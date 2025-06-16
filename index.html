@@ -6106,37 +6106,47 @@
 
   }
 
-  function expandCard(clickedCard) {
-    const cd = clickedCard.getAttribute('data-cd');
-    const grid = document.getElementById('grid');
-    const existing = document.querySelector('.card-detail.active');
-    if (existing) existing.remove();
+ function expandCard(clickedCard) {
+  const cd = clickedCard.getAttribute('data-cd');
+  const grid = document.getElementById('grid');
+  const existing = document.querySelector('.card-detail.active');
 
-    const detail = document.getElementById('detail-' + cd);
-    if (!detail) return;
-
-    const cloned = detail.cloneNode(true);
-    cloned.style.display = 'block';
-    cloned.classList.add('active');
-
-    const cards = Array.from(grid.children).filter(
-      c => c.classList.contains("card") && c.style.display !== "none"
-    );
-
-    const clickedIndex = cards.indexOf(clickedCard);
-
-    let columns = 7;
-    if (grid.clientWidth < 768) {
-      columns = 4;
-    } else if (grid.clientWidth < 1024) {
-      columns = 5;
-    }
-
-    const rowStart = Math.floor(clickedIndex / columns) * columns;
-    const rowEnd = Math.min(rowStart + columns - 1, cards.length - 1);
-    const insertAfter = cards[rowEnd];
-    insertAfter.insertAdjacentElement('afterend', cloned);
+  // すでに開いていて、それが同じカードなら閉じるだけ
+  if (existing && existing.getAttribute('data-cd') === cd) {
+    existing.remove();
+    return;
   }
+
+  // 他のカードの詳細が開いていたら閉じる
+  if (existing) existing.remove();
+
+  const detail = document.getElementById('detail-' + cd);
+  if (!detail) return;
+
+  const cloned = detail.cloneNode(true);
+  cloned.style.display = 'block';
+  cloned.classList.add('active');
+  cloned.setAttribute('data-cd', cd); // ★ 比較のために追加
+
+  const cards = Array.from(grid.children).filter(
+    c => c.classList.contains("card") && c.style.display !== "none"
+  );
+
+  const clickedIndex = cards.indexOf(clickedCard);
+
+  let columns = 7;
+  if (grid.clientWidth < 768) {
+    columns = 4;
+  } else if (grid.clientWidth < 1024) {
+    columns = 5;
+  }
+
+  const rowStart = Math.floor(clickedIndex / columns) * columns;
+  const rowEnd = Math.min(rowStart + columns - 1, cards.length - 1);
+  const insertAfter = cards[rowEnd];
+  insertAfter.insertAdjacentElement('afterend', cloned);
+}
+
 
   // イベント登録
   document.addEventListener("DOMContentLoaded", function () {
