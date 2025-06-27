@@ -1913,7 +1913,7 @@ footer a:hover {
       data-cd="20010"
       data-race="アンドロイド"
       data-category="アドミラルシップ"
-      data-rarity="レジェンド"
+      data-rarity="ブロンズ"
       data-type="チャージャー"
       data-cost="0"
       data-power="8"
@@ -7039,7 +7039,15 @@ footer a:hover {
     ■攻撃成功時■<br/>カードを3枚引く。
   </div>
 </div>
+
+<!--龍年ボタン-->
+
+<button id="dragon-mode-btn" style="display: none;">🐉 龍年モード</button>
+
+
 </div>
+
+
   </div>
 
 
@@ -9111,6 +9119,19 @@ function checkSameNameLimit() {
     document.getElementById("tab-edit")?.addEventListener("click", () => {
       updateSavedDeckList();
     });
+
+  //龍年モード表示
+  const searchInput = document.getElementById('keyword'); // 検索欄のID
+  const dragonButton = document.getElementById('dragon-mode-btn'); // 龍年ボタンのID
+
+  searchInput.addEventListener('input', () => {
+    const keyword = searchInput.value.trim();
+    if (keyword.includes('龍年')) {
+      dragonButton.style.display = 'inline-block'; // ボタン表示
+    } else {
+      dragonButton.style.display = 'none'; // 非表示
+    }
+  });
 </script>
 
 
