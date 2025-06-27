@@ -2,16 +2,86 @@
 <!DOCTYPE html>
 
 <html lang="ja">
-<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8"/>
 <title>神託のメソロギアカード一覧</title>
 <link href="favicon.ico" rel="icon" type="image/png"/>
 <style>
     body {
+      margin: 0;
       font-family: sans-serif;
-      padding: 1rem;
       background: #f5f5f5;
     }
+    .main-header {
+  height: 55px;
+  background-image: url("img/header.webp");
+  background-repeat: repeat-x;       /* 横方向に繰り返し */
+  background-size: auto 55px;        /* 高さ55pxにフィット */
+  background-position: center center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 5px;
+  color: white;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-logo img {
+  height: 1.8em;
+  width: auto;
+  margin-top: 10px;
+  object-fit: contain;
+}
+
+.header-nav a {
+  margin-left: 1em;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.85em;
+
+  background-color: rgba(0, 0, 0, 0.4);  /* 背景とのコントラスト */
+  padding: 6px 0.2em;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.header-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.2);  /* 軽いホバー効果 */
+  text-decoration: none;
+}
+
+
+    .search-bar{
+      position: sticky;
+      top: 0px;
+      background: #fff;
+      z-index: 100;
+      margin: 10px 0px;
+      display: flex;
+      gap: 1rem;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+  select{
+      font-size: 0.8rem;
+    }
+    #sort-select{
+      max-width: 100px;
+    }
+    input[type="text"] {
+  font-size: 16px;
+  padding: 6px 12px;
+  height: 36px;
+}
+
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -21,20 +91,17 @@
       width: calc(100% / 7 - 8px);
       box-sizing: border-box;
       cursor: pointer;
+      position: relative;
     }
     .card img {
-      width: 100%;
+      width: 100%;     /* グリッドセルの幅に合わせる */
+      height: auto;    /* アスペクト比を維持 */
+      display: block;  /* 余白をなくす */
       border-radius: 6px;
-      display: block;
     }
-    @media (max-width: 1024px) {
-      .card { width: calc(100% / 5 - 8px); }
-    }
-    @media (max-width: 768px) {
-      .card { width: calc(100% / 4 - 8px); }
-    }
+
     .modal {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -58,6 +125,7 @@
 }
 .filter-btn {
   margin: 4px 0px; /* 任意の数値で間隔調整、例：4px〜8pxくらいが自然です */
+
 }
 
     .filter-btn.selected {
@@ -72,14 +140,14 @@
 #filterModal {
   display: none;
   flex-direction: column;
-  max-height: 90vh;
+  max-height: 120vh;
   overflow-y: auto;
 }
 #scrollTopFixed {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  padding: 15px;
+  padding: 10px;
   font-size: 18px;
   background-color: #eee;
   border-radius: 50%;
@@ -157,11 +225,151 @@
   line-height: 1.5;
 }
 
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  padding: 1rem 0;
+  background-color: #f9f9f9;
+  line-height: 1.6;
+}
+
+footer a {
+  color: #3366cc;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+
+
+@media (max-width: 1024px) {
+      .card { width: calc(100% / 5 - 8px); }
+    }
+
+@media (max-width: 768px) {
+  .header-nav a {
+  font-size: 0.75em;
+}
+    .card-list {
+      grid-template-columns: repeat(2, 1fr); /* 2列表示に */
+      gap: 8px;
+    }
+
+    .card {
+      width: calc(100% / 4 - 8px);
+      font-size: 12px;
+      padding: 0px;
+    }
+
+    .filter-section,
+    .sort-section {
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .card-detail {
+      font-size: 13px;
+    }
+
+    .search-bar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0rem;
+  }
+
+
+  .search-bar input,
+  .search-bar select,
+  .search-bar button {
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0.3rem 0.5rem;
+    height: 2.2rem; /* 👈 ここで高さを統一 */
+    line-height: 1.2rem;
+  }
+
+  .search-bar input {
+    flex: 2;
+    font-size: 0.8rem;
+    padding: 0.3rem;
+  }
+
+  .search-bar select {
+    flex: 1;
+    font-size: 0.55rem;
+    padding: 0.2rem;
+  }
+
+  .search-bar button {
+    flex: 0 0 auto;
+    font-size: 0.45rem;
+    padding: 0.3rem 0.5rem;
+    white-space: nowrap;
+  }
+  footer {
+    font-size: 0.5rem; /* ← モバイルではさらに小さく */
+    padding: 0.5rem 0;
+  }
+  }
+  @media (max-width: 680px){
+  .header-nav a {
+  font-size: 0.65em;
+}
+}
+@media (max-width: 630px){
+  .header-nav a {
+  font-size: 0.6em;
+}
+}
+  @media (max-width: 560px){
+  .header-nav a {
+    margin-left: 0.1em;
+  font-size: 0.45em;
+}
+  #deckHelp {
+    display: block;
+  font-size: 0.26rem;
+}
+}
+@media (max-width: 410px){
+  .deck-card {
+    width: 55px;   /* 最小スマホではこのサイズに */
+    height: auto;  /* 縦幅は画像サイズに任せる or 調整 */
+  }
+  .header-nav a {
+    font-size: 0.23em;
+}
+}
+
   </style>
 </head>
 <body>
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-<input id="keyword" oninput="filterByKeyword()" placeholder="カード名・種族・カテゴリ・効果名・効果内容で検索" style="flex: 1; padding: 0.5rem; font-size: 1rem; box-sizing: border-box;" type="text"/>
+<!-- ヘッダー -->
+<header class="main-header">
+  <div class="header-logo">
+    <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+  </div>
+  <nav class="header-nav">
+    <a href="index.html">📖 一覧</a>
+    <a href="deckmaker.html">🃏 デッキメーカー</a>
+    <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📊 所持率チェッカー</a>
+    <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>
+  </nav>
+</header>
+
+<div  class="search-bar">
+<input id="keyword" oninput="filterByKeyword()" placeholder="検索" style="flex: 1; padding: 0.5rem; font-size: 1rem; box-sizing: border-box;" type="text"/>
 <select id="sort-select">
 <option value="default">通常順</option>
 <option value="cost-asc">コスト昇順</option>
@@ -171,182 +379,187 @@
 </select>
 <button onclick="openFilterModal()">📊 フィルター</button>
 </div>
+
+
+<!--フィルターモーダル-->
 <div class="modal" id="filterModal">
-<div class="modal-content">
-<div id="main-filters">
-<div>
-<strong>種族</strong>
-<div class="filter-group" data-key="種族">
-<button class="filter-btn" data-value="ドラゴン" type="button">ドラゴン</button>
-<button class="filter-btn" data-value="アンドロイド" type="button">アンドロイド</button>
-<button class="filter-btn" data-value="エレメンタル" type="button">エレメンタル</button>
-<button class="filter-btn" data-value="ルミナス" type="button">ルミナス</button>
-<button class="filter-btn" data-value="シェイド" type="button">シェイド</button>
-<button class="filter-btn" data-value="イノセント" type="button">イノセント</button>
-<button class="filter-btn" data-value="旧神" type="button">旧神</button>
-</div>
-</div>
-<div>
-<strong>カテゴリ</strong>
-<div class="filter-group" data-key="カテゴリ">
-<button class="filter-btn" data-value="聖焔龍（フォルティア）" type="button">聖焔龍（フォルティア）</button>
-<button class="filter-btn" data-value="ドラゴライダー" type="button">ドラゴライダー</button>
-<button class="filter-btn" data-value="メイドロボ" type="button">メイドロボ</button>
-<button class="filter-btn" data-value="アドミラルシップ" type="button">アドミラルシップ</button>
-<button class="filter-btn" data-value="ナチュリア" type="button">ナチュリア</button>
-<button class="filter-btn" data-value="鬼刹（きせつ）" type="button">鬼刹（きせつ）</button>
-<button class="filter-btn" data-value="ロスリス" type="button">ロスリス</button>
-<button class="filter-btn" data-value="白騎士" type="button">白騎士</button>
-<button class="filter-btn" data-value="昏き霊園" type="button">昏き霊園</button>
-<button class="filter-btn" data-value="マディスキア" type="button">マディスキア</button>
-<button class="filter-btn" data-value="ノーカテゴリ" type="button">ノーカテゴリ</button>
-</div>
-</div>
-<div>
-<strong>タイプ</strong>
-<div class="filter-group" data-key="タイプ">
-<button class="filter-btn" data-value="チャージャー" type="button">チャージャー</button>
-<button class="filter-btn" data-value="アタッカー" type="button">アタッカー</button>
-<button class="filter-btn" data-value="ブロッカー" type="button">ブロッカー</button>
-</div>
-</div>
-<div>
-<strong>レアリティ</strong>
-<div class="filter-group" data-key="レアリティ">
-<button class="filter-btn" data-value="レジェンド" type="button">レジェンド</button>
-<button class="filter-btn" data-value="ゴールド" type="button">ゴールド</button>
-<button class="filter-btn" data-value="シルバー" type="button">シルバー</button>
-<button class="filter-btn" data-value="ブロンズ" type="button">ブロンズ</button>
-</div>
-</div>
-<br/><strong>コスト：</strong>
-<select id="cost-min">
-<option value="">下限なし</option>
-<option value="0">0</option>
-<option value="2">2</option>
-<option value="4">4</option>
-<option value="6">6</option>
-<option value="8">8</option>
-<option value="10">10</option>
-<option value="12">12</option>
-<option value="14">14</option>
-<option value="16">16</option>
-<option value="20">20</option>
-<option value="24">24</option>
-<option value="60">60</option>
-<option value="66">66</option>
-</select>
-<select id="cost-max">
-<option value="">上限なし</option>
-<option value="0">0</option>
-<option value="2">2</option>
-<option value="4">4</option>
-<option value="6">6</option>
-<option value="8">8</option>
-<option value="10">10</option>
-<option value="12">12</option>
-<option value="14">14</option>
-<option value="16">16</option>
-<option value="20">20</option>
-<option value="24">24</option>
-<option value="60">60</option>
-<option value="66">66</option>
-</select>
-<br/><strong>パワー：</strong>
-<select id="power-min">
-<option value="">下限なし</option>
-<option value="0">0</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="12">12</option>
-<option value="14">14</option>
-<option value="16">16</option>
-<option value="20">20</option>
-<option value="24">24</option>
-</select>
-<select id="power-max">
-<option value="">上限なし</option>
-<option value="0">0</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="12">12</option>
-<option value="14">14</option>
-<option value="16">16</option>
-<option value="20">20</option>
-<option value="24">24</option>
-</select>
-</div>
-<div>
-<button onclick="toggleDetailFilters()">詳細フィルター開閉</button>
-<div id="detail-filters" style="display: none;">
-<!-- パック名 -->
-<div class="filter-group" data-key="パック名">
-<div class="filter-label">パック名</div>
-<button class="filter-btn" data-value="Awaking The Oracle「神託者の覚醒」">Awaking The Oracle「神託者の覚醒」</button>
-</div>
-<!-- 効果名 -->
-<div class="filter-group" data-key="効果名">
-<div class="filter-label">効果名</div>
-<button class="filter-btn" data-value="■召喚時■">■召喚時■</button>
-<button class="filter-btn" data-value="■手札発動■">■手札発動■</button>
-<button class="filter-btn" data-value="■攻撃成功時■">■攻撃成功時■</button>
-<button class="filter-btn" data-value="■防御成功時■">■防御成功時■</button>
-<button class="filter-btn" data-value="■戦場発動■">■戦場発動■</button>
-<button class="filter-btn" data-value="■特性■">■特性■</button>
-</div>
-<!-- BP要素（単一選択） -->
-<div class="filter-group" data-key="BP要素">
-<div class="filter-label">BP要素</div>
-<button class="filter-btn" data-value="BPあり">あり</button>
-<button class="filter-btn" data-value="BPなし">なし</button>
-</div>
-<!-- フィールド関係 -->
-<div class="filter-group" data-key="フィールド">
-<div class="filter-label">フィールド</div>
-<button class="filter-btn" data-value="ドラゴンフィールド">ドラゴンフィールド</button>
-<button class="filter-btn" data-value="アンドロイドフィールド">アンドロイドフィールド</button>
-<button class="filter-btn" data-value="エレメンタルフィールド">エレメンタルフィールド</button>
-<button class="filter-btn" data-value="ルミナスフィールド">ルミナスフィールド</button>
-<button class="filter-btn" data-value="シェイドフィールド">シェイドフィールド</button>
-<button class="filter-btn" data-value="フィールドリセット">フィールドリセット</button>
-<button class="filter-btn" data-value="フィールド関係なし">関係なし</button>
-</div>
-<!-- 特殊能力 -->
-<div class="filter-group" data-key="特殊効果">
-<div class="filter-label">特殊効果</div>
-<button class="filter-btn" data-value="燃焼">燃焼</button>
-<button class="filter-btn" data-value="拘束">拘束</button>
-<button class="filter-btn" data-value="沈黙">沈黙</button>
-<button class="filter-btn" data-value="特殊効果未所持">なし</button>
-</div>
-<!-- その他条件（詳細フィルター） -->
-<div class="filter-group-group" id="extra-conditions">
-<div class="filter-section-title">その他条件</div>
-<!-- 破壊効果 -->
-<div class="filter-group" data-key="破壊">
-<button class="filter-btn" data-value="破壊あり">破壊</button>
-</div>
-<!-- 今後追加予定 -->
-</div>
-</div>
-</div>
-<div id="detail-filters" style="display: none; margin-top: 1rem;"></div>
-<div style="margin-top: 1rem;">
-<button id="applyFilterBtn">この条件で絞り込む</button>
-<button onclick="resetFilters()">リセット</button>
-</div>
-</div>
-</div>
+  <div class="modal-content">
+    <div id="main-filters">
+      <div>
+        <strong>種族</strong>
+        <div class="filter-group" data-key="種族">
+          <button class="filter-btn" data-value="ドラゴン" type="button">ドラゴン</button>
+          <button class="filter-btn" data-value="アンドロイド" type="button">アンドロイド</button>
+          <button class="filter-btn" data-value="エレメンタル" type="button">エレメンタル</button>
+          <button class="filter-btn" data-value="ルミナス" type="button">ルミナス</button>
+          <button class="filter-btn" data-value="シェイド" type="button">シェイド</button>
+          <button class="filter-btn" data-value="イノセント" type="button">イノセント</button>
+          <button class="filter-btn" data-value="旧神" type="button">旧神</button>
+        </div>
+      </div>
+      <div>
+        <strong>カテゴリ</strong>
+        <div class="filter-group" data-key="カテゴリ">
+          <button class="filter-btn" data-value="聖焔龍（フォルティア）" type="button">聖焔龍（フォルティア）</button>
+          <button class="filter-btn" data-value="ドラゴライダー" type="button">ドラゴライダー</button>
+          <button class="filter-btn" data-value="メイドロボ" type="button">メイドロボ</button>
+          <button class="filter-btn" data-value="アドミラルシップ" type="button">アドミラルシップ</button>
+          <button class="filter-btn" data-value="ナチュリア" type="button">ナチュリア</button>
+          <button class="filter-btn" data-value="鬼刹（きせつ）" type="button">鬼刹（きせつ）</button>
+          <button class="filter-btn" data-value="ロスリス" type="button">ロスリス</button>
+          <button class="filter-btn" data-value="白騎士" type="button">白騎士</button>
+          <button class="filter-btn" data-value="昏き霊園" type="button">昏き霊園</button>
+          <button class="filter-btn" data-value="マディスキア" type="button">マディスキア</button>
+          <button class="filter-btn" data-value="ノーカテゴリ" type="button">ノーカテゴリ</button>
+        </div>
+      </div>
+      <div>
+        <strong>タイプ</strong>
+        <div class="filter-group" data-key="タイプ">
+          <button class="filter-btn" data-value="チャージャー" type="button">チャージャー</button>
+          <button class="filter-btn" data-value="アタッカー" type="button">アタッカー</button>
+          <button class="filter-btn" data-value="ブロッカー" type="button">ブロッカー</button>
+        </div>
+      </div>
+      <div>
+        <strong>レアリティ</strong>
+        <div class="filter-group" data-key="レアリティ">
+          <button class="filter-btn" data-value="レジェンド" type="button">レジェンド</button>
+          <button class="filter-btn" data-value="ゴールド" type="button">ゴールド</button>
+          <button class="filter-btn" data-value="シルバー" type="button">シルバー</button>
+          <button class="filter-btn" data-value="ブロンズ" type="button">ブロンズ</button>
+        </div>
+      </div>
+      <br /><strong>コスト：</strong>
+      <select id="cost-min">
+        <option value="">下限なし</option>
+        <option value="0">0</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+        <option value="60">60</option>
+        <option value="66">66</option>
+      </select>
+      <select id="cost-max">
+        <option value="">上限なし</option>
+        <option value="0">0</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+        <option value="60">60</option>
+        <option value="66">66</option>
+      </select>
+      <br /><strong>パワー：</strong>
+      <select id="power-min">
+        <option value="">下限なし</option>
+        <option value="0">0</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+      </select>
+      <select id="power-max">
+        <option value="">上限なし</option>
+        <option value="0">0</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+      </select>
+    </div>
+    <div>
+      <button onclick="toggleDetailFilters()">詳細フィルター開閉</button>
+      <div id="detail-filters" style="display: none;">
+        <!-- パック名 -->
+        <div class="filter-group" data-key="パック名">
+          <div class="filter-label">パック名</div>
+          <button class="filter-btn" data-value="Awaking The Oracle「神託者の覚醒」">Awaking The Oracle「神託者の覚醒」</button>
+        </div>
+        <!-- 効果名 -->
+        <div class="filter-group" data-key="効果名">
+          <div class="filter-label">効果名</div>
+          <button class="filter-btn" data-value="■召喚時■">■召喚時■</button>
+          <button class="filter-btn" data-value="■手札発動■">■手札発動■</button>
+          <button class="filter-btn" data-value="■攻撃成功時■">■攻撃成功時■</button>
+          <button class="filter-btn" data-value="■防御成功時■">■防御成功時■</button>
+          <button class="filter-btn" data-value="■戦場発動■">■戦場発動■</button>
+          <button class="filter-btn" data-value="■特性■">■特性■</button>
+        </div>
+        <!-- BP要素（単一選択） -->
+        <div class="filter-group" data-key="BP要素">
+          <div class="filter-label">BP要素</div>
+          <button class="filter-btn" data-value="BPあり">あり</button>
+          <button class="filter-btn" data-value="BPなし">なし</button>
+        </div>
+        <!-- フィールド関係 -->
+        <div class="filter-group" data-key="フィールド">
+          <div class="filter-label">フィールド</div>
+          <button class="filter-btn" data-value="ドラゴンフィールド">ドラゴンフィールド</button>
+          <button class="filter-btn" data-value="アンドロイドフィールド">アンドロイドフィールド</button>
+          <button class="filter-btn" data-value="エレメンタルフィールド">エレメンタルフィールド</button>
+          <button class="filter-btn" data-value="ルミナスフィールド">ルミナスフィールド</button>
+          <button class="filter-btn" data-value="シェイドフィールド">シェイドフィールド</button>
+          <button class="filter-btn" data-value="フィールドリセット">フィールドリセット</button>
+          <button class="filter-btn" data-value="フィールド関係なし">関係なし</button>
+        </div>
+        <!-- 特殊能力 -->
+        <div class="filter-group" data-key="特殊効果">
+          <div class="filter-label">特殊効果</div>
+          <button class="filter-btn" data-value="燃焼">燃焼</button>
+          <button class="filter-btn" data-value="拘束">拘束</button>
+          <button class="filter-btn" data-value="沈黙">沈黙</button>
+          <button class="filter-btn" data-value="特殊効果未所持">なし</button>
+        </div>
+        <!-- その他条件（詳細フィルター） -->
+        <div class="filter-group-group" id="extra-conditions">
+          <div class="filter-section-title">その他条件</div>
+          <!-- 破壊効果 -->
+          <div class="filter-group" data-key="破壊">
+            <button class="filter-btn" data-value="破壊あり">破壊</button>
+          </div>
+          <!-- 今後追加予定 -->
+        </div>
+      </div>
+    </div>
+    <div id="detail-filters" style="display: none; margin-top: 1rem;"></div>
+    <div style="margin-top: 1rem;">
+      <button id="applyFilterBtn">この条件で絞り込む</button>
+      <button onclick="resetFilters()">リセット</button>
+    </div>
+  </div>
+  </div>
+
+
 <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 <div class="grid" id="grid">
 
@@ -2459,7 +2672,7 @@
   data-category="白騎士"
   data-pack="Awaking The Oracle「神託者の覚醒」"
   data-cost="20"
-  data-power="14"
+  data-power="12"
   data-rarity="ブロンズ"
   data-effectname="■手札発動■"
   data-skill="特殊効果未所持"
@@ -5961,10 +6174,13 @@
   </div>
 </div>
 </div>
-<footer style="text-align:center; font-size:0.9em; padding:10px;">
-  © 2025 Mesorogia Cards. All rights reserved.<br/>
-  当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。
+<footer>
+  © 2025 Mesorogia Cards. All rights reserved.<br />
+  当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
+  一部画像素材は「ジュエルセイバーFREE」<br />
+  （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。
 </footer>
+
 <script>
   function openFilterModal() {
     document.getElementById("filterModal").style.display = "flex";
@@ -6106,47 +6322,46 @@
 
   }
 
- function expandCard(clickedCard) {
-  const cd = clickedCard.getAttribute('data-cd');
-  const grid = document.getElementById('grid');
-  const existing = document.querySelector('.card-detail.active');
+    function expandCard(clickedCard) {
+      const cd = clickedCard.getAttribute('data-cd');
+      const grid = document.getElementById('grid');
+      const existing = document.querySelector('.card-detail.active');
 
-  // すでに開いていて、それが同じカードなら閉じるだけ
-  if (existing && existing.getAttribute('data-cd') === cd) {
-    existing.remove();
-    return;
-  }
+      // すでに開いていて、それが同じカードなら閉じるだけ
+      if (existing && existing.getAttribute('data-cd') === cd) {
+        existing.remove();
+        return;
+      }
 
-  // 他のカードの詳細が開いていたら閉じる
-  if (existing) existing.remove();
+      // 他のカードの詳細が開いていたら閉じる
+      if (existing) existing.remove();
 
-  const detail = document.getElementById('detail-' + cd);
-  if (!detail) return;
+      const detail = document.getElementById('detail-' + cd);
+      if (!detail) return;
 
-  const cloned = detail.cloneNode(true);
-  cloned.style.display = 'block';
-  cloned.classList.add('active');
-  cloned.setAttribute('data-cd', cd); // ★ 比較のために追加
+      const cloned = detail.cloneNode(true);
+      cloned.style.display = 'block';
+      cloned.classList.add('active');
+      cloned.setAttribute('data-cd', cd); // ★ 比較のために追加
 
-  const cards = Array.from(grid.children).filter(
-    c => c.classList.contains("card") && c.style.display !== "none"
-  );
+      const cards = Array.from(grid.children).filter(
+        c => c.classList.contains("card") && c.style.display !== "none"
+      );
 
-  const clickedIndex = cards.indexOf(clickedCard);
+      const clickedIndex = cards.indexOf(clickedCard);
 
-  let columns = 7;
-  if (grid.clientWidth < 768) {
-    columns = 4;
-  } else if (grid.clientWidth < 1024) {
-    columns = 5;
-  }
+      let columns = 7;
+      if (grid.clientWidth < 768) {
+        columns = 4;
+      } else if (grid.clientWidth < 1024) {
+        columns = 5;
+      }
 
-  const rowStart = Math.floor(clickedIndex / columns) * columns;
-  const rowEnd = Math.min(rowStart + columns - 1, cards.length - 1);
-  const insertAfter = cards[rowEnd];
-  insertAfter.insertAdjacentElement('afterend', cloned);
-}
-
+      const rowStart = Math.floor(clickedIndex / columns) * columns;
+      const rowEnd = Math.min(rowStart + columns - 1, cards.length - 1);
+      const insertAfter = cards[rowEnd];
+      insertAfter.insertAdjacentElement('afterend', cloned);
+    }
 
   // イベント登録
   document.addEventListener("DOMContentLoaded", function () {
