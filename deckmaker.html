@@ -160,6 +160,10 @@
       border-radius: 20px;
       padding: 1px 8px;
     }
+
+
+
+
 .deck-bar-wrapper {
   display: flex;
   overflow: hidden;
@@ -256,7 +260,9 @@ input[type="text"] {
   filter: grayscale(100%);
   opacity: 0.5;
 }
-
+.hidden-by-grayscale {
+  display: none !important;
+}
     .zoom-btn {
       position: absolute;
       top: 4px;
@@ -441,7 +447,7 @@ input[type="text"] {
 
 #deck-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.2rem;
   padding: 8px;;
 }
@@ -512,12 +518,18 @@ input[type="text"] {
 }
 
 #analysis-section.open {
-  max-height: 500px; /* 必要に応じて調整 */
+  max-height: 700px; /* 必要に応じて調整 */
   opacity: 1;
+}
+#deck-info {
+  flex: 1;
+  padding: 1rem;
+  background: #fff;
 }
 
 #deck-info .deck-name-row {
   margin-bottom: 0.5rem;
+
 }
 #deck-info label {
   font-weight: bold;
@@ -602,6 +614,16 @@ input[type="text"] {
   font-weight: bold;
   z-index: 9999;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+#deck-stats {
+  margin-bottom: 1.5em; /* ボタンとの重なりを防ぐ */
+}
+
+#deck-stats .accident-rate {
+  display: block;
+  margin-top: 0.2em;
+  font-size: 0.9em;
+  color: #444;
 }
 
 footer {
@@ -744,6 +766,7 @@ footer a:hover {
   #deck-info div {
   font-size: 0.75rem;
 }
+
   footer {
     font-size: 0.5rem; /* ← モバイルではさらに小さく */
     padding: 0.5rem 0;
@@ -7120,18 +7143,28 @@ footer a:hover {
             </div>
             <div style="overflow-x: auto; max-width: 100%;">
               <strong>コスト分布：</strong>
-              <canvas id="costChart" height="75"></canvas>
+              <canvas id="costChart" height="80em"></canvas>
             </div>
             <div style="overflow-x: auto; max-width: 100%; margin-top: 20px;">
               <strong>パワー分布：</strong>
-              <canvas id="powerChart" height="75"></canvas>
+              <canvas id="powerChart" height="80em"></canvas>
             </div>
             <div>
               <strong>総コスト：</strong><span id="total-cost">0</span>  <strong>総パワー：</strong><span id="total-power">🔵0 / 🟣0</span>
             </div>
             <div>
-              <strong>初手事故率：</strong><span id="bad-hand-rate">0.0%</span>
-            <div style="font-size: 14px;">※4枚マリガン込みしてもチャージャー1枚も引けない確率</div>
+              <label for="mulligan-count">マリガン枚数：</label>
+              <select id="mulligan-count">
+                <option value="0">マリガンなし</option>
+                <option value="1">1枚マリガン</option>
+                <option value="2">2枚マリガン</option>
+                <option value="3">3枚マリガン</option>
+                <option value="4" selected>4枚マリガン</option>
+              </select>
+              <strong>初手事故率：</strong>
+              <span id="bad-hand-rate">0.0%</span>
+              <span id="bad-hand-frequency">（ほぼ事故なし）</span>
+              <div style="font-size: 14px;">※初手に出せるカードがマリガンしても来ない確率</div>
           </div>
         </div>
     <!-- 🔽 コード出力・入力ボタン群 -->
@@ -7320,7 +7353,7 @@ function rebuildCardMap() {
       deck[cd] = (deck[cd] || 0) + 1;
       updateDeck();
       updateCardDisabling(); // ✅ これがなければ一覧の更新がされない
-      applyGrayscaleFilter()
+      applyGrayscaleFilter();
       applyFilters();
     }
 
@@ -7438,7 +7471,9 @@ function rebuildCardMap() {
     const active = document.querySelector(".card-detail.active");
     if (active) active.remove();
     sortCards();
+    applyGrayscaleFilter();
   }
+
 
   function resetFilters() {
     document.querySelectorAll(".filter-btn.selected").forEach(btn => btn.classList.remove("selected"));
@@ -7618,7 +7653,6 @@ function getRaceType(race) {
     updateDeck();
     updateCardDisabling();
     applyGrayscaleFilter();
-    applyFilters();
   }
 
 
@@ -7985,7 +8019,10 @@ function updateDeck() {
     const mainRate = deck.length ? Math.round((mainRace[1] / deck.length) * 100) : 0;
 
     // 初手事故率（コスト5以上のカードが初手8枚に8枚とも含まれる確率）
-    const badRate = calcBadHandRate(deck);
+    const mulliganCount = parseInt(document.getElementById("mulligan-count").value);
+    const badRate = calcBadHandRate(deck, mulliganCount);
+
+
 
     // 表示更新
     document.getElementById("rarity-legend").textContent = `🌈 ${rarityCounts.LEG}`;
@@ -8177,19 +8214,59 @@ function updateDeck() {
 
 
 //初手事故率
-  function calcBadHandRate(deck) {
+  function calcBadHandRate(deck, mulliganCount = 4) {
     const trials = 1000;
     let badCount = 0;
+    const deckSize = deck.length;
 
     for (let i = 0; i < trials; i++) {
       const shuffled = [...deck].sort(() => Math.random() - 0.5);
-      const top8 = shuffled.slice(0, 8);
-      const isBad = top8.every(card => card.type === "アタッカー" || card.type === "ブロッカー");
-      if (isBad) badCount++;
+
+      const hand1 = shuffled.slice(0, 4);
+      const unplayable = hand1.filter(card => parseInt(card.cost) > 4);
+
+      if (unplayable.length < 4) continue;
+
+      const keepCount = 4 - mulliganCount;
+      const keptCards = hand1.slice(0, keepCount);
+      const remainingDeck = shuffled.slice(4);
+      const drawn = remainingDeck.slice(0, mulliganCount);
+      const finalHand = keptCards.concat(drawn);
+
+      const hasPlayable = finalHand.some(card => parseInt(card.cost) <= 4);
+      if (!hasPlayable) badCount++;
     }
 
     return (badCount / trials) * 100;
   }
+    function updateAccidentRateOnly() {
+      const deck = currentDeck;
+      const mulliganCount = parseInt(document.getElementById("mulligan-count").value);
+      const accidentRate = calcBadHandRate(deck, mulliganCount);
+
+      document.getElementById("bad-hand-rate").textContent =
+        accidentRate.toFixed(1) + "%";
+
+      // 何回に1回の表示
+      const frequency = 100 / accidentRate;
+      const frequencyText =
+        accidentRate > 0.0 && frequency <= 100
+          ? `（約${Math.round(frequency)}回に1回）`
+          : "（ほぼ事故なし）";
+
+
+      document.getElementById("bad-hand-frequency").textContent = frequencyText;
+    }
+
+
+      document.getElementById("mulligan-count").addEventListener("change", () => {
+        updateAccidentRateOnly();
+      });
+
+
+
+
+
 
 //交換ポイント（ダイヤ・砂）
   function showExchange(type) {
@@ -8377,9 +8454,17 @@ function updateDeck() {
             const cards = document.querySelectorAll(".card");
             cards.forEach(card => {
               const isGrayscale = card.classList.contains("grayscale");
-              card.style.display = (hideInvalidRace && isGrayscale) ? "none" : "";
+
+              // 条件に合うカードにだけ非表示クラスを付与／削除
+              if (hideInvalidRace && isGrayscale) {
+                card.classList.add("hidden-by-grayscale");
+              } else {
+                card.classList.remove("hidden-by-grayscale");
+              }
             });
-        }
+          }
+
+
 
 
 
