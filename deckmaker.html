@@ -8655,7 +8655,7 @@ function updateGrayscaleState() {
     const eldergods = deckCards.filter(c => c.種族 === "旧神");
 
     if (eldergods.length === 0) {
-      document.getElementById("deck-eldergod").textContent = "なし";
+      document.getElementById("deck-eldergod").textContent = "未採用";
     } else if (eldergods.length === 1) {
       const cd = Object.keys(deck).find(cd => cardMap[cd]?.race === "旧神");
       const name = cd ? cardMap[cd]?.name || "旧神" : "旧神";
