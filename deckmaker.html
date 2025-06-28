@@ -1073,6 +1073,7 @@ footer a:hover {
 
 <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
+<!--カード一覧-->
 <div class="grid" id="grid">
   <div class="card"
       data-cd="10001"
@@ -7075,13 +7076,15 @@ footer a:hover {
 
 
 <!--デッキ編集ページ-->
-  <div class="grid" id="cardGrid"></div>
 <div class="tab-content" id="edit">
   <div id="deck-layout">
+<!--デッキリストゾーン-->
       <div id="deck-card-list" class="deck-section">
         <div id="deckcard-empty-message">デッキがここに表示されます</div>
         <!-- カード一覧（5列グリッド） -->
       </div>
+
+<!--デッキ情報ゾーン-->
       <div id="deck-info" class="deck-section">
         <h3 style="margin-top: 0px;">デッキ情報</h3>
         <!-- デッキ名入力欄 -->
@@ -7127,7 +7130,7 @@ footer a:hover {
           </div>
           <div style="font-size: 14px;">※採用中のゴールドとレジェンドを全部交換した場合（今後所持カードから反映予定）</div>
         </div>
-          <!-- 🔽 デッキ分析結果 -->
+<!-- 🔽 デッキ分析結果 -->
       <button id="toggle-analysis-btn" onclick="toggleAnalysis()">🔍 分析を表示</button>
       <div id="analysis-section" class="deck-analysis" style="margin-top: 1rem; font-size: 0.85rem;">
             <div>
@@ -7137,10 +7140,12 @@ footer a:hover {
               <span id="rarity-silver">⚪️ 0</span> /
               <span id="rarity-bronze">🟤 0</span>
             </div>
+            <!--メイン種族リスト-->
             <div>
               <strong>メイン種族率：</strong>
               <span id="race-rate"> 0%</span>
             </div>
+            <!--コスト、パワー分布グラフ-->
             <div style="overflow-x: auto; max-width: 100%;">
               <strong>コスト分布：</strong>
               <canvas id="costChart" height="80em"></canvas>
@@ -7150,8 +7155,10 @@ footer a:hover {
               <canvas id="powerChart" height="80em"></canvas>
             </div>
             <div>
+            <!--総コスト、パワー-->
               <strong>総コスト：</strong><span id="total-cost">0</span>  <strong>総パワー：</strong><span id="total-power">🔵0 / 🟣0</span>
             </div>
+            <!--マリガンボタン-->
             <div>
               <label for="mulligan-count">マリガン枚数：</label>
               <select id="mulligan-count">
@@ -7174,6 +7181,7 @@ footer a:hover {
         コピーしました！ </div>
       <button id="load-code-btn">📥 コード読み込み</button>
       <button onclick="saveDeckToLocalStorage()">💾 一時保存</button>
+      <button id="resetDeckButton">デッキをリセット</button>
     </div>
       </div>
 
