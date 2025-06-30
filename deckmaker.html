@@ -192,16 +192,14 @@
 
 #deckHelp {
   white-space: nowrap;
-  overflow-x: auto;
   font-size: 0.4rem;
 }
 
 .deck-bar-top {
   min-height: 87px;
   display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding: 4px;
+  gap:  4px;
+  padding: 4px 4px 0px 4px;
   background: #fff;
 }
 
@@ -436,7 +434,7 @@ input[type="text"] {
   width: 100%;
   background-color: #e0e0e0;
   color: #333;
-  font-size: 0.85rem;
+  font-size: 0.5rem;
   padding: 2px 0px;
   border: 1px solid #aaa;
   cursor: pointer;
@@ -466,21 +464,21 @@ input[type="text"] {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  padding: 8px;;
 }
 
 .deck-section {
   background: #fff;
-  padding: 1rem;
+  padding: 0.5rem 0px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  max-height: 25rem;
+
 }
 
 #deck-card-list {
   position: relative;
   background-image: url("img/cardlist.webp");
   background-repeat: no-repeat;
-  min-height: auto;
   background-size: cover;
   background-position: center;
   display: grid;
@@ -490,6 +488,7 @@ input[type="text"] {
   min-height: 140px;
   align-content: start;       /* カードを上詰め配置 */
   justify-content: start;
+  overflow-y: auto;
 }
 #deckcard-empty-message {
   position: absolute;
@@ -497,14 +496,15 @@ input[type="text"] {
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  font-size: 1.2rem;
   opacity: 0.8;
   text-shadow: 1px 1px 2px #000;
   text-align: center;
   pointer-events: none;
   z-index: 1;
 }
-
+#deck-info{
+  overflow-y: auto;
+}
 
 .deck-entry {
   position: relative;
@@ -521,7 +521,7 @@ input[type="text"] {
 }
 /* 代表カードの枠（styleタグまたはCSSに追加） */
 .deck-entry.representative {
-  outline: 3px solid limegreen;
+  outline: 3px solid crimson;
   outline-offset: -2px;
   border-radius: 6px;
   box-shadow: 0 0 10px limegreen;
@@ -530,7 +530,6 @@ input[type="text"] {
 #analysis-section {
   max-height: 0;
   opacity: 0;
-  overflow: hidden;
   transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
@@ -538,12 +537,6 @@ input[type="text"] {
   max-height: 700px; /* 必要に応じて調整 */
   opacity: 1;
 }
-#deck-info {
-  flex: 1;
-  padding: 1rem;
-  background: #fff;
-}
-
 #deck-info .deck-name-row {
   margin-bottom: 0.5rem;
 
@@ -556,17 +549,26 @@ input[type="text"] {
   width: 100%;
   max-width: 240px;
   padding: 4px 8px;
-  font-size: 0.9rem;
+  font-size: 0.65rem;
   box-sizing: border-box;
 }
 #deck-info div {
-  font-size: 0.9rem;
+  font-size: 0.65rem;
+  overflow-y: auto;
+}
+#exchange-toggle-btn{
+  font-size: 0.65em;
+}
+#toggle-analysis-btn{
+  font-size: 0.6em;
+}
+.deck-code-controls button{
+  font-size: 0.85em;
 }
 .deck-type-breakdown {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1rem; /* 行と列に少し余白 */
-  margin-top: 0.5rem;
   font-size: 0.9rem;
 }
 
@@ -576,7 +578,8 @@ input[type="text"] {
 #savedDeckList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* ⬅ 2列対応 */
-  gap: 1em;
+  gap: 0.3em;
+  margin-top: 0.2em;
 }
 
 .saved-deck-item {
@@ -585,7 +588,7 @@ input[type="text"] {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1em;
+  gap: 0.5em;
   border: 1px solid #ccc;
   padding: 0.5em;
   background-color: #fff;
@@ -608,9 +611,12 @@ input[type="text"] {
 .saved-deck-info .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1em;
+  gap: 0.5em;
 }
-
+.saved-deck-info .row small {
+  font-size: 0.75em;
+  color: #555;
+}
 .saved-deck-buttons {
   display: flex;
   flex-direction: column;
@@ -667,12 +673,14 @@ footer a:hover {
     @media (min-width: 700px) {
   #deck-layout {
     flex-direction: row;
+    height: 100%;
+    max-height: 25rem;
   }
   #deck-info {
   flex: 1;
-  max-width: 40%; /* ← 適宜調整可能 */
+  max-width: 50%; /* ← 適宜調整可能 */
+  min-height: 5rem;
 }
-
 #deck-card-list {
   flex: 1;
   min-width: 0;
@@ -811,7 +819,6 @@ footer a:hover {
 }
 @media (max-width: 410px){
   .deck-card {
-    width: 55px;   /* 最小スマホではこのサイズに */
     height: auto;  /* 縦幅は画像サイズに任せる or 調整 */
   }
   .header-nav a {
@@ -1081,12 +1088,13 @@ footer a:hover {
 
 </div>
 
-</div>
 <!--使用不可種族表示非表示ボタン-->
 <div class="deck-filter-bar">
   <button id="toggle-invalid-race" class="filter-toggle-button">✅使用不可種族を表示(モノクロ)</button>
 </div>
 
+
+</div>
 
 <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
@@ -7102,7 +7110,7 @@ footer a:hover {
 
 <!--デッキ情報ゾーン-->
       <div id="deck-info" class="deck-section">
-        <h3 style="margin-top: 0px;">デッキ情報</h3>
+        <h3 style="margin: 0px 0px 0.5em; font-size: 0.8em;">デッキ情報</h3>
         <!-- デッキ名入力欄 -->
         <div class="deck-name-row">
           <input type="text" id="deck-name" placeholder="デッキ名を入力" />
@@ -7125,6 +7133,7 @@ footer a:hover {
         <!-- 代表カード -->
         <div class="deck-representative">
           代表カード：<span id="deck-representative">未選択</span>
+          <div style="font-size: 14px;">タップで変更可能</div>
         </div>
         <!-- 使用タイプ内訳 -->
         <div class="deck-type-breakdown">
@@ -7139,7 +7148,7 @@ footer a:hover {
           <div id="exchange-diamond" style="display:none;">💎 必要ダイヤ：<span id="diamond-cost">0</span></div>
           <div id="exchange-sand" style="display:none;">
             🪨 必要砂
-            <ul style="margin: 0.2rem 0 0 1rem;">
+            <ul style="margin: 0.2rem 0 0 0.5rem;">
               <li>レジェンドの砂：<span id="sand-leg">0</span>個</li>
               <li>ゴールドの砂：<span id="sand-gld">0</span>個</li>
             </ul>
@@ -7148,7 +7157,7 @@ footer a:hover {
         </div>
 <!-- 🔽 デッキ分析結果 -->
       <button id="toggle-analysis-btn" onclick="toggleAnalysis()">🔍 分析を表示</button>
-      <div id="analysis-section" class="deck-analysis" style="margin-top: 1rem; font-size: 0.85rem;">
+      <div id="analysis-section" class="deck-analysis" style="margin-top: 0.5rem; font-size: 0.85rem;">
             <div>
               <strong>レアリティ内訳：</strong>
               <span id="rarity-legend">🌈0</span> /
@@ -7162,11 +7171,11 @@ footer a:hover {
               <span id="race-rate"> 0%</span>
             </div>
             <!--コスト、パワー分布グラフ-->
-            <div style="overflow-x: auto; max-width: 100%;">
+            <div style="max-width: 100%;">
               <strong>コスト分布：</strong>
               <canvas id="costChart" height="80em"></canvas>
             </div>
-            <div style="overflow-x: auto; max-width: 100%; margin-top: 20px;">
+            <div style="max-width: 100%; margin-top: 20px;">
               <strong>パワー分布：</strong>
               <canvas id="powerChart" height="80em"></canvas>
             </div>
@@ -7191,7 +7200,7 @@ footer a:hover {
           </div>
         </div>
     <!-- 🔽 コード出力・入力ボタン群 -->
-    <div class="deck-code-controls" style="margin-top: 1rem;">
+    <div class="deck-code-controls">
       <button id="generate-code-btn">📤 コード生成</button>
       <div id="copy-message" style="font-size: 0.85rem; color: green; margin-top: 0.5rem; display: none;">
         コピーしました！ </div>
@@ -7200,12 +7209,14 @@ footer a:hover {
       <button id="resetDeckButton">デッキをリセット</button>
     </div>
       </div>
-
   </div>
 
 <!-- 保存デッキ一覧表示用 -->
-<div id="savedDeckCount" style="margin-bottom: 0.5em; font-size: 20px; color: #333;"></div>
-<div id="savedDeckList" style="gap: 0.5em; margin-top: 1em;"></div>
+<div id="savedDeckCount" style="margin-bottom: 0.3em; font-size: 20px; color: #333;"></div>
+<p style="color: red; font-weight: bold;font-size: 15px; margin: 0px;">
+  ⚠️ デッキはブラウザに保存されます。キャッシュを削除するとデータが消えるのでご注意ください。
+</p>
+<div id="savedDeckList"></div>
 
 </div>
 <footer>
@@ -7686,8 +7697,6 @@ function getRaceType(race) {
 
 
 
-
-
   // デッキ枚数表示（バッジ）を更新(一時的削除)
 
 
@@ -7945,7 +7954,6 @@ function updateDeck() {
   ${oldGodLine}<br>
   ${typeLine}
 `;
-
     updateGrayscaleState();
     updateCardDisabling();
     // 🔽 デッキ情報（種族・タイプなど）表示を更新
@@ -7964,14 +7972,11 @@ function updateDeck() {
       if (!card) return [];
       return Array(count).fill({ ...card });
     });
-
-
     document.querySelectorAll('.deck-card').forEach(card => {
       card.addEventListener('contextmenu', e => {
         e.preventDefault(); // 🔴 右クリックメニュー抑制
       });
     });
-
     currentDeck = expandedDeck; // グローバルに設定（分析関数用）
     rebuildCardMap();
     updateDeckAnalysis(); // 分析実行
@@ -7983,14 +7988,17 @@ function updateDeck() {
   applyFilters();
 }
 
+
+
+
 //分析表示/非表示ボタン
   function toggleAnalysis() {
     const section = document.getElementById("analysis-section");
     const btn = document.getElementById("toggle-analysis-btn");
     const isOpen = section.classList.toggle("open");
-
     btn.textContent = isOpen ? "⬆ 分析を隠す" : "🔍 分析を表示";
   }
+
 
 //カード分析
   function updateDeckAnalysis() {
@@ -9072,15 +9080,25 @@ function checkSameNameLimit() {
       if (counter) {
         counter.textContent = `保存デッキ数：${multiSaved.length} / 20`;
       }
-
+      // ✅ 複数保存デッキがある場合
       if (multiSaved.length > 0) {
-        // ✅ 複数保存デッキがある場合
         multiSaved.forEach((deckData, index) => {
+          // ✅ 保存日時がない場合は作る（古いデータ用）
+          if (!deckData.date) {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            deckData.date = `${yyyy}/${mm}/${dd}`;
+          }
+
+          // ✅ generateDeckLayout に渡す
           const html = generateDeckLayout(deckData, index);
           container.insertAdjacentHTML("beforeend", html);
         });
         return;
       }
+
 
       // 🔁 複数保存がなければ、旧式（tempDeck）を使う
       const singleSaved = localStorage.getItem("tempDeck");
@@ -9111,54 +9129,67 @@ function checkSameNameLimit() {
 
 
 //保存デッキ表示
-      function generateDeckLayout(deckData, index = null) {
-        let cardImg = "img/10001.webp";
-        let deckName = "デッキ一時保存（複数可）";
-        let race = "リーダー種族表示";
-        let count = "デッキ枚数";
-        let typeCount = "チャージャー：🔵アタッカー：🟣ブロッカー：⚪️";
+  function generateDeckLayout(deckData, index = null) {
+    let cardImg = "img/10001.webp";
+    let deckName = "デッキ一時保存（複数可）";
+    let race = "リーダー種族表示";
+    let count = "デッキ枚数";
+    let typeCount = "チャージャー：🔵アタッカー：🟣ブロッカー：⚪️";
+    let savedDate = ""; // ✅ 保存日時の初期値
 
-        if (deckData && deckData.cardCounts) {
-          let total = 0, charge = 0, attack = 0, block = 0;
-          for (const cd in deckData.cardCounts) {
-            const n = deckData.cardCounts[cd];
-            total += n;
-            const card = cards.find(c => c.cd === cd);
-            if (card) {
-              if (card.type === "チャージャー") charge += n;
-              if (card.type === "アタッカー") attack += n;
-              if (card.type === "ブロッカー") block += n;
-            }
-          }
-          count = total + "/30~40";
-          typeCount = `🔵${charge}🟣${attack}⚪️${block}`;
-          deckName = deckData.name || "名称未設定";
-          race = getMainTribe(deckData.g);
-          if (deckData.m) {
-            cardImg = "img/" + String(deckData.m) + ".webp";
-          }
+    if (deckData && deckData.cardCounts) {
+      // ✅ デッキ枚数・タイプ数を計算
+      let total = 0, charge = 0, attack = 0, block = 0;
+      for (const cd in deckData.cardCounts) {
+        const n = deckData.cardCounts[cd];
+        total += n;
+        const card = cards.find(c => c.cd === cd);
+        if (card) {
+          if (card.type === "チャージャー") charge += n;
+          if (card.type === "アタッカー") attack += n;
+          if (card.type === "ブロッカー") block += n;
         }
+      }
+      count = total + "/30~40";
+      typeCount = `🔵${charge}🟣${attack}⚪️${block}`;
+      deckName = deckData.name || "名称未設定";
+      race = getMainTribe(deckData.g);
 
-        const loadBtn = index != null
-          ? `<button onclick="loadDeckFromIndex(${index})">🔄 読み込む</button>`
-          : `<button onclick="loadDeckFromSaved()">🔄 読み込む</button>`;
+      // ✅ 代表カード画像
+      if (deckData.m) {
+        cardImg = "img/" + String(deckData.m) + ".webp";
+      }
 
-        const deleteBtn = index != null
-          ? `<button onclick="deleteDeckFromIndex(${index})">🗑 削除</button>`
-          : `<button onclick="clearSavedDeck()">🗑 削除</button>`;
+      // ✅ 保存日時があれば設定（無ければ空）
+      savedDate = deckData.date ? deckData.date : "";
+    }
 
-        return `
+    // ✅ 読み込み・削除ボタン（複数か単一か）
+    const loadBtn = index != null
+      ? `<button onclick="loadDeckFromIndex(${index})">🔄 読み込む</button>`
+      : `<button onclick="loadDeckFromSaved()">🔄 読み込む</button>`;
+
+    const deleteBtn = index != null
+      ? `<button onclick="deleteDeckFromIndex(${index})">🗑 削除</button>`
+      : `<button onclick="clearSavedDeck()">🗑 削除</button>`;
+
+    // ✅ 保存日時を含むHTMLを返す
+    return `
     <div class="saved-deck-item">
       <img src="${cardImg}" alt="代表カード" />
-      <div class="deck-info">
-        <div class="deck-info-row">
+      <div class="saved-deck-info">
+        <div class="row">
           <strong>${deckName}</strong>
           <span>使用種族：${race}</span>
         </div>
-        <div class="deck-info-row">
+        <div class="row">
           <span>${count}</span>
           <span>${typeCount}</span>
         </div>
+        ${savedDate
+        ? `<div class="row"><small>保存日時: ${savedDate}</small></div>`
+        : ""
+      }
       </div>
       <div class="deck-buttons">
         ${loadBtn}
@@ -9166,7 +9197,8 @@ function checkSameNameLimit() {
       </div>
     </div>
   `;
-      }
+  }
+
 
 
 
@@ -9230,7 +9262,6 @@ function checkSameNameLimit() {
         updateCardDisabling();
         renderDeckList();
         updateDeckSummaryDisplay();
-
         alert("保存されたデッキを読み込みました");
       }
 
