@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
+    <title>モスロギア 神託のメソロギア 所持率チェッカー</title>
+    <link href="favicon.ico" rel="icon" type="image/png" />
+
+    <!-- 検索キーワード -->
+    <meta name="keywords" content="カードゲーム,デッキメーカー,DCG,神託のメソロギア,メソロギア,神託,デッキ分析,一覧,モスロギア">
+
+    <!-- ページの説明（検索結果の下に表示） -->
+    <meta name="description" content="このサイトは、アプリ「信託のメソロギア」の所持率チェックができる非公式サイトです。">
+
+    <!-- OGP基本 -->
+    <meta property="og:title" content="モスロギア | 神託のメソロギア 所持率チェッカー">
+    <meta property="og:description" content="神託のメソロギアのカード検索・デッキ構築ができる非公式サイトです。">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
+    <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitterカード向け -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="モスロギア | 神託のメソロギア デッキメーカー">
+    <meta name="twitter:description" content="カード検索とデッキ構築で信託のメソロギアをもっと楽しもう！">
+    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/common-page23.css">
+    <link rel="stylesheet" href="css/page3.css">
+
+
+
+<!--外部リソース-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+
+
+<body>
+<!-- ヘッダー -->
+<header class="main-header">
+    <div class="header-logo">
+        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+    </div>
+    <nav class="header-nav">
+        <a href="index.html">📖 一覧</a>
+        <a href="deckmaker.html">🃏 デッキメーカー</a>
+        <a href="cardcheker.html">📊 所持率チェッカー</a>
+        <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>
+    </nav>
+</header>
+
+<!--タブ切り替え-->
+<div class="tab-bar">
+    <div id="tab1" class="tab active" onclick="switchTab('checker', this)">
+        <span>📊 所持率チェッカー</span>
+    </div>
+    <div id="tab2" class="tab" onclick="switchTab('owned', this)">
+        <span>🔢 所持カード分析</span>
+    </div>
+</div>
+
+
+<!-- 所持率チェッカーのコンテンツ -->
+<div id="checker" class="tab-content active">
+
+    <!-- スマホ用 所持率サマリー上部バー -->
+    <div class="top-summary">
+
+        <!-- 所持率 + ツイート -->
+        <div class="summary-bar">
+            <span>
+                全所持率: <span id="mobile-owned-type-count">0</span>/<span id="mobile-total-type-count">0</span>
+                (<span id="mobile-owned-type-percent">0%</span>)
+            </span>
+            <a id="mobile-tweet-link" href="#" target="_blank" rel="noopener" class="custom-tweet-button">
+                <img src="img/x-logo.svg" alt="Post" class="tweet-icon">
+                <span>ポスト</span>
+            </a>
+        </div>
+
+
+        <!-- コンプ率 + プルダウン -->
+        <div class="summary-bar">
+            <span>
+                全コンプ率: <span id="mobile-owned-count">0</span>/<span id="mobile-total-count">0</span>
+                (<span id="mobile-owned-percent">0%</span>)
+            </span>
+            <select id="pack-selector" onchange="selectMobilePack(this.value)">
+                <option value="awaking">Awaking The Oracle</option>
+            </select>
+        </div>
+
+        <!-- パック所持率 -->
+        <div id="mobile-pack-summary">
+            <div class="pack-name">Awaking The Oracle</div>
+            <div class="pack-rate">
+                所持率: 0/0 (0%)<br>
+                コンプ率: 0/0 (0%)
+            </div>
+        </div>
+
+        <!-- 所持データ操作ボタンエリア -->
+        <div class="menu-mobile">
+            <button id="save-btn-mobile" onclick="saveOwnership()">💾 保存</button>
+            <button class="js-share-owned">🔗 共有コピー</button>
+        </div>
+    </div>
+
+
+
+
+    <div class="page-wrapper">
+        <!-- PC・タブレット用 所持率サマリーサイドバー -->
+        <aside class="summary-panel">
+            <!-- 所持データ操作ボタンエリア -->
+            <div class="menu">
+                <button id="save-btn" onclick="saveOwnership()">💾 保存</button>
+                <button class="js-share-owned">🔗 共有コピー</button>
+            </div>
+            <!-- 全カード所持率 -->
+            <div id="summary" class="summary-block">
+                <h4>全カード</h4>
+                <span class="summary-rate">
+                    所持率: 0/0 (0%)<br>
+                    コンプ率: 0/0 (0%)
+                </span>
+
+                <!-- ツイート共有 -->
+                <div class="summary-share">
+                    <a
+                    class="custom-tweet-button"
+                    href="#"
+                    target="_blank"
+                    rel="noopener">
+                        <img
+                        class="tweet-icon"
+                        src="img/x-logo.svg"
+                        alt="Post">
+                        <span>ポスト</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 各パック所持率 -->
+            <div id="pack-summary-list">
+                <div class="pack-summary">
+                    <a href="..." class="pack-summary-link">
+                        <span class="pack-summary-name">パック名</span>
+                        <span class="pack-summary-rate">
+                            所持率: 0/0 (0%)<br>
+                            コンプ率: 0/0 (0%)
+                        </span>
+                    </a>
+            <!-- ツイート共有 -->
+                <div class="summary-share">
+                    <a
+                    class="custom-tweet-button"
+                    href="..."
+                    target="_blank"
+                    rel="noopener">
+                        <img
+                        class="tweet-icon"
+                        src="img/x-logo.svg"
+                        alt="Post">
+                        <span>ポスト</span>
+                    </a>
+                </div>
+                </div>
+            </div>
+        </aside>
+
+
+
+
+<!--メニューボタン+カード一覧-->
+        <main class="card-content">
+
+
+            <!-- カード一覧（パックごと） -->
+<div id="packs-root"></div>
+
+
+            <!--上部に戻る-->
+            <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
+
+            <footer>
+                <div class="site-description">
+                    <p>
+                        <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                        カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
+                    </p>
+                </div>
+
+                <p>
+                    🔗 公式サイトはこちら 👉
+                    <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                        神託のメソロギア公式サイト
+                    </a>
+                </p>
+
+                © 2025 Mesorogia Cards. All rights reserved.<br />
+                当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
+                一部画像素材は「ジュエルセイバーFREE」<br />
+                （<a href="https://www.jewel-s.jp/" target="_blank"
+                    rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
+                💬 ご要望・不具合報告 👉
+                <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
+                    @192837465aruneo
+                </a>
+            </footer>
+        </main>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- 所持カード分析タブのコンテンツ -->
+
+<div id="owned" class="tab-content">
+
+    <!-- 🔍 スマホ用：検索/フィルター -->
+    <div class="owned-search-mobile owned-mobile">
+        <!-- owned-aside right の中身を丸ごとここへ -->
+        <h4>キーワード検索</h4>
+        <input type="text" id="keyword-input-mobile" placeholder="カード名・効果など">
+
+        <h4>フィルター</h4>
+        <div id="open-filter-mobile">
+            <button id="open-filter-modal-mobile">📊 フィルター</button>
+
+            <div id="type-toggle-mobile">
+                <button class="type-btn selected" data-type="all">全タイプ</button>
+                <button class="type-btn" data-type="チャージャー">🔵チャージャー</button>
+                <button class="type-btn" data-type="アタッカー">🟣アタッカー</button>
+                <button class="type-btn" data-type="ブロッカー">⚪️️️️️ブロッカー</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="owned-container" class="owned-container">
+        <!-- 左サイド：総所持枚数や分解ポイント -->
+        <aside class="owned-aside left">
+            <div class="owned-aside-btn">
+                <button id="apply-to-checker">保存＆反映</button>
+            </div>
+            <h4>所持データ</h4>
+            <p>総枚数: <span id="owned-total">0</span> 枚</p>
+
+            <h4>レアリティ別</h4>
+            <p>レジェンド: <span id="owned-legend">0</span></p>
+            <p>ゴールド: <span id="owned-gold">0</span></p>
+            <p>シルバー: <span id="owned-silver">0</span></p>
+            <p>ブロンズ: <span id="owned-bronze">0</span></p>
+
+            <h4>種族ごと</h4>
+            <div id="owned-race-summary"></div>
+        </aside>
+
+
+        <!--中央：カード所持枚数一覧-->
+        <div class="owned-main">
+
+            <div id="owned-card-grid" class="owned-card-grid">
+            <!--カード生成部分-->
+            </div>
+
+            <dialog id="effect-dialog">
+                    <header>
+                        <h3 id="dlg-title" style="margin:.4rem 0;"></h3>
+                        <form method="dialog"><button class="icon-btn">閉じる</button></form>
+                    </header>
+                    <div id="dlg-body"></div>
+            </dialog>
+            <!-- グリッド中央左右ページ送りボタン -->
+            <div class="grid-page-arrow left-arrow">←</div>
+            <div class="grid-page-arrow right-arrow">→</div>
+
+
+            <!--カード送りボタン・ページ表示-->
+            <div class="pagination-controls">
+                <button id="prev-page">←</button>
+                <span id="page-info">1 / ?</span>
+                <button id="next-page">→</button>
+            </div>
+        </div>
+
+
+        <!-- 右サイド：検索機能など -->
+        <aside class="owned-aside right">
+            <h4>キーワード検索</h4>
+            <input type="text" id="keyword-input" placeholder="カード名・効果など">
+
+            <h4>フィルター</h4>
+            <button id="open-filter-modal">📊 フィルター</button>
+
+            <div id="type-toggle">
+                <button class="type-btn selected" data-type="all">全タイプ</button>
+                <button class="type-btn" data-type="チャージャー">🔵チャージャー</button>
+                <button class="type-btn" data-type="アタッカー">🟣アタッカー</button>
+                <button class="type-btn" data-type="ブロッカー">⚪️️️️️ブロッカー</button>
+            </div>
+        </aside>
+
+
+
+
+    </div>
+
+    <!-- 🗂️ スマホ用：総所持枚数・内訳 -->
+    <div class="owned-summary-mobile owned-mobile">
+
+        <h4>所持データ</h4>
+        <div class="owned-total-row">
+            <p>総枚数: <span id="owned-total-mobile">0</span> 枚</p>
+            <div class="owned-total-btn-mobile">
+                <button id="apply-to-checker-mobile">保存＆反映</button>
+            </div>
+
+
+        </div>
+
+
+        <h4>レアリティ別</h4>
+        <div class="summary-scroll">
+            <div class="summary-card">レジェンド<br><span id="owned-legend-mobile">0</span></div>
+            <div class="summary-card">ゴールド<br><span id="owned-gold-mobile">0</span></div>
+            <div class="summary-card">シルバー<br><span id="owned-silver-mobile">0</span></div>
+            <div class="summary-card">ブロンズ<br><span id="owned-bronze-mobile">0</span></div>
+        </div>
+
+        <h4>種族ごと</h4>
+        <div id="owned-race-summary-mobile" class="summary-scroll">
+            <!-- 種族内訳をJSでカード型で追加 -->
+        </div>
+    </div>
+
+
+
+<!-- フィルターモーダル -->
+<div id="filter-modal" style="display:none;">
+    <h4>種族</h4>
+    <div id="filter-race"></div>
+
+    <h4>カテゴリ</h4>
+    <div id="filter-category"></div>
+
+    <h4>レアリティ</h4>
+    <div id="filter-rarity"></div>
+
+    <!-- 追加：パック -->
+    <h4>パック</h4>
+    <div id="filter-pack"></div>
+
+    <div class="filter-actions" style="margin-top:.6rem; display:flex; gap:.4rem; justify-content:flex-end;">
+        <button id="filter-reset">条件リセット</button>
+        <button id="filter-close">閉じる</button>
+    </div>
+</div>
+
+    <div id="modal-backdrop">
+    </div>
+
+
+        <footer>
+            <div>
+                <p>
+                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                    カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
+                </p>
+            </div>
+
+            <p>
+                🔗 公式サイトはこちら 👉
+                <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                    神託のメソロギア公式サイト
+                </a>
+            </p>
+
+            © 2025 Mesorogia Cards. All rights reserved.<br />
+            当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
+            一部画像素材は「ジュエルセイバーFREE」<br />
+            （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
+            💬 ご要望・不具合報告 👉
+            <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
+                @192837465aruneo
+            </a>
+        </footer>
+</div>
+
+
+
+
+
+<!-- JS -->
+<script src="js/common.js"></script>
+<script src="js/page3.js"></script>
+<script src="js/common-page23.js"></script>
+
+</body>
+
