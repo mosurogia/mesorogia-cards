@@ -13,9 +13,15 @@ const cardMap = {};
 
 
 
-// JSON読み込み＆フィルター済み配列取得
+// common.js などグローバルに置く
+// ローカル開発なら '', GitHub Pages なら '/<リポジトリ名>/' などに調整
+const BASE_PATH = '';
+
 async function fetchLatestCards() {
-  const res = await fetch('public/cards_latest.json');
+  const res = await fetch('public/cards_latest.json'); 
+  if (!res.ok) {
+    throw new Error(`HTTP error ${res.status} - ${res.statusText}`);
+  }
   const allCards = await res.json();
   return allCards.filter(card => card.is_latest === true);
 }

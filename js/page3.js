@@ -158,7 +158,7 @@ function calcSummary(nodeList){
     const cnt = parseInt(card.dataset.count) || 0;
     owned += cnt;
     if (cnt > 0) ownedTypes++;
-    // 旧神=1、それ以外=3 を分母に採用:contentReference[oaicite:1]{index=1}
+    // 旧神=1、それ以外=3 を分母に採用
     total += (card.dataset.race === '旧神') ? 1 : 3;
   });
   totalTypes = nodeList.length;
@@ -188,7 +188,7 @@ function updateOverallSummary(){
 `【神託のメソロギア】
 全カード所持率${s.typePercent}％
 モスロギア～所持率チェッカー～
-＃信託のメソロギア
+＃神託のメソロギア
 https://mosurogia.github.io/cardcheker/`
     );
     pcTweet.href = `https://twitter.com/intent/tweet?text=${txt}`;
@@ -221,11 +221,11 @@ https://mosurogia.github.io/cardcheker/`
       selTypePercent = calcSummary(selCards).typePercent;
     }
     const mtxt = encodeURIComponent(
-`【信託のメソロギア】
+`【神託のメソロギア】
 全カード所持率${s.typePercent}％
 ${selPack ? selPack.nameMain : ''}所持率${selTypePercent}％
 モスロギア～所持率チェッカー～
-＃信託のメソロギア
+＃神託のメソロギア
 https://mosurogia.github.io/cardcheker/`
     );
     mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
@@ -263,10 +263,10 @@ function updatePackSummary(){
 
     // Xポストボタン（.summary-share 内に配置）
     const packTxt = encodeURIComponent(
-`【信託のメソロギア】
+`【神託のメソロギア】
 ${pack.nameMain}所持率${s.typePercent}％
 モスロギア～所持率チェッカー～
-＃信託のメソロギア
+＃神託のメソロギア
 https://mosurogia.github.io/cardcheker/`
     );
     const share = document.createElement('div');
@@ -306,13 +306,6 @@ if (mobileSelect && mobileSummary) {
 }
 }
 
-// スマホのセレクト変更時ハンドラ（HTML側 onchange でもOK）
-function selectMobilePack(packKey){
-  const sel = document.getElementById('pack-selector');
-  if (sel) sel.value = packKey;
-  updatePackSummary();
-  updateOverallSummary();
-}
 
 // 既存のトグル／+1ボタン等から呼ばれる updateSummary を差し替え（呼び出し名は据え置き）:contentReference[oaicite:15]{index=15}
 function updateSummary(){
