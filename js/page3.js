@@ -1541,7 +1541,8 @@ function renderOwnedPage() {
     if (card.effect_text2) div.dataset.effecttext2 = card.effect_text2;
 
 div.innerHTML = `
-  <img alt="${esc(card.name)}" loading="lazy" src="img/${card.cd}.webp" />
+  <img alt="${esc(card.name)}" loading="lazy" src="img/${card.cd}.webp"
+       onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='img/00000.webp';}" />
   <div class="owned-card-info">
     <div class="card-name owned-race-${esc(card.race ?? '-')}" title="${esc(card.name)}">${esc(card.name)}</div>
 
