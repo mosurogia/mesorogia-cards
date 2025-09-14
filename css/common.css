@@ -61,7 +61,7 @@ button,
 /*ヘッダー関連*/
 .main-header {
     height: 55px;
-    background-image: url("/img/header.webp");
+    background-image: url("../img/header.webp");
     background-repeat: repeat-x;
     /* 横方向に繰り返し */
     background-size: auto 55px;

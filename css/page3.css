@@ -2,7 +2,7 @@
         0.タブ画像
 =======================*/
 #tab1 {
-    background-image: url("/img/chekertab1.webp");
+    background-image: url("../img/chekertab1.webp");
     background-size: cover;
     background-position: center;
     color: white;
@@ -10,7 +10,7 @@
 }
 
 #tab2 {
-    background-image: url("/img/chekertab2.webp");
+    background-image: url("../img/chekertab2.webp");
     background-size: cover;
     background-position: center;
     color: white;

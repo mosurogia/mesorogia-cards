@@ -3,7 +3,7 @@
 ========================*/
 
 #tab1 {
-    background-image: url("/img/makertab1.webp");
+    background-image: url("../img/makertab1.webp");
     background-size: cover;
     background-position: center;
     color: white;
@@ -11,7 +11,7 @@
 }
 
 #tab2 {
-    background-image: url("/img/makertab2.webp");
+    background-image: url("../img/makertab2.webp");
     background-size: cover;
     background-position: center;
     color: white;
@@ -247,7 +247,7 @@
 /*カードリスト画面*/
 #deck-card-list {
     position: relative;
-    background-image: url(/mesorogia/img/cardlist.webp);
+    background-image: url(/img/cardlist.webp);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
