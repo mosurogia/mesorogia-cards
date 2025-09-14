@@ -795,7 +795,9 @@ function buildPackSectionHTML(packEn, packJp, cardsGroupedByRace){
       html += `        <div class="card ${rarityCls}" data-name="${esc(c.name)}" data-cd="${esc(c.cd)}"`;
       html += `          data-pack="${esc(c.pack_name)}" data-race="${esc(c.race)}" data-category="${esc(c.category)}"`;
       html += `          data-rarity="${esc(c.rarity)}" data-type="${esc(c.type)}" onclick="toggleOwnership(this)">`;
-      html += `          <img alt="${esc(c.name)}" loading="lazy" src="img/${esc(c.cd)}.webp" />`;
+      html += `          <img alt="${esc(c.name)}" loading="lazy" src="img/${esc(c.cd)}.webp"
+              onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='img/00000.webp';}" />`;
+
       html += `          <div class="owned-mark"></div>`;
       html += `        </div>`;
     }
