@@ -14,8 +14,8 @@ const cardMap = {};
 
 
 // common.js などグローバルに置く
-// ローカル開発なら '', GitHub Pages なら '/<リポジトリ名>/' などに調整
-const BASE_PATH = '';
+// ローカル開発なら '', GitHub Pages なら '/mesorogia-cards/' などに調整
+const BASE_PATH = 'mesorogia-cards';
 
 async function fetchLatestCards() {
   const res = await fetch('public/cards_latest.json'); 
