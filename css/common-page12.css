@@ -1,0 +1,274 @@
+
+/*=====サーチバー=======*/
+.search-bar {
+    position: sticky;
+    top: 0px;
+    background: #fff;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem;
+    padding: 4px;
+    border-bottom: 1px solid #ccc;
+}
+
+/*キーワード検索*/
+.search-bar input {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+input[type="text"] {
+    font-size: 16px;
+    padding: 6px 12px;
+    height: 36px;
+}
+
+/*並び替え*/
+select {
+    font-size: 0.8rem;
+}
+#sort-select {
+    max-width: 100px;
+    font-size: clamp(5px, 3vw, 18px);
+}
+/*スマホ版*/
+@media (max-width: 768px) {
+    .search-bar {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 0rem;
+    }
+
+    .search-bar input,
+    .search-bar select,
+    .search-bar button {
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 0.3rem 0.5rem;
+        height: 1.8rem;
+        /* 👈 ここで高さを統一 */
+        line-height: 1.2rem;
+    }
+
+    .search-bar input {
+        flex: 2;
+        font-size: clamp(5px, 3vw, 18px);
+        padding: 5px;
+    }
+
+    .search-bar select {
+        flex: 1;
+        font-size: 0.55rem;
+        padding: 0.2rem;
+    }
+
+    .search-bar button {
+        flex: 0 0 auto;
+        font-size: clamp(5px, 2vw, 18px);
+        padding: 1vw 5px;
+        white-space: nowrap;
+    }
+}
+
+
+
+
+/*======モーダル======*/
+#filterModal {
+    display: none;
+    flex-direction: column;
+    max-height: 120vh;
+    overflow-y: auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2002;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 950px;
+    width: 90%;
+    max-height: 100%;
+    overflow-y: auto;
+    position: relative;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.filter-btn {
+    margin: 4px 0px;
+}
+
+.filter-btn.selected {
+    background-color: #333;
+    color: white;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+/*コストパワー横並び*/
+.filter-range-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+/*コストパワーボタン幅調整*/
+.filter-group select{
+    width: 4rem;
+    font-size: 0.8rem;
+}
+/*詳細フィルター*/
+#extra-conditions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+/*=====カード一覧======*/
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.card {
+    width: calc(100% / 7 - 5px);
+    box-sizing: border-box;
+    position: relative;
+}
+
+/*非表示種族*/
+.hidden-by-grayscale {
+    display: none !important;
+}
+/*詳細展開ボタン*/
+.zoom-btn {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto;
+
+}
+
+.card.grayscale .zoom-btn {
+    pointer-events: auto;
+    /* ← 🔎を有効に */
+    z-index: 10;
+    pointer-events: auto;
+}
+@media (max-width: 768px) {
+    .card {
+            width: calc(100% / 4 - 4px);
+            font-size: 12px;
+            padding: 0px;
+        }
+}
+
+
+
+
+/*=====カード詳細======*/
+.card-detail {
+    display: none;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    box-sizing: border-box;
+}
+/*カード名*/
+.card-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 0.3em;
+}
+/*種族、カテゴリ*/
+.card-meta {
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 0.5em;
+}
+/*カード効果*/
+.card-effect {
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+/*タイプ別背景色*/
+.type-アタッカー {
+    background: rgba(125, 91, 155, 0.5); /* 紫 */
+}
+
+.type-チャージャー {
+    background: rgba(119, 170, 212, 0.5); /* 水色 */
+}
+
+.type-ブロッカー {
+    background: rgba(214, 212, 204, 0.5); /* 灰色 */
+}
+
+/*種族別枠線色*/
+.race-ドラゴン {
+    border: 6px solid rgb(200, 40, 40);
+}
+
+.race-アンドロイド {
+    border: 6px solid rgb(40, 200, 200);
+}
+
+.race-エレメンタル {
+    border: 6px solid rgb(40, 180, 90);
+}
+
+.race-ルミナス {
+    border: 6px solid rgb(240, 200, 40);
+}
+
+.race-シェイド {
+    border: 6px solid rgb(150, 100, 180);
+}
+
+.race-イノセント {
+    border: 6px solid silver;
+}
+
+.race-旧神 {
+    border: 6px solid;
+    border-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 215, 140, 0.8),
+            rgba(180, 255, 255, 0.7),
+            rgba(220, 180, 255, 0.7),
+            rgba(255, 255, 255, 0.6)) 1;
+}
+
+@media (max-width: 768px) {
+.card-detail {
+        font-size: 13px;
+    }
+}
