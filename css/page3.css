@@ -464,7 +464,7 @@ section h4 {
     .owned-mark {
         min-width: 18px;
         width: 23%;
-        font-size: 1em;
+        font-size: 0.6em;
     }
 }
 @media (max-width: 560px) {

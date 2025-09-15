@@ -51,11 +51,16 @@ button,
 .card.owned .owned-mark {
     display: flex;
 }
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .owned-mark {
         min-width: 18px;
         width: 23%;
-        font-size: 0.6em;
+        font-size: 1.5em;
+    }
+}
+@media (max-width: 560px) {
+    .owned-mark {
+        font-size: 1.25em;
     }
 }
 /*ヘッダー関連*/
