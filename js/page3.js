@@ -167,6 +167,7 @@ function calcSummary(nodeList){
   return { owned, ownedTypes, total, totalTypes, percent, typePercent };
 }
 
+
 // === 全体所持率（PCサイドバー & スマホ上部）を更新 ===
 function updateOverallSummary(){
   const allCards = document.querySelectorAll('#packs-root .card');
@@ -181,18 +182,16 @@ function updateOverallSummary(){
       `コンプ率: ${s.owned}/${s.total} (${s.percent}%)`;
   }
 
-  // PCサイドバーの全体ツイートリンク（id=tweet-link）を更新:contentReference[oaicite:3]{index=3}
-  const pcTweet = document.querySelector('#summary .summary-share a');
-  if (pcTweet){
-    const txt = encodeURIComponent(
-`【神託のメソロギア】
-全カード所持率${s.typePercent}％
-モスロギア～所持率チェッカー～
-＃神託のメソロギア
-https://mosurogia.github.io/cardcheker/`
-    );
-    pcTweet.href = `https://twitter.com/intent/tweet?text=${txt}`;
-  }
+// 枚数＋%の所持率/コンプ率を含める
+const pcTweet = document.querySelector('#summary .summary-share a');
+if (pcTweet){
+  const txt = buildShareText({
+    header: '全カード',
+    sum: s, // updateOverallSummary内で求めた全体サマリー
+  });
+  pcTweet.href = `https://twitter.com/intent/tweet?text=${txt}`;
+}
+
 
   // スマホ上部バー（所持率・コンプ率・全体）を同期
   const moTypeCount   = document.getElementById('mobile-owned-type-count');
@@ -209,34 +208,37 @@ https://mosurogia.github.io/cardcheker/`
   if (moTotal)       moTotal.textContent = s.total;
   if (moPercent)     moPercent.textContent = `${s.percent}%`;
 
-  // スマホ上部 全体+選択パックのツイート（id=mobile-tweet-link）
-  const mobileTweet = document.getElementById('mobile-tweet-link');
-  if (mobileTweet){
-    // 選択中パックの所持率（種類）も文言に含める
-    const selKey = (document.getElementById('pack-selector')||{}).value;
-    const selPack = (Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null) || packs?.[0];
-    let selTypePercent = 0;
-    if (selPack){
-      const selCards = queryCardsByPack(selPack);
-      selTypePercent = calcSummary(selCards).typePercent;
-    }
-    const mtxt = encodeURIComponent(
-`【神託のメソロギア】
-全カード所持率${s.typePercent}％
-${selPack ? selPack.nameMain : ''}所持率${selTypePercent}％
-モスロギア～所持率チェッカー～
-＃神託のメソロギア
-https://mosurogia.github.io/cardcheker/`
-    );
-    mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
+
+// 両方とも「枚数＋%」の所持率/コンプ率で出す
+const mobileTweet = document.getElementById('mobile-tweet-link');
+if (mobileTweet){
+  const selKey = (document.getElementById('pack-selector')||{}).value;
+  const selPack = (Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null) || packs?.[0];
+
+  let packName = '';
+  let packSum = null;
+  if (selPack){
+    packName = selPack.nameMain;
+    const selCards = queryCardsByPack(selPack);
+    packSum = calcSummary(selCards);
   }
+
+  const mtxt = buildShareText({
+    header: '全カード',
+    sum: s,         // 全体
+    packName,       // 選択パック名
+    packSum         // 選択パックのサマリー
+  });
+  mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
+}
+
 }
 
 // === 各パック所持率（PCの #pack-summary-list は li を使わず、指定の div 構成で生成） ===
 function updatePackSummary(){
-  const pcList = document.getElementById('pack-summary-list'); // PC側の入れ物（div）
-  const mobileSelect = document.getElementById('pack-selector'); // スマホ上部プルダウン
-  const mobileSummary = document.getElementById('mobile-pack-summary'); // スマホ上部パック概要
+  const pcList = document.getElementById('pack-summary-list');
+  const mobileSelect = document.getElementById('pack-selector');
+  const mobileSummary = document.getElementById('mobile-pack-summary');
 
   if (!pcList) return;
 
@@ -247,10 +249,8 @@ function updatePackSummary(){
     const cards = queryCardsByPack(pack);
     const s = calcSummary(cards);
 
-    // === PC側: 指定の構成で生成 ===
     const wrap = document.createElement('div');
     wrap.className = 'pack-summary';
-    // a.pack-summary-link + 内部に name / rate（2行）
     wrap.innerHTML = `
       <a href="${pack.selector}" class="pack-summary-link">
         <span class="pack-summary-name">${pack.nameMain}<br><small>${pack.nameSub || ''}</small></span>
@@ -260,26 +260,23 @@ function updatePackSummary(){
         </span>
       </a>
     `;
+// 枚数＋%の所持率/コンプ率
+const packTxt = buildShareText({
+  header: pack.nameMain,
+  sum: s, // そのパックのサマリー
+});
+const share = document.createElement('div');
+share.className = 'summary-share';
+share.innerHTML = `
+  <a class="custom-tweet-button" href="https://twitter.com/intent/tweet?text=${packTxt}" target="_blank" rel="noopener">
+    <img class="tweet-icon" src="img/x-logo.svg" alt="Post"><span>ポスト</span>
+  </a>
+`;
 
-    // Xポストボタン（.summary-share 内に配置）
-    const packTxt = encodeURIComponent(
-`【神託のメソロギア】
-${pack.nameMain}所持率${s.typePercent}％
-モスロギア～所持率チェッカー～
-＃神託のメソロギア
-https://mosurogia.github.io/cardcheker/`
-    );
-    const share = document.createElement('div');
-    share.className = 'summary-share';
-    share.innerHTML = `
-      <a class="custom-tweet-button" href="https://twitter.com/intent/tweet?text=${packTxt}" target="_blank" rel="noopener">
-        <img class="tweet-icon" src="img/x-logo.svg" alt="Post"><span>ポスト</span>
-      </a>
-    `;
     wrap.appendChild(share);
     pcList.appendChild(wrap);
 
-    // === スマホ: セレクトと概要も更新 ===
+    // スマホ: セレクト
     if (mobileSelect){
       const opt = document.createElement('option');
       opt.value = pack.key;
@@ -288,23 +285,28 @@ https://mosurogia.github.io/cardcheker/`
     }
   });
 
-  // スマホ：現在選択中パックの概要を書き換え
-if (mobileSelect && mobileSummary) {
-  const sel = packs.find(p => p.key === mobileSelect.value) || packs[0];
-  if (sel) {
-    // ❌ const cards = queryCardsByPack(pack);
-    const cards = queryCardsByPack(sel); // ← ここを sel に
-    const s = calcSummary(cards);
-    mobileSummary.innerHTML = `
-      <div class="pack-name">${sel.nameMain}</div>
-      <div class="pack-rate">
-        所持率: ${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)<br>
-        コンプ率: ${s.owned}/${s.total} (${s.percent}%)
-      </div>
-    `;
+  // ★ 初期値が空なら先頭を選ぶ（.value が空のままの環境対策）
+  if (mobileSelect && !mobileSelect.value && packs?.length) {
+    mobileSelect.value = packs[0].key;
+  }
+
+  // スマホ: 現在選択中パックの概要
+  if (mobileSelect && mobileSummary) {
+    const sel = packs.find(p => p.key === mobileSelect.value) || packs[0];
+    if (sel) {
+      const cards = queryCardsByPack(sel);
+      const s = calcSummary(cards);
+      mobileSummary.innerHTML = `
+        <div class="pack-name">${sel.nameMain}</div>
+        <div class="pack-rate">
+          所持率: ${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)<br>
+          コンプ率: ${s.owned}/${s.total} (${s.percent}%)
+        </div>
+      `;
+    }
   }
 }
-}
+
 
 
 // 既存のトグル／+1ボタン等から呼ばれる updateSummary を差し替え（呼び出し名は据え置き）:contentReference[oaicite:15]{index=15}
@@ -324,8 +326,8 @@ function selectMobilePack(packKey) {
   const pack = (Array.isArray(packs) ? packs.find(p => p.key === packKey) : null) || (packs?.[0]);
   if (!pack) return;
 
-  // 対象パックのカード要素を集めて所持率/コンプ率を算出
-  const cards = queryCardsByPack(sel);
+  // ✅ ここを修正：select 要素ではなく pack オブジェクトを渡す
+  const cards = queryCardsByPack(pack);
   const s = calcSummary(cards); // { owned, ownedTypes, total, totalTypes, percent, typePercent }
 
   // モバイル上部サマリーを書き換え
@@ -340,13 +342,43 @@ function selectMobilePack(packKey) {
     `;
   }
 
-  // モバイルの全体ポスト文言も選択パック率を含めて更新するため再計算
-  // （updateOverallSummary は #pack-selector の値を読んでモバイルTweetを再生成する実装）
+  // ツイート文言の選択パック率も更新
   updateOverallSummary();
 }
 
+
 // グローバル公開（HTML の onchange="selectMobilePack(this.value)" から呼ぶため）
 window.selectMobilePack = selectMobilePack;
+
+// ==== 共有用テキスト生成（Xのintent用） ====
+function buildShareText({
+  header = '全カード',
+  sum,                // { ownedTypes, totalTypes, typePercent } を利用
+  packName = '',      // 追加で表示したいパック名（任意）
+  packSum = null,     // そのパックのサマリー（任意）
+  url = 'https://mosurogia.github.io/cardcheker/', // 既存どおり
+  useFullWidthHash = false, // 半角ハッシュ（#）
+} = {}) {
+  const hashTag = useFullWidthHash ? '＃神託のメソロギア' : '#神託のメソロギア';
+  const lines = [
+    '【神託のメソロギア】',
+    header,
+    `所持率: ${sum.ownedTypes}/${sum.totalTypes} (${sum.typePercent}%)`,
+  ];
+  if (packSum && packName) {
+    lines.push(
+      packName,
+      `所持率: ${packSum.ownedTypes}/${packSum.totalTypes} (${packSum.typePercent}%)`,
+    );
+  }
+  lines.push(
+    'モスロギア～所持率チェッカー～',
+    hashTag,
+    url
+  );
+  return encodeURIComponent(lines.join('\n'));
+}
+
 
 /*===================
     3.メニューボタン
