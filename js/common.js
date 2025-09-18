@@ -15,10 +15,10 @@ const cardMap = {};
 
 // common.js などグローバルに置く
 // ローカル開発なら '', GitHub Pages なら '/mesorogia-cards/' などに調整
-const BASE_PATH = 'mesorogia-cards';
+const BASE_PATH = '';
 
 async function fetchLatestCards() {
-  const res = await fetch('public/cards_latest.json'); 
+  const res = await fetch('public/cards_latest.json');
   if (!res.ok) {
     throw new Error(`HTTP error ${res.status} - ${res.statusText}`);
   }
@@ -52,7 +52,7 @@ const order = {
 "風花森（ふかしん）":33,
 "ロスリス": 41,
 "白騎士": 42,
-"愚者愚者（ぐしゃぐしゃ）":43,
+"愚者愚者（クラウンクラウド）":43,
 "昏き霊園": 51,
 "マディスキア": 52,
 "炎閻魔": 53,
