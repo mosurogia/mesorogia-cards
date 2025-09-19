@@ -363,7 +363,7 @@ fieldWrapper.querySelectorAll('.filter-btn').forEach(btn => {
 
 detailFilters.appendChild(fieldWrapper);
 
-detailFilters.appendChild(createRangeStyleWrapper('BP要素', ['true', 'false'], 'bp'));
+detailFilters.appendChild(createRangeStyleWrapper('BP（ブレッシングポイント）要素', ['true', 'false'], 'bp'));
 detailFilters.appendChild(createRangeStyleWrapper('特殊効果', SPECIAL_ABILITIES, 'ability'));
 
 // ✅ boolean 条件 → まとめて「その他」タイトルの下に表示
