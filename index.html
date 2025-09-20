@@ -46,6 +46,7 @@
         <a href="deckmaker.html">🃏 デッキメーカー</a>
         <a href="cardcheker.html">📊 所持率チェッカー</a>
         <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>
+        <!--<a href="deck-post.html">📤 デッキ投稿</a>-->
     </nav>
 </header>
 
@@ -93,6 +94,17 @@
 
 
 </div>
+
+<!-- カード拡大モーダル（画像のみ） -->
+<div id="cardZoomModal" class="modal" style="display:none;">
+    <div class="modal-content card-zoom" style="position:relative">
+        <button id="cardZoomClose" aria-label="閉じる"
+            style="position:absolute;right:.5rem;top:.5rem;font-size:1.25rem;">×</button>
+        <img id="zoomImage" alt=""
+            style="max-width:90vw;max-height:85vh;object-fit:contain;display:block;margin:auto;" />
+    </div>
+</div>
+
 
 
 <footer>
