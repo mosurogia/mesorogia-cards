@@ -79,8 +79,99 @@ async function loadCards() {
   });
 
   sortCards(); // 任意：並び替え
-  rebuildCardMap();//カード一覧再読み込み
+  if (typeof window.rebuildCardMap === 'function') {
+    rebuildCardMap(); //カード一覧再読み込み
+  }
 }
+
+
+//カード拡大モーダル（長押し）
+(function(){
+  const modal = () => document.getElementById('cardZoomModal');
+  const $ = (id) => document.getElementById(id);
+
+  // cd→カード情報を探す（page1.js は allCardsMap、page2.js は cardMap）
+  function findCardByCd(cd){
+    cd = String(cd);
+    if (window.allCardsMap && window.allCardsMap[cd]) return window.allCardsMap[cd];
+    if (window.cardMap && window.cardMap[cd]) return { cd, ...window.cardMap[cd] };
+    return null;
+  }
+
+// （IIFE内）画像のみ版
+function openCardZoom(cd){
+  const m = document.getElementById('cardZoomModal'); if (!m) return;
+  const img = document.getElementById('zoomImage');   if (!img) return;
+
+  img.src = `img/${cd}.webp`;
+  img.onerror = function(){
+    if (this.dataset.fallbackApplied) return;
+    this.dataset.fallbackApplied = '1';
+    this.src = 'img/00000.webp';
+  };
+
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+
+  function closeCardZoom(){
+    const m = modal(); if (!m) return;
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // 背景タップ/×/ESCで閉じる
+  document.addEventListener('click', (e)=>{
+    const m = modal(); if (!m || m.style.display !== 'flex') return;
+    if (e.target === m) closeCardZoom();
+  });
+  document.addEventListener('keydown', (e)=>{
+    const m = modal(); if (!m || m.style.display !== 'flex') return;
+    if (e.key === 'Escape') closeCardZoom();
+  });
+  const closeBtn = document.getElementById('cardZoomClose');
+  if (closeBtn) closeBtn.addEventListener('click', closeCardZoom);
+
+  // #grid 配下の .card に長押しをバインド
+  function bindLongPressForCards(context){
+    const root = document.getElementById('grid');
+    if (!root) return;
+
+    let timer = null, startX=0, startY=0, moved=false;
+    const LONG_MS = 380;   // 体感よいしきい値（350〜450ms 推奨）
+    const MOVE_TOL = 8;    // 長押し中の許容移動
+
+    root.addEventListener('touchstart', (ev)=>{
+      const t = ev.target.closest('.card');
+      if (!t) return;
+      const touch = ev.touches[0];
+      startX = touch.clientX; startY = touch.clientY; moved = false;
+
+      const cd = t.dataset.cd;
+      clearTimeout(timer);
+      timer = setTimeout(()=>{ openCardZoom(cd, context); }, LONG_MS);
+    }, {passive:true});
+
+    root.addEventListener('touchmove', (ev)=>{
+      const touch = ev.touches[0];
+      if (Math.hypot(touch.clientX - startX, touch.clientY - startY) > MOVE_TOL){
+        moved = true; clearTimeout(timer);
+      }
+    }, {passive:true});
+
+    root.addEventListener('touchend', ()=>{
+      if (!moved){ /* タップは既存のonclick(=行間展開)へ任せる */ }
+      clearTimeout(timer);
+    }, {passive:true});
+
+    root.addEventListener('touchcancel', ()=> clearTimeout(timer), {passive:true});
+
+  }
+
+  // 公開（各ページで呼ぶ）
+  window.__bindLongPressForCards = bindLongPressForCards;
+})();
 
 /*============================
       3.フィルター生成・表示

@@ -5,7 +5,9 @@
 //カード呼び出し
 window.addEventListener('DOMContentLoaded', () => {
   loadCards();
+  setTimeout(() => window.__bindLongPressForCards?.('list'), 0);
 });
+
 
 //#endregion
 /*====================

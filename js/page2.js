@@ -7,6 +7,7 @@
 window.addEventListener('DOMContentLoaded', async () => {
   await loadCards(); // カードデータ読み込み
   updateSavedDeckList();  // その後に保存デッキ一覧を表示
+  setTimeout(()=> window.__bindLongPressForCards('deckmaker'), 0);
 });
 
 // 日付フォーマット
@@ -780,7 +781,7 @@ function updateDeck() {
             addCard(cd);
           } else {
             // 下フリック：削除
-            removeCard(cd); 
+            removeCard(cd);
           }
         }, 200);
       }, {passive:true});
