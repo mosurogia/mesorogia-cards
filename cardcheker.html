@@ -53,6 +53,7 @@
         <a href="deckmaker.html">🃏 デッキメーカー</a>
         <a href="cardcheker.html">📊 所持率チェッカー</a>
         <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>
+        <!--<a href="deck-post.html">📤 デッキ投稿</a>-->
     </nav>
 </header>
 
@@ -72,44 +73,26 @@
 
     <!-- スマホ用 所持率サマリー上部バー -->
     <div class="top-summary">
-
-        <!-- 所持率 + ツイート -->
         <div class="summary-bar">
-            <span>
-                全所持率: <span id="mobile-owned-type-count">0</span>/<span id="mobile-total-type-count">0</span>
-                (<span id="mobile-owned-type-percent">0%</span>)
-            </span>
+            <select id="pack-selector" onchange="selectMobilePack(this.value)"></select>
+
+            <button id="jump-pack-btn" class="jump-pack-btn" onclick="jumpToSelectedPack()">移動</button>
+
             <a id="mobile-tweet-link" href="#" target="_blank" rel="noopener" class="custom-tweet-button">
                 <img src="img/x-logo.svg" alt="Post" class="tweet-icon">
                 <span>ポスト</span>
             </a>
         </div>
 
+        <div id="mobile-pack-summary"></div>
 
-        <!-- コンプ率 + プルダウン -->
-        <div class="summary-bar">
-            <span>
-                全コンプ率: <span id="mobile-owned-count">0</span>/<span id="mobile-total-count">0</span>
-                (<span id="mobile-owned-percent">0%</span>)
-            </span>
-            <select id="pack-selector" onchange="selectMobilePack(this.value)"></select>
-        </div>
-
-        <!-- パック所持率 -->
-        <div id="mobile-pack-summary">
-            <div class="pack-name">Awaking The Oracle</div>
-            <div class="pack-rate">
-                所持率: 0/0 (0%)<br>
-                コンプ率: 0/0 (0%)
-            </div>
-        </div>
-
-        <!-- 所持データ操作ボタンエリア -->
         <div class="menu-mobile">
             <button id="save-btn-mobile" onclick="saveOwnership()">💾 保存</button>
-            <button class="js-share-owned">🔗 共有コピー</button>
+            <button class="js-share-owned">📋 リスト共有</button>
+            <button id="show-missing-all-mobile">🧩 不足カード</button>
         </div>
     </div>
+
 
 
 
@@ -120,7 +103,8 @@
             <!-- 所持データ操作ボタンエリア -->
             <div class="menu">
                 <button id="save-btn" onclick="saveOwnership()">💾 保存</button>
-                <button class="js-share-owned">🔗 共有コピー</button>
+                <button class="js-share-owned">📋 リスト共有</button>
+                <button id="show-missing-all">🧩 不足カード</button>
             </div>
             <!-- 全カード所持率 -->
             <div id="summary" class="summary-block">
@@ -213,6 +197,25 @@
                     @192837465aruneo
                 </a>
             </footer>
+
+            <!--不足カードモーダル-->
+            <dialog id="missing-dialog">
+                <header style="display:flex;justify-content:space-between;align-items:center;">
+                    <h3 id="missing-title" style="margin:.4rem 0; font-size: 20px;">不足カード</h3>
+                    <form method="dialog"><button class="icon-btn">閉じる</button></form>
+                </header>
+                <div id="missing-body" style="max-height:50vh;overflow:auto;"></div>
+                <div style="display:flex;gap:.4rem;justify-content:flex-end;margin-top:.5rem;">
+                    <button id="missing-copy">一覧をコピー</button>
+                </div>
+            </dialog>
+            <!--不足カードポップアップ画像-->
+            <div id="card-preview-pop">
+                <img alt="preview" src="img/00000.webp"
+                    onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='img/00000.webp';}">
+            </div>
+
+
         </main>
 
     </div>
@@ -228,6 +231,35 @@
 <!-- 所持カード分析タブのコンテンツ -->
 
 <div id="owned" class="tab-content">
+
+    <!-- 🗂️ スマホ用：総所持枚数・内訳 -->
+    <div class="owned-summary-mobile owned-mobile">
+
+        <h4>所持データ</h4>
+        <div class="owned-total-row">
+            <p>総枚数: <span id="owned-total-mobile">0</span> 枚</p>
+            <div class="owned-total-btn-mobile">
+                <button id="apply-to-checker-mobile">保存＆反映</button>
+            </div>
+
+
+        </div>
+
+
+        <h4>レアリティ別</h4>
+        <div class="summary-scroll">
+            <div class="summary-card">レジェンド<br><span id="owned-legend-mobile">0</span></div>
+            <div class="summary-card">ゴールド<br><span id="owned-gold-mobile">0</span></div>
+            <div class="summary-card">シルバー<br><span id="owned-silver-mobile">0</span></div>
+            <div class="summary-card">ブロンズ<br><span id="owned-bronze-mobile">0</span></div>
+        </div>
+
+        <h4>種族ごと</h4>
+        <div id="owned-race-summary-mobile" class="summary-scroll">
+            <!-- 種族内訳をJSでカード型で追加 -->
+        </div>
+    </div>
+
 
     <!-- 🔍 スマホ用：検索/フィルター -->
     <div class="owned-search-mobile owned-mobile">
@@ -319,33 +351,7 @@
 
     </div>
 
-    <!-- 🗂️ スマホ用：総所持枚数・内訳 -->
-    <div class="owned-summary-mobile owned-mobile">
 
-        <h4>所持データ</h4>
-        <div class="owned-total-row">
-            <p>総枚数: <span id="owned-total-mobile">0</span> 枚</p>
-            <div class="owned-total-btn-mobile">
-                <button id="apply-to-checker-mobile">保存＆反映</button>
-            </div>
-
-
-        </div>
-
-
-        <h4>レアリティ別</h4>
-        <div class="summary-scroll">
-            <div class="summary-card">レジェンド<br><span id="owned-legend-mobile">0</span></div>
-            <div class="summary-card">ゴールド<br><span id="owned-gold-mobile">0</span></div>
-            <div class="summary-card">シルバー<br><span id="owned-silver-mobile">0</span></div>
-            <div class="summary-card">ブロンズ<br><span id="owned-bronze-mobile">0</span></div>
-        </div>
-
-        <h4>種族ごと</h4>
-        <div id="owned-race-summary-mobile" class="summary-scroll">
-            <!-- 種族内訳をJSでカード型で追加 -->
-        </div>
-    </div>
 
 
 

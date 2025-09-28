@@ -38,6 +38,9 @@
 <!--棒グラフ外部リソース-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<!--画像生成-->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -112,7 +115,7 @@
         <div class="deck-bar-content">
             <div class="deck-bar-top" id="deckBarTop">
                 <div id="deck-empty-text">
-                    <div style="font-size: 0.7rem;">デッキバー操作</div>
+                    <div style="font-size: 0.7rem;">カード操作</div>
                     <div class="deck-help" id="deckHelp">
                         <div>
                             【PC】<br>
@@ -121,8 +124,9 @@
                         </div>
                         <div>
                             【スマホ】<br>
-                            ・上フリック：追加<br>
-                            ・下フリック：削除
+                            ・タップ,上フリック：追加<br>
+                            ・下フリック：削除<br>
+                            ・長押し：拡大表示
                         </div>
                     </div>
                 </div>
@@ -134,7 +138,8 @@
     <div class="deck-summary" id="deck-summary">
         <div class="deck-info"></div>
         <div class="analyze-button-wrapper">
-            <button class="analyze-button" onclick="goToAnalyzeTab()">💾 デッキ分析へ</button>
+            <button class="analyze-button" onclick="goToAnalyzeTab()">分析</button>
+            <button class="analyze-button" id="resetDeckButton">リセット</button>
         </div>
     </div>
 
@@ -287,10 +292,7 @@
             <div class="deck-code-controls">
                 <button onclick="saveDeckToLocalStorage()">💾デッキ保存</button>
                 <button id="resetDeckButton">デッキリセット</button>
-                <!--
-                <button>画像生成</button>
-                <button id="btnSubmitDeck">📤投稿</button>
-                -->
+                <button id="exportPngBtn">画像生成</button>
             </div>
         </div>
     </div>
