@@ -59,12 +59,22 @@
     justify-content: center;
     align-items: center;
 }
+@media (max-width: 768px) {
+
+    /* 使用不可種族ボタンを deck-bar-wrapper より下に強制的に配置 */
+    .deck-filter-bar {
+        position: relative;
+        z-index: 1;
+        /* サマリーより下のレイヤーにする */
+    }
+}
 .filter-toggle-button {
     width: 100%;
     background-color: #e0e0e0;
     color: #333;
     font-size: 0.5rem;
     padding: 2px 0px;
+    margin-top: 3px;
     border: 1px solid #aaa;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -97,13 +107,18 @@
 
 #deckHelp {
     white-space: nowrap;
-    font-size: 0.6rem;
+    font-size: 14px;
     display: flex;
     color: #555;
     padding: 4px;
     border-radius: 6px;
     gap: 8px;
 }
+        @media (max-width: 768px) {
+            #deckHelp {
+                font-size: 10px;
+            }
+        }
 
 .deck-bar-top {
     min-height: 80px;
@@ -153,7 +168,7 @@
 @media (max-width: 410px) {
 .deck-summary {
         width: 95px;
-        font-size: 8.5px;
+        font-size: 9px;
     }
 }
 @media (max-width: 768px) {
@@ -176,19 +191,23 @@
 }
 
 .analyze-button-wrapper {
-    margin-top: 0.3rem;
-    text-align: center;
+    margin-top: 5px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
 }
 
 .analyze-button {
     background-color: #6a5acd;
     color: white;
-    font-size: 0.6rem;
-    padding: 6px 14px;
+    font-size: 12px;
+    padding: 6px 10px;
     border: none;
-    border-radius: 16px;
+    border-radius: 18px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    flex: 1;/* 均等に広がる */
+    text-align: center;
 }
 @media (max-width: 410px) {
     .analyze-button {
@@ -215,6 +234,60 @@
     z-index: 5;
 }
 
+/* 復元トースト（任意） */
+#restore-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    background: rgba(60, 60, 60, .95);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 9999px;
+    font-size: 10px;
+    z-index: 3000;
+
+    /* ここがポイント */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    /* 折り返し禁止 */
+    max-width: calc(100vw - 24px);
+    /* 画面幅に収める */
+}
+#restore-toast .msg {
+    overflow: hidden;
+    /* はみ出す時は… */
+    text-overflow: ellipsis;
+    /* 省略表示 */
+}
+
+#restore-toast button {
+    background: #fff;
+    color: #333;
+    border: none;
+    border-radius: 9999px;
+    padding: 4px 8px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+#restore-toast button:hover {
+    filter: brightness(0.95);
+}
+@media (max-width: 360px) {
+    #restore-toast {
+        font-size: 9px;
+        padding: 6px 10px;
+    }
+
+    #restore-toast button {
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+}
+
 
 /*=======================
         5.デッキ編集
@@ -235,7 +308,6 @@
 /*編集セクション*/
 .deck-section {
     background: #fff;
-    padding: 0.5rem 0px;
     border: 1px solid #ccc;
     border-radius: 6px;
     max-height: 25rem;
@@ -321,6 +393,26 @@
     font-size: 0.65rem;
 }
 
+.subtab-bar {
+    margin-bottom: .4rem;
+    background: #fff;
+    color: #000;
+}
+.subtab-bar .active {
+    border-bottom:none;
+    background: #fff;
+}
+.subtab-bar .tab span {
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    background: none;
+    text-shadow: none;
+}
+
+.subtab-bar.tab:not(.active):hover span{
+    background-color:#fff;
+}
+
 #deck-info label {
     font-weight: bold;
     margin-right: 0.5rem;
@@ -335,32 +427,37 @@
     border-radius: 6px;
     z-index: 2000;
 }
+@media (max-width: 768px) {
+    .deck-card {
+        width: 70px;
+        /* スマホではこのサイズに */
+        height: auto;
+        /* 縦幅は画像サイズに任せる or 調整 */
+    }
+}
 
 .deck-card img {
     width: 100%;
     display: block;
 }
-
+/*枚数表示*/
 .count-badge {
     position: absolute;
-    top: 2px;
-    right: 4px;
-    background: #222;
+    top: 0;/* 位置とサイズは JS が上書き */
+    right: 0;
+    background: rgba(0, 0, 0, .65);
     color: #fff;
-    font-size: 15px;
-    border-radius: 20px;
-    padding: 1px 8px;
+    font-weight: 700;
+    line-height: 1;
+    /* 文字の縦詰めだけ指定 */
+    z-index: 3;
+    display: flex;
+    /* 中央寄せの土台だけ */
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    /* クリック透過（必要なら外してOK） */
 }
-@media (max-width: 768px) {
-    .deck-card {
-            width: 70px;
-            /* スマホではこのサイズに */
-            height: auto;
-            /* 縦幅は画像サイズに任せる or 調整 */
-        }
-}
-
-
 
 
 

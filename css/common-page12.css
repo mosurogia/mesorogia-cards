@@ -56,7 +56,7 @@ select {
 
     .search-bar input {
         flex: 2;
-        font-size: clamp(5px, 3vw, 18px);
+        font-size: clamp(5px, 2.5vw, 18px);
         padding: 5px;
     }
 
