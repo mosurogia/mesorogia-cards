@@ -209,10 +209,15 @@
     flex: 1;/* 均等に広がる */
     text-align: center;
 }
+@media (max-width: 768px) {
+    .analyze-button {
+            margin-top: 0rem;
+            font-size: 8px;
+        }
+}
 @media (max-width: 410px) {
     .analyze-button {
-        margin-top: 0rem;
-        font-size: 0.25rem;
+        font-size: 6px;
     }
 }
 .analyze-button:hover {
@@ -393,25 +398,48 @@
     font-size: 0.65rem;
 }
 
+/* サブタブバー */
 .subtab-bar {
-    margin-bottom: .4rem;
+    --subtab-active: #6a5acd;
     background: #fff;
-    color: #000;
-}
-.subtab-bar .active {
-    border-bottom:none;
-    background: #fff;
-}
-.subtab-bar .tab span {
-    font-size: 0.8rem;
-    padding: 2px 6px;
-    background: none;
-    text-shadow: none;
+    color: #222;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    gap: 0;
 }
 
-.subtab-bar.tab:not(.active):hover span{
-    background-color:#fff;
+.subtab-bar .tab {
+    padding: 8px 12px;
 }
+
+.subtab-bar .tab span {
+    background: none;
+    text-shadow: none;
+    font-size: clamp(12px, 2.6vw, 15px);
+    padding: 2px 4px;
+    position: relative;
+}
+
+.subtab-bar .tab.active span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    height: 3px;
+    background: var(--subtab-active);
+    border-radius: 3px;
+}
+
+.subtab-bar .tab:not(.active):hover span {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.subtab-bar .tab.active {
+    border-bottom: none;
+    background: #fff;
+}
+
 
 #deck-info label {
     font-weight: bold;
