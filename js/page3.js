@@ -152,6 +152,9 @@ const packs = [
   },
 ];
 
+// ★ クリックハンドラで参照するため公開
+window.packs = packs;
+
 function calcSummary(nodeList){
   let owned = 0, ownedTypes = 0, total = 0, totalTypes = 0;
   nodeList.forEach(card => {
@@ -213,26 +216,61 @@ if (pcTweet){
 const mobileTweet = document.getElementById('mobile-tweet-link');
 if (mobileTweet){
   const selKey = (document.getElementById('pack-selector')||{}).value;
-  const selPack = (Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null) || packs?.[0];
 
   let packName = '';
   let packSum = null;
-  if (selPack){
-    packName = selPack.nameMain;
-    const selCards = queryCardsByPack(selPack);
-    packSum = calcSummary(selCards);
+  if (selKey && selKey !== 'all') {
+    const selPack = Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null;
+    if (selPack){
+      packName = selPack.nameMain;
+      const selCards = queryCardsByPack(selPack);
+      packSum = calcSummary(selCards);
+    }
   }
 
-  const mtxt = buildShareText({
-    header: '全カード',
-    sum: s,         // 全体
-    packName,       // 選択パック名
-    packSum         // 選択パックのサマリー
-  });
+// モバイル：パック選択時は「全カード」を出さず、そのパックのみをポスト
+  let mtxt;
+  if (selKey && selKey !== 'all' && packSum && packName) {
+    // パックが選ばれているとき → そのパックだけ
+    mtxt = buildShareText({
+      header: packName,
+      sum: packSum
+    });
+  } else {
+    // 「全カード」選択時 → 全体だけ
+    mtxt = buildShareText({
+      header: '全カード',
+      sum: s
+    });
+  }
   mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
 }
 
 }
+
+  // モバイル：進捗バー付きサマリーHTMLを返す
+  function renderMobilePackSummaryHTML(s){
+    return `
+      <div class="pack-meters">
+        <div class="meter">
+          <div class="meter-label">所持率</div>
+          <div class="meter-track" role="progressbar"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.typePercent}">
+            <span class="meter-bar" style="width:${s.typePercent}%"></span>
+          </div>
+          <div class="meter-val">${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)</div>
+        </div>
+        <div class="meter">
+          <div class="meter-label">コンプ率</div>
+          <div class="meter-track" role="progressbar"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.percent}">
+            <span class="meter-bar -comp" style="width:${s.percent}%"></span>
+          </div>
+          <div class="meter-val">${s.owned}/${s.total} (${s.percent}%)</div>
+        </div>
+      </div>`;
+  }
+
 
 // === 各パック所持率（PCの #pack-summary-list は li を使わず、指定の div 構成で生成） ===
 function updatePackSummary(){
@@ -243,7 +281,16 @@ function updatePackSummary(){
   if (!pcList) return;
 
   pcList.innerHTML = '';
-  if (mobileSelect) mobileSelect.innerHTML = '';
+  if (mobileSelect) {
+    // 既存の選択値を保持
+    const prev = mobileSelect.value;
+    mobileSelect.innerHTML = '';
+    // 先頭に「全カード」
+    const optAll = document.createElement('option');
+    optAll.value = 'all';
+    optAll.textContent = '全カード';
+    mobileSelect.appendChild(optAll);
+  }
 
   (packs || []).forEach(pack => {
     const cards = queryCardsByPack(pack);
@@ -286,24 +333,28 @@ share.innerHTML = `
   });
 
   // ★ 初期値が空なら先頭を選ぶ（.value が空のままの環境対策）
-  if (mobileSelect && !mobileSelect.value && packs?.length) {
-    mobileSelect.value = packs[0].key;
+  if (mobileSelect) {
+    // 既存選択があれば維持、なければ "all"
+    if (!mobileSelect.value) mobileSelect.value = 'all';
   }
 
   // スマホ: 現在選択中パックの概要
   if (mobileSelect && mobileSummary) {
-    const sel = packs.find(p => p.key === mobileSelect.value) || packs[0];
-    if (sel) {
+    const key = mobileSelect.value;
+    let s;
+    if (key === 'all') {
+      const all = document.querySelectorAll('#packs-root .card');
+      s = calcSummary(all);
+    } else {
+      const sel = packs.find(p => p.key === key) || packs[0];
       const cards = queryCardsByPack(sel);
-      const s = calcSummary(cards);
-      mobileSummary.innerHTML = `
-        <div class="pack-name">${sel.nameMain}</div>
-        <div class="pack-rate">
-          所持率: ${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)<br>
-          コンプ率: ${s.owned}/${s.total} (${s.percent}%)
-        </div>
-      `;
+      s = calcSummary(cards);
     }
+    mobileSummary.innerHTML = renderMobilePackSummaryHTML(s);
+
+    // 初期ロード時もジャンプボタンを制御
+    const jumpBtn = document.getElementById('jump-pack-btn');
+    if (jumpBtn) jumpBtn.style.display = (key==='all' ? 'none' : 'inline-block');
   }
 }
 
@@ -323,28 +374,43 @@ function selectMobilePack(packKey) {
   if (sel && sel.value !== packKey) sel.value = packKey;
 
   // packs から該当パックを取得（なければ先頭）
-  const pack = (Array.isArray(packs) ? packs.find(p => p.key === packKey) : null) || (packs?.[0]);
-  if (!pack) return;
-
-  // ✅ ここを修正：select 要素ではなく pack オブジェクトを渡す
-  const cards = queryCardsByPack(pack);
-  const s = calcSummary(cards); // { owned, ownedTypes, total, totalTypes, percent, typePercent }
+  let s;
+  if (packKey === 'all') {
+    const allCards = document.querySelectorAll('#packs-root .card');    s = calcSummary(allCards);
+  } else {
+    const pack = (Array.isArray(packs) ? packs.find(p => p.key === packKey) : null) || (packs?.[0]);
+    if (!pack) return;
+    const cards = queryCardsByPack(pack);
+    s = calcSummary(cards);
+  }
 
   // モバイル上部サマリーを書き換え
   const mobileSummary = document.getElementById('mobile-pack-summary');
   if (mobileSummary) {
-    mobileSummary.innerHTML = `
-      <div class="pack-name">${pack.nameMain}</div>
-      <div class="pack-rate">
-        所持率: ${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)<br>
-        コンプ率: ${s.owned}/${s.total} (${s.percent}%)
-      </div>
-    `;
+    mobileSummary.innerHTML = renderMobilePackSummaryHTML(s);
   }
+
+  //全カード時ジャンプボタン非表示
+  document.getElementById('jump-pack-btn').style.display = (packKey==='all'?'none':'inline-block');
 
   // ツイート文言の選択パック率も更新
   updateOverallSummary();
 }
+
+//パックへジャンプ
+function jumpToSelectedPack(){
+  const sel = document.getElementById('pack-selector');
+  const key = sel?.value;
+  if(!key || key === 'all') return;
+
+  // パックセクションに id="pack-〇〇" を振っている想定
+  const target = document.querySelector(`#pack-${key}`);
+  if(target){
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+
 
 
 // グローバル公開（HTML の onchange="selectMobilePack(this.value)" から呼ぶため）
@@ -799,6 +865,8 @@ function buildPackSectionHTML(packEn, packJp, cardsGroupedByRace){
   html += `  <div class="race-controls">`;
   html += `    <button class="pack-select-all-btn">シルバーブロンズ+3</button>`;
   html += `    <button class="pack-clear-all-btn">全て選択解除</button>`;
+  html += `<button class="missing-pack-btn">不足カード</button>
+            `;
   html += `  </div>`;
   html += `  <div id="card-list-${packSlug}">`;
 
@@ -905,6 +973,306 @@ async function renderAllPacks({
   // 生成後にコントロールイベントを委譲で付与
     attachPackControls(mount);
 }
+
+// 所持合計を読む（OwnedStore 優先）
+function ownedTotal(cd){
+  if (!window.OwnedStore) return 0;
+  const e = OwnedStore.get(String(cd));
+  return (e?.normal|0) + (e?.shine|0) + (e?.premium|0);
+}
+
+// 不足カード収集（scope === 'all' か pack オブジェクト）
+function collectMissing(scope='all'){
+  // 対象集合
+  let list = [];
+  if (scope === 'all'){
+    list = Array.isArray(window.__cardsCache) ? window.__cardsCache : [];
+  } else {
+    const els = queryCardsByPack(scope); // 既存ヘルパ
+    const byCd = new Set(Array.from(els).map(el => String(el.dataset.cd)));
+    list = (Array.isArray(window.__cardsCache) ? window.__cardsCache : [])
+            .filter(c => byCd.has(String(c.cd)));
+  }
+
+  const missing = [];
+  for (const c of list){
+    const max = (c.race === '旧神') ? 1 : 3;
+    const own = ownedTotal(c.cd);
+    const need = Math.max(0, max - own);
+    if (need <= 0) continue;
+    missing.push({
+      cd:String(c.cd),
+      name:c.name,
+      need,
+      max,
+      rarity:c.rarity,
+      cost:c.cost|0,
+      power:c.power|0,
+      type:c.type||'',
+      race:c.race || ''
+ });
+  }
+
+  // 並び順：パック → 種族 → タイプ → コスト → パワー → cd
+  const packIdx = getPackOrderIndex();
+  missing.sort((a,b)=>{
+    // 1) パック順
+    const pa = packIdx[packEnOf(a)] ?? 9999;
+    const pb = packIdx[packEnOf(b)] ?? 9999;
+    if (pa !== pb) return pa - pb;
+
+    // 2) 種族
+    const ra = raceRankOf(a.race || ''), rb = raceRankOf(b.race || '');
+    if (ra !== rb) return ra - rb;
+
+    // 3) タイプ
+    const ta = TYPE_ORDER[a.type] ?? 999;
+    const tb = TYPE_ORDER[b.type] ?? 999;
+    if (ta !== tb) return ta - tb;
+
+    // 4) コスト
+    const ca = Number.isFinite(a.cost) ? a.cost : Number.MAX_SAFE_INTEGER;
+    const cb = Number.isFinite(b.cost) ? b.cost : Number.MAX_SAFE_INTEGER;
+    if (ca !== cb) return ca - cb;
+
+    // 5) パワー
+    const pa2 = Number.isFinite(a.power) ? a.power : Number.MAX_SAFE_INTEGER;
+    const pb2 = Number.isFinite(b.power) ? b.power : Number.MAX_SAFE_INTEGER;
+    if (pa2 !== pb2) return pa2 - pb2;
+
+    // 6) cd
+    const cda = Number.isFinite(+a.cd) ? +a.cd : Number.MAX_SAFE_INTEGER;
+    const cdb = Number.isFinite(+b.cd) ? +b.cd : Number.MAX_SAFE_INTEGER;
+    return cda - cdb;
+  });
+  return missing;
+}
+
+function openMissingDialog(title, items){
+  const dlg  = document.getElementById('missing-dialog');
+  const body = document.getElementById('missing-body');
+  const ttl  = document.getElementById('missing-title');
+  if (!dlg || !body || !ttl) return;
+
+  ttl.textContent = title;
+  if (!items.length){
+    body.innerHTML = '<p>不足カードはありません。</p>';
+  } else {
+    const info = document.createElement('p');
+    info.className = 'missing-info';
+    // PC/モバイル判定して文言を変える
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+      info.textContent = '📱 タップで画像表示';
+    } else {
+      info.textContent = '🖱️ カーソル合わせて画像表示';
+    }
+
+    const ul = document.createElement('ul');
+    items.forEach(it=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="missing-name">${it.name}x${it.need}</span>`;
+      li.dataset.cd  = String(it.cd || '');
+      li.classList.add('missing-item');
+      const race = it.race || '';
+      if (race) li.classList.add(`race-${race}`);
+      ul.appendChild(li);
+    });
+
+    body.replaceChildren(info, ul); // ← 先に説明、次にリスト
+  }
+
+  const copyBtn = document.getElementById('missing-copy');
+  const text = items.map(it => `${it.name}x${it.need}`).join('\n');
+  copyBtn.onclick = async ()=>{
+    try{
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+      else prompt('以下をコピーしてください', text);
+      copyBtn.textContent = 'コピーしました';
+      setTimeout(()=> copyBtn.textContent = '一覧をコピー', 1400);
+    }catch{ alert('コピーに失敗しました'); }
+  };
+
+  dlg.style.left = '50%';
+  dlg.style.top  = '15vh';
+  dlg.style.transform = 'translateX(-50%)';
+  dlg.showModal();
+}
+
+// 画像プレビュー
+if (!window.__wiredMissingPreview){
+  window.__wiredMissingPreview = true;
+
+  // マウス：ホバーで表示、外れたら隠す
+  document.addEventListener('mouseover', (e)=>{
+    const span = e.target.closest('#missing-body li.missing-item .missing-name');
+    const li = span ? span.closest('li.missing-item') : null;
+    if (!li || !li.dataset.cd) return;
+    showCardPreviewNextTo(li, li.dataset.cd);
+  });
+    document.addEventListener('mousemove', (e)=>{
+    const span = e.target.closest('#missing-body li.missing-item .missing-name');
+    if (!span) { hideCardPreview(); return; }
+    const li = span.closest('li.missing-item');
+    if (!li || !li.dataset.cd) { hideCardPreview(); return; }
+    showCardPreviewAt(e.clientX, e.clientY, li.dataset.cd);
+  });
+  document.addEventListener('mouseout', (e)=>{
+    if (e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('#card-preview-pop')) return;
+    if (e.target.closest && e.target.closest('#missing-body')) {
+      // missing-body内から外へ出たら隠す
+      if (!e.relatedTarget || !e.relatedTarget.closest('#missing-body')) hideCardPreview();
+    }
+  });
+
+  // タッチ：長押し(500ms)で表示、離したら隠す
+    let pressTimer = 0;
+    let pressTarget = null;
+    document.addEventListener('touchstart', (e)=>{
+    const span = e.target.closest && e.target.closest('#missing-body li.missing-item .missing-name');
+    if (!span) return;
+    const li = span.closest('li.missing-item');
+    if (!li || !li.dataset.cd) return;
+    pressTarget = li;
+    const touch = e.touches[0];
+    pressTimer = window.setTimeout(()=>{
+      showCardPreviewAt(touch.clientX, touch.clientY, li.dataset.cd);
+    }, 500); // 長押し閾値
+  }, {passive:true});
+
+  ['touchend','touchcancel','touchmove'].forEach(type=>{
+    document.addEventListener(type, ()=>{
+      if (pressTimer){ clearTimeout(pressTimer); pressTimer = 0; }
+      hideCardPreview();
+      pressTarget = null;
+    }, {passive:true});
+  });
+
+  // モーダルを閉じたらプレビューも隠す
+  document.getElementById('missing-dialog')?.addEventListener('close', hideCardPreview);
+}
+
+
+// === パック順インデックス（PACK_ORDER優先→残りは英字→仮名字で自然順） ===
+let __PACK_INDEX_CACHE = null;
+function getPackOrderIndex() {
+  if (__PACK_INDEX_CACHE) return __PACK_INDEX_CACHE;
+
+  // ① JSONから英名（en）リスト抽出
+  const cards = Array.isArray(window.__cardsCache) ? window.__cardsCache : [];
+  const byEn = new Map(); // en -> jp
+  for (const c of cards) {
+    const pn = splitPackName(c.pack_name || c.pack || '');
+    if (!pn.en) continue;
+    if (!byEn.has(pn.en)) byEn.set(pn.en, pn.jp || '');
+  }
+
+  // ② 既定順（PACK_ORDER）→残りは英名のアルファベット順
+  const rest = [...byEn.keys()]
+    .filter(en => !PACK_ORDER.includes(en))
+    .sort((a,b)=> String(a).localeCompare(String(b), 'ja')); // 英字→仮名の自然順
+
+  const ordered = [...PACK_ORDER.filter(en => byEn.has(en)), ...rest];
+
+  // ③ en -> index の辞書
+  const idx = {};
+  ordered.forEach((en, i) => { idx[en] = i; });
+  __PACK_INDEX_CACHE = idx;
+  return idx;
+}
+
+// カードからパック英名(en)を取り出す
+function packEnOf(card){
+  const pn = splitPackName(card.pack_name || card.pack || '');
+  return pn.en || '';
+}
+
+// 種族→数値順位
+function raceRankOf(r){
+  return (RACE_ORDER.indexOf(r) >= 0) ? RACE_ORDER.indexOf(r) : 999;
+}
+
+// 全カード（PC/モバイル共通）
+['show-missing-all','show-missing-all-mobile'].forEach(id=>{
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('click', ()=>{
+    const items = collectMissing('all');
+    openMissingDialog('不足カード（全カード）', items);
+  });
+});
+
+// パックごと（パック名直下の単体ボタン）
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.missing-pack-btn');
+  if (!btn) return;
+  const section = btn.closest('.pack-section');
+  const slug = section?.id?.replace(/^pack-/, '');
+  const pack = Array.isArray(window.packs) ? window.packs.find(p => makePackSlug(p.nameMain) === slug) : null;
+  const items = collectMissing(pack || 'all');
+  openMissingDialog(pack ? `不足カード（${pack.nameMain}）` : '不足カード', items);
+});
+
+// ===== 不足リスト：カード画像プレビュー =====
+function ensurePreviewEl(){
+  let el = document.getElementById('card-preview-pop');
+  // ★ モーダルが開いているときはモーダルにぶら下げる
+  const dlg = document.getElementById('missing-dialog');
+  if (dlg && dlg.open && el.parentElement !== dlg) {
+    dlg.appendChild(el);
+  }
+  // 位置は viewport 基準にしたいので fixed
+  el.style.position = 'fixed';
+  return el;
+  }
+
+function showCardPreviewAt(x, y, cd){
+  const box = ensurePreviewEl();
+  const img = box.querySelector('img');
+  img.removeAttribute('data-fallback');
+  img.src = `img/${cd}.webp`;
+
+  const dlg = document.getElementById('missing-dialog');
+  const w  = img.clientWidth || 180;
+  const h  = img.clientHeight || 256;
+  const pad = 40;
+  let left, top;
+
+  if (dlg && dlg.open && box.parentElement === dlg) {
+    // dialog 内：dialog の矩形を基準に absolute 配置
+    const dr = dlg.getBoundingClientRect();
+    const vw = dr.width, vh = dr.height;
+   // 横方向
+    left = window.innerWidth - w - pad -20;
+    if (left + w + 16 > vw) left = (x - dr.left) + pad + 100;
+
+    // 縦方向：下に余裕があればカーソルの下、無ければ上
+ if (y + h +280  < window.innerHeight) {
+   top = y - pad*3;
+ } else {
+   top = y - h - pad*2;
+   if (top < pad) top = pad;
+ }
+}
+
+
+
+  box.style.left = `${Math.round(left)}px`;
+  box.style.top  = `${Math.round(top)}px`;
+  box.style.display = 'block';
+}
+
+function showCardPreviewNextTo(el, cd){
+  const rect = el.getBoundingClientRect();
+  showCardPreviewAt(rect.right, rect.top, cd);
+}
+
+function hideCardPreview(){
+  const box = document.getElementById('card-preview-pop');
+  if (box) box.style.display = 'none';
+}
+
+
+
 
 //#endregionroot
 /*====================================
@@ -1752,17 +2120,39 @@ function applyFilterAndSearch() {
     }
     return true;
   });
-  // ★ 並び順：コスト → パワー → cd（すべて昇順）
-  filtered.sort((a, b) => {
-    const ac = Number(a.cost ?? 999), bc = Number(b.cost ?? 999);
-    if (ac !== bc) return ac - bc;
+ // ★ 並び順：
+ //   （全カード＝パック未選択）→ パック順 → 種族 → タイプ → コスト → パワー → cd
+ //   （パック選択あり）        → 種族 → タイプ → コスト → パワー → cd
+ const hasPackFilter = (pickP && pickP.length > 0);
+ const packIdx = hasPackFilter ? null : getPackOrderIndex();
+ filtered.sort((a, b) => {
+   if (!hasPackFilter) {
+     // 1) パック順（PACK_ORDER優先＋残りは英字→仮名字順）
+     const pa = packIdx[packEnOf(a)] ?? 9999;
+     const pb = packIdx[packEnOf(b)] ?? 9999;
+     if (pa !== pb) return pa - pb;
+   }
+   // 2) 種族
+   const ra = raceRankOf(a.race || ''), rb = raceRankOf(b.race || '');
+   if (ra !== rb) return ra - rb;
+   // 3) タイプ（チャージャー→アタッカー→ブロッカー）
+   const ta = TYPE_ORDER[a.type] ?? 999;
+   const tb = TYPE_ORDER[b.type] ?? 999;
+   if (ta !== tb) return ta - tb;
+   // 4) コスト
+   const ac = Number.isFinite(a.cost) ? a.cost : Number.MAX_SAFE_INTEGER;
+   const bc = Number.isFinite(b.cost) ? b.cost : Number.MAX_SAFE_INTEGER;
+   if (ac !== bc) return ac - bc;
+   // 5) パワー
+   const ap = Number.isFinite(a.power) ? a.power : Number.MAX_SAFE_INTEGER;
+   const bp = Number.isFinite(b.power) ? b.power : Number.MAX_SAFE_INTEGER;
+   if (ap !== bp) return ap - bp;
+   // 6) cd（数値昇順）
+   const aid = Number.isFinite(+a.cd) ? +a.cd : Number.MAX_SAFE_INTEGER;
+   const bid = Number.isFinite(+b.cd) ? +b.cd : Number.MAX_SAFE_INTEGER;
+   return aid - bid;
+ });
 
-    const ap = Number(a.power ?? 99999), bp = Number(b.power ?? 99999);
-    if (ap !== bp) return ap - bp;
-
-    const aid = Number(a.cd ?? 999999999), bid = Number(b.cd ?? 999999999);
-    return aid - bid;
-  });
   // ★ 所持カード分析グリッドのデータを書き換えて再描画
   __ownedCardsData = filtered;
   __ownedCurrentPage = 1;

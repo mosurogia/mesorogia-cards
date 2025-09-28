@@ -11,7 +11,8 @@ const deck = {};
 // カード情報　例: { "10001": { name: "...", race: "...", type: "...", cost: 3, power: 2, ... }, ... }
 const cardMap = {};
 
-
+window.deck = deck;
+window.cardMap = cardMap;
 
 // common.js などグローバルに置く
 // ローカル開発なら '', GitHub Pages なら '/mesorogia-cards/' などに調整
@@ -25,12 +26,6 @@ async function fetchLatestCards() {
   const allCards = await res.json();
   return allCards.filter(card => card.is_latest === true);
 }
-
-
-
-
-
-
 
 
 

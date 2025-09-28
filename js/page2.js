@@ -21,6 +21,122 @@ function formatYmd(d = new Date()) {
 // 代表カードのグローバル変数
 let representativeCd = null;
 
+
+
+
+// === オートセーブ ===//
+const AUTOSAVE_KEY = 'deck_autosave_v1';
+let __autosaveTimer = 0;
+
+function isDeckEmpty() {
+  return !deck || Object.keys(deck).length === 0;
+}
+
+function readDeckNameInput() {
+  return document.getElementById('deck-name')?.value?.trim() || '';
+}
+
+function writeDeckNameInput(name) {
+  const el = document.getElementById('deck-name');
+  if (el) el.value = name || '';
+}
+
+function buildAutosavePayload() {
+  return {
+    cardCounts: { ...deck },
+    m: representativeCd || null,
+    name: readDeckNameInput(),
+    date: formatYmd()
+  };
+}
+
+function saveAutosaveNow() {
+  try {
+    const payload = buildAutosavePayload();
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(payload));
+  } catch (e) {
+    console.warn('autosave failed', e);
+  }
+}
+
+function scheduleAutosave() {
+  clearTimeout(__autosaveTimer);
+  __autosaveTimer = setTimeout(saveAutosaveNow, 250); // デバウンス
+}
+
+function clearAutosave() {
+  try { localStorage.removeItem(AUTOSAVE_KEY); } catch {}
+}
+
+function hasFreshParamOff() {
+  // ?fresh=1 なら復元スキップ（新規開始）
+  const sp = new URLSearchParams(location.search);
+  return sp.get('fresh') === '1';
+}
+
+/*デッキ復元確認トースト*/
+function loadAutosave(data){
+  if (!data || !data.cardCounts) return;
+
+  // デッキを入れ替え
+  Object.keys(deck).forEach(k => delete deck[k]);
+  Object.entries(data.cardCounts).forEach(([cd, n]) => { deck[cd] = n|0; });
+
+  // 代表カード
+  representativeCd = (data.m && deck[data.m]) ? data.m : null;
+  writeDeckNameInput(data.name || '');
+
+  // UI更新（スクロール保持）
+  withDeckBarScrollKept(() => {
+    updateDeck();
+    renderDeckList();
+  });
+  updateDeckSummaryDisplay();
+  updateExchangeSummary();
+}
+
+
+  function showToast(message, opts={}){
+  const toast = document.createElement('div');
+  toast.id = 'restore-toast';
+
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'msg';
+  msgSpan.textContent = message;
+  toast.appendChild(msgSpan);
+
+  if (opts.action) {
+    const btn = document.createElement('button');
+    btn.textContent = opts.action.label;
+    btn.onclick = () => { opts.action.onClick?.(); toast.remove(); };
+    toast.appendChild(btn);
+  }
+  if (opts.secondary) {
+    const btn2 = document.createElement('button');
+    btn2.textContent = opts.secondary.label;
+    btn2.onclick = () => { opts.secondary.onClick?.(); toast.remove(); };
+    toast.appendChild(btn2);
+  }
+
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 15000);
+  }
+
+ // オートセーブ復元確認
+  if (!window.location.search.includes('fresh=1')) {
+    const autosave = localStorage.getItem('deck_autosave_v1');
+    if (autosave && isDeckEmpty()) {
+      try {
+        const data = JSON.parse(autosave);
+        if (data && Object.keys(data.cardCounts || {}).length) {
+          showToast("以前のデッキを復元しますか？", {
+            action: { label: "復元する", onClick: () => loadAutosave(data) },
+            secondary: { label: "削除する", onClick: () => clearAutosave() }
+          });
+        }
+      } catch(e){}
+    }
+  }
 //#endregion
 /*===================
     2.一覧カード生成
@@ -36,6 +152,8 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-name', card.name);
   cardDiv.setAttribute('data-effect1', card.effect_name1 ?? "");
   cardDiv.setAttribute('data-effect2', card.effect_name2 ?? "");
+  cardDiv.setAttribute('data-effecttext1', card.effect_text1 ?? "");
+  cardDiv.setAttribute('data-effecttext2', card.effect_text2 ?? "");
   cardDiv.setAttribute('data-race', card.race);
   cardDiv.setAttribute('data-category', card.category);
   cardDiv.setAttribute('data-rarity', card.rarity);
@@ -43,7 +161,9 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-cost', card.cost);
   cardDiv.setAttribute('data-power', card.power);
   cardDiv.setAttribute('data-pack', card.pack_name);
-  cardDiv.setAttribute('data-effect', [card.effect_name1, card.effect_name2].filter(Boolean).join(','));
+  const _effectJoined =
+  [card.effect_name1, card.effect_text1, card.effect_name2, card.effect_text2]
+  .filter(Boolean).join(' ');
   cardDiv.setAttribute('data-field', card.field);
   cardDiv.setAttribute('data-ability', card.special_ability);
   cardDiv.setAttribute('data-bp', String(card.BP_flag ?? "").toLowerCase());
@@ -53,8 +173,14 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-destroy_Opponent', String(card.destroy_opponent ?? "").toLowerCase());
   cardDiv.setAttribute('data-destroy_Self', String(card.destroy_self ?? "").toLowerCase());
 
-
-
+  // 🔎 検索用にまとめた文字列（小文字化）
+  const keywords = [
+  card.name, card.race, card.category, card.type,
+  card.field, card.special_ability,
+  card.effect_name1, card.effect_text1,
+  card.effect_name2, card.effect_text2
+  ].filter(Boolean).join(' ').toLowerCase();
+  cardDiv.setAttribute('data-keywords', keywords);
   // UIパーツ
   const zoomBtn = document.createElement('div');
   zoomBtn.classList.add('zoom-btn');
@@ -532,6 +658,15 @@ function getRaceType(race) {
 // メイン種族の定義とヘルパー
 const MAIN_RACES = ["ドラゴン", "アンドロイド", "エレメンタル", "ルミナス", "シェイド"];
 
+// メイン種族背景色
+const RACE_BG = {
+  'ドラゴン':    'rgba(255, 100, 100, 0.16)',
+  'アンドロイド':'rgba(100, 200, 255, 0.16)',
+  'エレメンタル':'rgba(100, 255, 150, 0.16)',
+  'ルミナス':    'rgba(255, 250, 150, 0.16)',
+  'シェイド':    'rgba(200, 150, 255, 0.16)',
+};
+
 // デッキ内に存在するメイン種族を（重複なしで）配列で返す
 function getMainRacesInDeck() {
   const races = Object.keys(deck)
@@ -540,11 +675,20 @@ function getMainRacesInDeck() {
   return [...new Set(races)]; // 重複排除
 }
 
-// デッキの代表メイン種族
+// 配列からメイン種族を1つ決める（基本は先頭。万一複数なら優先順で決定）
+function computeMainRace() {
+  const arr = getMainRacesInDeck();
+  if (arr.length <= 1) return arr[0] || null;
+  for (const r of MAIN_RACES) if (arr.includes(r)) return r;
+  return arr[0] || null;
+}
+
+// デッキの代表メイン種族（基本1つ想定）
 function getMainRace() {
   const list = getMainRacesInDeck();
-  return list[0] || "ドラゴン";//無いときはドラゴン
+  return list[0] || null;
 }
+
 //#endregionMainraces
 
 
@@ -584,7 +728,7 @@ function addCard(cd) {
   }
   //カード追加
   deck[cd] = (deck[cd] || 0) + 1;
-  updateDeck();//デッキ情報更新
+  withDeckBarScrollKept(() => updateDeck());//デッキ情報更新（デッキバースクロール固定）
   applyGrayscaleFilter();//他種族モノクロor非表示
 }
 
@@ -596,7 +740,7 @@ function removeCard(cd) {
   } else {
     delete deck[cd];//削除
   }
-  updateDeck();//デッキ情報更新
+  withDeckBarScrollKept(() => updateDeck());//デッキ情報更新（デッキバースクロール固定）
   applyGrayscaleFilter();//他種族モノクロor非表示
 }
 
@@ -648,10 +792,10 @@ function updateDeck() {
   if (Object.keys(deck).length === 0) {
     deckBarTop.innerHTML = `
       <div id="deck-empty-text">
-        <div style="font-size: 0.7rem;">デッキバー操作</div>
+        <div style="font-size: 0.7rem;">カード操作</div>
         <div class="deck-help" id="deckHelp">
           <div>【PC】<br>・左クリック：追加<br>・右クリック：削除</div>
-          <div>【スマホ】<br>・上フリック：追加<br>・下フリック：削除</div>
+          <div>【スマホ】<br>・タップ,上フリック：追加<br>・下フリック：削除<br>・長押し：拡大表示</div>
         </div>
       </div>
     `;
@@ -660,6 +804,8 @@ function updateDeck() {
     updateDeckSummary([]);
     updateExchangeSummary();
     updateOwnedPanelsVisibility();
+    requestAnimationFrame(autoscaleAllBadges);
+
     return;
   }
 
@@ -794,6 +940,7 @@ function updateDeck() {
     cardEl.addEventListener("contextmenu", e => e.preventDefault());
 
     deckBarTop.appendChild(cardEl);
+    autoscaleBadgeForCardEl(cardEl);//枚数表示サイズ調整
   });
 
 
@@ -812,6 +959,22 @@ function updateDeck() {
   updateDeckAnalysis();//デッキ詳細情報分析
   updateExchangeSummary();  // ポイント等のサマリーを更新
   updateOwnedPanelsVisibility(); //表示/非表示も更新
+  updateDeckCardListBackground();//リスト背景変更
+  scheduleAutosave();  //オートセーブ
+}
+
+// === デッキバーの横スクロールを保持したまま処理を実行 ===
+function withDeckBarScrollKept(doRender) {
+  const scroller = document.querySelector('.deck-bar-scroll');
+  const prev = scroller ? scroller.scrollLeft : 0;
+  // レンダリング実行
+  doRender?.();
+  // レンダリング直後はDOMがまだ安定していない可能性があるので2フレーム待って復元
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (scroller) scroller.scrollLeft = prev;
+    });
+  });
 }
 
 
@@ -1002,11 +1165,61 @@ function renderDeckList() {
     });
 
     container.appendChild(cardEl);
+    autoscaleBadgeForCardEl(cardEl);//枚数表示サイズ調整
   }
 
   representativeCd = nextRepresentative;  // 代表カードの最終確定
   updateDeckSummaryDisplay();//代表カードデッキ情報表示
+  updateDeckCardListBackground();//リスト背景変更
 }
+
+
+//枚数表示サイズ調整
+function autoscaleBadgeForCardEl(cardEl){
+  const img   = cardEl.querySelector('img');
+  const badge = cardEl.querySelector('.count-badge');
+  if (!img || !badge) return;
+
+  const apply = () => {
+    const W   = img.clientWidth || img.naturalWidth || 220; // カードの表示幅
+    // ← 好みで係数調整（初期: 幅18% / 高さ12% / 文字7%）
+    const bW  = Math.max(20, Math.round(W * 0.18)); // バッジ幅
+    const bH  = Math.max(14, Math.round(W * 0.18)); // バッジ高
+    const fz  = Math.max(10, Math.round(W * 0.12)); // フォント
+    const gap = Math.max(2,  Math.round(W * 0.02)); // 右上の余白
+
+    Object.assign(badge.style, {
+      width:        `${bW}px`,
+      height:       `${bH}px`,
+      fontSize:     `${fz}px`,
+      borderRadius: `${Math.round(bH * 0.6)}px`,
+      padding:      `0 ${Math.round(bW * 0.15)}px`,
+      display:      'flex',
+      alignItems:   'center',
+      justifyContent:'center',
+      top:          `${gap}px`,
+      right:        `${gap}px`,
+    });
+  };
+
+  if (img.complete) apply();
+  else img.addEventListener('load', apply, { once: true });
+}
+
+function autoscaleAllBadges(){
+  document.querySelectorAll('.deck-entry, .deck-card').forEach(autoscaleBadgeForCardEl);
+}
+
+// リサイズやレイアウト変化で再計算
+window.addEventListener('resize', () => requestAnimationFrame(autoscaleAllBadges));
+if (window.ResizeObserver) {
+  const target = document.getElementById('deck-card-list');
+  if (target) {
+    new ResizeObserver(() => requestAnimationFrame(autoscaleAllBadges))
+      .observe(target);
+  }
+}
+
 
 
 //代表カードクラス付与
@@ -1026,7 +1239,7 @@ function renderDeckList() {
     document.getElementById("deck-representative").textContent = name;
   }
 
-  //デッキリスト「デッキをここに表示」
+//デッキリスト「デッキをここに表示」
   function updateDeckEmptyMessage() {
     const deck = document.getElementById("deck-card-list");
     const msg = document.getElementById("deckcard-empty-message");
@@ -1039,6 +1252,42 @@ function renderDeckList() {
       msg.style.display = "none";
     }
   }
+
+let lastMainRace = null;
+  // #deck-card-list の背景をメイン種族色に
+function updateDeckCardListBackground(){
+  const listEl = document.getElementById('deck-card-list');
+  if (!listEl) return;
+
+  // デッキが空かどうか
+  const hasCards = Object.keys(deck).length > 0;
+
+  if (!hasCards){
+    lastMainRace = null;
+    // 一度リセットしてからデフォルト画像
+    listEl.style.removeProperty('backgroundImage');
+    listEl.style.removeProperty('backgroundColor');
+    listEl.style.backgroundImage = 'url("./img/cardlist.webp")';
+    return;
+
+  }
+
+  const mainRace = getMainRace();
+  if (mainRace) {
+  if (mainRace !== lastMainRace) {
+    lastMainRace = mainRace;
+    const color = RACE_BG[mainRace] || 'transparent';
+    listEl.style.backgroundImage = 'none';
+    listEl.style.backgroundColor = color;
+  }
+  } else {
+  // カードはあるがメイン種族が無い場合 → デフォ背景に戻す
+  lastMainRace = null;
+  listEl.style.removeProperty('backgroundImage');
+    listEl.style.removeProperty('backgroundColor');
+    listEl.style.backgroundImage = 'url("./img/cardlist.webp")';
+  }
+}
 
 
 //#endregion
@@ -1487,6 +1736,216 @@ window.updateExchangeSummary = updateExchangeSummary;
 
 window.updateDeckAnalysis = updateDeckAnalysis;
 
+
+
+//---画像生成--//
+// ==== デッキリストをそのままPNG出力 ====
+
+// ボタンにハンドラ
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('exportPngBtn');
+  if (btn) {
+    btn.replaceWith(btn.cloneNode(true)); // 重複バインド回避
+    document.getElementById('exportPngBtn').addEventListener('click', exportDeckListAsPng);
+  }
+});
+
+async function exportDeckListAsPng() {
+  // 最新の見た目に
+  renderDeckList();
+
+  const node = document.getElementById('deck-card-list');
+  if (!node) { alert('デッキリストが見つかりません'); return; }
+
+  // 画像読み込み待ち
+  await Promise.all(Array.from(node.querySelectorAll('img')).map(img => {
+    if (img.complete) return;
+    return new Promise(res => { img.onload = img.onerror = res; });
+  }));
+
+  // スクロールで欠けないように一時展開
+  const section = node.closest('.deck-section');
+  const restore = {
+    sectionMax: section?.style.maxHeight,
+    nodeOverflow: node.style.overflow,
+    nodeH: node.style.height
+  };
+  if (section) section.style.maxHeight = 'none';
+  node.style.overflow = 'visible';
+  node.style.height   = 'auto';
+
+  // ★ 背景を外してキャプチャ
+// 端末負荷に応じて 1.5〜2.0 に固定（高DPI端末でも上げ過ぎない）
+  const scale = (window.devicePixelRatio >= 2.5) ? 1.75 : 1.5;
+  const listCanvas = await html2canvas(node, {
+    useCORS: true,
+    backgroundColor: null,   // ← 透明で撮る
+    scale,
+    logging: false,
+    removeContainer: true,
+    onclone: (doc) => {
+      const n = doc.getElementById('deck-card-list');
+      if (!n) return;
+
+      // 背景画像/色を強制OFF（親にも念のため適用）
+      const targets = [n, n.parentElement, n.closest('.deck-section')].filter(Boolean);
+      targets.forEach(el => {
+        el.style.setProperty('background', 'none', 'important');
+        el.style.setProperty('backgroundImage', 'none', 'important');
+        el.style.setProperty('backgroundColor', 'transparent', 'important');
+        el.style.setProperty('box-shadow', 'none', 'important');
+        el.style.setProperty('filter', 'none', 'important');
+      });
+
+      // 疑似要素で背景を出している場合の保険
+      const style = doc.createElement('style');
+      style.textContent = `
+        #deck-card-list::before, #deck-card-list::after { display: none !important; }
+        #deck-card-list .deck-entry, #deck-card-list img {
+        box-shadow: none !important;
+        filter: none !important;
+        text-shadow: none !important;
+      }
+      `;
+      doc.head.appendChild(style);
+    }
+  });
+
+  // 展開を元に戻す
+  if (section) section.style.maxHeight = restore.sectionMax || '';
+  node.style.overflow = restore.nodeOverflow || '';
+  node.style.height   = restore.nodeH || '';
+
+// （中略）listCanvas 生成～復元の後
+
+// ─────────────────────────────────
+// ここから合成：上に情報ヘッダーを載せる
+// ─────────────────────────────────
+const deckNameRaw = document.getElementById('deck-name')?.value ?? '';
+const deckName    = deckNameRaw.trim();         // ← 既定名は入れない
+const hasTitle    = deckName.length > 0;        // ← タイトル有無
+
+const deckCount = document.getElementById('deck-count')?.textContent || '0';
+const mainRace  = getMainRace();
+const raceBgColor = mainRace ? RACE_BG[mainRace] : null;
+
+const elder = document.getElementById('deck-eldergod')?.textContent || '未採用';
+const nCh   = document.getElementById('count-charger')?.textContent || '0';
+const nAt   = document.getElementById('count-attacker')?.textContent || '0';
+const nBl   = document.getElementById('count-blocker')?.textContent || '0';
+
+// レイアウト値（タイトルなしなら高さも詰める）
+const PAD    = 24 * scale;
+const GAPY   = 10 * scale;
+const TITLE  = hasTitle ? 28 * scale : 0;
+const BODY   = 18 * scale;
+const HEADER_H = (PAD + (hasTitle ? (TITLE + GAPY) : 0) + BODY*2 + PAD);
+
+const OUT_W = listCanvas.width + PAD*2;
+const OUT_H = HEADER_H + listCanvas.height + PAD*2;
+
+const out = document.createElement('canvas');
+out.width = OUT_W;
+out.height = OUT_H;
+const ctx = out.getContext('2d');
+
+
+// 文字をくっきり描く（白縁 + 濃い塗り）
+const TEXT_FILL   = '#0a0a0a';
+const TEXT_STROKE = 'rgba(255,255,255,0.9)';
+
+function drawReadableText(ctx, text, x, y, px, scale){
+  ctx.save();
+  ctx.font = `${px}px system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.globalAlpha = 1;            // 念のため不透明
+  ctx.lineWidth = Math.max(2, Math.round(2*scale));
+  ctx.strokeStyle = TEXT_STROKE;  // 白い縁取り
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = TEXT_FILL;      // 濃い文字色
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+// 背景（白）→ 種族色オーバーレイ
+const TRANSPARENT_BG = false;
+if (!TRANSPARENT_BG) {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, OUT_W, OUT_H);
+}
+if (raceBgColor) {
+  ctx.fillStyle = raceBgColor;
+  ctx.fillRect(0, 0, OUT_W, OUT_H);
+}
+
+// ─ タイトル（デッキ名）は「ある時だけ」描画
+if (hasTitle) {
+  drawReadableText(ctx, deckName, PAD + 16*scale, PAD + 8*scale, TITLE, scale);
+}
+
+// 本文1・2行のY座標（タイトル有無で切り替え）
+const line1 = `枚数：${deckCount}　種族：${mainRace || '未選択'}　旧神：${elder}`;
+const line2 = `タイプ：🔵${nCh}　🟣${nAt}　⚪️${nBl}`;
+
+const baseY = PAD + 8*scale + (hasTitle ? (TITLE + GAPY) : 0);
+drawReadableText(ctx, line1, PAD + 16*scale, baseY,                 BODY, scale);
+drawReadableText(ctx, line2, PAD + 16*scale, baseY + BODY + 6*scale, BODY, scale);
+
+// リスト画像を貼る
+ctx.drawImage(listCanvas, PAD, HEADER_H);
+
+// ダウンロード（未設定時は 'deck.png'）
+out.toBlob(blob => {
+  const a = document.createElement('a');
+  const name = (deckName || 'deck') + '.png';
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}, 'image/png');
+}
+
+
+// deck & cardMap から並び順に展開（タイプ→コスト→パワー→cd）
+function getDeckCardsArray(){
+  const entries = Object.entries(deck);
+  const TYPE_ORDER = {'チャージャー':0,'アタッカー':1,'ブロッカー':2};
+  entries.sort((a,b)=>{
+    const A = cardMap[a[0]]||{}, B = cardMap[b[0]]||{};
+    const tA = TYPE_ORDER[A.type] ?? 99, tB = TYPE_ORDER[B.type] ?? 99;
+    if (tA !== tB) return tA - tB;
+    const cA = (A.cost|0), cB = (B.cost|0); if (cA !== cB) return cA - cB;
+    const pA = (A.power|0), pB = (B.power|0); if (pA !== pB) return pA - pB;
+    return String(a[0]).localeCompare(String(b[0]));
+  });
+  const out = [];
+  for (const [cd, count] of entries) for (let i=0;i<count;i++) out.push(cd);
+  return out;
+}
+
+// 画像読み込み（フォールバックは 00000.webp）
+function loadCardImage(cd){
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => { img.onerror = null; img.src = 'img/00000.webp'; };
+    img.src = `img/${cd}.webp`;
+  });
+}
+
+// <img>を枠いっぱいに「cover」させるための計算
+function fitCover(sw, sh, dw, dh){
+  const sr = sw/sh, dr = dw/dh;
+  let w, h, dx, dy;
+  if (sr > dr){ h = dh; w = h*sr; dx = -(w-dw)/2; dy = 0; }
+  else       { w = dw; h = w/sr; dx = 0;         dy = -(h-dh)/2; }
+  return {w,h,dx,dy};
+}
+
+
+
+
 //#endregion
 
 
@@ -1704,10 +2163,13 @@ function loadDeckFromIndex(index) {
   if (nameInput) {
     nameInput.value = data.name || ""; // ない場合は空に
   }
+  withDeckBarScrollKept(() => {
   updateDeck(); // デッキ欄更新
   renderDeckList();//デッキリスト画像更新
+  });
   updateDeckSummaryDisplay();//代表カードデッキ情報表示
   updateExchangeSummary();//交換ポイント数更新
+  scheduleAutosave();  //オートセーブ
 }
 
 // 🗑 インデックス指定で削除
@@ -1720,13 +2182,28 @@ function deleteDeckFromIndex(index) {
   renderDeckList();//デッキリスト画像更新
 }
 
+// デッキリセット（委譲で拾う：再描画に強い）
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#resetDeckButton');
+  if (!btn) return;
 
-// ♻ デッキを完全リセット（メモリも表示も空）
-document.getElementById("resetDeckButton")?.addEventListener("click", () => {
+  if (!confirm('現在のデッキを全てリセットします。よろしいですか？')) return;
+
+  // データ初期化
   Object.keys(deck).forEach(k => delete deck[k]);
-  representativeCd = null; //代表カードリセット
-  updateDeck();// デッキ欄更新
-  renderDeckList();//デッキリスト画像更新
+  representativeCd = null;
+
+  // UI更新（横スクロール保持）
+  withDeckBarScrollKept(() => {
+    updateDeck();       // デッキバー＆サマリー再計算
+    renderDeckList();   // デッキリスト画像エリア再描画
+  });
+
+  // 付随パネルや数値も同期
+  updateDeckSummaryDisplay();
+  updateExchangeSummary();
+  updateOwnedPanelsVisibility();
+  scheduleAutosave();  //オートセーブ
 });
 
 

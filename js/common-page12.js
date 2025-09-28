@@ -533,6 +533,7 @@ document.getElementById("applyFilterBtn")?.addEventListener("click", () => {
 
 function applyFilters() {
   const keyword = document.getElementById("keyword").value.trim().toLowerCase();
+  const tokens  = keyword.split(/\s+/).filter(Boolean);
 
   const selectedFilters = {
     race: getSelectedFilterValues("race"),
@@ -560,11 +561,16 @@ function applyFilters() {
   const powerMax = powerMaxVal === "上限なし" ? Infinity : parseInt(powerMaxVal);
 
   document.querySelectorAll(".card").forEach(card => {
-    const name = card.dataset.name?.toLowerCase() || "";
-    const effect1 = card.dataset.effect1?.toLowerCase() || "";
-    const effect2 = card.dataset.effect2?.toLowerCase() || "";
-    const tribe = card.dataset.tribe?.toLowerCase() || "";
-    const category = card.dataset.category?.toLowerCase() || "";
+    const haystack =
+      (card.dataset.keywords?.toLowerCase()) // ← ここに名＋効果名＋効果本文が入る
+      || [
+          card.dataset.name,
+           card.dataset.effect,      // 名＋本文の結合（①②で付与）
+          card.dataset.field,
+          card.dataset.ability,
+          card.dataset.category,
+          card.dataset.race,
+        ].filter(Boolean).join(' ').toLowerCase();
 
     const cardData = {
       race: card.dataset.race,
@@ -586,12 +592,9 @@ function applyFilters() {
     };
 
     // 絞り込み条件のチェック
-    const matchesKeyword =
-      name.includes(keyword) ||
-      effect1.includes(keyword) ||
-      effect2.includes(keyword) ||
-      tribe.includes(keyword) ||
-      category.includes(keyword);
+      const matchesKeyword = tokens.length === 0
+      ? true
+      : tokens.every(t => haystack.includes(t));
 
     const matchesFilters = Object.entries(selectedFilters).every(([key, selectedValues]) => {
       if (!selectedValues || selectedValues.length === 0) return true;

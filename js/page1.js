@@ -24,6 +24,8 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-name', card.name);
   cardDiv.setAttribute('data-effect1', card.effect_name1 ?? "");
   cardDiv.setAttribute('data-effect2', card.effect_name2 ?? "");
+  cardDiv.setAttribute('data-effecttext1', card.effect_text1 ?? "");
+  cardDiv.setAttribute('data-effecttext2', card.effect_text2 ?? "");
   cardDiv.setAttribute('data-race', card.race);
   cardDiv.setAttribute('data-category', card.category);
   cardDiv.setAttribute('data-rarity', card.rarity);
@@ -31,7 +33,10 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-cost', card.cost);
   cardDiv.setAttribute('data-power', card.power);
   cardDiv.setAttribute('data-pack', card.pack_name);
-  cardDiv.setAttribute('data-effect', [card.effect_name1, card.effect_name2].filter(Boolean).join(','));
+  const _effectJoined =
+  [card.effect_name1, card.effect_text1, card.effect_name2, card.effect_text2]
+  .filter(Boolean).join(' ');
+  cardDiv.setAttribute('data-effect', _effectJoined);
   cardDiv.setAttribute('data-field', card.field);
   cardDiv.setAttribute('data-ability', card.special_ability);
   cardDiv.setAttribute('data-bp', String(card.BP_flag ?? "").toLowerCase());
@@ -41,6 +46,14 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-destroy_Opponent', String(card.destroy_opponent ?? "").toLowerCase());
   cardDiv.setAttribute('data-destroy_Self', String(card.destroy_self ?? "").toLowerCase());
 
+  // 🔎 検索用にまとめた文字列（小文字化）
+  const keywords = [
+  card.name, card.race, card.category, card.type,
+  card.field, card.special_ability,
+  card.effect_name1, card.effect_text1,
+  card.effect_name2, card.effect_text2
+  ].filter(Boolean).join(' ').toLowerCase();
+  cardDiv.setAttribute('data-keywords', keywords);
   // 🔍 展開用クリックイベント（カード全体）
   cardDiv.setAttribute('onclick', 'handleZoomClick(event, this)');
 
