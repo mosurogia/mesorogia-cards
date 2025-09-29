@@ -21,7 +21,10 @@ function formatYmd(d = new Date()) {
 // 代表カードのグローバル変数
 let representativeCd = null;
 
-
+// iOS判定（画像生成時使用）
+function isiOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
 
 
 // === オートセーブ ===//
@@ -1751,6 +1754,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function exportDeckListAsPng() {
+    // ★ クリック直後（await前）に、iOSなら空タブを確保
+  const preWin = isiOS() ? window.open('', '_blank') : null;
   // 最新の見た目に
   renderDeckList();
 
@@ -1762,6 +1767,7 @@ async function exportDeckListAsPng() {
     if (img.complete) return;
     return new Promise(res => { img.onload = img.onerror = res; });
   }));
+
 
   // スクロールで欠けないように一時展開
   const section = node.closest('.deck-section');
@@ -1816,7 +1822,6 @@ async function exportDeckListAsPng() {
   node.style.overflow = restore.nodeOverflow || '';
   node.style.height   = restore.nodeH || '';
 
-// （中略）listCanvas 生成～復元の後
 
 // ─────────────────────────────────
 // ここから合成：上に情報ヘッダーを載せる
@@ -1895,15 +1900,32 @@ drawReadableText(ctx, line2, PAD + 16*scale, baseY + BODY + 6*scale, BODY, scale
 // リスト画像を貼る
 ctx.drawImage(listCanvas, PAD, HEADER_H);
 
-// ダウンロード（未設定時は 'deck.png'）
-out.toBlob(blob => {
-  const a = document.createElement('a');
-  const name = (deckName || 'deck') + '.png';
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}, 'image/png');
+
+  const fileName = (deckNameRaw.trim() || 'deck') + '.png';
+
+  if (isiOS() && preWin) {
+    // ★ iPad：Data URL を新規タブに表示（長押し→“写真に追加”）
+    const dataUrl = out.toDataURL('image/png');
+    preWin.document.title = fileName;
+    preWin.document.body.style.margin = '0';
+    preWin.document.body.innerHTML =
+      `<img src="${dataUrl}" alt="deck" style="width:100%;height:auto;display:block">`;
+    return; // ここで終了
+  }
+
+
+  // それ以外（PC/Android等）は Blob + download（Safari安定化のため DOM 追加してから click）
+  out.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.rel = 'noopener';
+    document.body.appendChild(a);   // ★ 追加
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, 'image/png');
 }
 
 
