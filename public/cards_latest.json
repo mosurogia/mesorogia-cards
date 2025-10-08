@@ -1079,7 +1079,7 @@
     "cost":8,
     "power":6,
     "effect_name1":"■手札発動■",
-    "effect_text1":"自分のアドミラルシップカ壊された時、相手のライフを2減らす。",
+    "effect_text1":"自分のアドミラルシップが壊された時、相手のライフを2減らす。",
     "effect_name2":null,
     "effect_text2":null,
     "field":"フィールド関係なし",
