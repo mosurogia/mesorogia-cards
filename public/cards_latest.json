@@ -23,7 +23,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -49,7 +52,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -75,7 +81,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -101,7 +110,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -127,7 +139,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -153,7 +168,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -179,7 +197,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -205,7 +226,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -231,7 +255,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -257,7 +284,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -283,7 +313,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -309,7 +342,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -335,7 +371,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -361,7 +400,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -387,7 +429,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -413,7 +458,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -439,7 +487,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -465,7 +516,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -491,7 +545,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -517,7 +574,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -543,7 +603,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -569,7 +632,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -595,7 +661,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -621,7 +690,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -647,7 +719,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -673,7 +748,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -699,7 +777,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -725,7 +806,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -751,7 +835,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -777,7 +864,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -803,7 +893,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -829,7 +922,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -855,7 +951,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -881,7 +980,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -907,7 +1009,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -933,7 +1038,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -959,7 +1067,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -985,7 +1096,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1011,7 +1125,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -1037,7 +1154,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1063,7 +1183,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1089,7 +1212,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1115,7 +1241,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -1141,7 +1270,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1167,7 +1299,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1193,7 +1328,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1219,7 +1357,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1245,7 +1386,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1271,7 +1415,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1297,7 +1444,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1323,7 +1473,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1349,7 +1502,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1375,7 +1531,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1401,7 +1560,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1427,7 +1589,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -1453,7 +1618,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1479,7 +1647,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1505,7 +1676,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1531,7 +1705,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1557,7 +1734,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1583,7 +1763,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -1609,7 +1792,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -1635,7 +1821,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -1661,7 +1850,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -1687,7 +1879,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1713,7 +1908,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -1739,7 +1937,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -1765,7 +1966,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1791,7 +1995,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1817,7 +2024,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1843,7 +2053,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -1869,7 +2082,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1895,7 +2111,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1921,7 +2140,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1947,7 +2169,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1973,7 +2198,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -1999,7 +2227,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2025,7 +2256,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -2051,7 +2285,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2077,7 +2314,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2103,7 +2343,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2129,7 +2372,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2155,7 +2401,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2181,7 +2430,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2207,7 +2459,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2233,7 +2488,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -2259,7 +2517,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -2285,7 +2546,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2311,7 +2575,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2337,7 +2604,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2363,7 +2633,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2389,7 +2662,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2415,7 +2691,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2441,7 +2720,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2467,7 +2749,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2493,7 +2778,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2519,7 +2807,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2545,7 +2836,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2571,7 +2865,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2597,7 +2894,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2623,7 +2923,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2649,7 +2952,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2675,7 +2981,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -2701,7 +3010,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2727,7 +3039,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2753,7 +3068,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2779,7 +3097,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2805,7 +3126,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2831,7 +3155,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2857,7 +3184,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2883,7 +3213,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2909,7 +3242,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2935,7 +3271,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2961,7 +3300,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -2987,7 +3329,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3013,7 +3358,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3039,7 +3387,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3065,7 +3416,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3091,7 +3445,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3117,7 +3474,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3143,7 +3503,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3169,7 +3532,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3195,7 +3561,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3221,7 +3590,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3247,7 +3619,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3273,7 +3648,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3299,7 +3677,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3325,7 +3706,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3351,7 +3735,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -3377,7 +3764,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3403,7 +3793,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":1,
@@ -3429,7 +3822,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -3455,7 +3851,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3481,7 +3880,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3507,7 +3909,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3533,7 +3938,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3559,7 +3967,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3585,7 +3996,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3611,7 +4025,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3637,7 +4054,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3663,7 +4083,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3689,7 +4112,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3715,7 +4141,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3741,7 +4170,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3767,7 +4199,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3793,7 +4228,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3819,7 +4257,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3845,7 +4286,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3871,7 +4315,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3897,7 +4344,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3923,7 +4373,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3949,7 +4402,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -3975,7 +4431,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4001,7 +4460,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4027,7 +4489,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4053,7 +4518,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4079,7 +4547,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4105,7 +4576,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4131,7 +4605,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4157,7 +4634,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4183,7 +4663,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4209,7 +4692,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4235,7 +4721,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4261,7 +4750,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4287,7 +4779,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4313,7 +4808,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4339,7 +4837,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4365,7 +4866,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4391,7 +4895,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4417,7 +4924,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4443,7 +4953,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -4469,7 +4982,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4495,7 +5011,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4521,7 +5040,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4547,7 +5069,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4573,7 +5098,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4599,7 +5127,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4625,7 +5156,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4651,7 +5185,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":1,
@@ -4677,7 +5214,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4703,7 +5243,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4729,7 +5272,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4755,7 +5301,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4781,7 +5330,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4807,7 +5359,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4833,7 +5388,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":1,
@@ -4859,7 +5417,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -4885,7 +5446,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -4911,7 +5475,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":2,
@@ -4937,7 +5504,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -4963,7 +5533,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -4989,7 +5562,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5015,7 +5591,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5041,7 +5620,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5067,7 +5649,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5093,7 +5678,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5119,7 +5707,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5145,7 +5736,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5171,7 +5765,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5197,7 +5794,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5223,7 +5823,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5249,7 +5852,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5275,7 +5881,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5301,7 +5910,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5327,7 +5939,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5353,7 +5968,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5379,7 +5997,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5405,7 +6026,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5431,7 +6055,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5457,7 +6084,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":4,
@@ -5483,7 +6113,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5509,7 +6142,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5535,7 +6171,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5561,7 +6200,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":2,
@@ -5587,7 +6229,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5613,7 +6258,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5639,7 +6287,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":2,
@@ -5665,7 +6316,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":2,
@@ -5691,7 +6345,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5717,7 +6374,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5743,7 +6403,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5769,7 +6432,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5795,7 +6461,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5821,7 +6490,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5847,7 +6519,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5873,7 +6548,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":2,
@@ -5899,7 +6577,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5925,7 +6606,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -5951,7 +6635,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -5977,7 +6664,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -6003,7 +6693,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -6029,7 +6722,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -6055,7 +6751,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":4,
@@ -6081,7 +6780,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -6107,7 +6809,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":2,
@@ -6133,7 +6838,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":2,
@@ -6159,7 +6867,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6185,7 +6896,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6211,7 +6925,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6237,7 +6954,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6263,7 +6983,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":true
   },
   {
     "version":3,
@@ -6289,7 +7012,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":3,
@@ -6315,7 +7041,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6341,7 +7070,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6367,7 +7099,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6393,7 +7128,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6419,7 +7157,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6445,7 +7186,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6471,7 +7215,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":3,
@@ -6497,7 +7244,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":true
+    "destroy_self":true,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6523,7 +7273,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6549,7 +7302,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6575,7 +7331,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6601,7 +7360,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6627,7 +7389,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6653,7 +7418,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6679,7 +7447,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6705,7 +7476,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":3,
@@ -6731,7 +7505,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6757,7 +7534,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6783,7 +7563,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6809,7 +7592,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":3,
@@ -6835,7 +7621,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":true,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -6861,7 +7650,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6887,7 +7679,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6913,7 +7708,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6939,7 +7737,10 @@
     "graveyard_recovery":false,
     "cardsearch":true,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6965,7 +7766,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -6991,12 +7795,15 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
-    "version":4,
+    "version":5,
     "is_latest":true,
-    "updated_at":"2025-09-18",
+    "updated_at":"2025-10-09",
     "pack_name":"Creeping Souls「忍び寄る魂達」",
     "cd":50204,
     "rarity":"レジェンド",
@@ -7007,7 +7814,7 @@
     "cost":0,
     "power":7,
     "effect_name1":"■召喚時■",
-    "effect_text1":"自分のライフが15以下であれば、相手の戦場のカードを手札に戻し、相手のライフを4減らす。そうでなければ、自分のライフを2減らし、シェイドフィールドにする。",
+    "effect_text1":"自分の手札に炎閻魔が2枚以上あり、自分のライフが15以下であれば、相手の戦場のカードを手札に戻し、相手のライフを4減らす。そうでなければ、自分のライフを2減らし、シェイドフィールドにする。",
     "effect_name2":null,
     "effect_text2":null,
     "field":"シェイドフィールド",
@@ -7017,7 +7824,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7035,7 +7845,7 @@
     "effect_name1":"■手札発動■",
     "effect_text1":"『炎閻魔-夜雀』以外のカードによって自分のライフが減少したとき、シェイドフィールドであれば相手のライフを2減らす。",
     "effect_name2":"■召喚時■",
-    "effect_text2":"シェイドフィ ー ルドにする。",
+    "effect_text2":"シェイドフィールドにする。",
     "field":"シェイドフィールド",
     "BP_flag":false,
     "special_ability":"特殊効果未所持",
@@ -7043,7 +7853,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7069,7 +7882,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7095,7 +7911,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7121,7 +7940,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7147,7 +7969,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7173,7 +7998,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7199,7 +8027,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":true,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7225,7 +8056,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7251,7 +8085,10 @@
     "graveyard_recovery":true,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7277,7 +8114,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7303,7 +8143,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7329,7 +8172,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7355,7 +8201,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7381,7 +8230,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7407,7 +8259,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":true
   },
   {
     "version":3,
@@ -7433,7 +8288,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
   },
   {
     "version":3,
@@ -7459,7 +8317,10 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   },
   {
     "version":3,
@@ -7485,6 +8346,125 @@
     "graveyard_recovery":false,
     "cardsearch":false,
     "destroy_opponent":false,
-    "destroy_self":false
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
+  },
+  {
+    "version":5,
+    "is_latest":true,
+    "updated_at":"2025-10-11",
+    "pack_name":"その他特殊カード",
+    "cd":10206,
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"虹色の原石 杏乃みはる",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札をランダムに2枚、パワーを1増やし、自分のBPを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "special_ability":"特殊効果未所持",
+    "draw":false,
+    "graveyard_recovery":false,
+    "cardsearch":false,
+    "destroy_opponent":false,
+    "destroy_self":false,
+    "heal":false,
+    "power_up":true,
+    "power_down":false
+  },
+  {
+    "version":5,
+    "is_latest":true,
+    "updated_at":"2025-10-11",
+    "pack_name":"その他特殊カード",
+    "cd":30214,
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"虹色の原石 ゆぴぴ",
+    "cost":10,
+    "power":8,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"相手の手札のアタッカーを全て破壊し、エレメンタルフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "special_ability":"特殊効果未所持",
+    "draw":false,
+    "graveyard_recovery":false,
+    "cardsearch":false,
+    "destroy_opponent":true,
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
+  },
+  {
+    "version":5,
+    "is_latest":true,
+    "updated_at":"2025-10-11",
+    "pack_name":"その他特殊カード",
+    "cd":40206,
+    "rarity":"ゴールド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"虹色の原石 まぐねっこ・つなかん",
+    "cost":8,
+    "power":10,
+    "effect_name1":"■特性■",
+    "effect_text1":"このカードのコストは「自分のBP×2」減る。",
+    "effect_name2":"■召喚時■",
+    "effect_text2":"相手の手札をランダムに2枚拘束する。",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "special_ability":"拘束",
+    "draw":false,
+    "graveyard_recovery":false,
+    "cardsearch":false,
+    "destroy_opponent":false,
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
+  },
+  {
+    "version":5,
+    "is_latest":true,
+    "updated_at":"2025-10-11",
+    "pack_name":"その他特殊カード",
+    "cd":50214,
+    "rarity":"ゴールド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"虹色の原石 星乃ノワル",
+    "cost":12,
+    "power":10,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分の墓地のシェイドを1枚選び、手札に加え、コストを4減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "special_ability":"特殊効果未所持",
+    "draw":false,
+    "graveyard_recovery":true,
+    "cardsearch":false,
+    "destroy_opponent":false,
+    "destroy_self":false,
+    "heal":false,
+    "power_up":false,
+    "power_down":false
   }
 ]
