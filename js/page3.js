@@ -150,6 +150,11 @@ const packs = [
     nameSub:'「忍び寄る魂達」',
     selector:'#pack-creeping'
   },
+      { key:'drawn',
+    nameMain:'Drawn Sword',
+    nameSub:'「引き抜かれた剣」',
+    selector:'#pack-drawn'
+  },
 ];
 
 // ★ クリックハンドラで参照するため公開
@@ -756,6 +761,7 @@ const PACK_ORDER = [
     'Awaking The Oracle',
     'Beyond the Sanctuary',
     'Creeping Souls',
+    'Drawn Sword',
     // 新パックをここに追加（無くても自動検出されます）
 ];
 
@@ -763,7 +769,8 @@ const PACK_ORDER = [
 const PACK_SLUG_ALIAS = {
     'Awaking The Oracle': 'awaking',
     'Beyond the Sanctuary': 'beyond',
-    'Creeping Souls': 'creeping'
+    'Creeping Souls': 'creeping',
+    'Drawn Sword':'drawn'
 };
 
 // 種族表示順
