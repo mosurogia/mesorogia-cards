@@ -463,7 +463,7 @@
                         <div id="post-card-notes">
                             <!-- JSで行を生成 -->
                         </div>
-                        <div style="display:flex; gap:.5rem; align-items:center;">
+                        <div class="add-note-box">
                             <button type="button" id="add-card-note" class="add-note-btn">カード解説を追加</button>
                             <div class="post-hint" style="opacity:.8">※カードを選んで簡単な解説や採用理由を書けます</div>
                         </div>
@@ -636,9 +636,8 @@
                 </div>
 
 
-
+                <div id="post-status" class="status-text"></div>
                 <div class="post-actions">
-                    <div id="post-status" class="status-text"></div>
                     <button type="button" id="post-open-imagegen">画像生成</button>
                     <button type="button" id="post-preview" onclick="previewDeckPost()">プレビュー</button>
                     <button id="post-submit" type="submit">投稿</button>

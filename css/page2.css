@@ -400,8 +400,7 @@
     height: 100%;
     max-height: clamp(40vh, calc( 4 * (12vw + 4px) ), 120vh);
 }
-
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     #deck-layout {
         flex-direction: column;
         height: auto;
@@ -490,9 +489,9 @@
     padding: 4px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .cardop-modal {
-        width: min(30vw, 180px);
+        width: min(30vw, 200px);
         padding: 3px;
     }
 }
@@ -505,12 +504,6 @@
     margin-bottom: .25rem;
 }
 
-@media (max-width: 700px) {
-    .cardop-header {
-        gap: 2px;
-    }
-}
-
 .cardop-topline {
     display: flex;
     align-items: center;
@@ -518,15 +511,10 @@
 }
 
 .cardop-move-hint {
-    font-size: 10px;
+    font-size:clamp(.325rem, 1vw, .625rem);
     color: #666;
 }
 
-@media (max-width: 700px) {
-    .cardop-move-hint {
-        font-size: 7px;
-    }
-}
 
 /* 右上の×を少し小ぶりに */
 .cardop-close {
@@ -541,19 +529,19 @@
 
 .cardop-title {
     font-size: .85rem;
+    font-size: clamp(.6rem, 1.5vw, .9rem);
     margin: 0;
-}
-@media (max-width: 700px) {
-    .cardop-title {
-        font-size: .6rem;
-    }
 }
 
 .cardop-body {
     display: grid;
     gap: 5px;
 }
-
+@media (max-width: 768px) {
+    .cardop-body {
+            gap: 2px;
+        }
+}
 /* 画像＋バッジ */
 .cardop-figure {
     position: relative;
@@ -602,7 +590,7 @@
     background: #fff;
     cursor: pointer;
     font-weight: 700;
-    font-size: .65rem;
+    font-size: clamp(.4rem, 1.5vw, .8rem);
     transition: filter .15s ease, transform .06s ease;
 }
 
@@ -619,7 +607,6 @@
 
 /* 効果一覧 */
 .cardop-effects {
-    margin-top: .25rem;
     display: grid;
     gap: .35rem;
 }
@@ -630,24 +617,24 @@
     border-radius: 10px;
     background: #fafafa;
     padding: 5px;
+    font-size: clamp(.4rem, 1.5vw, .9rem);
 }
-
+@media (max-width: 768px) {
+    .cardop-effects .eff {
+    padding: 2.5px;
+    }
+}
 .cardop-effects .eff-name {
     font-weight: 700;
     margin-bottom: .2rem;
-    font-size: .65rem;
 }
 
 .cardop-effects .eff-text {
-    font-size: .7rem;
     line-height: 1.5;
     white-space: pre-wrap;
 }
-@media (max-width: 700px) {
-    .cardop-effects .eff-text {
-        font-size: .55rem;
-    }
-}
+
+
 /* ドラッグ時の位置調整（親.modal を固定） */
 #cardOpModal {
     position: fixed;
@@ -690,7 +677,7 @@
     touch-action: none;
 }
 /* モバイル以外で常に無効 */
-@media (min-width: 701px) {
+@media (min-width: 769px) {
     #deckpeek-button {
         display: none !important;
     }
@@ -722,7 +709,7 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
     padding: 6px;
 }
-@media (min-width: 701px) {
+@media (min-width: 769px) {
     #deckpeek-overlay {
         display: none !important;
     }
@@ -778,7 +765,7 @@
     max-width: 50%;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 #deck-info {
     max-width: 100%;
     overflow-y: visible;
@@ -843,29 +830,20 @@
     gap: .25rem;
     padding: .3rem;
 }
-@media (max-width: 700px) {
-/* 全体の余白を少し詰める */
-    .info-section {
-        gap: .1rem;
-    }
-}
 
 .info-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: .4rem;
 }
 @media (max-width: 1024px) {
     .info-row {
         display: block;
     }
 }
-@media (max-width: 700px) {
-/* ラベルを上・値を下の縦レイアウトに（横スクロール防止） */
+@media (max-width: 768px) {
 .info-row {
     display: flex;
-    gap: 2px;
 }
 
 }
@@ -897,47 +875,35 @@
         align-items: center;
         }
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .any {
             display: block;
-            gap: 5px;
         }
     }
 .any-text{
-    font-size: 0.9em;
+    font-size: clamp(.7rem, 2.2vw, 1rem);;
 }
-@media (max-width: 700px) {
-.any-text {
-    font-size: clamp(11px, 2vw, 14px);
-    }
-}
+
 /*デッキ名入力*/
 .info-value input[type="text"],
 .info-value input[type="password"],
 .info-value textarea {
     width: 100%;
-    padding: 0.3rem 0.5rem;
+    padding: .25rem 0.4rem;
     font-size: clamp(.7rem, 2.2vw, 1rem);
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 6px;
     resize: vertical;
 }
-@media (max-width: 700px) {
-/* 入力のタップ領域と読みやすさ */
-.info-value input[type="text"],
-.info-value textarea {
-    font-size: clamp(11px, 2.8vw, 21px);
-    padding: .2rem .3rem;
-}
-}
+
 /* ==== タップ可能な代表カード名の強調 ==== */
 .tap-target {
     text-decoration: underline dotted;
     text-underline-offset: 2px;
     cursor: pointer;
     position: relative;
-    padding-right: 1.1em;
+    padding-right: clamp(.7rem, 2.2vw, 1rem);
     /* ✏️ の余白 */
 }
 
@@ -948,7 +914,7 @@
     right: 0;
     top: 50%;
     transform: translateY(-47%);
-    font-size: 0.9em;
+    font-size: .75rem;
     opacity: .7;
 }
 
@@ -957,15 +923,6 @@
 .tap-target:hover {
     color: #6a5acd;
 }
-
-/* モバイルでヒントが大きくなりすぎないように */
-@media (max-width: 700px) {
-    .tap-hint {
-        font-size: .75em;
-    }
-}
-
-
 
 /*代表カード説明*/
 .post-representative-hint{
@@ -1040,7 +997,7 @@
     align-items: center;
     margin-top: .25rem;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 /* 投稿/保存ボタンは縦積み・全幅にしてタップしやすく */
     .deck-code-controls,
     .post-actions {
@@ -1055,7 +1012,7 @@
     border: none;
     color: #fff;
     font-weight: 500;
-    font-size: 0.7rem;
+    font-size: clamp(.75rem, 3vw, 1.25rem);
     display: flex;
     justify-content: flex-end;
     cursor: pointer;
@@ -1070,10 +1027,9 @@
         padding: .8rem .5rem;
 }
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 .deck-code-controls button,
     .post-actions button {
-        font-size: clamp(11px, 3vw, 21px);
         width: 100%;
         padding: .5rem 1rem;
         display: block;
@@ -1108,34 +1064,23 @@
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(107, 201, 107, .25);
 }
-@media (max-width: 700px) {
-    /* 投稿/保存ボタンは縦積み・全幅にしてタップしやすく */
-    .deck-code-controls{
-    padding: 0;
-    position: static;
-    padding: .6rem .8rem;
-    border-top: 1px solid #ddd;
-    }
-}
 
 
 .deck-code-controls button {
         background: linear-gradient(90deg, #6bc96b, #a0e4a0);
         box-shadow: 0 2px 6px rgba(107, 201, 107, 0.25);
-        font-size: 1.2rem;
 }
 @media (max-width: 1024px) {
-
     .deck-code-controls button {
         font-size: 0.8rem;
         padding: .4rem .3rem;
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     /* 投稿/保存ボタンは縦積み・全幅にしてタップしやすく */
     .deck-code-controls button {
-        font-size: 0.65rem;
+        font-size: clamp(.75rem, 3vw, 1.25rem);
         padding: .6rem .3rem;
     }
 }
@@ -1212,7 +1157,7 @@
         margin-bottom: 15px;
     }
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 .chart {
         height: 30vw;
     }
@@ -1415,11 +1360,7 @@
     border-radius: 8px;
     padding: .3rem .3rem;
 }
-@media (max-width: 700px) {
-    .owned-info {
-        padding: .5rem .6rem;
-    }
-}
+
 .owned-info .owned-head {
     font-size: 1.1rem;
     font-weight: 700;
@@ -1533,7 +1474,7 @@
     cursor: pointer;
     margin-bottom: auto;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     #shortage-toggle-btn,
     #exchange-toggle-btn-compact {
         font-size: 1rem;
@@ -1566,7 +1507,7 @@
     background: linear-gradient(180deg, #f8fbff 0%, #eaf3ff 100%);
 }
 .post-hint {
-    font-size: .7rem;
+    font-size: clamp(.55rem, 2.25vw, .85rem);
     color: #666;
     margin-top: 4px;
     line-height: 1.5;
@@ -1582,7 +1523,7 @@
     margin-bottom: 3px;
     align-items: center;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .note-toolbar {
     grid-template-rows: 32px 32px;
     gap: 6px;
@@ -1601,10 +1542,9 @@
     min-width: 0;
 
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .note-presets-grid {
         grid-template-rows: 32px 32px;
-        gap: 6px;
     }
 }
 /* 右1/3は“全表示”を縦2段分の高さで正方形気味に */
@@ -1623,7 +1563,7 @@
     border: none;
     border-radius: 8px;
     padding: 0.35rem 0.5rem;
-    font-size: 12px;
+    font-size: .75rem;
     font-weight: 600;
     line-height: 1;
     cursor: pointer;
@@ -1631,12 +1571,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.06s ease, box-shadow 0.2s ease;
 }
-@media (max-width: 700px) {
-    .note-preset-btn {
-        font-size: 11px;
-        padding: 0.3rem 0.45rem;
-    }
-}
+
 
 /* 個別カラー */
 .note-preset-btn[data-preset="deck-overview"] {
@@ -1694,7 +1629,7 @@
     justify-content: center;
     border-radius: 10px;
     font-weight: 700;
-    font-size: 12px;
+    font-size: .75rem;
     cursor: pointer;
     transition: all 0.2s ease;
     background: linear-gradient(90deg, #f59e0b, #fbbf24);
@@ -1702,10 +1637,9 @@
     color: #fff;
     border: none;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .note-showall-btn {
     height: calc(32px * 2 + 6px);
-    font-size: 13px;
     }
 }
 
@@ -1724,15 +1658,12 @@
 /* デッキ解説  */
 #post-note {
     min-height: 10rem;
-    resize: vertical;
-    line-height: 1.6;
-    font-size: 1rem;
+    line-height: 1.4;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     #post-note {
         min-height: 12rem;
-        font-size: .8rem;
     }
 }
 
@@ -1754,7 +1685,7 @@
 }
 @media (max-width: 1024px) {
     .post-card-note {
-        grid-template-columns: 70px 1fr;
+        grid-template-columns: 90px 1fr;
         gap: .25rem;
     }
 }
@@ -1766,14 +1697,8 @@
     max-height: 90%;
     display: flex;
     flex-direction: column;
-    gap: .6rem;
     margin-top: 50px;
     padding-bottom: 15px;
-}
-@media (max-width: 700px) {
-    .note-fullscreen {
-        gap: 0;
-    }
 }
 
 .note-full-head{
@@ -1805,7 +1730,7 @@
     min-height: 0;
     margin-top: .7rem;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .note-full-body {
         grid-template-columns: 1fr;
         margin-top: .4rem;
@@ -1842,7 +1767,7 @@
     border-left: 1px solid rgba(0, 0, 0, .08);
     padding-left: 5px;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .note-side {
         display: none;
     }
@@ -1972,6 +1897,17 @@
     height: 100%;
     resize: vertical;
 }
+/* カード解説追加ボタンボックス */
+.add-note-box{
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+@media (max-width: 768px) {
+.add-note-box {
+        display: block;
+    }
+}
 /* カード解説追加ボタン */
 .add-note-btn {
     padding: .3rem .5rem;
@@ -2040,6 +1976,8 @@
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 4px;
+    word-break: break-word;
+    overflow-wrap: normal;
 }
 @media (max-width: 768px) {
 .tag-chips {
@@ -2049,25 +1987,39 @@
 
 
 .tag-chips .chip {
+    transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+/* チップ共通 */
+.tag-chips .chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 4px 8px;
+    min-height: 34px;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 1.2;
+    word-break: normal;
+    white-space: normal;
+    /* ← Safariのnowrapを打ち消す */
     background: #fff5f8;
     border: 1px solid #f4a2c2;
     color: #9b355e;
     box-shadow: 0 0 6px rgba(255, 170, 110, 0.4);
-    transition: box-shadow 0.2s ease, transform 0.1s ease;
     border-radius: 999px;
     cursor: pointer;
     user-select: none;
     font-weight: 500;
-    font-size: 1rem;
+    font-size: .9rem;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 .tag-chips .chip {
         padding: 4px 7px;
         font-size: .75rem;
     }
 }
 
+/* ホバー時 */
 .tag-chips .chip:hover {
     box-shadow: 0 0 10px rgba(255, 180, 120, 0.6);
     transform: translateY(-1px);
@@ -2085,7 +2037,7 @@
     margin-bottom: 10px;
 }
 
-/* 自動タグはクリック無効＆別の見た目 */
+/* 自動タグ（クリック不可） */
 #auto-tags .chip {
     background: linear-gradient(90deg, #ff9040, #ff6a3d);
     border-color: #ff6333;
@@ -2093,7 +2045,6 @@
     color: #fff;
     cursor: default;
     pointer-events: none;
-    min-width: 125px;
 }
 
 /* 選択タグ */
@@ -2103,9 +2054,9 @@
     gap: 6px;
     align-items: stretch;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 #select-tags{
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 }
 
@@ -2185,14 +2136,10 @@
 /* ボタンを横並びにして均等に伸ばす */
 .paste-code-controls {
     display: flex;
-    gap: 5px;
+    gap: .3rem;
     width: 100%;
 }
-@media (max-width: 700px) {
-    .paste-code-controls {
-    gap: 0.2rem;
-    }
-}
+
 .paste-code-controls button {
     flex: 1 1 0;
     /* 以下は見た目を揃えるために好みで調整 */
@@ -2224,7 +2171,7 @@
     width: 100%;
     word-break: break-all;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 .paste-code-preview {
 display: block;
 font-size: .8rem;
@@ -2468,7 +2415,7 @@ font-size: .8rem;
 .status-text {
     margin-top: 0.5rem;
     color: #444;
-    font-size: clamp(.5rem, 1vw, .9rem);
+    font-size: clamp(.75rem, 3vw, 1.25rem);
 }
 
 /* 投稿同意チェックの軽量デザイン */
@@ -2480,7 +2427,7 @@ font-size: .8rem;
     color: #333;
     line-height: 1.4;
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .agree-label {
         font-size: .85rem;
         gap: 3px;
@@ -2488,16 +2435,12 @@ font-size: .8rem;
 }
 .agree-note {
     display: block;
-    font-size: 0.7rem;
+    font-size:clamp(.55rem, 2.25vw, .85rem);
     color: #666;
     margin-top: 4px;
     line-height: 1.5;
 }
-@media (max-width: 700px) {
-    .agree-note {
-        font-size: 0.6rem;
-    }
-}
+
 
 #post-agree {
     transform: scale(1.1);
@@ -2517,7 +2460,11 @@ font-size: .8rem;
     background: linear-gradient(90deg, #68a6ff, #a4d0ff);
     box-shadow: 0 2px 6px rgba(104, 166, 255, 0.25);
 }
-
+@media (max-width: 768px) {
+    .post-actions button {
+        font-size: clamp(.75rem, 3vw, 1.25rem);
+    }
+}
 .post-actions button:hover {
     box-shadow: 0 3px 8px rgba(104, 166, 255, 0.35);
 }
