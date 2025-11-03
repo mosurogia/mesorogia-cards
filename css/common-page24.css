@@ -1,0 +1,160 @@
+/* ================================
+   アカウントデータ モーダル（UI）
+   ※ 開閉/保存ロジックは JS 側で実装
+================================== */
+#accountDataModal{
+    z-index: 3500;
+}
+.account-modal {
+    width: min(720px, 94vw);
+    max-height: 88vh;
+    overflow: auto;
+    border-radius: 12px;
+    padding: 12px;
+    align-items: center;
+}
+
+.account-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.account-modal-head h3 {
+    margin: 0;
+    font-size: clamp(18px, 3.8vw, 22px);
+}
+
+.account-close {
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.account-modal-body {
+    display: grid;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.account-field {
+    display: grid;
+    gap: 6px;
+}
+
+.account-field label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+.account-field input[type="text"],
+.account-field input[type="password"] {
+    width: 100%;
+    padding: .45rem .6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.account-pass-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.account-hint {
+    color: #6b7280;
+    font-size: .8rem;
+}
+
+.account-note {
+    margin-top: 4px;
+    color: #374151;
+    font-size: .9rem;
+}
+
+.account-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* 小さめ画面最適化 */
+@media (max-width: 700px) {
+    .account-modal {
+        padding: 10px;
+    }
+
+    .account-field label {
+        font-size: .9rem;
+    }
+}
+
+.auth-status {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+}
+
+.auth-status-body {
+    background: #fff;
+    padding: 14px 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 220px;
+    font-size: 14px;
+}
+
+.auth-spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid #cde2ff;
+    border-top-color: #4aa3ff;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.auth-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    z-index: 10000;
+    max-width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.auth-toast.ok {
+    background: #10b981;
+}
+
+.auth-toast.err {
+    background: #ef4444;
+}

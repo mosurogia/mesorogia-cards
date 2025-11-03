@@ -131,34 +131,32 @@ if (window.OwnedStore?.setAutosave) {
 document.addEventListener('DOMContentLoaded', () => {
   updateSummary(); // 初回反映
 });
+
+
+// グローバル初期値（未定義エラー防止）
+window.PACK_ORDER = window.PACK_ORDER || [];
+window.packs      = window.packs || [];
+
+ // packs が未設定なら packs.json から埋める
+  (async ()=>{
+  if (Array.isArray(window.packs) && window.packs.length) return;
+  try{
+    const pc = await (window.loadPackCatalog ? window.loadPackCatalog() : null);
+    if (pc && Array.isArray(pc.list)) {
+      window.packs = pc.list.map(p => ({
+        key: p.slug,                        // = slug
+        nameMain: p.en,
+        nameSub: p.jp || '',
+        selector: `#pack-${p.slug}`
+      }));
+    }
+  }catch(e){ console.warn('packs fallback failed', e); }
+  })();
+
 /*===================
     2.所持率コンプ率
 ====================*/
-const packs = [
-  { key:'awaking',
-    nameMain:'Awaking The Oracle',
-    nameSub:'「神託者の覚醒」',
-    selector:'#pack-awaking'
-  },
-    { key:'beyond',
-    nameMain:'Beyond the Sanctuary',
-    nameSub:'「聖域の先へ」',
-    selector:'#pack-beyond'
-  },
-    { key:'creeping',
-    nameMain:'Creeping Souls',
-    nameSub:'「忍び寄る魂達」',
-    selector:'#pack-creeping'
-  },
-      { key:'drawn',
-    nameMain:'Drawn Sword',
-    nameSub:'「引き抜かれた剣」',
-    selector:'#pack-drawn'
-  },
-];
 
-// ★ クリックハンドラで参照するため公開
-window.packs = packs;
 
 function calcSummary(nodeList){
   let owned = 0, ownedTypes = 0, total = 0, totalTypes = 0;
@@ -179,10 +177,9 @@ function calcSummary(nodeList){
 // === 全体所持率（PCサイドバー & スマホ上部）を更新 ===
 function updateOverallSummary(){
   const allCards = document.querySelectorAll('#packs-root .card');
-
   const s = calcSummary(allCards);
 
-  // PCサイドバー #summary 内の .summary-rate を書き換え
+  // PCサイドバー
   const pcRate = document.querySelector('#summary .summary-rate');
   if (pcRate){
     pcRate.innerHTML =
@@ -190,18 +187,14 @@ function updateOverallSummary(){
       `コンプ率: ${s.owned}/${s.total} (${s.percent}%)`;
   }
 
-// 枚数＋%の所持率/コンプ率を含める
-const pcTweet = document.querySelector('#summary .summary-share a');
-if (pcTweet){
-  const txt = buildShareText({
-    header: '全カード',
-    sum: s, // updateOverallSummary内で求めた全体サマリー
-  });
-  pcTweet.href = `https://twitter.com/intent/tweet?text=${txt}`;
-}
+  // PC共有リンク
+  const pcTweet = document.querySelector('#summary .summary-share a');
+  if (pcTweet){
+    const txt = buildShareText({ header: '全カード', sum: s });
+    pcTweet.href = `https://twitter.com/intent/tweet?text=${txt}`;
+  }
 
-
-  // スマホ上部バー（所持率・コンプ率・全体）を同期
+  // モバイル上部の数値
   const moTypeCount   = document.getElementById('mobile-owned-type-count');
   const moTypeTotal   = document.getElementById('mobile-total-type-count');
   const moTypePercent = document.getElementById('mobile-owned-type-percent');
@@ -216,65 +209,49 @@ if (pcTweet){
   if (moTotal)       moTotal.textContent = s.total;
   if (moPercent)     moPercent.textContent = `${s.percent}%`;
 
+  // モバイル共有リンク（選択中パックを優先、なければ全体）
+  const mobileTweet = document.getElementById('mobile-tweet-link');
+  if (mobileTweet){
+    const selKey = (document.getElementById('pack-selector')||{}).value;
+    let mtxt;
 
-// 両方とも「枚数＋%」の所持率/コンプ率で出す
-const mobileTweet = document.getElementById('mobile-tweet-link');
-if (mobileTweet){
-  const selKey = (document.getElementById('pack-selector')||{}).value;
-
-  let packName = '';
-  let packSum = null;
-  if (selKey && selKey !== 'all') {
-    const selPack = Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null;
-    if (selPack){
-      packName = selPack.nameMain;
-      const selCards = queryCardsByPack(selPack);
-      packSum = calcSummary(selCards);
+    if (selKey && selKey !== 'all') {
+      const selPack = Array.isArray(packs) ? packs.find(p=>p.key===selKey) : null;
+      if (selPack){
+        const selCards = queryCardsByPack(selPack);
+        const sum = calcSummary(selCards);
+        mtxt = buildShareText({ header: selPack.nameMain, sum });
+      }
     }
-  }
 
-// モバイル：パック選択時は「全カード」を出さず、そのパックのみをポスト
-  let mtxt;
-  if (selKey && selKey !== 'all' && packSum && packName) {
-    // パックが選ばれているとき → そのパックだけ
-    mtxt = buildShareText({
-      header: packName,
-      sum: packSum
-    });
-  } else {
-    // 「全カード」選択時 → 全体だけ
-    mtxt = buildShareText({
-      header: '全カード',
-      sum: s
-    });
+    if (!mtxt) mtxt = buildShareText({ header: '全カード', sum: s });
+    mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
   }
-  mobileTweet.href = `https://twitter.com/intent/tweet?text=${mtxt}`;
 }
 
+// モバイル：進捗バー付きサマリーHTML
+function renderMobilePackSummaryHTML(s){
+  return `
+    <div class="pack-meters">
+      <div class="meter">
+        <div class="meter-label">所持率</div>
+        <div class="meter-track" role="progressbar"
+            aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.typePercent}">
+          <span class="meter-bar" style="width:${s.typePercent}%"></span>
+        </div>
+        <div class="meter-val">${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)</div>
+      </div>
+      <div class="meter">
+        <div class="meter-label">コンプ率</div>
+        <div class="meter-track" role="progressbar"
+            aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.percent}">
+          <span class="meter-bar -comp" style="width:${s.percent}%"></span>
+        </div>
+        <div class="meter-val">${s.owned}/${s.total} (${s.percent}%)</div>
+      </div>
+    </div>`;
 }
 
-  // モバイル：進捗バー付きサマリーHTMLを返す
-  function renderMobilePackSummaryHTML(s){
-    return `
-      <div class="pack-meters">
-        <div class="meter">
-          <div class="meter-label">所持率</div>
-          <div class="meter-track" role="progressbar"
-              aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.typePercent}">
-            <span class="meter-bar" style="width:${s.typePercent}%"></span>
-          </div>
-          <div class="meter-val">${s.ownedTypes}/${s.totalTypes} (${s.typePercent}%)</div>
-        </div>
-        <div class="meter">
-          <div class="meter-label">コンプ率</div>
-          <div class="meter-track" role="progressbar"
-              aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.percent}">
-            <span class="meter-bar -comp" style="width:${s.percent}%"></span>
-          </div>
-          <div class="meter-val">${s.owned}/${s.total} (${s.percent}%)</div>
-        </div>
-      </div>`;
-  }
 
 
 // === 各パック所持率（PCの #pack-summary-list は li を使わず、指定の div 構成で生成） ===
@@ -320,10 +297,13 @@ const packTxt = buildShareText({
 const share = document.createElement('div');
 share.className = 'summary-share';
 share.innerHTML = `
-  <a class="custom-tweet-button" href="https://twitter.com/intent/tweet?text=${packTxt}" target="_blank" rel="noopener">
+  <a class="custom-tweet-button" target="_blank" rel="noopener">
     <img class="tweet-icon" src="img/x-logo.svg" alt="Post"><span>ポスト</span>
   </a>
 `;
+const a = share.querySelector('a');
+a.href = `https://twitter.com/intent/tweet?text=${buildShareText({ header: pack.nameMain, sum: s })}`;
+wrap.appendChild(share);
 
     wrap.appendChild(share);
     pcList.appendChild(wrap);
@@ -331,7 +311,8 @@ share.innerHTML = `
     // スマホ: セレクト
     if (mobileSelect){
       const opt = document.createElement('option');
-      opt.value = pack.key;
+      // packs.json の key は slug にしてある
+      opt.value = pack.key; // = slug
       opt.textContent = pack.nameMain;
       mobileSelect.appendChild(opt);
     }
@@ -403,19 +384,23 @@ function selectMobilePack(packKey) {
 }
 
 //パックへジャンプ
-function jumpToSelectedPack(){
+function jumpToSelectedPack() {
   const sel = document.getElementById('pack-selector');
   const key = sel?.value;
-  if(!key || key === 'all') return;
+  if (!key || key === 'all') return;
 
-  // パックセクションに id="pack-〇〇" を振っている想定
   const target = document.querySelector(`#pack-${key}`);
-  if(target){
-    target.scrollIntoView({behavior:'smooth', block:'start'});
-  }
+  if (!target) return;
+
+  // ← ここを class で取得
+  const headerEl = document.querySelector('.top-summary');
+  const offset   = headerEl ? headerEl.getBoundingClientRect().height : 0;
+
+  const rect = target.getBoundingClientRect();
+  const y = window.scrollY + rect.top - offset - 10; // 少しだけ余白
+
+  window.scrollTo({ top: y, behavior: 'smooth' });
 }
-
-
 
 
 // グローバル公開（HTML の onchange="selectMobilePack(this.value)" から呼ぶため）
@@ -754,24 +739,6 @@ async function buildOwnedShareURL(){
 /*=======================
     2.所持率チェッカー変数
 ========================*/
-//スラッグ：プログラム用文字列
-
-// パック名表示順（未指定のものは末尾にアルファベット順で付く)
-const PACK_ORDER = [
-    'Awaking The Oracle',
-    'Beyond the Sanctuary',
-    'Creeping Souls',
-    'Drawn Sword',
-    // 新パックをここに追加（無くても自動検出されます）
-];
-
-// パック名→id（スラッグ）化
-const PACK_SLUG_ALIAS = {
-    'Awaking The Oracle': 'awaking',
-    'Beyond the Sanctuary': 'beyond',
-    'Creeping Souls': 'creeping',
-    'Drawn Sword':'drawn'
-};
 
 // 種族表示順
 const RACE_ORDER = ['ドラゴン','アンドロイド','エレメンタル','ルミナス','シェイド','イノセント','旧神'];
@@ -815,16 +782,6 @@ const viewCategory = (s) => String(s ?? '').replace(/\s*[（(][^（）()]*[）)]
 /*============生成前準備===========*/
 //#regionready
 
-// パック名分裂（英名和名で分裂）
-function splitPackName(packName) {
-    const i = packName.indexOf('「');
-    if (i >= 0) return { en: packName.slice(0, i).trim(), jp: packName.slice(i).trim() };
-    return { en: packName.trim(), jp: '' };
-}
-//パック英名→スラッグ用id生成
-function makePackSlug(packEn) {
-    return PACK_SLUG_ALIAS[packEn] || packEn.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-}
 
 //レアリティclassを作る
 function rarityClassOf(rarity) {
@@ -1556,24 +1513,50 @@ function attachPackControls(root){
   });
 }
 
-// ========== 全パックをまとめて描画 ==========
-renderAllPacks({
+// パックカタログ初期化してから描画
+async function initPacksThenRender() {
+  try {
+    const catalog = await window.loadPackCatalog();
+    window.PACK_ORDER = catalog.order; // 英名の表示順
+    window.packs = catalog.list.map(p => ({
+      key: p.key,
+      nameMain: p.en,
+      nameSub:  p.jp,
+      selector: `#pack-${p.slug}`
+    }));
+  } catch (e) {
+    console.warn('packカタログ初期化に失敗:', e);
+    window.PACK_ORDER = [];
+    window.packs = [];
+  }
+
+  // ここでパック順が確定した状態で描画
+  await renderAllPacks({
     jsonUrl: 'public/cards_latest.json',
     mountSelector: '#packs-root',
     isLatestOnly: true,
-    sortInRace: typeCostPowerCd,
-    }).then(() => {
-  // 所持表示の同期 → サマリー更新
+    sortInRace: typeCostPowerCd
+  });
+
   if (typeof window.applyGrayscaleFilter === 'function') window.applyGrayscaleFilter();
-  updateSummary();
-});
+  updateSummary && updateSummary();
+}
+
+// DOM 準備後に起動
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPacksThenRender, { once:true });
+} else {
+  initPacksThenRender();
+}
 
 // パック抽出の共通ヘルパ（英名で前方一致＋範囲限定）
 function queryCardsByPack(pack) {
-  const key = (pack?.nameMain || '').trim();
-  if (!key) return document.querySelectorAll('#packs-root .card');
-  return document.querySelectorAll(`#packs-root .card[data-pack^="${CSS.escape(key)}"]`);
+  const en = (pack?.nameMain || '').trim(); // 既存互換
+  return en
+    ? document.querySelectorAll(`#packs-root .card[data-pack^="${CSS.escape(en)}"]`)
+    : document.querySelectorAll('#packs-root .card');
 }
+
 
 // チェッカー反映（保存 → 反映 → チェッカータブへ）
 // ※ 保存を拒否した場合は A に巻き戻してからタブ切替（クランプはしない）

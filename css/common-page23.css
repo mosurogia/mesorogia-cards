@@ -1,45 +1,45 @@
 
 /* ======== タブ切り替え ======== */
-        .tab-bar {
-            display: flex;
-            background: #333;
-            color: white;
-        }
+.tab-bar {
+    display: flex;
+    background: #333;
+    color: white;
+}
 
-        .tab {
-            flex: 1;
-            padding: 10px 2vw;
-            text-align: center;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-        }
+.tab {
+    flex: 1;
+    padding: 10px 2vw;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+}
 
-        .tab span {
-            background: rgba(0, 0, 0, 0.4);
-            /* 背景の黒半透明 */
-            border-radius: 6px;
-            display: inline-block;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            font-size: clamp(17px, 4.5vw, 35px);
-        }
+.tab span {
+    background: rgba(0, 0, 0, 0.4);
+    /* 背景の黒半透明 */
+    border-radius: 6px;
+    display: inline-block;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-size: clamp(17px, 4.5vw, 35px);
+}
 
-        .tab:not(.active):hover span {
-            background-color: rgba(255, 230, 150, 0.6);
-            /* 明るめに変化 */
-            transition: background 0.3s;
-        }
+.tab:not(.active):hover span {
+    background-color: rgba(255, 230, 150, 0.6);
+    /* 明るめに変化 */
+    transition: background 0.3s;
+}
 
-        .tab.active {
-            border-bottom: 3px solid yellow;
-            background: #444;
-        }
+.tab.active {
+    border-bottom: 3px solid yellow;
+}
 
-        .tab-content {
-            display: none;
-            padding: 4px;
-        }
+.tab-content {
+    display: none;
+    padding: 4px;
+}
 
-        .tab-content.active {
-            display: block;
-        }
+.tab-content.active {
+    display: block;
+}
+
 

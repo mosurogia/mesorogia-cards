@@ -65,7 +65,7 @@ button,
 }
 /*ヘッダー関連*/
 .main-header {
-    height: 55px;
+    height: 3.5rem;
     background-image: url("../img/header.webp");
     background-repeat: repeat-x;
     /* 横方向に繰り返し */
@@ -82,7 +82,7 @@ button,
 }
 
 .header-logo img {
-    height: 1.8em;
+    height: 2.8rem;
     width: auto;
     margin-top: 10px;
     object-fit: contain;
@@ -90,11 +90,11 @@ button,
 
 
 .header-nav a {
-    margin-left: 1em;
+    margin-left: 1rem;
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.85em;
+    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
     background-color: rgba(0, 0, 0, 0.4);
     padding: 6px 0.2em;
     border-radius: 6px;
@@ -102,38 +102,28 @@ button,
 }
 @media (max-width: 768px) {
     .header-nav a {
-        font-size: 0.75em;
+        font-size: 1.05rem;
+        font-size: clamp(.6rem, 2.45vw, 1.05rem);
     }
 }
-@media (max-width: 680px) {
+@media (max-width: 560px) {
     .header-nav a {
-        font-size: 0.65em;
-    }
-}
-@media (max-width: 630px) {
-    .header-nav a {
-        font-size: 0.6em;
+        margin-left: 0.1rem;
     }
 }
 
-@media (max-width: 560px) {
-    .header-nav a {
-        margin-left: 0.1em;
-        font-size: 0.45em;
-    }
-}
-@media (max-width: 410px) {
-    .header-nav a {
-        font-size: 0.23em;
-    }
-}
 .header-nav a:hover {
     background-color: rgba(255, 255, 255, 0.2);
     /* 軽いホバー効果 */
     text-decoration: none;
 }
 
-
+.header-nav a.active-page {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
 
 
 /*上部に戻るボタン*/
@@ -149,7 +139,7 @@ button,
     border-radius: 50%;
     border: 1px solid #aaa;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 1500;
 }
 
 
@@ -157,7 +147,7 @@ button,
 /* ======== フッター ======== */
 footer {
     text-align: center;
-    font-size: clamp(5px, 1vw, 1rem);
+    font-size: clamp(10px, 1vw, 1rem);
     color: #666;
     padding: 3vw 0;
     background-color: #f9f9f9;

@@ -1,0 +1,307 @@
+/* =========================
+   deck-post 一覧UI
+   ========================= */
+
+.post-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0e0f13;
+    border-bottom: 1px solid #202534;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px 6px;
+}
+
+.search-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #2a2f3c;
+    border-radius: 10px;
+    background: #121521;
+    color: #eef1ff;
+}
+
+.search-row button {
+    padding: 10px 12px;
+    border: 1px solid #2a2f3c;
+    border-radius: 10px;
+    background: #1a1f2e;
+    color: #dfe6ff;
+}
+
+.status-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 12px 10px;
+    color: #cdd5f6;
+    font-size: 0.95rem;
+}
+
+.select-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.select-wrap select {
+    background: #121521;
+    color: #eef1ff;
+    border: 1px solid #2a2f3c;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+/* チップ */
+.chips {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 6px 12px 12px;
+    scrollbar-width: thin;
+}
+
+.chip {
+    padding: 4px 10px;
+    border: 1px solid #3a4257;
+    border-radius: 999px;
+    background: #151a24;
+    color: #d8defa;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.chip.active {
+    background: #2b3345;
+    border-color: #5f78ff;
+}
+
+.chip.mini {
+    font-size: .8rem;
+    padding: 2px 8px;
+}
+
+.chip.hash {
+    opacity: .9;
+}
+
+/* 一覧 */
+.post-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+}
+
+.post-list.list-view .post-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: stretch;
+}
+
+.post-list.list-view .thumb-box {
+    aspect-ratio: 4/3;
+}
+
+.post-card {
+    background: #171a22;
+    border: 1px solid #2a2f3c;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.thumb-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #0b0d11;
+}
+
+.thumb-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    align-items: center;
+}
+
+.title-wrap .title {
+    font-weight: 700;
+    color: #eaf0ff;
+}
+
+.title-wrap .sub {
+    font-size: .85rem;
+    color: #a9b4d9;
+}
+
+.fav-btn {
+    border: none;
+    background: transparent;
+    color: #cfd8ff;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.fav-btn.active {
+    color: #ffd400;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 10px 8px;
+}
+
+.post-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 10px 10px;
+}
+
+.post-actions button {
+    padding: 8px 10px;
+    background: #1a1f2e;
+    border: 1px solid #2a2f3c;
+    border-radius: 8px;
+    color: #dfe6ff;
+}
+
+.post-detail {
+    padding: 10px;
+    border-top: 1px dashed #2a2f3c;
+    color: #d5dcff;
+}
+
+/* もっと見る */
+.load-more {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+}
+
+.load-more button {
+    padding: 10px 16px;
+    border: 1px solid #2a2f3c;
+    border-radius: 999px;
+    background: #151a24;
+    color: #eaf0ff;
+}
+
+/* シート（下から出るモーダル） */
+.sheet.hidden {
+    display: none;
+}
+
+.sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 85vh;
+    background: #151922;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -10px 32px rgba(0, 0, 0, .5);
+    z-index: 20;
+}
+
+.sheet-handle {
+    width: 44px;
+    height: 5px;
+    background: #3a4257;
+    border-radius: 3px;
+    margin: 8px auto;
+}
+
+.sheet-body {
+    padding-bottom: 8px;
+}
+
+.sheet-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 12px 8px;
+}
+
+.sheet-tabs button {
+    padding: 8px 10px;
+    background: #1a2030;
+    border: 1px solid #2a2f3c;
+    border-radius: 10px;
+    color: #dfe6ff;
+}
+
+.sheet-tabs button.active {
+    background: #2b3345;
+    border-color: #5f78ff;
+}
+
+.sheet-content {
+    padding: 0 12px 8px;
+    color: #eaf0ff;
+}
+
+.sheet-actions {
+    padding: 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sheet-actions button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #2a2f3c;
+    background: #1a2030;
+    color: #dfe6ff;
+}
+
+/* 類似一覧 */
+.similar-head {
+    padding: 0 4px 6px;
+    color: #cdd5f6;
+}
+
+.similar-list {
+    padding-left: 20px;
+}
+
+.similar-list li {
+    margin: 4px 0;
+}
+
+.similar-list b {
+    color: #ffd36a;
+}
+
+.to-diff {
+    margin-left: 8px;
+    padding: 4px 8px;
+    border: 1px solid #2a2f3c;
+    border-radius: 8px;
+    background: #232a3d;
+    color: #dfe6ff;
+}
+
+/* デッキ簡易 */
+.deck-simple {
+    padding-left: 16px;
+}
+
+/* 幅広時の2カラム */
+@media (min-width: 1024px) {
+    .post-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

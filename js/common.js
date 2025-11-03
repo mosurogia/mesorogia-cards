@@ -19,7 +19,7 @@ window.cardMap = cardMap;
 const BASE_PATH = '';
 
 async function fetchLatestCards() {
-  const res = await fetch('public/cards_latest.json');
+  const res = await fetch('./public/cards_latest.json');
   if (!res.ok) {
     throw new Error(`HTTP error ${res.status} - ${res.statusText}`);
   }
@@ -28,8 +28,89 @@ async function fetchLatestCards() {
 }
 
 
+// パック一覧を読み出して共通利用（card_data.py が packs.json を出す想定）
+let __PackCatalog = null;
+/**
+ * 返り値:
+ * {
+ *   list: [{ key, en, jp, slug, labelTwoLine }, ...] // 表示順でソート済み
+ *   byEn:  Map(en -> item)
+ *   order: string[] // en の表示順
+ * }
+ */
+function splitPackName(name='') {
+  const s = String(name);
+  if (s.includes('「')) {
+    const i = s.indexOf('「');
+    return { en: s.slice(0, i).trim(), jp: s.slice(i).trim() };
+  }
+  if (s.includes('／')) {
+    const [en, jp=''] = s.split('／');
+    return { en: en.trim(), jp: jp.trim() ? `「${jp.trim()}」` : '' };
+  }
+  return { en: s.trim(), jp: '' };
+}
+function makePackSlug(en='') {
+  const base = String(en || '').trim();
+  const ascii = base.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  // 英字が1文字も無い（=日本語など）と空になるのでフォールバックで元文字列を返す
+  return ascii || base;
+}
+async function loadPackCatalog() {
+  if (window.__PackCatalog) return window.__PackCatalog;
+  try {
+    const res2 = await fetch('./public/packs.json', { cache: 'no-store' });
+if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
+
+    const raw = await res2.json();
+    // どちらの形式でも受け付ける:
+    // A) { "packs": [ ... ], "order": [...] } ← 新しい生成スクリプト
+    // B) { "list":  [ ... ], "order": [...] } ← 以前の手作業ファイル
+    const arr   = Array.isArray(raw.packs) ? raw.packs : (Array.isArray(raw.list) ? raw.list : []);
+    const order = Array.isArray(raw.order) ? raw.order : null;
+
+    const list = arr.map(p => {
+      const enRaw = (p.en ?? '').trim();
+      const jpRaw = (p.jp ?? '').trim();
+      // en が未入力で jp 側だけある場合でも表示できるように補正
+      const en  = enRaw || (jpRaw ? jpRaw.replace(/[「」]/g,'') : '');
+      const jp  = jpRaw || '';
+      // slug/key は与えられていれば尊重。無ければ makePackSlug から作る
+      const slug = p.slug || makePackSlug(en);
+      const key  = p.key  || slug;
+      return {
+        key, en, jp, slug,
+        labelTwoLine: `${en}${jp ? `\n${jp}` : ''}`
+      };
+    });
+
+    const byEn  = new Map(list.map(x => [x.en, x]));
+    const ord   = order && order.length ? order : list.map(x => x.en);
+
+    window.__PackCatalog = { list, byEn, order: ord };
+    return window.__PackCatalog;
+
+  } catch (e) {
+    console.warn('packs.json 読み込み失敗→cards_latest.jsonから検出にフォールバック', e);
+    const cards = await fetchLatestCards();
+    const byEn = new Map();
+    cards.forEach(c => {
+      const { en, jp } = splitPackName(c.pack_name || '');
+      if (en && !byEn.has(en)) byEn.set(en, { en, jp, slug: makePackSlug(en) });
+    });
+    const list = [...byEn.values()].sort((a,b)=>a.en.localeCompare(b.en,'ja'));
+    list.forEach(x => { x.key = x.slug; x.labelTwoLine = `${x.en}${x.jp?`\n${x.jp}`:''}`; });
+    const order = list.map(x => x.en);
+    window.__PackCatalog = { list, byEn: new Map(list.map(x=>[x.en,x])), order };
+    return window.__PackCatalog;
+  }
+}
 
 
+// ここで window に公開
+window.splitPackName   = splitPackName;
+window.makePackSlug    = makePackSlug;
+window.loadPackCatalog = loadPackCatalog;
 
 
 
@@ -39,6 +120,7 @@ const getCategoryOrder = (category) => {
 const order = {
 "聖焔龍（フォルティア）": 11,
 "ドラゴライダー": 12,
+"電竜": 13,
 "メイドロボ": 21,
 "アドミラルシップ": 22,
 "テックノイズ": 23,
@@ -48,6 +130,7 @@ const order = {
 "ロスリス": 41,
 "白騎士": 42,
 "愚者愚者（クラウンクラウド）":43,
+"蒼ノ刀": 44,
 "昏き霊園（スレイヴヤード）": 51,
 "マディスキア": 52,
 "炎閻魔（えんえんま）": 53,
@@ -77,40 +160,46 @@ function scrollToTop() {
 
 // 一覧のカードをソート
 function sortCards() {
-const sortValue = document.getElementById("sort-select").value;
-const grid = document.getElementById("grid");
-const cards = Array.from(grid.children).filter(card => card.classList.contains("card"));
+  const sortValue = document.getElementById("sort-select").value;
+  const grid = document.getElementById("grid");
+  const cards = Array.from(grid.children).filter(card => card.classList.contains("card"));
 
-cards.sort((a, b) => {
-const typeA = getTypeOrder(a.dataset.type);
-const typeB = getTypeOrder(b.dataset.type);
-const costA = parseInt(a.dataset.cost);
-const costB = parseInt(b.dataset.cost);
-const powerA = parseInt(a.dataset.power);
-const powerB = parseInt(b.dataset.power);
-const cdA = parseInt(a.dataset.cd);
-const cdB = parseInt(b.dataset.cd);
-const catA = getCategoryOrder(a.dataset.category);
-const catB = getCategoryOrder(b.dataset.category);
+  cards.sort((a, b) => {
+    const typeA = getTypeOrder(a.dataset.type);
+    const typeB = getTypeOrder(b.dataset.type);
+    const costA = parseInt(a.dataset.cost);
+    const costB = parseInt(b.dataset.cost);
+    const powerA = parseInt(a.dataset.power);
+    const powerB = parseInt(b.dataset.power);
+    const cdA = parseInt(a.dataset.cd);
+    const cdB = parseInt(b.dataset.cd);
+    const catA = getCategoryOrder(a.dataset.category);
+    const catB = getCategoryOrder(b.dataset.category);
 
-switch (sortValue) {
-    case "cost-asc":
-    return costA - costB || typeA - typeB || powerA - powerB || cdA - cdB;
-    case "cost-desc":
-    return costB - costA || typeA - typeB || powerA - powerB || cdA - cdB;
-    case "power-asc":
-    return powerA - powerB || typeA - typeB || costA - costB || cdA - cdB;
-    case "power-desc":
-    return powerB - powerA || typeA - typeB || costA - costB || cdA - cdB;
-    case "category-order":
-    return catA - catB || typeA - typeB || costA - costB || powerA - powerB || cdA - cdB;
-    default:
-    return typeA - typeB || costA - costB || powerA - powerB || cdA - cdB;
+    switch (sortValue) {
+      case "cost-asc":
+        return costA - costB || typeA - typeB || powerA - powerB || cdA - cdB;
+      case "cost-desc":
+        return costB - costA || typeA - typeB || powerA - powerB || cdA - cdB;
+      case "power-asc":
+        return powerA - powerB || typeA - typeB || costA - costB || cdA - cdB;
+      case "power-desc":
+        return powerB - powerA || typeA - typeB || costA - costB || cdA - cdB;
+      case "category-order":
+        return catA - catB || typeA - typeB || costA - costB || powerA - powerB || cdA - cdB;
+      case "rarity-order":
+        const rarityOrder = { "レジェンド": 0, "ゴールド": 1, "シルバー": 2, "ブロンズ": 3 };
+        const rA = rarityOrder[a.dataset.rarity] ?? 99;
+        const rB = rarityOrder[b.dataset.rarity] ?? 99;
+        return rA - rB || costA - costB || powerA - powerB || cdA - cdB;
+      default:
+        return typeA - typeB || costA - costB || powerA - powerB || cdA - cdB;
+    }
+  });
+
+  cards.forEach(card => grid.appendChild(card));
 }
-});
 
-cards.forEach(card => grid.appendChild(card));
-}
 
 
 /* === 所持データ共通ストア ===*/

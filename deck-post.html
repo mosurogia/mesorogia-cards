@@ -47,10 +47,64 @@
         <a href="index.html">📖 一覧</a>
         <a href="deckmaker.html">🃏 デッキメーカー</a>
         <a href="cardcheker.html">📊 所持率チェッカー</a>
-        <a href="deck-post.html">📤 デッキ投稿</a>
+        <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
     </nav>
 </header>
 
+<main id="post-app">
+    <section class="post-header">
+        <div class="search-row">
+            <input id="keyword" type="search" inputmode="search" placeholder="デッキ名・作者・#ハッシュタグ・カード名で検索">
+            <button id="openFiltersBtn" aria-haspopup="dialog">絞り込み</button>
+        </div>
+
+        <div class="status-row">
+            <span id="resultCount">0件</span>
+            <label class="select-wrap">
+                並び:
+                <select id="sortSelect">
+                    <option value="new">新しい順</option>
+                    <option value="old">古い順</option>
+                    <option value="fav">お気に入り多い順</option>
+                </select>
+            </label>
+            <label class="select-wrap">
+                表示:
+                <select id="viewSelect">
+                    <option value="card">カード</option>
+                    <option value="list">リスト</option>
+                </select>
+            </label>
+        </div>
+
+        <div id="filterChips" class="chips scroll-x" aria-label="フィルタチップ">
+            <!-- 自動/選択タグ、ハッシュタグ、種族、タイプ などをJSで注入 -->
+        </div>
+    </section>
+
+    <section id="postList" class="post-list" aria-live="polite"></section>
+
+    <section class="load-more">
+        <button id="loadMoreBtn">もっと見る</button>
+    </section>
+</main>
+<!-- ▲▲ デッキ投稿：一覧UI本体 ▲▲ -->
+
+<!-- 類似・比較：下から出るシート -->
+<div id="compareSheet" class="sheet hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="類似・比較">
+    <div class="sheet-handle" draggable="false"></div>
+    <div class="sheet-body">
+        <div class="sheet-tabs" role="tablist">
+            <button data-tab="diff" class="active" role="tab" aria-selected="true">差分</button>
+            <button data-tab="deckA" role="tab" aria-selected="false">A</button>
+            <button data-tab="deckB" role="tab" aria-selected="false">B</button>
+        </div>
+        <div id="sheetContent" class="sheet-content"></div>
+        <div class="sheet-actions">
+            <button id="closeSheetBtn">閉じる</button>
+        </div>
+    </div>
+</div>
 
 
 <footer>

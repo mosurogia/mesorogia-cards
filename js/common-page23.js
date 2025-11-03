@@ -43,29 +43,48 @@ window.switchTab = function switchTab(targetId, el) {
   afterTabSwitched(targetId);
 };
 
-// ここから新規：タブ切替“後”の再描画フック
-function afterTabSwitched(targetId) {
-  // 上段の「デッキ分析」タブに入ったら、リストと数値・グラフを毎回再生成
+window.afterTabSwitched = function afterTabSwitched(targetId) {
+  // 上段の「デッキ分析」タブに入ったら再描画
   if (targetId === 'edit') {
-    if (typeof renderDeckList === 'function') renderDeckList();       // #deck-card-list 再構築
-    if (typeof updateDeckAnalysis === 'function') updateDeckAnalysis();// グラフ/内訳再計算
-    if (typeof updateExchangeSummary === 'function') updateExchangeSummary(); // 不足/ポイント再計算
+    if (typeof renderDeckList === 'function') renderDeckList();
+    if (typeof updateDeckAnalysis === 'function') updateDeckAnalysis();
+    if (typeof updateExchangeSummary === 'function') updateExchangeSummary();
     if (typeof autoscaleAllBadges === 'function')
-      requestAnimationFrame(autoscaleAllBadges);                      // バッジサイズ再調整
+      requestAnimationFrame(autoscaleAllBadges);
+  //上にスクロール
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // 上段の「デッキ構築」へ戻った場合も、表示を最新にそろえておくと安心
+  // 構築タブに戻った場合
   if (targetId === 'build') {
     if (typeof refreshOwnedOverlay === 'function') refreshOwnedOverlay();
     if (typeof applyGrayscaleFilter === 'function') applyGrayscaleFilter();
   }
 
-  // 入れ子サブタブ（info-tab / post-tab）に切り替えた時は、数値の揺れ防止で軽く同期
+  // info/post サブタブ共通
   if (targetId === 'info-tab') {
     if (typeof updateDeckSummaryDisplay === 'function') updateDeckSummaryDisplay();
     if (typeof updateExchangeSummary === 'function') updateExchangeSummary();
   }
-}
+
+  if (targetId === 'info-tab' || targetId === 'post-tab') {
+    if (typeof window.syncDeckNameFields === 'function') window.syncDeckNameFields();
+  }
+
+    // ✅ どのタブに移動してもデッキリストの×Nバッジを同期
+  if (typeof renderDeckList === 'function' && document.getElementById('deck-card-list')) {
+    renderDeckList();
+    if (typeof autoscaleAllBadges === 'function') {
+      requestAnimationFrame(autoscaleAllBadges);
+    }
+  }
+
+
+    // （任意）他箇所連動用のイベントも飛ばす
+  document.dispatchEvent(new Event('deckTabSwitched'));
+
+
+};
 
 
 

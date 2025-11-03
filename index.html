@@ -32,7 +32,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/common-page12.css">
-        <link rel="stylesheet" href="css/page1.css">
+    <link rel="stylesheet" href="css/page1.css">
 </head>
 
 <body>
@@ -42,7 +42,7 @@
         <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
     </div>
     <nav class="header-nav">
-        <a href="index.html">📖 一覧</a>
+        <a class="active-page" href="index.html">📖 一覧</a>
         <a href="deckmaker.html">🃏 デッキメーカー</a>
         <a href="cardcheker.html">📊 所持率チェッカー</a>
         <a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>
@@ -61,6 +61,7 @@
         <option value="power-asc">パワー昇順</option>
         <option value="power-desc">パワー降順</option>
         <option value="category-order">カテゴリ順</option>
+        <option value="rarity-order">レアリティ順</option>
     </select>
     <button onclick="openFilterModal()">📊 フィルター</button>
 </div>
@@ -69,31 +70,27 @@
 <!--フィルターモーダル-->
 <div class="modal" id="filterModal">
     <div class="modal-content">
+        <h3 class="filter-maintitle">フィルター内容</h3>
         <div id="main-filters">
-
+            <!--フィルターボタン内容-->
         </div>
-        <div>
-            <button onclick="toggleDetailFilters()">詳細フィルター開閉</button>
-            <div id="detail-filters" style="display: none;">
+        <!-- 詳細フィルター -->
+        <h4 class="filter-subtitle">さらに詳しい条件フィルター</h4>
+        <div id="detail-filters"></div>
 
-            </div>
-
-        </div>
-        <div style="margin-top: 1rem;">
-            <button id="applyFilterBtn">この条件で絞り込む</button>
-            <button onclick="resetFilters()">リセット</button>
+        <!--下部ボタン-->
+        <div class="modal-footer">
+            <button class="modal-buttun" id="applyFilterBtn">この条件で絞り込む</button>
+            <button class="modal-buttun" onclick="resetFilters()">リセット</button>
         </div>
     </div>
 </div>
-<!--上部に戻るボタン-->
-<button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
 <!--カード一覧-->
 <div class="grid" id="grid">
-
-
-
+    <!--カード内容-->
 </div>
+
 
 <!-- カード拡大モーダル（画像のみ） -->
 <div id="cardZoomModal" class="modal" style="display:none;">
@@ -110,15 +107,11 @@
 <footer>
     <div>
         <p>
-            <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
-            カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
+        <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+        カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
         </p>
     </div>
-
-    <p>
-        🔗 公式サイトはこちら 👉
-        <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
-            神託のメソロギア公式サイト
+    <p>🔗 公式サイトはこちら 👉<a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">神託のメソロギア公式サイト
         </a>
     </p>
 
@@ -127,14 +120,16 @@
     一部画像素材は「ジュエルセイバーFREE」<br />
     （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
     💬 ご要望・不具合報告 👉
-    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
-        @192837465aruneo
+    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">@192837465aruneo
     </a>
 </footer>
 
+<!--上部に戻るボタン-->
+<button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
 <!-- JS -->
+<script src="js/common.js"></script>
 <script src="js/page1.js"></script>
 <script src="js/common-page12.js"></script>
-<script src="js/common.js"></script>
+
 </body>

@@ -36,15 +36,28 @@ function generateCardListElement(card) {
   const _effectJoined =
   [card.effect_name1, card.effect_text1, card.effect_name2, card.effect_text2]
   .filter(Boolean).join(' ');
+  // ← 効果名＆本文の結合を data-effect にも載せる
+  cardDiv.setAttribute('data-effect', _effectJoined);
   cardDiv.setAttribute('data-effect', _effectJoined);
   cardDiv.setAttribute('data-field', card.field);
   cardDiv.setAttribute('data-ability', card.special_ability);
   cardDiv.setAttribute('data-bp', String(card.BP_flag ?? "").toLowerCase());
   cardDiv.setAttribute('data-draw', String(card.draw ?? "").toLowerCase());
-  cardDiv.setAttribute('data-graveyard_Recovery', String(card.graveyard_recovery ?? "").toLowerCase());
+  cardDiv.setAttribute('data-graveyard_recovery', String(card.graveyard_recovery ?? "").toLowerCase());
   cardDiv.setAttribute('data-cardsearch', String(card.cardsearch ?? "").toLowerCase());
   cardDiv.setAttribute('data-destroy_Opponent', String(card.destroy_opponent ?? "").toLowerCase());
   cardDiv.setAttribute('data-destroy_Self', String(card.destroy_self ?? "").toLowerCase());
+  cardDiv.setAttribute('data-heal', String(card.heal ?? "").toLowerCase());
+  cardDiv.setAttribute('data-power_up', String(card.power_up ?? "").toLowerCase());
+  cardDiv.setAttribute('data-power_down', String(card.power_down ?? "").toLowerCase());
+  
+// リンクカード情報（コラボカードかどうか）と性能元カードの cd を data 属性に含める
+  if (typeof card.link !== 'undefined') {
+    cardDiv.setAttribute('data-link', String(card.link).toLowerCase());
+  }
+  if (typeof card.link_cd !== 'undefined') {
+    cardDiv.setAttribute('data-linkcd', String(card.link_cd));
+  }
 
   // 🔎 検索用にまとめた文字列（小文字化）
   const keywords = [
