@@ -1835,7 +1835,7 @@ function updateDeckCardListBackground(){
 
 // ===== Deck Peek：モバイルで分析中にデッキリストが見えていない時、左上のボタン長押しでミニリストを表示 =====
 (function setupDeckPeek(){
-  const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+  const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
   // 「デッキ分析」タブが開いているか（ info/post サブタブは不問）
   function isEditTabOpen() {
@@ -3290,7 +3290,7 @@ function getDeckCardsArray(){
 
 // ===== deck-code-controls が画面に見えていない時だけ、画面下に“浮遊バー”を出す（モバイル用） =====
 (function setupFloatingDeckControls(){
-  const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+  const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
   // ★ 現在のタブ状態を判定（afterTabSwitchedの仕様と一致させる）
   function isDeckAnalysisInfoOpen() {
@@ -4492,7 +4492,25 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPostSelectTags().catch(console.error);
   }
 });
+/* （選択タグ）全角カッコの前で改行ヒント <wbr> を入れる */
+function insertWbrForSelectTagBrackets(){
+  const chips = document.querySelectorAll('#select-tags .chip');
+  chips.forEach(chip=>{
+    if (chip.dataset.wbrApplied) return;  // 多重適用防止
+    chip.dataset.wbrApplied = '1';
+    // テキストをHTML化：全角カッコの直前に<wbr>
+    const txt = chip.textContent;
+    chip.innerHTML = txt.replace(/([（［【])/g, '<wbr>$1');
+  });
+}
 
+/* 初期化時 */
+document.addEventListener('DOMContentLoaded', insertWbrForSelectTagBrackets);
+
+/* もしタグを描画し直す箇所があるなら、描画後にも呼ぶ */
+window.afterRenderSelectTags = function(){
+  insertWbrForSelectTagBrackets();
+};
 
 // =====ユーザータグ =====
 /*ユーザータグ*/

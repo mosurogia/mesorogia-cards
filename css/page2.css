@@ -1986,10 +1986,7 @@
 }
 
 
-.tag-chips .chip {
-    transition: box-shadow 0.2s ease, transform 0.1s ease;
-}
-/* チップ共通 */
+/* チップ共通（ここを1つだけに統合） */
 .tag-chips .chip {
     display: flex;
     align-items: center;
@@ -1998,10 +1995,14 @@
     min-height: 34px;
     box-sizing: border-box;
     text-align: center;
-    line-height: 1.2;
-    word-break: normal;
+
+    /* 折り返し関連の“基準値”は normal にしておく */
     white-space: normal;
-    /* ← Safariのnowrapを打ち消す */
+    word-break: normal;
+
+    line-height: 1.2;
+
+    /* 見た目 */
     background: #fff5f8;
     border: 1px solid #f4a2c2;
     color: #9b355e;
@@ -2011,6 +2012,9 @@
     user-select: none;
     font-weight: 500;
     font-size: .9rem;
+
+    /* （← ここに transition も統合）*/
+    transition: box-shadow 0.2s ease, transform 0.1s ease;
 }
 @media (max-width: 768px) {
 .tag-chips .chip {
@@ -2033,6 +2037,7 @@
     color: #fff;
 }
 
+/*---自動タグ---*/
 #auto-tags{
     margin-bottom: 10px;
 }
@@ -2047,6 +2052,8 @@
     pointer-events: none;
 }
 
+/*---選択タグ---*/
+
 /* 選択タグ */
 #select-tags {
     display: grid;
@@ -2059,18 +2066,12 @@
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 }
-
-/* 自動タグと選択タグの見た目を横並びで揃えやすくする */
-#select-tags .chip,
-#auto-tags .chip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 34px;
-    box-sizing: border-box;
-    text-align: center;
-    word-break: keep-all;
-    /* タグ語の途中改行を回避 */
+/* 選択タグは折り返し許可（ユーザータグは後で nowrap に） */
+#select-tags .chip {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.25;
 }
 
 /* ヒント行（1列にまたがる） */
@@ -2082,12 +2083,33 @@
     user-select: none;
     pointer-events: none;
 }
+.user-tags .chip {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
+.user-tags .chip {
+    position: relative;
+    padding-right: 25px;
+}
+
+.user-tags .chip .rm {
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    /* ← 50 → 50% 修正はOK */
+}
 
 /*ユーザータグ欄*/
 #user-tags{
         gap: 6px;
         align-items: stretch;
+}
+.user-tags .chip {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 /* ユーザータグ（色だけ自由タグと差別化：青系） */
 .user-tags .chip.active {
