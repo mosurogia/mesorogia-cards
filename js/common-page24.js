@@ -663,9 +663,9 @@ function downloadCanvas(canvas, fileName){
   const hint = document.createElement('div');
   const ua = navigator.userAgent.toLowerCase();
   if (/iphone|ipad|ipod/.test(ua))
-    hint.textContent = '長押しで「写真に追加」や「共有」ができます';
+    hint.textContent = '長押しで「写真に追加」や「共有（画像保存）」ができます';
   else if (/android/.test(ua))
-    hint.textContent = '長押しで「画像をダウンロード」や「共有」ができます';
+    hint.textContent = '長押しで「画像をダウンロード」や「共有（画像保存）」ができます';
   else
     hint.textContent = '右クリックで「名前を付けて保存」できます';
   bar.appendChild(hint);
@@ -700,13 +700,13 @@ function downloadCanvas(canvas, fileName){
       return el;
     };
 
-    // 保存（どの端末でも確実に使える）
-    const saveBtn = mkBtn('保存');
+    // ダウンロード（どの端末でも確実に使える）
+    const saveBtn = mkBtn('ダウンロード');
     saveBtn.href = dataUrl;          // ★ toDataURL をそのまま
     saveBtn.download = fileName;     // PC なら即保存、モバイルは新規DL
 
     // 共有（対応端末のみ表示）
-    const shareBtn = mkBtn('共有');
+    const shareBtn = mkBtn('共有（画像保存）');
     if (navigator.share) {
       shareBtn.href = 'javascript:void(0)';
       shareBtn.onclick = async () => {
@@ -717,7 +717,7 @@ function downloadCanvas(canvas, fileName){
         } catch (_) { /* キャンセルは無視 */ }
       };
     } else {
-      shareBtn.style.display = 'none'; // 未対応環境では非表示（保存ボタンが全幅に）
+      shareBtn.style.display = 'none'; // 未対応環境では非表示（ダウンロードボタンが全幅に）
     }
 
         btnBar.appendChild(saveBtn);
@@ -783,7 +783,8 @@ if (typeof window.setAuthChecking !== 'function') {
 
 // ==== Auth 一本化（PIN撤去版・UI結線） ====
 (function(){
-  const API = 'https://script.google.com/macros/s/AKfycbyoFYF12R929Mo1JgI23zWiBw0eVMoqATz-TWOHGhdxr4DVHGHhPrboxyxjuC57Mcig/exec';
+  // 共通定義（common.js）から取得
+  const API = window.AUTH_API_BASE || window.GAS_API_BASE;
   window.API = API;
 
   const Auth = {
@@ -881,32 +882,75 @@ window.postJSON = postJSON;
   // ---- UI（グローバル公開版）----
   window.reflectLoginUI = function reflectLoginUI(){
     const loggedIn = !!(Auth?.user && Auth?.token && Auth?.verified);
+    const user = loggedIn ? (Auth.user || {}) : null;
 
+    // 既存のログインフォーム周り（大きい方）
     const $form     = document.getElementById('auth-login-form');
     const $logged   = document.getElementById('auth-logged-in');
     const $disp     = document.getElementById('auth-display');
     const $unameLbl = document.getElementById('auth-username-label');
     const $pw       = document.getElementById('auth-password');
 
+    // 投稿フォーム内のミニ表示
+    const $miniOut  = document.getElementById('auth-mini-loggedout');  // 「未ログイン＋ボタン」
+    const $miniIn   = document.getElementById('auth-mini-loggedin');   // ログイン中（auth-logged-in-row）
+
+    // ---- 既存エリア（大きいログイン枠）の表示/非表示 ----
     if ($form)   $form.style.display   = loggedIn ? 'none' : '';
     if ($logged) $logged.style.display = loggedIn ? '' : 'none';
 
     if (loggedIn){
-      const u = Auth?.user || {};
-      if ($disp)     $disp.textContent     = u.displayName || u.username || '(no name)';
-      if ($unameLbl) $unameLbl.textContent = u.username || '';
+      if ($disp)     $disp.textContent     = user.displayName || user.username || '(no name)';
     } else {
-      if ($pw) $pw.value = '';
-      if ($disp) $disp.textContent = '';
-      if ($unameLbl) $unameLbl.textContent = '';
+      if ($pw)       $pw.value = '';
+      if ($disp)     $disp.textContent = '';
+    }
+
+    // ミニ側チップの中の ID 表示（auth-username-label）もここで更新
+    if ($unameLbl){
+      $unameLbl.textContent = loggedIn
+        ? (user.username || user.displayName || '')
+        : '';
+    }
+
+    // ---- 投稿フォーム内ミニ表示の切り替え ----
+    if ($miniOut) $miniOut.style.display = loggedIn ? 'none' : '';
+    if ($miniIn)  $miniIn.style.display  = loggedIn ? '' : 'none';
+
+    // ★ mine-login-note の表示切り替え（マイ投稿ページ用）
+    const note = document.querySelector('.mine-login-note');
+    if (note) {
+      // ログイン中なら非表示、未ログインなら表示
+      note.style.display = loggedIn ? 'none' : '';
+    }
+
+    // ★ マイ投稿ヘッダーの「ログイン状況(ID)」表示を更新
+    const mineName = document.getElementById('mine-login-username');
+    if (mineName) {
+      // ID欄なので username 優先で表示
+      mineName.textContent = loggedIn
+        ? (user.username || user.displayName || '')
+        : '未ログイン';
+    }
+
+    // ---- デッキ投稿フォームの既定値（未入力時のみ自動入力） ----
+    const $dispInput = document.getElementById('auth-display-name');
+    if (loggedIn && $dispInput && !$dispInput.value){
+      $dispInput.value = user.displayName || user.username || '';
+    }
+
+    const $xInput = document.getElementById('auth-x');
+    if (loggedIn && $xInput && !$xInput.value){
+      $xInput.value = user.x || '';
     }
   };
+
 
 
   // ===== 認証UIフィードバック =====
 function setAuthLoading(on, msg){
   // ボタン disable / 文言
-  const loginBtn  = document.getElementById('auth-login-btn');
+  const loginBtn  = document.getElementById('auth-login-btn-submit'); // ← 実際のログインボタン
   const signupBtn = document.getElementById('auth-signup-btn');
   if (loginBtn)  loginBtn.disabled  = !!on;
   if (signupBtn) signupBtn.disabled = !!on;
@@ -940,25 +984,87 @@ function startSlowTimer(ms = 5000) {
   return () => { fired = true; clearTimeout(id); };
 }
 
+  // パスワード保存トリガー
+  function triggerPasswordSave(username, password){
+      const form = document.getElementById('auth-login-save');
+      if (!form) return;
+
+      const u = form.querySelector('input[name="username"]');
+      const p = form.querySelector('input[name="password"]');
+      if (!u || !p) return;
+
+      u.value = username || '';
+      p.value = password || '';
+
+      // Chrome が無視しないよう一瞬だけ表示
+      form.style.left = '0px';
+      form.style.top  = '0px';
+
+      try {
+          form.requestSubmit?.();
+          form.submit?.();
+      } catch(e){}
+
+      // すぐ隠す（UIに見えない）
+      setTimeout(() => {
+          form.style.left = '-9999px';
+          form.style.top  = '-9999px';
+      }, 50);
+  }
 
   // 事件: 新規登録
   async function doSignup(){
     const username    = (document.getElementById('auth-username')?.value || '').trim().toLowerCase();
     const password    = (document.getElementById('auth-password')?.value || '');
+    const password2   = (document.getElementById('auth-password-confirm')?.value || '');
     const displayName = '';
     const x           = '';
-    if (!username || !password){ alert('ユーザー名とパスワードを入力してください'); return; }
+
+    // 入力チェック
+    if (!username || !password){
+      alert('ユーザー名とパスワードを入力してください');
+      return;
+    }
+    if (!password2){
+      alert('確認用パスワードを入力してください');
+      return;
+    }
+    if (password !== password2){
+      alert('パスワードが一致しません。もう一度入力してください');
+      return;
+    }
 
     setAuthLoading(true, '登録中…');
     const stopSlow = startSlowTimer(5000);
     try{
-      const res = await Auth.signup(username, password, displayName, x); // 成功時: {ok:true, token...}
-      stopSlow(); setAuthLoading(false, '');
+      const res = await Auth.signup(username, password, displayName, x);
+      stopSlow();
+      setAuthLoading(false, '');
       showAuthOK('登録完了');
-      // サインアップ成功＝ログイン状態になっている設計ならここで反映
       window.reflectLoginUI?.();
+      window.onDeckPostAuthChanged?.();
+
+      // ★ 入力欄を軽くリセット
+      const modal = document.getElementById('authLoginModal');
+      const pw    = document.getElementById('auth-password');
+      const pw2   = document.getElementById('auth-password-confirm');
+      if (pw)  pw.value  = '';
+      if (pw2) pw2.value = '';
+
+      // ★ モーダルを閉じる
+      if (modal) modal.style.display = 'none';
+
+      // ★ 閉じた後に alert（少し間をあける）
+      setTimeout(() => {
+        alert('新規登録しました');
+      }, 100);
+
+      // ★ パスワード保存
+      triggerPasswordSave(username, password);
+
     }catch(e){
-      stopSlow(); setAuthLoading(false, '');
+      stopSlow();
+      setAuthLoading(false, '');
       showAuthError('登録失敗：' + (e?.message || 'unknown'));
     }
   }
@@ -968,27 +1074,87 @@ function startSlowTimer(ms = 5000) {
   async function doLogin(){
     const username = (document.getElementById('auth-username')?.value || '').trim().toLowerCase();
     const password = (document.getElementById('auth-password')?.value || '');
-    if (!username || !password){ alert('ユーザー名とパスワードを入力してください'); return; }
+    if (!username || !password){
+      alert('ユーザー名とパスワードを入力してください');
+      return;
+    }
 
     setAuthLoading(true, 'ログイン中…');
     const stopSlow = startSlowTimer(5000);
     try{
-      const res = await Auth.login(username, password); // 成功時: {ok:true, token...}
-      stopSlow(); setAuthLoading(false, '');
+      const res = await Auth.login(username, password);
+      stopSlow();
+      setAuthLoading(false, '');
       showAuthOK('ログイン完了');
       window.reflectLoginUI?.();
+      window.onDeckPostAuthChanged?.()
+
+      // ★ モーダルを閉じる
+      const modal = document.getElementById('authLoginModal');
+      if (modal) modal.style.display = 'none';
+
+      // ★ 閉じた後に alert（少し間をあける）
+      setTimeout(() => {
+        alert('ログインしました');
+        location.hash = '#logged-in';
+      }, 100);
+
+      // ★ パスワード保存
+      triggerPasswordSave(username, password);
+
     }catch(e){
-      stopSlow(); setAuthLoading(false, '');
+      stopSlow();
+      setAuthLoading(false, '');
       showAuthError('ログイン失敗：' + (e?.message || 'unknown'));
     }
   }
 
+// 事件: ログアウト
+async function doLogout(){
+  const logoutBtn = document.getElementById('auth-logout-btn');
+  const prevLabel = logoutBtn ? logoutBtn.textContent : '';
 
-  // 事件: ログアウト
-  async function doLogout(){
-    await Auth.logout();
-    alert('ログアウトしました');
+  // ボタン状態を「ログアウト中…」に
+  if (logoutBtn){
+    logoutBtn.disabled = true;
+    logoutBtn.textContent = 'ログアウト中…';
   }
+
+  // 上の「ログイン中…」バッジやインライン表示も連動
+  setAuthLoading(true, 'ログアウト中…');
+  const stopSlow = startSlowTimer(5000);
+
+  try{
+    // 実際のログアウト処理（token クリア＆ UI 更新）
+    await Auth.logout();
+
+    // ★ デッキ投稿側にも「ログアウトしたよ」と通知
+    if (window.onDeckPostAuthChanged){
+      try { window.onDeckPostAuthChanged(); } catch(_) {}
+    }
+
+    // ログイン完了メッセージなどをクリア
+    const st = document.getElementById('auth-inline-status');
+    if (st) st.textContent = '';
+
+    stopSlow();
+    setAuthLoading(false, '');
+    alert('ログアウトしました');
+
+  } catch(e){
+    stopSlow();
+    setAuthLoading(false, '');
+    // 失敗時だけエラーメッセージを表示
+    showAuthError('ログアウト失敗：' + (e?.message || 'unknown'));
+  } finally {
+    // ボタン表記を元に戻す（UIとしては未ログイン表示になっているはず）
+    if (logoutBtn){
+      logoutBtn.disabled = false;
+      logoutBtn.textContent = prevLabel || 'ログアウト';
+    }
+  }
+}
+
 
   // DOM 結線
   window.addEventListener('DOMContentLoaded', () => {
@@ -1003,14 +1169,44 @@ function startSlowTimer(ms = 5000) {
       });
     }
 
+    // 元の大きいログインフォーム
     document.getElementById('auth-signup-btn')?.addEventListener('click', doSignup);
-    document.getElementById('auth-login-btn') ?.addEventListener('click', doLogin);
     document.getElementById('auth-logout-btn')?.addEventListener('click', doLogout);
 
+
+    // 認証状態の初期化（未ログイン表示からスタート）
     Auth.init();
 
+    // Enter キーでのデフォルト送信を止める（即ログイン防止）
+    const loginForm = document.getElementById('auth-login-form');
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => {
+        // Enter で勝手にログインさせないため、送信そのものを止める
+        e.preventDefault();
+      });
+    }
 
+    // ログインボタン経由でのみログインを実行
+    const loginBtn = document.getElementById('auth-login-btn-submit');
+    if (loginBtn) {
+      loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        doLogin();
+      });
+    }
+
+    // 確認パスワード欄で Enter を押したら新規登録を実行（任意だけど便利）
+    const pwConfirm = document.getElementById('auth-password-confirm');
+    if (pwConfirm) {
+      pwConfirm.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doSignup();
+        }
+      });
+    }
   });
+
 })();
 
 
@@ -1257,3 +1453,30 @@ function startSlowTimer(ms = 5000) {
   });
 })();
 
+// ======================================
+//  マイ投稿用: whoami → ユーザー名反映
+// ======================================
+window.refreshWhoAmI = async function refreshWhoAmI(){
+  if (!window.Auth) return;
+
+  const span = document.getElementById('mine-login-username');
+  const note = document.querySelector('.mine-login-note');
+
+  const res = await Auth.whoami();  // token が無い場合は ok:false で返る想定
+
+  const loggedIn = !!(res && res.ok && res.user);
+
+  if (span){
+    if (loggedIn){
+      const u = res.user;
+      span.textContent = u.displayName || u.username || 'ログイン中';
+    } else {
+      span.textContent = '未ログイン';
+    }
+  }
+
+  // 説明文：「ログイン中は非表示」のまま維持
+  if (note){
+    note.style.display = loggedIn ? 'none' : '';
+  }
+};

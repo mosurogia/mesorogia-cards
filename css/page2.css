@@ -499,20 +499,27 @@
 .cardop-header {
     display: flex;
     flex-direction: column;
-    cursor: move;
-    user-select: none;
     margin-bottom: .25rem;
 }
 
+/* ここだけがドラッグゾーン */
 .cardop-topline {
+    user-select: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    cursor: move;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #f3f4ff, #ffffff);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
 }
 
+/* 「ここをドラッグ」感を少し強める */
 .cardop-move-hint {
-    font-size:clamp(.325rem, 1vw, .625rem);
+    font-size: clamp(.325rem, 1vw, .625rem);
     color: #666;
+    margin-top: 2px;
 }
 
 
@@ -1122,16 +1129,6 @@
 }
 
 
-
-
-
-
-
-/*交換ポイント*/
-.exchange-summary{
-    display: none;
-}
-
 /*交換ポイントボタン*/
 #exchange-toggle-btn {
     font-size: 0.65em;
@@ -1594,26 +1591,14 @@
     box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
 }
 
-/* ホバー・クリック時 */
-.note-preset-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-}
-
-.note-preset-btn:active {
-    transform: scale(0.98);
-}
-
-/* hover時に少し明るく */
 .note-preset-btn:hover {
     filter: brightness(1.03);
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
 }
 
-/* 押した時に軽く沈む */
 .note-preset-btn:active {
-    transform: scale(0.97);
+    transform: scale(.97);
     box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
 }
 
@@ -1659,6 +1644,7 @@
 #post-note {
     min-height: 10rem;
     line-height: 1.4;
+    margin-top: .4rem;
 }
 
 @media (max-width: 768px) {
@@ -1965,11 +1951,6 @@
 }
 
 
-.post-card-note .selected-label {
-    font-size: .85rem;
-    opacity: .8;
-}
-
 /* タグの共通デザイン */
 .tag-chips {
     display: flex;
@@ -1998,8 +1979,7 @@
 
     /* 折り返し関連の“基準値”は normal にしておく */
     white-space: normal;
-    word-break: normal;
-
+    word-break: break-word;
     line-height: 1.2;
 
     /* 見た目 */
@@ -2039,7 +2019,7 @@
 
 /*---自動タグ---*/
 #auto-tags{
-    margin-bottom: 10px;
+    margin: .4rem 0 .625rem;
 }
 
 /* 自動タグ（クリック不可） */
@@ -2083,34 +2063,15 @@
     user-select: none;
     pointer-events: none;
 }
-.user-tags .chip {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
 
-.user-tags .chip {
-    position: relative;
-    padding-right: 25px;
-}
 
-.user-tags .chip .rm {
-    right: 6px;
-    top: 50%;
-    transform: translateY(-50%);
-    /* ← 50 → 50% 修正はOK */
-}
-
+/*---ユーザータグ---*/
 /*ユーザータグ欄*/
 #user-tags{
         gap: 6px;
         align-items: stretch;
 }
-.user-tags .chip {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
+
 /* ユーザータグ（色だけ自由タグと差別化：青系） */
 .user-tags .chip.active {
     display: inline-flex;
@@ -2126,13 +2087,18 @@
 /* ×ボタン（右端・縦中央） — バグ修正: top:50% に */
 .user-tags .chip {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding-right: 25px;
 }
+
 .user-tags .chip .rm {
     position: absolute;
     right: 6px;
     top: 50%;
-    /* ← 50 ではなく 50% が正しい */
     transform: translateY(-50%);
     width: 16px;
     height: 16px;
@@ -2150,9 +2116,74 @@
     filter: brightness(.95);
 }
 
+/* ユーザータグ候補ボックス */
+.user-tag-suggest-box .chip {
+    cursor: pointer;
+    /* 必要なら色も変える */
+}
+
+/* ユーザータグ候補：ローディング表示 */
+.user-tag-suggest-loading {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* ユーザータグ候補パネル */
+.user-tag-suggest-box {
+    margin-top: 6px;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #fafafa;
+    max-height: 160px;
+    overflow-y: auto;
+    display: none;
+    /* JSで block にする */
+}
+
+/* 見出し */
+.user-tag-suggest-head {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+/* 候補1行 */
+.user-tag-suggest-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    border: none;
+    background: #fff;
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-tag-suggest-item:hover {
+    background: #edf4ff;
+}
+
+.user-tag-suggest-label {
+    font-weight: 500;
+}
+
+.user-tag-suggest-meta {
+    font-size: 0.7rem;
+    color: #888;
+}
+
 /* ===== 貼り付けコードブロック ===== */
 .paste-code-block {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 /* ボタンを横並びにして均等に伸ばす */
@@ -2161,7 +2192,46 @@
     gap: .3rem;
     width: 100%;
 }
+/* --- デッキコード貼り付け表示のはみ出し防止 --- */
+.paste-code-block .paste-code-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    /* 親でオーバーフローを抑止 */
+}
+.paste-code-block .paste-code-preview {
+    flex-wrap: nowrap;
+    min-width: 0;
+    max-width: 100%;
+}
+.paste-code-block .paste-code-preview .label {
+    flex: 0 0 auto;
+    /* ラベルは縮ませない */
+}
 
+#pasted-code-preview {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    background: #fff;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#pasted-code-preview.ok {
+    opacity: 1;
+}
+
+#pasted-code-preview.ng {
+    opacity: .9;
+}
 .paste-code-controls button {
     flex: 1 1 0;
     /* 以下は見た目を揃えるために好みで調整 */
@@ -2206,219 +2276,15 @@ font-size: .8rem;
     white-space: nowrap;
 }
 
-/* 既存の自由タグと見た目を合わせつつ控えめに */
-#pasted-code-preview {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #fff;
-    border: 1px dashed #d1d5db;
-    border-radius: 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    box-sizing: border-box;
-}
 
-
-/* === 投稿者UI === */
-.auth-stack {
-    display: grid;
-    gap: 5px;
-}
-
-.auth-login-form{
-    display: grid;
-    gap: 5px;
-}
-
-.poster-line {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-/* パスワード行：入力＋トグル */
-.poster-line input {
-    flex: 1;
-    height: 30px;
-}
-
-.btn.ghost {
-    font-size: .7rem;
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    color: #333;
-    border-radius: 8px;
-    padding: .35rem .6rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* 登録 / ログイン */
-.auth-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-}
-
-.auth-buttons #auth-logout-btn[hidden] {
-    display: none !important;
-}
-
-/* ログイン中はログアウトを全幅で見せる */
-.auth-buttons.logged-in {
-    grid-template-columns: 1fr;
-}
-
-.btn.primary {
-    font-size: .8rem;
-    background: linear-gradient(90deg, #6a5acd, #9aa0ff);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: .3rem .7rem;
-    font-weight: 700;
-}
-
-
-
-.auth-logged-in {
-    align-items: center;
-    gap: 8px;
-}
-
-.auth-logged-in small {
-    opacity: .75;
-}
-/* ===== Auth: logged-in row (UI only) ===== */
-.auth-logged-in-row {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr;
-    /* ID＋ボタン2つを等分 */
-    align-items: center;
-    gap: 3px;
-    width: 100%;
-}
-@media (max-width: 1024px) {
-    .auth-logged-in-row {
-        display: flex;
-        flex-wrap: wrap;
-}
-}
-/* 表示専用の登録IDバッジに見せる */
-.login-id-chip {
-    justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    /* 入力欄っぽさを消す：*/
-    width: auto;
-    /* ← ここが重要。幅100%をやめる */
-    padding: 6px 10px;
-    border: none;
-    /* 罫線を外す */
-    border-radius: 999px;
-    background: linear-gradient(180deg, #f6f9ff 0%, #eaf1ff 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 1px 3px rgba(0, 0, 0, .05);
-    font-size: .8rem;
-    color: #1f2937;
-    cursor: default;
-    /* ← クリック可能に見せない */
-    user-select: text;
-    /* ← 文字コピーはできる */
-}
-@media (max-width: 1024px) {
-    .login-id-chip {
-        width: 100%;
-    }
-}
-.login-id-chip .id-lock {
-    font-size: 1rem;
-    opacity: .8;
-}
-
-.login-id-chip .id-label {
-    font-weight: 700;
-    font-size: .8rem;
-    color: #3b82f6;
-    /* 表示専用ラベルの色 */
-    letter-spacing: .02em;
-}
-
-.login-id-chip .id-value {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    font-weight: 600;
-    background: rgba(59, 130, 246, .10);
-    /* 値の小チップで“表示っぽさ”を強調 */
-    padding: 2px 8px;
-    border-radius: 999px;
-    line-height: 1.2;
-    color: #111827;
-}
-
-
-
-.login-id-chip small {
-    letter-spacing: .02em;
-}
-
-.login-id-chip strong {
-    font-weight: 700;
-}
-
-.btn.danger {
-    background: linear-gradient(90deg, #ef4444, #f97316);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: .45rem .5rem;
-    font-weight: 700;
-    font-size: .7rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    justify-self: stretch;
-    text-align: center;
-}
-@media (max-width: 1024px) {
-    .auth-logged-in-row .btn.danger {
-        width: auto;
-        flex: 1;
-    }
-}
-
+/* ===== デッキ投稿タブ共通スタイル ===== */
+/* X 行全体 */
 .x-line {
     display: block;
     gap: 5px;
     align-items: center;
 }
 
-/* X 行：既存の .X-info を横並び均等 */
-.X-info {
-    display: flex;
-    width: 100%;
-    gap: 5px;
-}
-
-.X-info input {
-    flex: 1;
-}
-
-.x-link-btn {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.7rem;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-}
 
 /* 投稿者行（横並び→折返し対応） */
 .poster-row {
@@ -2428,16 +2294,117 @@ font-size: .8rem;
     align-items: center;
 }
 
-.x-link-btn:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
 
 /*投稿＆プレビューボタン欄*/
 .status-text {
     margin-top: 0.5rem;
     color: #444;
     font-size: clamp(.75rem, 3vw, 1.25rem);
+}
+
+/* ローディングスピナー */
+.loading-spinner {
+    width: 26px;
+    height: 26px;
+    border: 3px solid #ddd;
+    border-top-color: #4a90e2;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 8px auto;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== 投稿トースト（成功／エラー） ===== */
+.post-toast {
+    position: fixed;
+    right: 16px;
+    bottom: 20px;
+    max-width: 260px;
+    background: rgba(40, 40, 40, 0.95);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: .9rem;
+    z-index: 5000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+    animation: post-toast-in .25s ease;
+}
+
+.post-toast.success {
+    background: rgba(60, 160, 90, 0.95);
+}
+
+.post-toast.error {
+    background: rgba(200, 60, 60, 0.95);
+}
+
+@keyframes post-toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== 投稿成功チェックマーク ===== */
+.success-check {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #4caf50;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: scale(0.6);
+    z-index: 6000;
+    pointer-events: none;
+    animation: none;
+}
+
+@keyframes popin {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    10% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1.0);
+    }
+}
+
+@keyframes fadeout {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 /* 投稿同意チェックの軽量デザイン */
@@ -2469,6 +2436,7 @@ font-size: .8rem;
     accent-color: #6a5acd;
     /* メインカラー */
 }
+
 
 #post-tab .post-actions button.is-disabled {
     opacity: .5;
@@ -2581,4 +2549,40 @@ font-size: .8rem;
     flex-direction: column;
     gap: 0.5em;
     min-width: 80px;
+}
+
+/* ===== キーボードフォーカスの可視化 ===== */
+.analyze-button:focus-visible,
+.filter-toggle-button:focus-visible,
+.cardop-btn:focus-visible,
+.note-preset-btn:focus-visible,
+.note-showall-btn:focus-visible,
+.deck-code-controls button:focus-visible,
+.post-actions button:focus-visible,
+.paste-code-controls button:focus-visible,
+.btn.ghost:focus-visible,
+.btn.primary:focus-visible,
+.btn.danger:focus-visible,
+.pick-btn:focus-visible,
+.note-move:focus-visible,
+.note-remove:focus-visible,
+.add-note-btn:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.6);
+    outline-offset: 2px;
+}
+
+/* ===== 動きの軽減（アクセシビリティ） ===== */
+@media (prefers-reduced-motion: reduce) {
+  .note-preset-btn,
+  .tag-chips .chip,
+  .deck-code-controls button,
+  .post-actions button,
+  .cardop-btn,
+  .analyze-button,
+  .paste-code-controls button,
+  .btn,
+  .add-note-btn {
+    transition: none !important;
+    animation: none !important;
+  }
 }

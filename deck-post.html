@@ -1,21 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
+
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
-    <title>モスロギア 神託のメソロギア デッキメーカー</title>
+    <title>モスロギア 神託のメソロギア デッキ投稿</title>
     <link href="favicon.ico" rel="icon" type="image/png" />
     <!-- 検索キーワード -->
-    <meta name="keywords" content="カードゲーム,デッキメーカー,DCG,神託のメソロギア,メソロギア,神託,デッキ分析,一覧,モスロギア">
+    <meta name="keywords" content="カードゲーム,デッキメーカー,DCG,神託のメソロギア,メソロギア,神託,デッキ分析,一覧,モスロギア,カードゲーム,デッキ投稿,デッキ共有,DCG,神託のメソロギア,メソロギア,神託,デッキ募集">
     <!-- ページの説明（検索結果の下に表示） -->
     <meta name="description" content="このサイトは、アプリ「神託のメソロギア」のカード一覧、デッキ構築、デッキ分析ができる非公式サイトです。カード検索やデッキ管理をスマホでも快適に！">
 
 
     <!-- OGP基本 -->
     <meta property="og:title" content="モスロギア | 神託のメソロギア デッキ投稿">
-    <meta property="og:description" content="このサイトはアプリ「神託のメソロギア」のカード検索・デッキ構築ができる非公式サイトです。">
+    <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿されたデッキ一覧やマイ投稿をチェックできます。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/">
     <meta property="og:type" content="website">
@@ -23,117 +24,425 @@
     <!-- Twitterカード向け -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="モスロギア | 神託のメソロギア デッキ投稿">
-    <meta name="twitter:description" content="カード検索とデッキ構築で神託のメソロギアをもっと楽しもう！">
+    <meta name="twitter:description" content="神託のメソロギアのデッキ投稿・共有ページです。">
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
 
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/common-page24.css">
+    <link rel="stylesheet" href="css/common-page234.css">
     <link rel="stylesheet" href="css/page4.css">
 
-    <!--棒グラフ外部リソース-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <!--画像生成-->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
-
-
 <body>
 
-<header class="main-header">
-    <div class="header-logo">
-        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+    <header class="main-header">
+        <div class="header-logo">
+            <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+        </div>
+        <nav class="header-nav">
+            <a href="index.html">📖 一覧</a>
+            <a href="deckmaker.html">🃏 デッキメーカー</a>
+            <a href="cardcheker.html">📊 所持率チェッカー</a>
+            <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
+        </nav>
+    </header>
+
+<!-- タブバー -->
+<div class="tab-bar">
+    <div class="tab active" id="title-list" onclick="switchTab('tab-post-list', this)">
+        <span>📤 投稿一覧</span>
     </div>
-    <nav class="header-nav">
-        <a href="index.html">📖 一覧</a>
-        <a href="deckmaker.html">🃏 デッキメーカー</a>
-        <a href="cardcheker.html">📊 所持率チェッカー</a>
-        <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
-    </nav>
-</header>
-
-<main id="post-app">
-    <section class="post-header">
-        <div class="search-row">
-            <input id="keyword" type="search" inputmode="search" placeholder="デッキ名・作者・#ハッシュタグ・カード名で検索">
-            <button id="openFiltersBtn" aria-haspopup="dialog">絞り込み</button>
-        </div>
-
-        <div class="status-row">
-            <span id="resultCount">0件</span>
-            <label class="select-wrap">
-                並び:
-                <select id="sortSelect">
-                    <option value="new">新しい順</option>
-                    <option value="old">古い順</option>
-                    <option value="fav">お気に入り多い順</option>
-                </select>
-            </label>
-            <label class="select-wrap">
-                表示:
-                <select id="viewSelect">
-                    <option value="card">カード</option>
-                    <option value="list">リスト</option>
-                </select>
-            </label>
-        </div>
-
-        <div id="filterChips" class="chips scroll-x" aria-label="フィルタチップ">
-            <!-- 自動/選択タグ、ハッシュタグ、種族、タイプ などをJSで注入 -->
-        </div>
-    </section>
-
-    <section id="postList" class="post-list" aria-live="polite"></section>
-
-    <section class="load-more">
-        <button id="loadMoreBtn">もっと見る</button>
-    </section>
-</main>
-<!-- ▲▲ デッキ投稿：一覧UI本体 ▲▲ -->
-
-<!-- 類似・比較：下から出るシート -->
-<div id="compareSheet" class="sheet hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="類似・比較">
-    <div class="sheet-handle" draggable="false"></div>
-    <div class="sheet-body">
-        <div class="sheet-tabs" role="tablist">
-            <button data-tab="diff" class="active" role="tab" aria-selected="true">差分</button>
-            <button data-tab="deckA" role="tab" aria-selected="false">A</button>
-            <button data-tab="deckB" role="tab" aria-selected="false">B</button>
-        </div>
-        <div id="sheetContent" class="sheet-content"></div>
-        <div class="sheet-actions">
-            <button id="closeSheetBtn">閉じる</button>
-        </div>
+    <div class="tab" onclick="switchTab('tab-compare', this)">
+        <span>⚖️ デッキ比較</span>
     </div>
 </div>
 
 
-<footer>
-    <div>
-        <p>
-            <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
-            カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
-        </p>
-    </div>
+<!--投稿一覧タブ -->
+<div class="tab-content active" id="tab-post-list">
+    <main id="post-app" class="page" aria-labelledby="title-list">
 
-    <p>
-        🔗 公式サイトはこちら 👉
-        <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
-            神託のメソロギア公式サイト
-        </a>
-    </p>
+        <!-- ツールバー -->
+        <div class="toolbar" id="toolbar">
+            <div class="spacer"></div>
+            <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">マイ投稿</button>
+        </div>
 
-    © 2025 Mesorogia Cards. All rights reserved.<br />
-    当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
-    一部画像素材は「ジュエルセイバーFREE」<br />
-    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
-    💬 ご要望・不具合報告 👉
-    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
-        @192837465aruneo
-    </a>
-</footer>
+        <!-- 並び替え・フィルターバー -->
+        <div class="list-controls" id="listControls">
+            <div class="list-controls-left">
+                <label class="sort-label">
+                    並び替え：
+                    <select id="sortSelect" class="ctrl-select">
+                        <option value="new" selected>新しい順</option>
+                        <option value="old">古い順</option>
+                    </select>
+                </label>
+                <button type="button" id="filterBtn" class="ctrl-btn">
+                    フィルター
+                </button>
+            </div>
+            <div class="list-controls-right">
+                <!-- （ベータ版の説明は下の共通ブロックへ移動） -->
+            </div>
+        </div>
+
+        <!-- ▼ フィルタ機能 ベータ版お知らせ -->
+        <section class="beta-note beta-note--filter" id="betaFilterNote">
+            <div class="beta-note-icon">🧪</div>
+            <div class="beta-note-body">
+                <p class="beta-note-title">フィルタ機能はベータ版では準備中です</p>
+                <p class="beta-note-text">
+                    現在のベータ版では投稿一覧のフィルタ機能はまだ利用できません。<br>
+                    今後のアップデートで追加予定です。
+                </p>
+            </div>
+        </section>
+        <!-- ▲ フィルタ機能 ベータ版お知らせ -->
 
 
-<!-- JS -->
-<script src="js/common.js"></script>
-<script src="js/page4.js"></script>
+        <!-- =========================
+                     一覧＋詳細：マスタ詳細レイアウト
+                ========================== -->
+        <div id="postMainLayout" class="post-main-layout">
+
+            <!-- ▼ 左カラム：投稿一覧＋ページネーション -->
+            <div class="post-master-column">
+
+                <!-- 一覧リスト（JSが流し込み） -->
+                <section id="postList" class="post-list" aria-live="polite"></section>
+
+                <!-- 件数＋ページネーション（投稿一覧専用） -->
+                <div id="listFooter" class="list-footer">
+                    <div id="resultCount" class="list-status"></div>
+
+                    <div class="pager">
+                        <button id="pagePrev" class="pager-btn" type="button">
+                            ◀ 前へ
+                        </button>
+                        <span id="pageInfo" class="pager-info">
+                            1 / 1
+                        </span>
+                        <button id="pageNext" class="pager-btn" type="button">
+                            次へ ▶
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- ▲ 左カラム -->
+
+            <!-- ▼ 右カラム：詳細ペイン（PC専用想定） -->
+            <section id="postDetailPane" class="post-detail-pane" aria-live="polite">
+                <div class="post-detail-empty">
+                    <div class="post-detail-empty-icon">👈</div>
+                    <div class="post-detail-empty-text">
+                        <div class="post-detail-empty-title">デッキ詳細パネル</div>
+                        <p class="post-detail-empty-main">
+                            左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
+                            ここにデッキの詳細が表示されます。
+                        </p>
+
+                    </div>
+                </div>
+            </section>
+            <!-- ▲ 右カラム -->
+
+        </div>
+
+    </main>
+
+    <!-- =========================
+            Page: マイ投稿 (#pageMine)
+        ========================== -->
+    <main id="pageMine" class="page" hidden aria-labelledby="title-mine">
+        <!-- 上段：ヘッダー（戻る＋タイトル） -->
+        <div class="mine-header">
+            <button id="backToListBtn" class="btn-ghost" type="button">← 戻る</button>
+            <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
+        </div>
+
+        <!-- ▼ マイ投稿 編集機能 ベータ版お知らせ -->
+        <section class="beta-note beta-note--mine" id="betaMineNote">
+            <div class="beta-note-icon">🧪</div>
+            <div class="beta-note-body">
+                <p class="beta-note-title">マイ投稿の編集機能はベータ版では準備中です</p>
+                <p class="beta-note-text">
+                    現在のベータ版では「マイ投稿」の編集機能はまだ利用できません。<br>
+                    今後のアップデートで追加予定です。
+                </p>
+            </div>
+        </section>
+        <!-- ▲ マイ投稿 編集機能 ベータ版お知らせ -->
+
+        <!-- 上段：ログイン状況枠 -->
+        <section class="mine-login-section">
+            <div class="mine-login-box">
+
+                <!-- 上段：ID＋ボタンを横並び -->
+                <div class="mine-login-top">
+                    <!-- 左：ログインID -->
+                    <div class="mine-login-row">
+                        <span class="mine-login-label">ログイン状況(ID):</span>
+                        <span id="mine-login-username" class="mine-login-username">未ログイン</span>
+                    </div>
+
+                    <!-- 右：ボタン群 -->
+                    <div class="mine-login-auth">
+
+                        <!-- 未ログイン時：新規登録 / ログイン -->
+                        <div id="auth-mini-loggedout" style="display:none;">
+                            <button type="button" id="open-login-modal" class="auth-mini-btn" data-open="authLoginModal">
+                                新規登録 / ログイン
+                            </button>
+                        </div>
+
+                        <!-- ログイン時：アカウントデータ ＋ ログアウト -->
+                        <div id="auth-mini-loggedin" style="display:none;">
+                            <div class="auth-logged-in-row">
+                                <button class="btn ghost" type="button" id="account-data-btn" data-open="accountDataModal">
+                                    アカウントデータ
+                                </button>
+                                <button class="btn danger" type="button" id="auth-logout-btn">
+                                    ログアウト
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 下段：説明文 -->
+                <p class="mine-login-note">
+                    アカウント登録・ログインすることで自分の投稿を表示・編集できます。
+                </p>
+
+            </div>
+        </section>
+
+
+        <!-- マイ投稿リスト（自分の投稿だけ / 10件単位表示） -->
+        <!-- ★ 未ログイン時に表示する案内 -->
+        <div id="mine-error" class="mine-nologin" style="display:none;">
+            <p>ここにあなたの投稿が表示されます。</p>
+            <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
+        </div>
+        <!-- マイ投稿が0件のときの案内 -->
+        <div id="mine-empty" class="mine-empty" style="display:none;">
+            <p>まだ投稿がありません。</p>
+            <p>
+                <a href="deckmaker.html" class="mine-empty-link">
+                    🃏 デッキメーカーでデッキを作りましょう！
+                </a>
+            </p>
+        </div>
+
+            <!-- =========================
+                        マイ投稿：一覧＋詳細レイアウト（PC用）
+                    ========================== -->
+            <div id="mineMainLayout" class="post-main-layout">
+
+                <!-- ▼ 左カラム：マイ投稿一覧＋ページネーション -->
+                <div class="post-master-column">
+
+                    <!-- 未ログイン時の案内 -->
+                    <div id="mine-error" class="mine-nologin" style="display:none;">
+                        <p>ここにあなたの投稿が表示されます。</p>
+                        <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
+                    </div>
+
+                    <!-- マイ投稿が0件のときの案内 -->
+                    <div id="mine-empty" class="mine-empty" style="display:none;">
+                        <p>まだ投稿がありません。</p>
+                        <p>
+                            <a href="deckmaker.html" class="mine-empty-link">
+                                🃏 デッキメーカーでデッキを作りましょう！
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- マイ投稿が1件以上のときのリスト -->
+                    <section id="myPostList" class="post-list" aria-live="polite"></section>
+
+                    <!-- 件数＋ページネーション（マイ投稿専用） -->
+                    <div id="mineFooter" class="list-footer">
+                        <div id="resultCountMine" class="list-status"></div>
+
+                        <div class="pager">
+                            <button id="minePagePrev" class="pager-btn" type="button">
+                                ◀ 前へ
+                            </button>
+                            <span id="minePageInfo" class="pager-info">
+                                1 / 1
+                            </span>
+                            <button id="minePageNext" class="pager-btn" type="button">
+                                次へ ▶
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ▲ 左カラム -->
+
+                <!-- ▼ 右カラム：マイ投稿用 詳細ペイン（PC専用） -->
+                <section id="postDetailPaneMine" class="post-detail-pane" aria-live="polite">
+                    <div class="post-detail-empty">
+                        <div class="post-detail-empty-icon">👈</div>
+                        <div class="post-detail-empty-text">
+                            <div class="post-detail-empty-title">デッキ詳細パネル</div>
+                            <p class="post-detail-empty-main">
+                                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
+                                ここにそのデッキの詳細が表示されます。
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <!-- ▲ 右カラム -->
+
+            </div>
+    </main>
+
+
+        <!-- ▼ ログイン / 新規登録 モーダル -->
+        <div class="account-modal" id="authLoginModal" style="display:none;">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+                <div class="account-modal-head">
+                    <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+                    <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+                </div>
+
+                <div class="account-modal-body">
+                    <div class="auth-stack">
+                        <!-- ▼ 非ログイン時に表示 -->
+                        <form id="auth-login-form" class="auth-login-form">
+
+                            <div class="poster-line" style="margin-top:6px;">
+                                <input id="auth-username" name="username" type="text" placeholder="ログインID" autocomplete="username"
+                                    autocapitalize="none" autocorrect="off" spellcheck="false">
+                            </div>
+
+                            <div class="poster-line">
+                                <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                                    autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                                <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                            </div>
+
+                            <!-- ▼ 追加：新規登録用の確認パスワード欄 -->
+                            <div class="poster-line">
+                                <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                                    autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                            </div>
+                            <!-- ▲ ここまで追加 -->
+
+                            <div class="auth-buttons">
+                                <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                                <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                            </div>
+
+                            <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:.5rem 0 0; font-size:.9rem;">
+                            </p>
+                        </form>
+
+                        <!-- ▼ ログイン中に表示 -->
+                        <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                            <p style="margin:0;">ログイン中です。</p>
+                            <p style="margin:4px 0 0; font-size:.85rem; opacity:.8;">
+                                アカウント情報の変更は、マイ投稿ページの「ログイン状況」枠から行えます。
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ アカウントデータ モーダル -->
+        <div class="account-modal" id="accountDataModal" style="display:none;">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+                <div class="account-modal-head">
+                    <h3 id="accountModalTitle">アカウントデータ変更</h3>
+                    <button type="button" class="account-close" data-close="accountDataModal" aria-label="閉じる">×</button>
+                </div>
+
+                <div class="account-modal-body">
+                    <!-- 情報表示（編集可） -->
+                    <div class="account-field">
+                        <label>新しいログイン名</label>
+                        <input id="acct-login-name" type="text" autocomplete="username" placeholder="新しいログイン名を入力">
+                    </div>
+
+                    <div class="account-field">
+                        <label>新しいパスワード</label>
+                        <div class="account-pass-row">
+                            <input id="acct-password" type="password" autocomplete="current-password" placeholder="※4文字以上">
+                            <button type="button" class="btn ghost" id="acct-pass-toggle">表示</button>
+                        </div>
+                        <small class="account-hint">※保存時に現在のパスワード確認を行います</small>
+                    </div>
+
+                    <div class="account-field">
+                        <label>投稿者名</label>
+                        <input id="acct-poster-name" type="text" autocomplete="nickname" placeholder="投稿に表示する名前（任意）">
+                    </div>
+
+                    <div class="account-field">
+                        <label>Xアカウント</label>
+                        <div class="X-info">
+                            <input id="acct-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
+                            <button type="button" class="x-link-btn" id="acct-x-open" title="Xプロフィールを開く">X を確認</button>
+                        </div>
+                    </div>
+
+                    <div class="account-note">
+                        ※ 投稿者名・Xアカウントを登録すると、次回以降のログイン時に自動入力されます。
+                    </div>
+                </div>
+
+                <div class="account-modal-footer">
+                    <button type="button" class="btn ghost" data-close="accountDataModal">キャンセル</button>
+                    <button type="button" class="btn danger" id="acct-save-btn" disabled>保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ パスワード保存用の隠しログインフォーム -->
+        <form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on" style="position:absolute; left:-9999px; top:-9999px;
+                       width:1px; height:1px; overflow:hidden;
+                       opacity:0; pointer-events:none;">
+            <input type="text" name="username" autocomplete="username">
+            <input type="password" name="password" autocomplete="current-password">
+        </form>
+        <iframe name="auth-login-save-frame" style="display:none;"></iframe>
+
+</div>
+
+
+<!--デッキ比較タブ -->
+<div class="tab-content" id="tab-compare">
+    <!-- ▼ デッキ比較機能 ベータ版お知らせ -->
+    <section class="beta-note beta-note--compare" id="betaCompareNote">
+        <div class="beta-note-icon">🧪</div>
+        <div class="beta-note-body">
+            <p class="beta-note-title">デッキ比較機能はベータ版では準備中です</p>
+            <p class="beta-note-text">
+                現在のベータ版ではデッキ比較タブの機能はまだ利用できません。<br>
+                今後のアップデートで、投稿デッキ同士を比較できる機能を追加予定です。
+            </p>
+        </div>
+    </section>
+</div>
+
+
+    <!-- スクリプト群 -->
+    <script src="js/common.js"></script>
+    <script src="js/common-page24.js"></script>
+    <script src="js/common-page234.js"></script>
+    <script src="js/page4.js"></script>
+    <script>
+    </script>
 </body>
+
+</html>

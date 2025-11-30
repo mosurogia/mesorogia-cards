@@ -1,11 +1,41 @@
-/* ================================
-   アカウントデータ モーダル（UI）
-   ※ 開閉/保存ロジックは JS 側で実装
-================================== */
-#accountDataModal{
+/* =========================================
+   1. アカウント＆ログイン UI 共通
+   - 1-1. アカウントデータ モーダル
+   - 1-2. Auth ローディング / トースト
+   - 1-3. 投稿フォーム内ミニログイン UI
+   - 1-3-1. ログインIDチップ共通
+   - 1-3-2. 危険系ボタン（ログアウトなど）
+========================================= */
+
+
+/*-----------------------------------------
+  1-1. アカウントデータ モーダル（UI）
+  ※ 開閉/保存ロジックは JS 側で実装
+------------------------------------------*/
+
+.account-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 4000;
+    justify-content: center;
+    align-items: center;
+}
+
+#accountDataModal {
     z-index: 3500;
 }
-.account-modal {
+
+.account-modal .modal-content {
+    background: #fff;
+    max-width: 950px;
+    position: relative;
+    box-sizing: border-box;
+    margin: auto;
     width: min(720px, 94vw);
     max-height: 88vh;
     overflow: auto;
@@ -90,13 +120,58 @@
 
 /* 小さめ画面最適化 */
 @media (max-width: 700px) {
-    .account-modal {
-        padding: 10px;
-    }
     .account-field label {
         font-size: .9rem;
     }
 }
+
+/* X 行：既存の .X-info を横並び均等 */
+.X-info {
+    display: flex;
+    width: 100%;
+    gap: 5px;
+}
+
+.X-info input {
+    flex: 1;
+}
+
+/* X ボタン共通 */
+.x-link-btn {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #111;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.x-link-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.x-link-btn:focus-visible
+ {
+    outline: 2px solid rgba(59, 130, 246, 0.6);
+    outline-offset: 2px;
+}
+/* ===== 動きの軽減（アクセシビリティ） ===== */
+@media (prefers-reduced-motion: reduce) {
+    .x-link-btn
+    {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/*-----------------------------------------
+  1-2. Auth ローディング / トースト（共通）
+------------------------------------------*/
 
 .auth-status {
     position: fixed;
@@ -156,4 +231,245 @@
 
 .auth-toast.err {
     background: #ef4444;
+}
+
+
+/*-----------------------------------------
+  1-3. 投稿フォーム内 ミニログイン UI
+------------------------------------------*/
+
+/* === 投稿者UI === */
+/* === 投稿フォーム内ミニログインUI ================== */
+
+/* 未ログイン：1ボタン（ログイン/新規登録） */
+.auth-mini-btn {
+    font-size: .8rem;
+    background: #6c63ff;
+    color: #fff;
+    padding: .35rem .8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.auth-mini-btn:hover {
+    opacity: .9;
+}
+
+/* ログイン中UIのボタン */
+.auth-mini-loggedin .btn {
+    padding: .4rem .6rem;
+    font-size: .75rem;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+/* ログイン中：IDバッジ（既存の .login-id-chip を縮小運用） */
+#auth-mini-loggedin .login-id-chip {
+    font-size: .75rem;
+    padding: 6px 10px;
+}
+
+.auth-stack {
+    display: grid;
+    gap: 5px;
+}
+
+.auth-login-form {
+    display: grid;
+    gap: 5px;
+}
+
+.poster-line {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* パスワード行：入力＋トグル */
+.poster-line input {
+    flex: 1;
+    height: 30px;
+}
+
+.btn.ghost {
+    font-size: .7rem;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #333;
+    border-radius: 8px;
+    padding: .35rem .6rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 登録 / ログイン */
+/* ===== 未ログインカード ===== */
+
+.auth-mini-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-mini-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #4b3f8a;
+}
+
+.auth-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.auth-buttons #auth-logout-btn[hidden] {
+    display: none !important;
+}
+
+/* ログイン中はログアウトを全幅で見せる */
+.auth-buttons.logged-in {
+    grid-template-columns: 1fr;
+}
+
+/* 小さめボタン共通（primary） */
+.btn.primary {
+    font-size: .8rem;
+    background: linear-gradient(90deg, #6a5acd, #9aa0ff);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .3rem .7rem;
+    font-weight: 700;
+}
+
+
+/* ===== Auth: ログイン中表示行 ===== */
+
+.auth-logged-in {
+    align-items: center;
+    gap: 8px;
+}
+
+.auth-logged-in small {
+    opacity: .75;
+}
+
+/* 表示専用：ログイン中行レイアウト */
+.auth-logged-in-row {
+    display: grid;
+    grid-template-columns:auto 1fr 1fr;
+    align-items: center;
+    gap: 3px;
+    width: 100%;
+}
+@media (max-width: 1024px) {
+    .auth-logged-in-row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+/* ボタン2つ並び時：均等2カラム */
+#auth-mini-loggedin .auth-logged-in-row{
+    grid-template-columns: 1fr 1fr;
+}
+
+/*-----------------------------------------
+  1-3-1. ログインIDチップ共通
+------------------------------------------*/
+
+/* 表示専用の登録IDバッジに見せる */
+.login-id-chip {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    /* 入力欄っぽさを消す：*/
+    width: auto;
+    /* ← ここが重要。幅100%をやめる */
+    padding: 6px 10px;
+    border: none;
+    /* 罫線を外す */
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f6f9ff 0%, #eaf1ff 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .8),
+        0 1px 3px rgba(0, 0, 0, .05);
+    font-size: .8rem;
+    color: #1f2937;
+    cursor: default;
+    /* クリック可能に見せない */
+    user-select: text;
+    /* 文字コピーはできる */
+}
+
+@media (max-width: 1024px) {
+    .login-id-chip {
+        width: 100%;
+    }
+}
+
+.login-id-chip .id-lock {
+    font-size: 1rem;
+    opacity: .8;
+}
+
+.login-id-chip .id-label {
+    font-weight: 700;
+    font-size: .8rem;
+    color: #3b82f6;
+    /* 表示専用ラベルの色 */
+    letter-spacing: .02em;
+}
+
+.login-id-chip .id-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 600;
+    background: rgba(59, 130, 246, .10);
+    /* 値の小チップで“表示っぽさ”を強調 */
+    padding: 2px 8px;
+    border-radius: 999px;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.login-id-chip small {
+    letter-spacing: .02em;
+}
+
+.login-id-chip strong {
+    font-weight: 700;
+}
+
+
+/*-----------------------------------------
+  1-3-2. 危険系ボタン（ログアウトなど）
+------------------------------------------*/
+
+.btn.danger {
+    background: linear-gradient(90deg, #ef4444, #f97316);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .45rem .5rem;
+    font-weight: 700;
+    font-size: .7rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    justify-self: stretch;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .auth-logged-in-row .btn.danger {
+        width: auto;
+        flex: 1;
+    }
 }
