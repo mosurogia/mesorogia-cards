@@ -42,9 +42,6 @@ async function fetchLatestCards() {
 }
 
 
-// 他ページから呼べるように公開
-window.ensureCardMapLoaded = ensureCardMapLoaded;
-
 // =======================================
 // カードマスタ → cardMap 構築（共通）
 // =======================================
