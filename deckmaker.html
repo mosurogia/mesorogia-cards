@@ -65,7 +65,7 @@
         <span>🃏 デッキ構築</span>
     </div>
     <div id="tab2" class="tab" onclick="switchTab('edit', this)">
-        <span>💾 デッキ分析</span>
+        <span>📤 分析＆投稿</span>
     </div>
 </div>
 
@@ -117,7 +117,7 @@
         <div class="deck-bar-content">
             <div class="deck-bar-top" id="deckBarTop">
                 <div id="deck-empty-text">
-                    <div style="font-size: 0.7rem;">カード操作</div>
+                    <div>カード操作</div>
                     <div class="deck-help" id="deckHelp">
                         <div>
                             【PC】<br>
@@ -137,11 +137,28 @@
         </div>
     </div>
 
+    <!-- デッキサマリー＆投稿ボタン -->
     <div class="deck-summary" id="deck-summary">
         <div class="deck-info"></div>
+        <!-- デッキサマリー＆操作ボタン -->
         <div class="analyze-button-wrapper">
-            <button class="analyze-button" onclick="goToAnalyzeTab()">分析</button>
-            <button class="analyze-button" id="resetDeckButton">リセット</button>
+            <!-- 上段：投稿 ＋ ？ -->
+            <div class="analyze-row-top">
+                <!-- 分析＆投稿タブへ飛ぶボタン -->
+                <button class="analyze-button" type="button" onclick="goToAnalyzeTab()">
+                    📤 投稿
+                </button>
+
+                <!-- 投稿の流れヘルプ（？アイコン） -->
+                <button type="button" class="analyze-button analyze-help-button" id="post-flow-help-btn-top" aria-label="デッキ投稿までの流れを確認">
+                    ？
+                </button>
+            </div>
+
+            <!-- 下段：デッキリセット -->
+            <button id="resetDeckButton" type="button" class="analyze-button">
+                デッキリセット
+            </button>
         </div>
     </div>
 
@@ -188,10 +205,18 @@
         <div id="deck-info" class="deck-section">
         <!-- サブタブ -->
         <div class="tab-bar subtab-bar">
-            <div class="info-tab-bar tab active
-            " onclick="switchTab('info-tab', this)"><span>📋 デッキ情報</span></div>
-            <div class="post-tab-bar tab" onclick="switchTab('post-tab', this)"><span>📤 デッキ投稿</span></div>
+                <div class="info-tab-bar tab active" onclick="switchTab('info-tab', this)">
+                    <span>📋 デッキ情報</span>
+                </div>
+                <div class="post-tab-bar tab" onclick="switchTab('post-tab', this)">
+                    <span>📤 デッキ投稿</span>
+                    <!-- デッキ投稿の流れヘルプ（サブタブ右側） -->
+                    <button type="button" id="post-flow-help-btn-form" class="subtab-help-button" aria-label="デッキ投稿までの流れを確認">
+                        ？
+                    </button>
+                </div>
         </div>
+
 
         <!--タブ内-->
         <div class="tab-contents-group">
@@ -352,7 +377,6 @@
         <!-- デッキ投稿タブ -->
         <div id="post-tab" class="tab-content">
         <form id="deck-post-form" onsubmit="return submitDeckPost(event)">
-
             <div class="info-section">
                 <div class="info-row">
                     <label class="info-label">デッキ名</label>
@@ -368,6 +392,7 @@
                     </div>
                 </div>
 
+                <!-- 代表カード -->
                 <div class="info-row">
                     <label class="info-label">メインカード</label>
                 <div class="info-value">
@@ -604,24 +629,10 @@
 
                 <div class="post-actions">
                     <button type="button" id="post-open-imagegen">画像生成</button>
-                    <button type="button" id="post-preview" onclick="previewDeckPost()">プレビュー</button>
+                    <button type="button" id="post-reset">投稿リセット</button>
                     <button id="post-submit" type="submit">投稿</button>
                 </div>
 
-                <!-- ▼ ベータ版注意メッセージ --
-                <div class="beta-warning" style="
-                background: #fff3cd;
-                border: 1px solid #ffeeba;
-                border-radius: 8px;
-                padding: 10px;
-                margin: 10px 0;
-                color: #856404;
-                font-weight: 600;
-                ">
-                    🧪 このデッキ投稿機能は <b>ベータ版</b> です。<br>
-                    現在はUIの先行公開のみで、投稿の送信はできません。
-                </div>
-            -->
 
 <!-- デッキ解説: 全画面編集モーダル -->
 <div id="noteFullModal" class="modal" style="display:none;">
@@ -651,8 +662,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
+</div>
 
 <!-- ▼ カード解説：候補選択モーダル -->
 <div class="modal" id="cardNoteSelectModal" style="display:none;">
@@ -685,6 +695,49 @@
     ✓
 </div>
 
+<!-- 投稿成功モーダル -->
+<div id="postSuccessModal" class="modal" style="display:none;">
+    <div class="modal-content post-success-modal">
+        <button id="post-success-close" class="modal-close-x" type="button" aria-label="閉じる">×</button>
+
+        <div class="post-success-header">
+            🎉 デッキ投稿が完了しました
+        </div>
+
+        <div class="post-success-body">
+            <div class="post-success-content">
+                <div class="post-success-text">
+                    <div class="post-success-row">
+                        <span class="post-success-label">デッキ名</span>
+                        <span id="post-success-deck-name" class="post-success-deck-name">（デッキ名）</span>
+                    </div>
+                    <p class="post-success-desc">
+                    デッキ投稿一覧ページにあなたのデッキが追加されました。<br>
+                    Xで投稿したことをシェアしてみましょう！<br>
+                    ポスト用のデッキリスト画像は、下の「画像生成」から保存できます。
+                    </p>
+                </div>
+                <!-- 右側のプレビュー領域 -->
+                <div id="post-success-preview" class="post-success-preview"></div>
+            </div>
+        </div>
+
+
+        <div class="post-success-buttons">
+            <button type="button" id="post-success-gen-image" class="btn ghost">
+                🖼 デッキリスト画像を生成
+            </button>
+            <button type="button" id="post-success-open-posts" class="btn primary">
+                📂 投稿一覧を開く
+            </button>
+            <button type="button" id="post-success-tweet" class="btn x-share">
+                𝕏 でポストする
+            </button>
+        </div>
+    </div>
+</div>
+
+
 
                 <!-- Hidden values -->
                 <input type="hidden" id="post-deck-code" name="deckCode">
@@ -694,6 +747,7 @@
                 <input type="hidden" id="post-poster-hidden" name="poster">
                 <input type="hidden" id="post-share-code" name="shareCode">
         </form>
+
 
 <!-- ▼ ログイン / 新規登録 モーダル -->
 <div class="account-modal" id="authLoginModal" style="display:none;">
@@ -748,39 +802,47 @@
     </div>
 </div>
 
-<!-- ▼ アカウントデータ モーダル -->
-<div class="modal" id="accountDataModal" style="display:none;">
-    <div class="modal-content account-modal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+<!-- ▼ アカウントデータ モーダル（form版） -->
+<div class="account-modal" id="accountDataModal" style="display:none;">
+    <form id="account-data-form" class="modal-content" role="dialog" aria-modal="true"
+        aria-labelledby="accountModalTitle">
+
         <div class="account-modal-head">
             <h3 id="accountModalTitle">アカウントデータ変更</h3>
             <button type="button" class="account-close" data-close="accountDataModal" aria-label="閉じる">×</button>
         </div>
 
         <div class="account-modal-body">
-            <!-- 情報表示（編集可） -->
+            <!-- 新しいログイン名 -->
             <div class="account-field">
                 <label>新しいログイン名</label>
-                <input id="acct-login-name" type="text" autocomplete="username" placeholder="新しいログイン名を入力">
+                <input id="acct-login-name" name="new-username" type="text" autocomplete="username"
+                    placeholder="新しいログイン名を入力">
             </div>
 
+            <!-- 新しいパスワード -->
             <div class="account-field">
                 <label>新しいパスワード</label>
                 <div class="account-pass-row">
-                    <input id="acct-password" type="password" autocomplete="current-password" placeholder="※4文字以上">
+                    <input id="acct-password" name="new-password" type="password" autocomplete="new-password"
+                        placeholder="※4文字以上">
                     <button type="button" class="btn ghost" id="acct-pass-toggle">表示</button>
                 </div>
-                <small class="account-hint">※保存時に現在のパスワード確認を行います</small>
+                <small class="account-hint">※ 保存時に現在のパスワード確認を行います</small>
             </div>
 
+            <!-- 投稿者名 -->
             <div class="account-field">
                 <label>投稿者名</label>
-                <input id="acct-poster-name" type="text" autocomplete="nickname" placeholder="投稿に表示する名前（任意）">
+                <input id="acct-poster-name" name="poster-name" type="text" autocomplete="nickname"
+                    placeholder="投稿に表示する名前（任意）">
             </div>
 
+            <!-- Xアカウント -->
             <div class="account-field">
                 <label>Xアカウント</label>
                 <div class="X-info">
-                    <input id="acct-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
+                    <input id="acct-x" name="poster-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
                     <button type="button" class="x-link-btn" id="acct-x-open" title="Xプロフィールを開く">X を確認</button>
                 </div>
             </div>
@@ -792,10 +854,13 @@
 
         <div class="account-modal-footer">
             <button type="button" class="btn ghost" data-close="accountDataModal">キャンセル</button>
+            <!-- クリックで JS が送信するので type="button" のままでOK -->
             <button type="button" class="btn danger" id="acct-save-btn" disabled>保存</button>
         </div>
-    </div>
+
+    </form>
 </div>
+
 
 
 <!-- ▼ パスワード保存用の隠しログインフォーム -->
@@ -910,6 +975,28 @@
         @192837465aruneo
     </a>
 </footer>
+
+<!-- デッキ投稿の流れ ヘルプモーダル -->
+<div id="postFlowHelpModal" class="modal" style="display:none;">
+    <div class="modal-content post-flow-modal">
+        <button id="post-flow-help-close" class="modal-close-x" type="button" aria-label="閉じる">×</button>
+
+        <h3 class="post-flow-title">
+            <span>❓ デッキ投稿の流れ</span>
+        </h3>
+
+        <ol class="post-flow-steps">
+            <li>「🃏 デッキ構築」タブで、デッキを組みましょう。</li>
+            <li>「📋 デッキ情報」内で枚数・種族・レアリティなどを確認しましょう。</li>
+            <li>「📤 デッキ投稿」サブタブに進みます。投稿内のデッキ名・投稿コメント・タグなどの記入欄を埋めていきましょう。</li>
+            <li>最後に、投稿チェック」にチェックを入れてから、一番下の「デッキを投稿する」ボタンを押したら投稿完了です！</li>
+        </ol>
+
+        <p class="post-flow-note">
+            ※ 投稿後は「デッキ投稿一覧ページ」にあなたのデッキが追加されます。
+        </p>
+    </div>
+</div>
 
 
 <!-- JS -->

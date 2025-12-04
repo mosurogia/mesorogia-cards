@@ -157,7 +157,7 @@
 }
 
 .deck-bar-top {
-    min-height: 80px;
+    min-height: 105px;
     display: flex;
     gap: 4px;
     padding: 4px 4px 0px 4px;
@@ -165,10 +165,15 @@
     flex-wrap: nowrap;
     align-items: flex-start;
 }
-
+@media (max-width: 768px) {
+    .deck-bar-top {
+        min-height: auto;
+        padding: 4px 0px 0px 0px;
+    }
+}
 /*デッキバーカードレイアウト*/
 .deck-card {
-    width: 100px;
+    width: 110px;
     background: #ccc;
     border: 2px solid #666;
     position: relative;
@@ -179,10 +184,15 @@
 }
 @media (max-width: 768px) {
     .deck-card {
-        width: 70px;
+        width: 80px;
         /* スマホではこのサイズに */
         height: auto;
         /* 縦幅は画像サイズに任せる or 調整 */
+    }
+}
+@media (max-width: 410px) {
+    .deck-card {
+        width: 70px;
     }
 }
 .deck-card img {
@@ -192,7 +202,7 @@
 
 #deckHelp {
     white-space: nowrap;
-    font-size: 14px;
+    font-size: .75rem;
     display: flex;
     color: #555;
     padding: 4px;
@@ -216,7 +226,7 @@
     line-height: 1.4;
     background: #fff;
     border-left: 1px solid #ccc;
-    padding: 4px;
+    padding: 0 4px;
     flex-shrink: 0;
     /* 🔑 固定幅として右に居座る */
     z-index: 1500;
@@ -224,7 +234,7 @@
 @media (max-width: 768px) {
     .deck-summary {
         position: absolute;
-        right: 20px;
+        right: 18px;
         top: 0;
         width: 120px;
         height: 100%;
@@ -263,10 +273,19 @@
 }
 
 .analyze-button-wrapper {
-    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: stretch;
+    margin: 0 auto;
+}
+/* 上段：投稿 + ？ボタンを横並びに */
+.analyze-row-top {
     display: flex;
     gap: 6px;
     justify-content: center;
+    /* 右寄せにしたければ flex-end に変更 */
+    align-items: stretch;
 }
 
 .analyze-button {
@@ -289,7 +308,7 @@
 }
 @media (max-width: 410px) {
     .analyze-button {
-        font-size: .35rem;
+        font-size: .375rem;
     }
 }
 .analyze-button:hover {
@@ -789,6 +808,7 @@
     color: #222;
     border-bottom: 1px solid #eee;
     gap: 0;
+    align-items: center; /* タブと？ボタンを縦中央に */
 }
 
 .subtab-bar .tab {
@@ -826,10 +846,38 @@
     background: linear-gradient(180deg, #f8fff8 0%, #ecffec 100%);
 }
 
-
 .subtab-bar .post-tab-bar{
     background: linear-gradient(180deg, #f8fbff 0%, #eaf3ff 100%);
 }
+
+/* サブタブ右側の「？」ボタン */
+.subtab-help-button {
+    margin-left: auto;
+    margin-right: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid #d4d4ff;
+    background: #f5f5ff;
+    color: #555;
+    font-size: .7rem;
+    cursor: pointer;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtab-help-button:hover {
+    background: #e3e3ff;
+}
+
+@media (max-width: 768px) {
+    .subtab-help-button {
+        padding: 3px 6px;
+        font-size: .6rem;
+    }
+}
+
 /*タブ全体レイアウト*/
 .info-section {
     display: flex;
@@ -2465,6 +2513,177 @@ font-size: .8rem;
 }
 
 
+/* ==========================
+   投稿成功モーダル
+   ========================== */
+
+#postSuccessModal{
+    z-index: 4000;
+}
+
+/* モーダル全体 */
+.post-success-modal {
+    width: 90%;
+    max-width: 720px;
+    max-height: 95%;
+    padding: 15px 15px 10px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+}
+
+#postSuccessModal .modal-content {
+    position: relative;
+}
+
+.modal-close-x {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.post-success-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.post-success-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+
+.post-success-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.post-success-deck-name {
+    font-weight: 600;
+}
+
+.post-success-desc {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 4px 0 ;
+}
+
+.post-success-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-end;
+}
+
+#postSuccessModal .post-success-buttons .btn {
+    min-width: 160px;
+    white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+    .post-success-buttons {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    #postSuccessModal .post-success-buttons .btn{
+    min-width: 160px;
+    }
+}
+
+#postSuccessModal .btn.x-share {
+    background: #000;
+    color: #fff;
+}
+
+#postSuccessModal .btn.x-share:hover {
+    opacity: 0.9;
+}
+
+/* 投稿成功モーダルの本文レイアウト：横並び */
+.post-success-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content:space-around;
+}
+
+/* 左側：デッキ名と説明文 */
+.post-success-text {
+    flex: 1 1 260px;
+    min-width: 200px;
+}
+
+/* 右側：プレビュー表示エリア */
+.post-success-preview {
+    flex: 0 0 270px;
+    max-width: 500px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* プレビュー内の deck-share-root を縮小表示し、余白を無くす */
+.post-success-preview .deck-share-root {
+    transform-origin: top left;
+    /* スケーリングは JavaScript 側で制御するため CSS では設定しません */
+    transform: none;
+    box-shadow: none;
+    height: auto !important;
+    width: auto !important;
+}
+
+/* モバイルなど狭い画面では縦並びに変更し、プレビューを少し大きくする */
+@media (max-width: 600px) {
+    .post-success-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .post-success-text{
+        flex: auto;
+    }
+
+    /* プレビューは全幅にし、上部との余白を追加 */
+    .post-success-preview {
+        flex: 1 1 auto;
+        max-width: 280px;
+        width: 100%;
+    }
+
+    /* ボタンを縦並びで全幅に */
+    .post-success-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    #postSuccessModal .post-success-buttons .btn {
+        width: 100%;
+        min-width: unset;
+        box-sizing: border-box;
+    }
+
+    .post-success-preview .deck-share-root {
+        /* スケーリングは JavaScript 側で制御します */
+        transform: none;
+    }
+}
+
+#post-success-preview{
+    height: auto;
+
+}
 
 /*======デッキ保存リスト=========*/
 /*保存デッキ一覧*/
@@ -2551,6 +2770,77 @@ font-size: .8rem;
     min-width: 80px;
 }
 
+/* ===== デッキ投稿ヘルプ（？ボタン＋モーダル） ===== */
+
+/* デッキバー右側の「？」ボタン */
+.analyze-help-button {
+    background: #eef2ff;
+    color: #4b5563;
+    font-weight: 600;
+    align-items: center;
+    line-height: 1;
+    flex:0;
+}
+.analyze-help-button:hover {
+    background: #e0e7ff;
+    transform: translateY(-1px);
+}
+
+/* 投稿フォーム上部の「❓ デッキ投稿の流れを確認」 */
+.post-flow-hint {
+    margin: 0.5rem 0 0.75rem;
+    text-align: right;
+}
+
+.post-flow-help-link {
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.post-flow-help-link:hover {
+    color: #1d4ed8;
+}
+
+/* モーダル本体の細かいレイアウト調整 */
+.post-flow-modal {
+    max-width: 480px;
+    width: 90%;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.post-flow-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+}
+
+.post-flow-steps {
+    margin: 0.25rem 0 1rem;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.post-flow-steps li+li {
+    margin-top: 0.25rem;
+}
+
+.post-flow-note {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+
+
 /* ===== キーボードフォーカスの可視化 ===== */
 .analyze-button:focus-visible,
 .filter-toggle-button:focus-visible,
@@ -2586,3 +2876,4 @@ font-size: .8rem;
     animation: none !important;
   }
 }
+

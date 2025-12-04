@@ -652,17 +652,33 @@ document.addEventListener("contextmenu", e => {
 //#endregion deckbar
 
 
-/* ===== 分析タブへ移動 ===== */
+/* ===== 分析＆投稿タブ → デッキ投稿 まで一気に移動 ===== */
 //#region goToAnalyze
 function goToAnalyzeTab() {
+  // まず上段タブを「💾 分析＆投稿（edit）」に切り替え
   const tab2 = document.querySelector('#tab2');
-  if (tab2 && typeof switchTab === 'function') switchTab('edit', tab2);
+  if (tab2 && typeof switchTab === 'function') {
+    switchTab('edit', tab2);
+  }
+
+  // 次に、分析＆投稿内のサブタブを「デッキ投稿」に切り替え
+  // （ボタンに class="post-tab-bar" を付けておく前提）
+  const postTabBtn =
+    document.querySelector('#deck-info .post-tab-bar') ||
+    document.querySelector('#deck-info [onclick*="post-tab"]');
+
+  if (postTabBtn && typeof switchTab === 'function') {
+    switchTab('post-tab', postTabBtn);
+  }
+
+  // デッキリスト・分析・交換サマリーを更新
   if (typeof renderDeckList === 'function') renderDeckList();
   if (typeof updateDeckAnalysis === 'function') updateDeckAnalysis();
   if (typeof updateExchangeSummary === 'function') updateExchangeSummary();
 }
 window.goToAnalyzeTab = goToAnalyzeTab;
 //#endregion goToAnalyze
+
 
 
 /* ===== デッキ情報開閉（ボタン表記同期） ===== */
@@ -1514,19 +1530,21 @@ function renderDeckList() {
     return String(cdA).localeCompare(String(cdB));
   });
 
-  // 代表カードの整合性を確定（無ければ先頭）
-  const representativeExists = entries.some(([cd]) => cd === window.representativeCd);
-  let nextRepresentative = representativeExists
-    ? window.representativeCd
-    : (entries[0]?.[0] ?? null);
+  // 代表カードの整合性を確定
+  // - 今の representativeCd がデッキ内にあればそのまま
+  // - デッキから消えていたら「未選択」（null）に戻す
+  const representativeExists = entries.some(([cd]) => cd === representativeCd);
+  let nextRepresentative = representativeExists ? representativeCd : null;
 
   // 空表示制御
   if (emptyMessage) emptyMessage.style.display = entries.length === 0 ? 'flex' : 'none';
   if (entries.length === 0) {
+    representativeCd = null;
     window.representativeCd = null;
     updateDeckSummaryDisplay?.();
     return;
   }
+
 
   // 行DOM生成（代表カードはクラス付与）
   for (const [cd, count] of entries) {
@@ -1561,11 +1579,15 @@ function renderDeckList() {
     autoscaleBadgeForCardEl?.(cardEl);
   }
 
-  window.representativeCd = nextRepresentative; // 最終確定
-  updateDeckSummaryDisplay?.();    // デッキ情報の表示同期
-  updateDeckCardListBackground?.();// リスト背景（種族等）同期
-  updateRepresentativeHighlight();//代表カードのハイライト更新
+  // 代表カードの最終確定
+  representativeCd = nextRepresentative;
+  window.representativeCd = representativeCd;
+
+  updateDeckSummaryDisplay?.();     // デッキ情報の表示同期
+  updateDeckCardListBackground?.(); // リスト背景（種族等）同期
+  updateRepresentativeHighlight();  // 代表カードのハイライト更新
 }
+
 
 
 
@@ -4082,6 +4104,46 @@ function deleteDeckFromIndex(index) {
   8) デッキ投稿フォーム関連
 ======================================================*/
 //#region 8. デッキ投稿フォーム
+// ===== デッキ投稿の流れヘルプモーダル =====
+(function(){
+  function openPostFlowHelp(){
+    const modal = document.getElementById('postFlowHelpModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closePostFlowHelp(){
+    const modal = document.getElementById('postFlowHelpModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  window.openPostFlowHelp = openPostFlowHelp; // 必要なら他からも呼べるように
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const btnTop  = document.getElementById('post-flow-help-btn-top');
+    const btnForm = document.getElementById('post-flow-help-btn-form');
+    const btnClose = document.getElementById('post-flow-help-close');
+    const modal = document.getElementById('postFlowHelpModal');
+
+    if (btnTop) {
+      btnTop.addEventListener('click', openPostFlowHelp);
+    }
+    if (btnForm) {
+      btnForm.addEventListener('click', openPostFlowHelp);
+    }
+    if (btnClose) {
+      btnClose.addEventListener('click', closePostFlowHelp);
+    }
+
+    // モーダルの背景クリックで閉じる
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closePostFlowHelp();
+        }
+      });
+    }
+  });
+})();
 
 
 // ===== サブタブの active を単一化（追加追記） =====
@@ -4425,6 +4487,7 @@ const NOTE_PRESETS = {
 
 【入れ替え候補】
 なぜこの構成にしたのか、他構築との差別化など。
+
 `,
 
   "play-guide": `【マリガン基準】
@@ -4437,6 +4500,7 @@ const NOTE_PRESETS = {
 
 【プレイのコツ】
 状況判断やよくあるミスなど。
+
 `,
 
   "matchup": `【環境での立ち位置】
@@ -4448,6 +4512,7 @@ const NOTE_PRESETS = {
 
 【対策カード】
 環境・メタに合わせた調整案など。
+
 `,
 
   "results": `【使用環境】
@@ -4461,6 +4526,7 @@ const NOTE_PRESETS = {
 
 【まとめ】
 使ってみた全体の印象、成果や気づきなど。
+
 `
 };
 
@@ -5441,21 +5507,78 @@ function normalizeHandle(v=''){
 
 /*同意チェック*/
 function bindMinimalAgreeCheck() {
-  const agree = document.getElementById('post-agree');
+  const agree  = document.getElementById('post-agree');
   const submit = document.getElementById('post-submit');
-  const preview = document.getElementById('post-preview');
 
   const sync = () => {
     const ok = !!agree.checked;
     submit.disabled = !ok;
-    if (preview) preview.disabled = !ok;
     submit.classList.toggle('is-disabled', !ok);
-    if (preview) preview.classList.toggle('is-disabled', !ok);
   };
 
   agree.addEventListener('change', sync);
   sync();
 }
+// 投稿フォームのリセット
+function resetDeckPostForm() {
+  const ok = window.confirm('投稿フォームの内容をすべて初期化します。\nよろしいですか？');
+  if (!ok) return;
+
+  // デッキ名（投稿タブ側）
+  const nameInput = document.getElementById('post-deck-name');
+  if (nameInput) nameInput.value = '';
+
+  // デッキ解説
+  const note = document.getElementById('post-note');
+  if (note) note.value = '';
+
+  // カード解説（行＋ミラー用hidden）
+  const notesWrap   = document.getElementById('post-card-notes');
+  const notesHidden = document.getElementById('post-card-notes-hidden');
+  if (notesWrap)   notesWrap.innerHTML = '';
+  if (notesHidden) notesHidden.value = '[]';
+
+  // 選択タグ
+  const selectTags = document.getElementById('select-tags');
+  if (selectTags) {
+    // すべての .chip から active を外す
+    selectTags.querySelectorAll('.chip.active').forEach(chip => {
+      chip.classList.remove('active');
+    })
+  }
+
+  // ユーザータグ
+  const userTagsWrap   = document.getElementById('user-tags');
+  const userTagsHidden = document.getElementById('post-user-tags-hidden');
+  if (userTagsWrap)   userTagsWrap.innerHTML = '';
+  if (userTagsHidden) userTagsHidden.value = '';
+
+  // 貼り付けデッキコード
+  const pastedPreview = document.getElementById('pasted-code-preview');
+  const clearBtn      = document.getElementById('btn-clear-code');
+  const shareHidden   = document.getElementById('post-share-code');
+  if (pastedPreview) pastedPreview.textContent = '（未設定）';
+  if (clearBtn)      clearBtn.disabled = true;
+  if (shareHidden)   shareHidden.value = '';
+
+  // 投稿同意チェックを外す
+  const agree = document.getElementById('post-agree');
+  if (agree) agree.checked = false;
+
+  // 投稿ボタン状態もリセット
+  const submit = document.getElementById('post-submit');
+  if (submit) {
+    submit.disabled = true;
+    submit.classList.add('is-disabled');
+  }
+
+  // 必要ならサマリー類を再同期
+  if (typeof refreshPostSummary === 'function') {
+    refreshPostSummary();
+  }
+}
+
+
 
 // === 投稿タブ: 画像生成ボタン ===
 (function attachPostImageGenButton(){
@@ -5478,8 +5601,19 @@ function bindMinimalAgreeCheck() {
   });
 })();
 
+// ===== 投稿タブ初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('post-tab')) bindMinimalAgreeCheck();
+  const postTab = document.getElementById('post-tab');
+  if (!postTab) return;
+
+  // 同意チェック初期化
+  bindMinimalAgreeCheck();
+
+  // 投稿リセットボタン
+  const resetBtn = document.getElementById('post-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetDeckPostForm);
+  }
 });
 
 
@@ -5652,19 +5786,22 @@ function buildDeckPostPayload(){
   const posterX    = posterXIn || user?.x || '';
   const username   = user?.username || (window.Auth?.user?.username) || '';
 
-  return {
-    title, comment, code, count, races, repImg,
-    cards: cardsMap,
-    cardNotes,
-    shareCode,
-    ua: navigator.userAgent,
-    autoTags  : Array.from(document.querySelectorAll('#auto-tags .chip[data-auto="true"]'))
-                   .map(el => el.textContent.trim()).filter(Boolean),
-    selectTags: Array.from(document.querySelectorAll('#select-tags .chip.active'))
-                   .map(el => el.textContent.trim()).filter(Boolean),
-    userTags  : Array.isArray(window.PostUserTags) ? window.PostUserTags.slice(0, 3) : [],
-    token,
-    poster: { name: posterName, x: posterX, username },
+return {
+  title, comment, code, count, races, repImg,
+  cards: cardsMap,
+  // ★ 追加：{cd: count} をそのまま文字列化
+  cardsJSON: JSON.stringify(cardsMap),
+
+  cardNotes,
+  shareCode,
+  ua: navigator.userAgent,
+  autoTags  : Array.from(document.querySelectorAll('#auto-tags .chip[data-auto="true"]'))
+                 .map(el => el.textContent.trim()).filter(Boolean),
+  selectTags: Array.from(document.querySelectorAll('#select-tags .chip.active'))
+                 .map(el => el.textContent.trim()).filter(Boolean),
+  userTags  : Array.isArray(window.PostUserTags) ? window.PostUserTags.slice(0, 3) : [],
+  token,
+  poster: { name: posterName, x: posterX, username },
   };
 }
 
@@ -5712,6 +5849,190 @@ function showPostToast(message, type='success', persist=false){
     box.style.display = 'none';
   }, 3500);
 }
+
+// 投稿成功モーダルを開く
+function openPostSuccessModal(opts = {}) {
+  const modal = document.getElementById('postSuccessModal');
+  if (!modal) return;
+
+  const nameEl = document.getElementById('post-success-deck-name');
+  const deckName =
+    (opts.deckName ||
+      (window.readDeckNameInput?.() || '').trim());
+
+  if (nameEl) {
+    nameEl.textContent = deckName || '（デッキ名）';
+  }
+
+  modal.style.display = 'flex'; // 他モーダルに合わせてflex
+  document.body.style.overflow = 'hidden';
+
+  // プレビューを非同期で生成します。エラーはログ出力のみにします。
+  if (typeof updatePostSuccessPreview === 'function') {
+    updatePostSuccessPreview().catch(err => {
+      console.error('post-success preview error:', err);
+    });
+  }
+}
+
+
+
+// 投稿成功モーダルのイベントをセット
+function initPostSuccessModal() {
+  const modal      = document.getElementById('postSuccessModal');
+  if (!modal) return;
+
+  const closeBtn   = document.getElementById('post-success-close');
+  const openPosts  = document.getElementById('post-success-open-posts');
+  const tweetBtn   = document.getElementById('post-success-tweet');
+  const genImgBtn  = document.getElementById('post-success-gen-image');
+
+  const closeModal = () => {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  // ×ボタン
+  closeBtn?.addEventListener('click', closeModal);
+
+
+  // 投稿一覧を開く
+  openPosts?.addEventListener('click', () => {
+    closeModal();
+    // ヘッダーの「📤 デッキ投稿」と同じ遷移先に合わせる
+    location.href = 'deck-post.html';
+  });
+
+  // ポスト用画像を生成（既存の画像生成ロジックを可能な範囲で流用）
+  genImgBtn?.addEventListener('click', () => {
+    try {
+      if (typeof window.exportDeckImage === 'function') {
+        // deckmaker 上部の「画像生成」と同じ関数があればそれを使う
+        window.exportDeckImage();
+      } else if (window.DeckImg && typeof window.DeckImg.export === 'function') {
+        window.DeckImg.export();
+      } else if (window.DeckImg && typeof window.DeckImg.exportDeckImage === 'function') {
+        window.DeckImg.exportDeckImage();
+      } else {
+        alert('画像生成機能が見つかりませんでした。上部の「画像生成」ボタンをお使いください。');
+      }
+    } catch (e) {
+      console.error('post-success image gen error:', e);
+      alert('画像生成中にエラーが発生しました。');
+    }
+  });
+
+  // X でポスト画面を開く
+  tweetBtn?.addEventListener('click', () => {
+    const deckName =
+      (window.readDeckNameInput?.() ||
+        document.getElementById('post-success-deck-name')?.textContent ||
+        '').trim();
+
+    const baseText = deckName
+      ? `【神託のメソロギア】「${deckName}」デッキを投稿しました！`
+      : '【神託のメソロギア】デッキを投稿しました！';
+
+    const hashtags = '#神託のメソロギア #メソロギアデッキ';
+    const text = `${baseText}\n${hashtags}`;
+
+    // 投稿一覧ページを共有URLに（必要なら後で個別ページURLに差し替え）
+    const url = 'https://mosurogia.github.io/mesorogia-cards/deck-post.html';
+
+    const intent =
+      'https://twitter.com/intent/tweet?text=' +
+      encodeURIComponent(text) +
+      '&url=' +
+      encodeURIComponent(url);
+
+    window.open(intent, '_blank', 'noopener');
+  });
+}
+
+// ページ読み込み時にモーダルを初期化
+document.addEventListener('DOMContentLoaded', initPostSuccessModal);
+
+// -----------------------------------------------------------------------------
+// 投稿成功モーダル内のポスト画像プレビュー
+// 成功時に表示されるモーダルの右側にデッキ画像の簡易プレビューを挿入します。
+// common-page24.js で公開されている buildShareNode / buildDeckSummaryData / getCanvasSpec を利用します。
+// -----------------------------------------------------------------------------
+async function updatePostSuccessPreview() {
+    const container = document.getElementById('post-success-preview');
+    if (!container) return;
+
+    // 既存プレビューをクリア
+    container.innerHTML = '';
+
+    // デッキが空の場合は何もしない
+    const deckObj = window.deck || {};
+    const total = Object.values(deckObj).reduce((a, b) => a + (b | 0), 0);
+    if (!total) return;
+
+    // 必要な関数が存在するか確認
+    if (typeof window.buildShareNodeForPreview       !== 'function' ||
+        typeof window.buildDeckSummaryDataForPreview !== 'function' ||
+        typeof window.getCanvasSpecForPreview        !== 'function') {
+        return;
+    }
+
+    // データと spec を取得
+    const data   = window.buildDeckSummaryDataForPreview();
+    const aspect = '3:4';
+    const kinds  = data.uniqueList ? data.uniqueList.length : 0;
+    const spec   = window.getCanvasSpecForPreview(aspect, kinds);
+    spec.cols = 5;
+
+    try {
+        // プレビュー用ノードを構築
+        const node = await window.buildShareNodeForPreview(data, spec);
+
+        // 固定配置・固定サイズを解除
+        node.style.position = 'relative';
+        node.style.left     = '0';
+        node.style.top      = '0';
+
+        // プレビューの縮小率を算出します。
+        // コンテナの幅から計算し、1より大きくならないよう制限します。
+        const containerWidth = container.clientWidth || spec.width;
+        let scale = containerWidth / spec.width;
+        if (scale > 1) scale = 1;
+
+        // ★ポイント★
+        // 1) コンテナ自体の幅・高さを縮小後のサイズに合わせます。
+        container.style.width  = `${spec.width  * scale}px`;
+        container.style.height = `${spec.height * scale}px`;
+        container.style.overflow = 'hidden';
+
+        // 2) ノードには元サイズを指定し、transform で縮小します。
+        node.style.width  = `${spec.width}px`;
+        node.style.height = `${spec.height}px`;
+        node.style.transformOrigin = 'top left';
+        node.style.transform = `scale(${scale})`;
+
+        // 挿入
+        container.appendChild(node);
+
+
+    } catch (err) {
+        console.error('updatePostSuccessPreview error:', err);
+    }
+}
+
+
+// 検証用：コンソールから呼び出せるテスト関数
+// 例）ブラウザのコンソールで
+//   debugShowPostSuccessModal('テストデッキ');
+// と叩くと、投稿なしでモーダルだけ確認できます。
+window.debugShowPostSuccessModal = function(deckName){
+  openPostSuccessModal({
+    deckName:
+      (deckName ||
+        (window.readDeckNameInput?.() || '').trim() ||
+        'テスト用デッキ')
+  });
+};
+
 
 
 // 送信（デッキコードは任意：空なら検証スキップ）
@@ -5790,18 +6111,40 @@ async function submitDeckPost(e){
       body   : JSON.stringify(payload),
     });
 
-    const json = await res.json();
-      if (json.ok) {
-        showPostToast(`投稿が完了しました`, 'success');
-      } else {
-        if (json.error === 'too_many_posts') {
-          showPostToast('短時間に連続して投稿することはできません。少し時間をおいて再度お試しください。', 'error');
-        } else if (json.error === 'dup_post') {
-          showPostToast('同じ内容の投稿を二重送信しそうだったのでブロックしました。', 'info');
-        } else {
-          showPostToast(`投稿失敗：${json.error || '不明なエラー'}`, 'error', true);
-        }
-      }
+  const json = await res.json();
+
+  if (json.ok) {
+    // 成功トースト＋チェックアニメ
+    showPostToast('投稿が完了しました', 'success');
+    try { showSuccessCheck(); } catch (_) {}
+
+    // 成功モーダルを開く（デッキ名も反映）
+    const deckName =
+      (window.readDeckNameInput?.() ||
+      document.getElementById('post-deck-name')?.value ||
+      '').trim();
+
+    openPostSuccessModal({ deckName });
+
+  } else {
+    if (json.error === 'too_many_posts') {
+      showPostToast(
+        '短時間に連続して投稿することはできません。少し時間をおいて再度お試しください。',
+        'error'
+      );
+    } else if (json.error === 'dup_post') {
+      showPostToast(
+        '同じ内容の投稿を二重送信しそうだったのでブロックしました。',
+        'info'
+      );
+    } else {
+      showPostToast(
+        `投稿失敗：${json.error || '不明なエラー'}`,
+        'error',
+        true
+      );
+    }
+  }
   } catch(err){
     console.error(err);
     showPostToast('通信エラーが発生しました', 'error', true);
@@ -5840,6 +6183,7 @@ function showSuccessCheck() {
 
 
 //#endregion
+
 
 
 /*======================================================
@@ -5889,8 +6233,8 @@ function buildRepSelectGrid() {
     if (!A || !B) return 0;
     const tA = typeOrder[A.type] ?? 99, tB = typeOrder[B.type] ?? 99;
     if (tA !== tB) return tA - tB;
-    const cA = (+A.cost||0), cB = (+B.cost||0); if (cA !== cB) return cA - cB;
-    const pA = (+A.power||0), pB = (+B.power||0); if (pA !== pB) return pA - pB;
+    const cA = (+A.cost || 0), cB = (+B.cost || 0); if (cA !== cB) return cA - cB;
+    const pA = (+A.power || 0), pB = (+B.power || 0); if (pA !== pB) return pA - pB;
     return String(cdA).localeCompare(String(cdB));
   });
 
@@ -5901,6 +6245,7 @@ function buildRepSelectGrid() {
     const wrap = document.createElement('div');
     wrap.className = 'item';
     wrap.style.cursor = 'pointer';
+    wrap.dataset.cd = String(cd);
 
     const img = document.createElement('img');
     img.alt = info.name || '';
@@ -5915,26 +6260,27 @@ function buildRepSelectGrid() {
     wrap.appendChild(img);
     wrap.appendChild(name);
 
+    // ★ クリックで代表カードに設定
     wrap.addEventListener('click', () => {
-      if (window.representativeCd === cd) {
-        // 既に代表 → 軽いハイライトだけ見せて閉じる
-        wrap.style.outline = '3px solid crimson';
-        wrap.style.outlineOffset = '-2px';
-        wrap.style.borderRadius = '6px';
-        wrap.style.boxShadow = '0 0 10px limegreen';
-        closeRepSelectModal();
-        return;
-      }
-      window.representativeCd = cd;
+      const newCd = String(cd);
+
+      // 代表カードを更新
+      representativeCd = newCd;
+      window.representativeCd = representativeCd;
+
+      // 画面を同期
       updateRepresentativeHighlight?.();
       updateDeckSummaryDisplay?.();
       scheduleAutosave?.();
+
+      // モーダルを閉じる
       closeRepSelectModal();
     });
 
     grid.appendChild(wrap);
   }
 }
+
 
 // 代表名タップでモーダル起動／外側タップで閉じる
 document.addEventListener('DOMContentLoaded', () => {

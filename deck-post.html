@@ -17,7 +17,7 @@
     <!-- OGP基本 -->
     <meta property="og:title" content="モスロギア | 神託のメソロギア デッキ投稿">
     <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿されたデッキ一覧やマイ投稿をチェックできます。">
-    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deck-post-og.webp">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/">
     <meta property="og:type" content="website">
 
@@ -25,7 +25,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="モスロギア | 神託のメソロギア デッキ投稿">
     <meta name="twitter:description" content="神託のメソロギアのデッキ投稿・共有ページです。">
-    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.webp">
+    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deck-post-og.webp">
 
 
     <!-- CSS -->
@@ -69,8 +69,16 @@
         <!-- ツールバー -->
         <div class="toolbar" id="toolbar">
             <div class="spacer"></div>
-            <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">マイ投稿</button>
+
+            <button class="btn-ghost" type="button" onclick="location.href='deckmaker.html'">
+                ➕ デッキを投稿する
+            </button>
+
+            <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">
+                👤 マイ投稿
+            </button>
         </div>
+
 
         <!-- 並び替え・フィルターバー -->
         <div class="list-controls" id="listControls">
@@ -80,6 +88,7 @@
                     <select id="sortSelect" class="ctrl-select">
                         <option value="new" selected>新しい順</option>
                         <option value="old">古い順</option>
+                        <option value="like">いいね順</option>
                     </select>
                 </label>
                 <button type="button" id="filterBtn" class="ctrl-btn">
@@ -132,7 +141,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
             <!-- ▲ 左カラム -->
 
@@ -146,14 +154,24 @@
                             左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
                             ここにデッキの詳細が表示されます。
                         </p>
-
+                        <p style="margin-top:10px;">
+                            <a href="deckmaker.html" class="post-cta-link">
+                                🃏 自分のデッキを投稿する(デッキメーカーページ)
+                            </a>
+                        </p>
                     </div>
                 </div>
             </section>
             <!-- ▲ 右カラム -->
 
-        </div>
 
+        </div>
+<section class="post-cta">
+    <p class="post-cta-title">あなたもデッキを投稿してみませんか？</p>
+    <a href="deckmaker.html" class="post-cta-btn">
+        🃏 デッキメーカーを開く
+    </a>
+</section>
     </main>
 
     <!-- =========================
@@ -359,39 +377,47 @@
             </div>
         </div>
 
-        <!-- ▼ アカウントデータ モーダル -->
+        <!-- ▼ アカウントデータ モーダル（form版） -->
         <div class="account-modal" id="accountDataModal" style="display:none;">
-            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+            <form id="account-data-form" class="modal-content" role="dialog" aria-modal="true"
+                aria-labelledby="accountModalTitle">
+
                 <div class="account-modal-head">
                     <h3 id="accountModalTitle">アカウントデータ変更</h3>
                     <button type="button" class="account-close" data-close="accountDataModal" aria-label="閉じる">×</button>
                 </div>
 
                 <div class="account-modal-body">
-                    <!-- 情報表示（編集可） -->
+                    <!-- 新しいログイン名 -->
                     <div class="account-field">
                         <label>新しいログイン名</label>
-                        <input id="acct-login-name" type="text" autocomplete="username" placeholder="新しいログイン名を入力">
+                        <input id="acct-login-name" name="new-username" type="text" autocomplete="username"
+                            placeholder="新しいログイン名を入力">
                     </div>
 
+                    <!-- 新しいパスワード -->
                     <div class="account-field">
                         <label>新しいパスワード</label>
                         <div class="account-pass-row">
-                            <input id="acct-password" type="password" autocomplete="current-password" placeholder="※4文字以上">
+                            <input id="acct-password" name="new-password" type="password" autocomplete="new-password"
+                                placeholder="※4文字以上">
                             <button type="button" class="btn ghost" id="acct-pass-toggle">表示</button>
                         </div>
-                        <small class="account-hint">※保存時に現在のパスワード確認を行います</small>
+                        <small class="account-hint">※ 保存時に現在のパスワード確認を行います</small>
                     </div>
 
+                    <!-- 投稿者名 -->
                     <div class="account-field">
                         <label>投稿者名</label>
-                        <input id="acct-poster-name" type="text" autocomplete="nickname" placeholder="投稿に表示する名前（任意）">
+                        <input id="acct-poster-name" name="poster-name" type="text" autocomplete="nickname"
+                            placeholder="投稿に表示する名前（任意）">
                     </div>
 
+                    <!-- Xアカウント -->
                     <div class="account-field">
                         <label>Xアカウント</label>
                         <div class="X-info">
-                            <input id="acct-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
+                            <input id="acct-x" name="poster-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
                             <button type="button" class="x-link-btn" id="acct-x-open" title="Xプロフィールを開く">X を確認</button>
                         </div>
                     </div>
@@ -403,10 +429,13 @@
 
                 <div class="account-modal-footer">
                     <button type="button" class="btn ghost" data-close="accountDataModal">キャンセル</button>
+                    <!-- クリックで JS が送信するので type="button" のままでOK -->
                     <button type="button" class="btn danger" id="acct-save-btn" disabled>保存</button>
                 </div>
-            </div>
+
+            </form>
         </div>
+
 
         <!-- ▼ パスワード保存用の隠しログインフォーム -->
         <form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on" style="position:absolute; left:-9999px; top:-9999px;
@@ -435,6 +464,32 @@
     </section>
 </div>
 
+
+<!--フッター-->
+<footer>
+    <div>
+        <p>
+            <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+            カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
+        </p>
+    </div>
+
+    <p>
+        🔗 公式サイトはこちら 👉
+        <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+            神託のメソロギア公式サイト
+        </a>
+    </p>
+
+    © 2025 Mesorogia Cards. All rights reserved.<br />
+    当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
+    一部画像素材は「ジュエルセイバーFREE」<br />
+    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
+    💬 ご要望・不具合報告 👉
+    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
+        @192837465aruneo
+    </a>
+</footer>
 
     <!-- スクリプト群 -->
     <script src="js/common.js"></script>

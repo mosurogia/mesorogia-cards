@@ -77,6 +77,13 @@
 
   window.exportDeckImage = exportDeckImage;
 
+// ===== プレビュー用に内部関数を公開 =====
+// 投稿成功モーダルでプレビューを作成するために必要な関数をグローバルへエクスポート
+window.buildShareNodeForPreview       = buildShareNode;
+window.buildDeckSummaryDataForPreview = buildDeckSummaryData;
+window.getCanvasSpecForPreview        = getCanvasSpec;
+
+
   // ============ データ収集 ============
   function buildDeckSummaryData(){
     const deck = window.deck || {};
@@ -655,7 +662,7 @@ function downloadCanvas(canvas, fileName){
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '12px',
+    margin: '15px',
     fontSize: 'clamp(14px, 2vw, 18px)',
     textAlign: 'center',
   });
@@ -1313,9 +1320,9 @@ async function doLogout(){
   if (window.__acctSaveBound) return;
   window.__acctSaveBound = true;
 
-  const API = window.API;                   // 既存の GAS エンドポイント
-  const postJSON = window.postJSON;         // 既存の postJSON
-  const Auth = window.Auth;                 // 既存の Auth（attachToken / _save / whoami / logout など）
+  const API     = window.API;
+  const postJSON= window.postJSON;
+  const Auth    = window.Auth;
 
   // 差分ペイロードを作る補助
   function buildPayloadFromForm(){
@@ -1363,25 +1370,29 @@ async function doLogout(){
     if ($login){
       const now = resUser?.username || ($login.placeholder || '').replace(/^現在:\s*/,'').trim();
       $login.value = '';
-      $login.placeholder = `現在: ${now}`;
+      $login.placeholder = now ? `現在: ${now}` : '（未設定）';
     }
     if ($name){
       const now = resUser?.displayName ?? ($name.placeholder || '').replace(/^現在:\s*/,'').trim();
       $name.value = '';
-      $name.placeholder = `現在: ${now || ''}`;
+      $name.placeholder = now ? `現在: ${now}` : '（未設定）';
     }
     if ($x){
       const now = resUser?.x ?? ($x.placeholder || '').replace(/^現在:\s*/,'').trim();
       $x.value = '';
-      $x.placeholder = `現在: ${now || ''}`;
+      $x.placeholder = now ? `現在: ${now}` : '（未設定）';
     }
     if ($pw){ $pw.value = ''; }
   }
 
+  // ★ ここを「ボタンクリック」→「フォーム submit」に変更
+  const form = document.getElementById('account-data-form');
+  if (!form) return;
 
-  // ここで一元バインド（イベント委任）
-  document.addEventListener('click', async (ev) => {
-    const btn = ev.target.closest('#acct-save-btn');
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+
+    const btn = document.getElementById('acct-save-btn');
     if (!btn) return;
 
     // 1) 差分作成
@@ -1416,15 +1427,15 @@ async function doLogout(){
       const res = await postJSON(`${API}?mode=updateProfile`, sendBody);
       if (!res?.ok) throw new Error(res?.error || 'update failed');
 
-      // 1) 返ってきた user があれば一旦キャッシュ更新（即座にUIに反映させたいとき用）
+      // 1) 返ってきた user があれば一旦キャッシュ更新
       if (res.user && Auth) {
         Auth._save(res.user, Auth.token);
       }
 
-      // 2) 必ず whoami でサーバ最新を再取得（username 変更なども確実に反映）
+      // 2) whoami でサーバ最新を再取得
       try {
         if (typeof window.refreshWhoAmI === 'function') {
-          await window.refreshWhoAmI(); // Auth.whoami() が内部で UI も反映
+          await window.refreshWhoAmI();
         } else if (Auth && typeof Auth.whoami === 'function') {
           await Auth.whoami();
         }
@@ -1434,10 +1445,10 @@ async function doLogout(){
       const newUser = (Auth && Auth.user) ? Auth.user : (res.user || null);
       applyResultToForm(newUser);
 
-      // 4) 念のためもう一度 UI 反映（ヘッダーなど）
+      // 4) ログイン表示更新
       window.reflectLoginUI?.();
 
-      // 5) モーダルを閉じる（存在するページのみ）
+      // 5) モーダルを閉じる
       const m = document.getElementById('accountDataModal');
       if (m) m.style.display = 'none';
 
@@ -1452,6 +1463,7 @@ async function doLogout(){
     }
   });
 })();
+
 
 // ======================================
 //  マイ投稿用: whoami → ユーザー名反映

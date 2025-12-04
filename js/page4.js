@@ -30,6 +30,9 @@ const DeckPostApp = (() => {
     token: '', // ログイン済みなら共通Authから拾う
   };
 
+  // ★ DeckPost 一覧の初期描画が完了したかどうか
+  let initialized = false;
+
 // ===== マイ投稿用ステート =====
 const postState = {
   mine: {
@@ -284,7 +287,25 @@ function updateMinePager(page, totalPages, totalCount){
     // まずログインID表示だけ更新
     updateMineLoginStatus();
 
-    // 「マイ投稿」ページが表示中なら 1ページ目を読み直す
+    // ★ トークンを取り直す（Auth.token が変わっている可能性がある）
+    state.token = resolveToken();
+
+    // ★ init 完了後なら：
+    //    一覧タブ(postList)も「自分のいいね」情報付きで取り直す
+    if (initialized) {
+      (async () => {
+        try {
+          await fetchAllList();       // token 付きでもう一度全件取得
+          rebuildFilteredItems();     // 並び替えなど再計算
+          const cur = state.list.currentPage || 1;
+          loadListPage(cur);          // 現在ページを維持したまま再描画
+        } catch (e) {
+          console.error('handleAuthChangedForDeckPost: reload list failed', e);
+        }
+      })();
+    }
+
+    // 「マイ投稿」ページが表示中なら 1ページ目を読み直す（既存処理）
     const minePage    = document.getElementById('pageMine');
     const mineVisible = minePage && !minePage.hidden;
 
@@ -298,34 +319,83 @@ function updateMinePager(page, totalPages, totalCount){
   window.onDeckPostAuthChanged = handleAuthChangedForDeckPost;
 
 
-  // ===== APIラッパ =====
-  async function apiList({ limit = PAGE_LIMIT, offset = 0, mine = false }) {
-    const qs = new URLSearchParams();
-    qs.set('mode', 'list');
-    qs.set('limit', String(limit));
-    qs.set('offset', String(offset));
+// =========================
+// JSONP で GAS(doGet) を叩く小さなヘルパー
+// =========================
+function jsonpRequest(url) {
+  return new Promise((resolve, reject) => {
+    const cbName =
+      '__deckpost_jsonp_' +
+      Date.now().toString(36) +
+      Math.random().toString(36).slice(2);
 
-    if (mine) {
-      qs.set('mine', '1');
+    const sep = url.includes('?') ? '&' : '?';
+    const script = document.createElement('script');
+    script.src = url + sep + 'callback=' + cbName;
+    script.async = true;
 
-      // できるだけ確実に token を拾う
-      const tk =
-        (window.Auth && window.Auth.token) ||
-        state.token ||
-        resolveToken();
-
-      if (tk) {
-        qs.set('token', tk);
-      } else {
-        // token が無い＝未ログインなので、ここで早期リターン
-        return { ok: false, error: 'auth required' };
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      delete window[cbName];
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
       }
-    }
+      if (timer) clearTimeout(timer);
+    };
 
-    const url = `${GAS_BASE}?${qs.toString()}`;
-    const res = await fetch(url);
-    return res.json();
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('JSONP timeout'));
+    }, 10000);
+
+    window[cbName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('JSONP script error'));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+
+// ===== APIラッパ =====
+async function apiList({ limit = PAGE_LIMIT, offset = 0, mine = false }) {
+  const qs = new URLSearchParams();
+  qs.set('mode', 'list');
+  qs.set('limit', String(limit));
+  qs.set('offset', String(offset));
+
+  // マイ投稿フラグだけ付ける
+  if (mine) {
+    qs.set('mine', '1');
   }
+
+  // ★ ログインしていれば常に token を付ける（一覧/マイ投稿 共通）
+  const tk =
+    (window.Auth && window.Auth.token) ||
+    state.token ||
+    resolveToken();
+
+  if (tk) {
+    qs.set('token', tk);
+  }
+
+  const url = `${GAS_BASE}?${qs.toString()}`;
+
+  // JSONP で呼び出し
+  const res = await jsonpRequest(url);
+  return res;
+}
+
+
+
 
     // ===== 一覧全件をまとめて取得（list用） =====
   async function fetchAllList(){
@@ -357,6 +427,126 @@ function updateMinePager(page, totalPages, totalCount){
     state.list.total    = total || all.length;
   }
 
+  // ===== いいね関連API =====
+  /**
+   * 指定の投稿IDについて「いいね」状態をトグルします。
+   * @param {string} postId
+   * @returns {Promise<{ok:boolean, liked?:boolean, likeCount?:number, error?:string}>}
+   */
+    // ★ いいね送信中フラグ（postIdごと）
+  const likePending = {};
+  async function apiToggleLike(postId){
+    const token = (window.Auth && window.Auth.token) || state.token || resolveToken();
+    console.log('[apiToggleLike] token =', token, 'postId =', postId);
+
+    if (!token){
+      return { ok:false, error:'auth required' };
+    }
+    try{
+      const res = await fetch(`${GAS_BASE}?mode=toggleLike`, {
+        method: 'POST',
+        headers: { 'Content-Type':'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ token, postId })
+      });
+      const json = await res.json();
+      console.log('[apiToggleLike] response =', json);
+      return json;
+    }catch(err){
+      console.error('[apiToggleLike] network error', err);
+      return { ok:false, error:'network' };
+    }
+  }
+
+
+  /**
+   * UI 用いいねトグルハンドラ。ボタンの表示更新と state の同期を行います。
+   * 楽観的更新：
+   *   - 押した瞬間に active/カウントを変更
+   *   - その裏で API 送信
+   *   - 送信中にもう一度押されたらメッセージ表示
+   * @param {string} postId
+   * @param {HTMLElement} btn
+   */
+  async function handleToggleLike(postId, btn){
+    if (!postId) return;
+    if (!btn) return;
+
+    // すでにこの投稿IDで送信中なら連打禁止
+    if (likePending[postId]) {
+      alert('反映中です、しばらくしてからまたお試しください。');
+      return;
+    }
+
+    // 現在の状態を state から取得（なければ DOM からでもOK）
+    const item = findPostItemById(postId) || {};
+    const prevLiked = !!item.liked;
+    const prevCount = Number(item.likeCount || 0);
+
+    // 楽観的に次の状態を決める
+    const optimisticLiked = !prevLiked;
+    const optimisticCount = prevLiked
+      ? Math.max(0, prevCount - 1)
+      : prevCount + 1;
+
+    // state & DOM をまとめて更新する小さなヘルパー
+    const applyLikeState = (liked, likeCount) => {
+      const selector = `.post-card[data-postid="${postId}"] .fav-btn`;
+      document.querySelectorAll(selector).forEach(el => {
+        el.classList.toggle('active', liked);
+        el.textContent = `${liked ? '★' : '☆'}${likeCount}`;
+      });
+
+      const updateList = (list) => {
+        if (Array.isArray(list)){
+          list.forEach((it) => {
+            if (String(it.postId) === String(postId)){
+              it.liked     = liked;
+              it.likeCount = likeCount;
+            }
+          });
+        }
+      };
+      updateList(state.list.allItems);
+      updateList(state.list.items);
+      updateList(state.list.filteredItems);
+      updateList(state.mine.items);
+    };
+
+    // ★ ここで楽観的に反映
+    applyLikeState(optimisticLiked, optimisticCount);
+
+    // フラグON & ボタン一時無効化
+    likePending[postId] = true;
+    btn.disabled = true;
+
+    try{
+      const res = await apiToggleLike(postId);
+
+      if (!res || !res.ok){
+        // 失敗したので元に戻す
+        applyLikeState(prevLiked, prevCount);
+
+        const isAuthError = res && res.error === 'auth required';
+        const msg = isAuthError
+          ? 'いいねするにはログインが必要です。\nマイ投稿タブから新規登録またはログインしてください。'
+          : `いいねに失敗しました。\n（エラー: ${res && res.error || 'unknown'}）`;
+        alert(msg);
+        return;
+      }
+
+      // サーバー側の最終状態で上書き（大体は楽観的状態と同じはず）
+      const liked     = !!res.liked;
+      const likeCount = Number(res.likeCount || 0);
+      applyLikeState(liked, likeCount);
+
+    } finally {
+      // 送信完了（成功/失敗問わず）
+      likePending[postId] = false;
+      btn.disabled = false;
+    }
+  }
+
+
 
   // ===== 画面遷移（一覧↔マイ投稿） =====
   function showList(){
@@ -369,6 +559,7 @@ function updateMinePager(page, totalPages, totalCount){
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // マイ投稿ページ表示
   function showMine(){
     const listPage = document.getElementById('post-app');
     const minePage = document.getElementById('pageMine');
@@ -396,13 +587,14 @@ function updateMinePager(page, totalPages, totalCount){
     'シェイド':     'rgba(200, 150, 255, 0.16)',
   };
 
+  // 種族文字列からメイン種族を取得
   function getMainRace(races){
     const s = String(races || '');
     if (!s) return '';
     return s.split(/[,+]/)[0].trim();  // 「シェイド,イノセント…」などを想定
   }
 
-
+  // 種族に応じた背景色を取得
   function raceBg(races){
     const main = getMainRace(races);
     return RACE_BG_MAP[main] || '';
@@ -430,15 +622,18 @@ function updateMinePager(page, totalPages, totalCount){
       .join('');
   }
 
+  // ===== サムネイル画像 =====
   function cardThumb(src, title){
     const safe = src ? src : 'img/noimage.webp';
     const alt  = title ? escapeHtml(title) : '';
     return `<div class="thumb-box"><img loading="lazy" src="${safe}" alt="${alt}"></div>`;
   }
 
-// ===== 詳細用：デッキリスト（5列固定） =====
-function buildDeckListHtml(item){
-  console.log('buildDeckListHtml:', item.postId, item.cardsJSON);
+
+// ===== デッキ情報の共通ヘルパー =====
+
+// item から { cd: count } 形式のデッキマップを作る
+function extractDeckMap(item){
   let deck = null;
 
   // 1) item.cards（配列）があれば優先
@@ -452,7 +647,18 @@ function buildDeckListHtml(item){
       deck[cd] = (deck[cd] || 0) + n;
     }
   }
-  // 2) なければ cardsJSON（{cd:count}）を使う
+  // 2) cards が「オブジェクト {cd: count}」のケース
+  else if (item.cards && typeof item.cards === 'object'){
+    deck = {};
+    for (const [cd, nRaw] of Object.entries(item.cards)){
+      const key = String(cd || '').trim();
+      if (!key) continue;
+      const n = Number(nRaw || 0) || 0;
+      if (n <= 0) continue;
+      deck[key] = (deck[key] || 0) + n;
+    }
+  }
+  // 3) なければ cardsJSON（{cd:count} 文字列）を使う
   else if (item.cardsJSON){
     try{
       const obj = JSON.parse(item.cardsJSON);
@@ -468,6 +674,35 @@ function buildDeckListHtml(item){
       }
     }catch(_){}
   }
+
+  return deck;
+}
+
+// 旧神カード（cd が 9xxxx）のカード名を取得する
+function getOldGodNameFromItem(item){
+  const deck = extractDeckMap(item);
+  if (!deck || !Object.keys(deck).length) return '';
+
+  const cardMap = window.cardMap || {};
+
+  // 仕様：デッキには旧神1枚 or 0枚
+  for (const cd of Object.keys(deck)){
+    const cd5 = String(cd).padStart(5, '0');
+    if (cd5[0] === '9'){
+      const card = cardMap[cd5] || {};
+      return card.name || '';
+    }
+  }
+
+  return '';
+}
+
+
+// ===== 詳細用：デッキリスト（5列固定） =====
+function buildDeckListHtml(item){
+  console.log('buildDeckListHtml:', item.postId, item.cardsJSON);
+
+  const deck = extractDeckMap(item);
 
   if (!deck || !Object.keys(deck).length){
     return `<div class="post-decklist post-decklist-empty">デッキリスト未登録</div>`;
@@ -496,20 +731,57 @@ function buildDeckListHtml(item){
     return String(a[0]).localeCompare(String(b[0]));
   });
 
-  const tiles = entries.map(([cd, n]) => {
-    const card = cardMap[cd] || {};
-    const name = card.name || cd;
-    const src  = `img/${cd}.webp`;
-    return `
-      <div class="deck-entry">
-        <img src="${src}" alt="${escapeHtml(name)}" loading="lazy">
-        <div class="count-badge">x${n}</div>
-      </div>
-    `;
-  }).join('');
+const tiles = entries.map(([cd, n]) => {
+  const cd5  = String(cd).padStart(5, '0');
+  const card = cardMap[cd5] || {};
+  const name = card.name || cd5;
+  const src  = `img/${cd5}.webp`;
+  return `
+    <div class="deck-entry">
+      <img src="${src}" alt="${escapeHtml(name)}" loading="lazy">
+      <div class="count-badge">x${n}</div>
+    </div>
+  `;
+}).join('');
 
   return `<div class="post-decklist">${tiles}</div>`;
 }
+
+// =============================
+// 簡易デッキ統計（タイプ構成だけ）
+// =============================
+function buildSimpleDeckStats(item) {
+  // DeckPosts シートに保存している typeMixJSON を使う想定
+  // 形式: [Chg枚数, Atk枚数, Blk枚数]
+  const raw = item.typeMixJSON || item.typeMixJson || '';
+
+  if (!raw) return null;
+
+  let arr;
+  try {
+    arr = JSON.parse(raw);
+  } catch (e) {
+    console.warn('typeMixJSON parse error:', e, raw);
+    return null;
+  }
+
+  if (!Array.isArray(arr) || arr.length < 3) return null;
+
+  const chg = Number(arr[0] || 0);
+  const atk = Number(arr[1] || 0);
+  const blk = Number(arr[2] || 0);
+
+  const typeText = `チャージャー ${chg}枚 / アタッカー ${atk}枚 / ブロッカー ${blk}枚`;
+
+  return {
+    typeText,
+    chg,
+    atk,
+    blk,
+    totalType: chg + atk + blk
+  };
+}
+
 
 // ===== 詳細用：カード解説（cardNotes） =====
 function buildCardNotesHtml(item){
@@ -559,9 +831,11 @@ function buildCardPc(item){
   const mainRace = getMainRace(item.races);
   const bg       = raceBg(item.races);
   const code     = item.shareCode || '';
-  const oldGod   = item.oldGodName || '';
+  const oldGod   = getOldGodNameFromItem(item) || '';// 旧神名
   const deckNote = item.deckNote || item.comment || '';
   const deckNoteHtml = buildDeckNoteHtml(deckNote);
+  const simpleStats = buildSimpleDeckStats(item);// タイプ構成情報
+  const typeMixText = simpleStats?.typeText || '';// タイプ構成テキスト
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
   const tagsUser = tagChipsUser(item.tagsUser);
@@ -572,12 +846,21 @@ function buildCardPc(item){
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
-  // デッキコードがあるときだけ行を出す
-  const hasCode = !!code;
-  const codeRow = hasCode ? `
-        <div class="post-detail-row post-detail-code">
-          <span>デッキコード</span>
-          <button type="button" class="btn-copy-code" data-code="${escapeHtml(code)}">コピー</button>
+  // ===== いいね関連 =====
+  const likeCount = Number(item.likeCount || 0);
+  const liked     = !!item.liked;
+  const favClass  = liked ? ' active' : '';
+  const favSymbol = liked ? '★' : '☆';
+  const favText   = `${favSymbol}${likeCount}`;
+
+  // ★ デッキコードコピー用ボタン（PC 詳細内）
+  const codeBtnHtml = code ? `
+        <div class="post-detail-code-body">
+          <button type="button"
+            class="btn-copy-code-wide"
+            data-code="${escapeHtml(code)}">
+            デッキコードをコピー
+          </button>
         </div>
   ` : '';
 
@@ -628,10 +911,12 @@ function buildCardPc(item){
             </div>
           </div>
 
-          <!-- お気に入りは今は非表示（CSSで display:none） -->
-          <button class="fav-btn sp-fav" type="button" aria-label="お気に入り">☆</button>
+          <!-- いいねボタン -->
+          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">
+            ${favText}
+          </button>
 
-          <!-- アクション（★ 詳細ボタンは削除して比較のみ） -->
+          <!-- アクション（比較のみ） -->
           <div class="post-actions pc-actions">
             <button type="button" class="btn-add-compare">比較に追加</button>
           </div>
@@ -644,14 +929,13 @@ function buildCardPc(item){
         <div class="post-tags post-tags-user">${tagsUser}</div>
       </div>
 
-      <!-- 詳細（SPと同じ内容。PCでは1024px以上だと右ペイン用のみ使う想定） -->
+      <!-- 詳細（SPと同じ内容。PC では狭い幅のときだけ使用） -->
       <div class="post-detail" hidden>
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキリスト</div>
           ${deckList}
+          ${codeBtnHtml}
         </div>
-
-        ${codeRow}
 
         <div class="post-detail-row">
           <span>種族：${escapeHtml(mainRace || '')}</span>
@@ -664,6 +948,12 @@ function buildCardPc(item){
         <div class="post-detail-row">
           <span>旧神：${escapeHtml(oldGod || 'なし')}</span>
         </div>
+
+        ${typeMixText ? `
+        <div class="post-detail-row">
+          <span>タイプ構成：${escapeHtml(typeMixText)}</span>
+        </div>
+        ` : ''}
 
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキ解説</div>
@@ -683,15 +973,17 @@ function buildCardPc(item){
   `);
 }
 
+
 // ===== 1枚カードレンダリング（スマホ用） =====
 function buildCardSp(item){
   const time     = item.updatedAt || item.createdAt || '';
   const mainRace = getMainRace(item.races);
   const bg       = raceBg(item.races);
-  const code = item.shareCode || '';
-  const oldGod   = item.oldGodName || '';
+  const oldGod   = getOldGodNameFromItem(item) || '';// 旧神名
   const deckNote = item.deckNote || item.comment || '';
   const deckNoteHtml = buildDeckNoteHtml(deckNote);
+  const simpleStats = buildSimpleDeckStats(item);// タイプ構成情報
+  const typeMixText = simpleStats?.typeText || '';// タイプ構成テキスト
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
   const tagsUser = tagChipsUser(item.tagsUser);
@@ -702,17 +994,26 @@ function buildCardSp(item){
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
+  // ===== いいね関連 =====
+  const likeCount = Number(item.likeCount || 0);
+  const liked     = !!item.liked;
+  const favClass  = liked ? ' active' : '';
+  const favSymbol = liked ? '★' : '☆';
+  const favText   = `${favSymbol}${likeCount}`;
 
-  // デッキコードがあるときだけ行を出す
-  const hasCode = !!code;
-  const codeRow = hasCode ? `
-        <div class="post-detail-row post-detail-code">
-          <span>デッキコード</span>
-          <button type="button" class="btn-copy-code" data-code="${escapeHtml(code)}">コピー</button>
+  // デッキコード（スマホ用：幅いっぱいボタン）
+  const code = item.shareCode || '';
+  const codeBtnHtml = code ? `
+        <div class="post-detail-code-body">
+          <button type="button"
+            class="btn-copy-code-wide"
+            data-code="${escapeHtml(code)}">
+            デッキコードをコピー
+          </button>
         </div>
   ` : '';
 
-  //カード解説があるかどうか判定
+  // カード解説があるかどうか判定
   const hasCardNotes =
     Array.isArray(item.cardNotes) &&
     item.cardNotes.some(r => r && (r.cd || r.text));
@@ -725,8 +1026,6 @@ function buildCardSp(item){
           </div>
         </div>
   ` : '';
-
-
 
   return el(`
     <article class="post-card post-card--sp" data-postid="${item.postId}" style="${bg ? `--race-bg:${bg};` : ''}">
@@ -761,9 +1060,11 @@ function buildCardSp(item){
             </div>
           </div>
 
-          <button class="fav-btn sp-fav" type="button" aria-label="お気に入り">☆</button>
+          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">
+            ${favText}
+          </button>
         </div>
-      </div> <!-- ← ★ sp-head-right の閉じタグ、sp-head の閉じタグ -->
+      </div>
 
       <!-- タグ（ヘッダーの下にまとめて） -->
       <div class="post-tags-wrap">
@@ -782,10 +1083,8 @@ function buildCardSp(item){
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキリスト</div>
           ${deckList}
+          ${codeBtnHtml}
         </div>
-
-        <!-- デッキコード行（ある場合のみ） -->
-        ${codeRow}
 
         <div class="post-detail-row">
           <span>種族：${escapeHtml(mainRace || '')}</span>
@@ -799,6 +1098,12 @@ function buildCardSp(item){
           <span>旧神：${escapeHtml(oldGod || 'なし')}</span>
         </div>
 
+        ${typeMixText ? `
+        <div class="post-detail-row">
+          <span>タイプ構成：${escapeHtml(typeMixText)}</span>
+        </div>
+        ` : ''}
+
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキ解説</div>
           <div class="post-detail-body post-detail-body--decknote">
@@ -806,7 +1111,6 @@ function buildCardSp(item){
           </div>
         </div>
 
-        <!-- 直接書かず、判定済みのセクションを差し込む -->
         ${cardNotesSection}
 
         <div class="post-detail-footer">
@@ -817,6 +1121,7 @@ function buildCardSp(item){
     </article>
   `);
 }
+
 
 
 // ===== 1枚カードレンダリング（PC/SP切り替え） =====
@@ -885,7 +1190,7 @@ function oneCard(item){
 
     const time       = item.updatedAt || item.createdAt || '';
     const mainRace   = getMainRace(item.races);
-    const oldGod     = item.oldGodName || 'なし';
+    const oldGod     = getOldGodNameFromItem(item) || 'なし';
     const code       = item.shareCode || '';
     const repImg     = item.repImg || '';
     const deckNote   = item.deckNote || item.comment || '';
@@ -915,6 +1220,22 @@ function oneCard(item){
 
     // カード解説HTML
     const cardNotesHtml = buildCardNotesHtml(item);
+
+    // ★ 簡易デッキ統計（タイプ構成だけ）
+    const simpleStats = buildSimpleDeckStats(item);
+    const typeMixText = simpleStats?.typeText || '';
+
+        // デッキコードコピー ボタン（あれば）
+    const codeBtnHtml = code ? `
+      <div class="post-detail-code-body">
+        <button type="button"
+          class="btn-copy-code-wide"
+          data-code="${escapeHtml(code)}">
+          デッキコードをコピー
+        </button>
+      </div>
+    ` : '';
+
 
     // ============================
     // ① デッキ情報パネル
@@ -958,11 +1279,20 @@ function oneCard(item){
               <dt>デッキ枚数</dt><dd>${item.count || 0}枚</dd>
               <dt>種族</dt><dd>${escapeHtml(mainRace || '')}</dd>
               <dt>旧神</dt><dd>${escapeHtml(oldGod || 'なし')}</dd>
+              ${typeMixText
+                ? `<dt>タイプ構成</dt><dd>${escapeHtml(typeMixText)}</dd>`
+                : ''
+              }
             </div>
 
             <div class="post-detail-tags">
               <div class="post-tags post-tags-main">${tagsMain}</div>
               <div class="post-tags post-tags-user">${tagsUser}</div>
+            </div>
+
+            <div class="post-detail-beta-note beta-note">
+              ※ レアリティ構成・コスト分布などの詳細な分析も準備中です。<br>
+              　 ベータ版では準備中です。
             </div>
 
         </div>
@@ -1023,11 +1353,12 @@ function oneCard(item){
           </div>
         </div>
 
-        <!-- 右カラム：常時表示のデッキリスト -->
+        <!-- 右カラム：常時表示のデッキリスト＋デッキコードコピー -->
         <aside class="post-detail-deckcol">
           <div class="post-detail-section">
             <div class="post-detail-heading">デッキリスト</div>
             ${deckListHtml}
+            ${codeBtnHtml}
           </div>
         </aside>
       </div>
@@ -1096,6 +1427,43 @@ function setupDetailTabs(){
   });
 }
 
+  // ===== デッキコードコピー（共通ボタン） =====
+  function showCodeCopyToast(){
+    let toast = document.getElementById('code-copy-toast');
+    if (!toast){
+      toast = document.createElement('div');
+      toast.id = 'code-copy-toast';
+      toast.textContent = 'デッキコードをコピーしました';
+      document.body.appendChild(toast);
+    }
+    toast.classList.add('is-visible');
+    if (toast._timer){
+      clearTimeout(toast._timer);
+    }
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('is-visible');
+    }, 1600);
+  }
+
+  function setupCodeCopyButtons(){
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-copy-code-wide');
+      if (!btn) return;
+
+      const code = btn.dataset.code || '';
+      if (!code) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(code)
+          .then(() => {
+            showCodeCopyToast();
+          })
+          .catch(() => {
+            // 失敗しても何もしない（必要なら alert など）
+          });
+      }
+    });
+  }
 
 
   // ===== 小物 =====
@@ -1120,6 +1488,20 @@ function setupDetailTabs(){
 // ===== イベント配線 =====
 function wireCardEvents(root){
   root.addEventListener('click', (e) => {
+    // 0) いいねボタンを先に処理
+    const favBtn = e.target.closest('.fav-btn');
+    if (favBtn) {
+      const art = favBtn.closest('.post-card');
+      if (art) {
+        const postId = art.dataset.postid;
+        if (postId) {
+          handleToggleLike(postId, favBtn);
+        }
+      }
+      // 他のハンドラには進まず終了
+      return;
+    }
+
     const art = e.target.closest('.post-card');
     if (!art) return;
 
@@ -1143,16 +1525,6 @@ function wireCardEvents(root){
       const d = art.querySelector('.post-detail');
       if (d) d.hidden = true;
       art.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      return;
-    }
-
-    // デッキコードコピー
-    if (e.target.classList.contains('btn-copy-code')){
-      const code = e.target.dataset.code || art.dataset.code || '';
-      if (!code) return;
-      if (navigator.clipboard){
-        navigator.clipboard.writeText(code).catch(()=>{});
-      }
       return;
     }
 
@@ -1336,21 +1708,40 @@ function wireCardEvents(root){
     return isNaN(t) ? 0 : t;
   }
 
-  // 並び替え実行
-  function sortItemsByDate(items, sortKey){
+
+
+  // ===== 並び替え実装 =====
+  function sortItems(items, sortKey){
     const arr = [...items];
+
     arr.sort((a, b) => {
-      const ta = getPostTime(a);
-      const tb = getPostTime(b);
-      // sortKey = 'new' なら新しい順（降順）、'old' なら古い順（昇順）
-      if (sortKey === 'old'){
-        return ta - tb;
-      } else {
+      if (sortKey === 'like') {
+        const la = Number(a.likeCount || 0);
+        const lb = Number(b.likeCount || 0);
+
+        // いいねの多い順（降順）
+        if (lb !== la) return lb - la;
+
+        // 同じなら投稿日の新しい方を上に
+        const ta = getPostTime(a);
+        const tb = getPostTime(b);
         return tb - ta;
       }
+
+      // ===== 既存：新しい順 / 古い順 =====
+      const ta = getPostTime(a);
+      const tb = getPostTime(b);
+
+      if (sortKey === 'old') {
+        return ta - tb; // 古い順
+      } else {
+        return tb - ta; // 新しい順
+      }
     });
+
     return arr;
   }
+
 
     // ===== 一覧：フィルタ＆ソート結果を作り直す =====
   function rebuildFilteredItems(){
@@ -1362,7 +1753,7 @@ function wireCardEvents(root){
     let filtered = base.slice();
 
     // 並び替え
-    filtered = sortItemsByDate(filtered, sortKey);
+    filtered = sortItems(filtered, sortKey);
 
     state.list.filteredItems = filtered;
 
@@ -1558,11 +1949,18 @@ function wireCardEvents(root){
     // ⑦ デリゲートイベント
     wireCardEvents(document);
 
+    // デッキコードコピー ボタン（PC右ペイン／SP共通）
+    setupCodeCopyButtons();
+
     // ⑧ 右ペイン詳細タブ
     setupDetailTabs();
 
-    // ⑨ スマホ版：代表カード長押しでデッキリスト簡易表示
+
+    // ⑩ スマホ版：代表カード長押しでデッキリスト簡易表示
     setupDeckPeekOnSp();
+
+    // ★ 初期描画完了フラグ
+    initialized = true;
   }
 
   // DOMReady
