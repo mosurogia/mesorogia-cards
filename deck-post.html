@@ -243,22 +243,6 @@
         </section>
 
 
-        <!-- マイ投稿リスト（自分の投稿だけ / 10件単位表示） -->
-        <!-- ★ 未ログイン時に表示する案内 -->
-        <div id="mine-error" class="mine-nologin" style="display:none;">
-            <p>ここにあなたの投稿が表示されます。</p>
-            <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
-        </div>
-        <!-- マイ投稿が0件のときの案内 -->
-        <div id="mine-empty" class="mine-empty" style="display:none;">
-            <p>まだ投稿がありません。</p>
-            <p>
-                <a href="deckmaker.html" class="mine-empty-link">
-                    🃏 デッキメーカーでデッキを作りましょう！
-                </a>
-            </p>
-        </div>
-
             <!-- =========================
                         マイ投稿：一覧＋詳細レイアウト（PC用）
                     ========================== -->
@@ -267,12 +251,12 @@
                 <!-- ▼ 左カラム：マイ投稿一覧＋ページネーション -->
                 <div class="post-master-column">
 
-                    <!-- 未ログイン時の案内 -->
+                    <!-- マイ投稿リスト（自分の投稿だけ / 10件単位表示） -->
+                    <!-- ★ 未ログイン時に表示する案内 -->
                     <div id="mine-error" class="mine-nologin" style="display:none;">
                         <p>ここにあなたの投稿が表示されます。</p>
                         <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
                     </div>
-
                     <!-- マイ投稿が0件のときの案内 -->
                     <div id="mine-empty" class="mine-empty" style="display:none;">
                         <p>まだ投稿がありません。</p>
