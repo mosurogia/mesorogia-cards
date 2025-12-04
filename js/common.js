@@ -40,31 +40,7 @@ async function fetchLatestCards() {
   const allCards = await res.json();
   return allCards.filter(card => card.is_latest === true);
 }
-// 一度だけカードマスタを読み込んで cardMap を埋める
-async function ensureCardMapLoaded() {
-  try {
-    // すでに埋まっていれば何もしない
-    if (window.cardMap && Object.keys(window.cardMap).length > 0) {
-      return window.cardMap;
-    }
 
-    const cards = await fetchLatestCards(); // is_latest=true のみ
-
-    cards.forEach(card => {
-      const cdRaw = card.cd ?? '';
-      if (!cdRaw && cdRaw !== 0) return;
-      const cd5 = String(cdRaw).padStart(5, '0');
-      cardMap[cd5] = card;
-    });
-
-    // 念のため window 側も同期
-    window.cardMap = cardMap;
-    return window.cardMap;
-  } catch (e) {
-    console.error('カード情報の読み込みに失敗しました', e);
-    throw e;
-  }
-}
 
 // 他ページから呼べるように公開
 window.ensureCardMapLoaded = ensureCardMapLoaded;
