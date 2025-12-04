@@ -41,7 +41,6 @@ async function fetchLatestCards() {
   return allCards.filter(card => card.is_latest === true);
 }
 
-
 // =======================================
 // カードマスタ → cardMap 構築（共通）
 // =======================================

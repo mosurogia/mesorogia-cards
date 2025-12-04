@@ -274,14 +274,6 @@ function updateMinePager(page, totalPages, totalCount){
     el.textContent = name || '未ログイン';
   }
 
-    // マイ投稿ヘッダーの「現在のログインID」を更新
-  function updateMineLoginStatus(){
-    const el = document.getElementById('mine-login-username');
-    if (!el) return;
-    const name = getLoginUsername();
-    el.textContent = name || '未ログイン';
-  }
-
   // ===== ログイン状態が変わったときに呼ばれるフック（Auth側から呼ぶ） =====
   function handleAuthChangedForDeckPost(){
     // まずログインID表示だけ更新
