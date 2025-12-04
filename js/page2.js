@@ -1518,6 +1518,14 @@ function renderDeckList() {
 
   // [cd, count] へ変換 & 並び替え（タイプ→コスト→パワー→cd）
   const entries = Object.entries(deck || {});
+
+  //デッキから代表カードが消えていたら強制リセット
+  if (representativeCd && !deck[representativeCd]) {
+    representativeCd = null;
+    window.representativeCd = null;
+  }
+
+  // 並び替えルール定義
   const typeOrder = { 'チャージャー': 0, 'アタッカー': 1, 'ブロッカー': 2 };
   entries.sort((a, b) => {
     const [cdA] = a, [cdB] = b;
@@ -1863,12 +1871,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //代表カードデッキ情報表示
 function updateDeckSummaryDisplay() {
-  const name = cardMap[representativeCd]?.name || "未選択";
+  let name = "未選択";
+  if (representativeCd && cardMap[representativeCd]) {
+    name = cardMap[representativeCd].name;//代表カード名
+  }
+
   const infoEl = document.getElementById("deck-representative");
   const postEl = document.getElementById("post-representative");
+
   if (infoEl) infoEl.textContent = name;
   if (postEl) postEl.textContent = name;
 }
+
 
 //#endregion 代表カード選択モーダル
 
@@ -6030,9 +6044,31 @@ async function submitDeckPost(e){
   }
   if (spinner) spinner.style.display = 'block';
 
+  //ここまで来ても representativeCd が空なら、デッキ内から自動で1枚選ぶ ---
+  if (!window.representativeCd) {
+    const deckObj = window.deck || {};
+    const cds = Object.entries(deckObj)
+      .filter(([, n]) => (n | 0) > 0)
+      .map(([cd]) => cd);
+
+    if (cds.length) {
+      cds.sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
+      window.representativeCd = cds[0];
+      console.warn('[post] representativeCd が空だったため、自動で代表カードを補完しました:', window.representativeCd);
+    }
+  }
+
+  // --- 投稿ペイロード構築 ---
   const base = buildDeckPostPayload();
   const feat = buildDeckFeaturesForPost();
   const payload = { ...base, ...feat };
+
+  // 代表カード情報を追加
+  payload.repCd = window.representativeCd || '';
+  payload.repImg = payload.repCd
+    ? `img/${String(payload.repCd).slice(0,5)}.webp`
+    : '';
+
 
   try {
     const res = await fetch(`${GAS_POST_ENDPOINT}?mode=post`, {
