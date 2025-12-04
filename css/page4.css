@@ -332,6 +332,22 @@ body {
 
 /*---------- 2-1.共通レイアウト（PC/スマホ統合） ----------*/
 
+/* 一覧の「読み込み中 / エラー」メッセージ */
+.post-list-message {
+    padding: 16px 10px;
+    margin: 12px 0;
+    text-align: center;
+    font-size: .9rem;
+    color: #6b7280;
+}
+
+.post-list-message--error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    color: #b91c1c;
+}
+
 /* 投稿リストは常に1列 */
 .post-list {
     display: block;

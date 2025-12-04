@@ -62,6 +62,16 @@ function renderPostListInto(targetId, items){
   box.appendChild(frag);
 }
 
+// 投稿一覧用：「読み込み中 / エラー」メッセージ表示
+function showListStatusMessage(type, text){
+  const listEl = document.getElementById('postList');
+  if (!listEl) return;
+
+  const baseClass  = 'post-list-message';
+  const errorClass = (type === 'error') ? ' post-list-message--error' : '';
+
+  listEl.innerHTML = `<div class="${baseClass}${errorClass}">${text}</div>`;
+}
 
 
 // マイ投稿: ページャ表示更新
@@ -1885,9 +1895,22 @@ function wireCardEvents(root){
     }
 
     // ④ 一覧データをすべて取得 → 初期描画
-    await fetchAllList();
-    rebuildFilteredItems();
-    loadListPage(1);
+    try {
+      state.list.loading = true;
+      // 投稿一覧の空欄部分に「読み込み中」を表示
+      showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+
+      await fetchAllList();
+      rebuildFilteredItems();
+      loadListPage(1);  // 正常終了したらカード一覧で上書きされる
+    } catch (e) {
+      console.error('初期一覧取得に失敗しました', e);
+      // 投稿一覧の空欄部分に「読み込み失敗」を表示
+      showListStatusMessage('error', '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。');
+    } finally {
+      state.list.loading = false;
+    }
+
 
     // ⑤ 一覧側：ページャボタン
     document.getElementById('pagePrev')?.addEventListener('click', () => {
