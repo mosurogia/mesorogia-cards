@@ -391,9 +391,35 @@ async function apiList({ limit = PAGE_LIMIT, offset = 0, mine = false }) {
 
   const url = `${GAS_BASE}?${qs.toString()}`;
 
-  // JSONP で呼び出し
-  const res = await jsonpRequest(url);
-  return res;
+  // 1) まずは通常の fetch(JSON) を試す
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+    });
+
+    // ステータスコードだけおかしい場合もログに出してフォールバック
+    if (!res.ok) {
+      console.warn('apiList: fetch status not ok:', res.status, res.statusText);
+    } else {
+      const data = await res.json();
+
+      // 期待している形式かざっくりチェック
+      if (data && (Array.isArray(data.items) || data.ok !== undefined || data.error)) {
+        return data;
+      } else {
+        console.warn('apiList: unexpected JSON format, fallback to JSONP', data);
+      }
+    }
+  } catch (err) {
+    console.warn('apiList: fetch failed, fallback to JSONP', err);
+  }
+
+  // 2) fetch が使えない / JSON で返っていないなどの場合は従来どおり JSONP で呼ぶ
+  const resJsonp = await jsonpRequest(url);
+  return resJsonp;
 }
 
 
