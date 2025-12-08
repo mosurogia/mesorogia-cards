@@ -779,36 +779,58 @@ const tiles = entries.map(([cd, n]) => {
 // 簡易デッキ統計（タイプ構成だけ）
 // =============================
 function buildSimpleDeckStats(item) {
-  // DeckPosts シートに保存している typeMixJSON を使う想定
+  // DeckPosts シートに保存している typeMixJSON をまず優先して使う
   // 形式: [Chg枚数, Atk枚数, Blk枚数]
   const raw = item.typeMixJSON || item.typeMixJson || '';
 
-  if (!raw) return null;
-
-  let arr;
-  try {
-    arr = JSON.parse(raw);
-  } catch (e) {
-    console.warn('typeMixJSON parse error:', e, raw);
-    return null;
+  // 1) typeMixJSON に有効な値があればそのまま使う
+  if (raw) {
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length >= 3) {
+        const chg = Number(arr[0] || 0);
+        const atk = Number(arr[1] || 0);
+        const blk = Number(arr[2] || 0);
+        const totalType = chg + atk + blk;
+        if (totalType > 0) {
+          const typeText = `チャージャー ${chg}枚 / アタッカー ${atk}枚 / ブロッカー ${blk}枚`;
+          return { typeText, chg, atk, blk, totalType };
+        }
+      }
+    } catch (e) {
+      console.warn('typeMixJSON parse error:', e, raw);
+    }
   }
 
-  if (!Array.isArray(arr) || arr.length < 3) return null;
+  // 2) typeMixJSON が無い / 全部0のときは、デッキ内容から再計算する
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length || !cardMap) return null;
 
-  const chg = Number(arr[0] || 0);
-  const atk = Number(arr[1] || 0);
-  const blk = Number(arr[2] || 0);
+  let chg = 0, atk = 0, blk = 0;
+
+  for (const [cd, nRaw] of Object.entries(deck)) {
+    const n = Number(nRaw || 0) || 0;
+    if (!n) continue;
+
+    const cd5 = String(cd).padStart(5, '0');
+    const t = (cardMap[cd5] || {}).type;
+    if (t === 'チャージャー') {
+      chg += n;
+    } else if (t === 'アタッカー') {
+      atk += n;
+    } else if (t === 'ブロッカー') {
+      blk += n;
+    }
+  }
+
+  const totalType = chg + atk + blk;
+  if (!totalType) return null;
 
   const typeText = `チャージャー ${chg}枚 / アタッカー ${atk}枚 / ブロッカー ${blk}枚`;
-
-  return {
-    typeText,
-    chg,
-    atk,
-    blk,
-    totalType: chg + atk + blk
-  };
+  return { typeText, chg, atk, blk, totalType };
 }
+
 
 
 // ===== 詳細用：カード解説（cardNotes） =====
@@ -1167,7 +1189,7 @@ function oneCard(item){
     wrap.appendChild(frag);
   }
 
-  // ===== デッキ解説用HTML生成 =====
+// ===== デッキ解説用HTML生成 =====
   function buildDeckNoteHtml(deckNote){
     const raw = String(deckNote || '').replace(/\r\n/g, '\n').trim();
     if (!raw) return '';
@@ -1188,11 +1210,19 @@ function oneCard(item){
     }
     if (current) sections.push(current);
 
-    // 見出し付きセクションが無ければ、従来どおり改行だけ反映
+    // 見出しが1つもない場合は、全体を1つの decknote-block として囲む
     const hasTitled = sections.some(s => s.title);
     if (!hasTitled){
-      return escapeHtml(raw).replace(/\n/g, '<br>');
+      const bodyHtml = escapeHtml(raw).replace(/\n/g, '<br>');
+      return `
+        <div class="post-decknote">
+          <section class="decknote-block">
+            <div class="decknote-body">${bodyHtml}</div>
+          </section>
+        </div>
+      `;
     }
+
 
     const blocks = sections.map(sec => {
       const bodyText = sec.body.join('\n').trim();
@@ -1516,39 +1546,32 @@ function setupDetailTabs(){
 // ===== イベント配線 =====
 function wireCardEvents(root){
   root.addEventListener('click', (e) => {
-    // 0) いいねボタンを先に処理
-    const favBtn = e.target.closest('.fav-btn');
-    if (favBtn) {
-      const art = favBtn.closest('.post-card');
-      if (art) {
-        const postId = art.dataset.postid;
-        if (postId) {
-          handleToggleLike(postId, favBtn);
-        }
-      }
-      // 他のハンドラには進まず終了
-      return;
-    }
-
     const art = e.target.closest('.post-card');
     if (!art) return;
 
     const isPcWide = window.matchMedia('(min-width: 1024px)').matches;
 
-    // 1) まずはボタン類を個別処理 ==================
-
-    // 旧・詳細ボタン（念のため残しておく）
-    if (e.target.classList.contains('btn-detail')){
-      if (isPcWide){
-        showDetailPaneForArticle(art);
-      } else {
-        const d = art.querySelector('.post-detail');
-        if (d) d.hidden = !d.hidden;
+    // 0) いいねボタンを先に処理（PC/SP共通）
+    const favBtn = e.target.closest('.fav-btn');
+    if (favBtn) {
+      const postId = art.dataset.postid;
+      if (postId) {
+        handleToggleLike(postId, favBtn);
       }
+      // 他のハンドラには進まず終了
       return;
     }
 
-    // 詳細内「閉じる」
+    // 1) まずはボタン類を個別処理 ==================
+
+    // 詳細ボタン（SP用） ※PCで存在しても問題なし
+    if (e.target.classList.contains('btn-detail')){
+      const d = art.querySelector('.post-detail');
+      if (d) d.hidden = !d.hidden;
+      return;
+    }
+
+    // 詳細内「閉じる」（SP用）
     if (e.target.classList.contains('btn-detail-close')){
       const d = art.querySelector('.post-detail');
       if (d) d.hidden = true;
@@ -1556,7 +1579,7 @@ function wireCardEvents(root){
       return;
     }
 
-    // 比較に追加
+    // 比較に追加（一覧側のボタン）
     if (e.target.classList.contains('btn-add-compare')){
       alert('比較タブに追加する機能はベータ版では準備中です。');
       return;
@@ -1571,23 +1594,24 @@ function wireCardEvents(root){
       return;
     }
 
-    // 2) 詳細エリア内をクリックしたときは何もしない
+    // 2) カード内の詳細エリアをクリックしたときは何もしない（PC/SP共通）
     if (e.target.closest('.post-detail')){
       return;
     }
 
-    // 3) 上記以外 → カード全体クリックとして詳細を開く ============
+    // 3) 上記以外 → 「カード全体クリック」として扱うかどうか ============
 
-    if (isPcWide){
-      // PC(1024px以上)：右ペインに詳細表示
-      showDetailPaneForArticle(art);
-    } else {
-      // スマホ／タブレット：カード内の詳細ブロックを開閉
-      const d = art.querySelector('.post-detail');
-      if (d) d.hidden = !d.hidden;
+    if (!isPcWide){
+      // ★ モバイル／タブレット（〜1023px）の場合は
+      //    詳細ボタン以外のタップでは何もしない（Xリンクなどはそのまま動作）
+      return;
     }
+
+    // ★ PC(1024px以上)：カード全体クリックで右ペインに詳細表示
+    showDetailPaneForArticle(art);
   });
 }
+
 
 
 

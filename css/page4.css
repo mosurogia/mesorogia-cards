@@ -555,6 +555,7 @@ body {
     margin-right: -5px;
 }
 
+/* Xリンク */
 .meta-x {
     color: #1d9bf0;
     text-decoration: none;
@@ -576,7 +577,17 @@ body {
     color: #666;
 }
 
-
+/* SP版 Xリンクのタップ判定を文字幅だけにする */
+/* SP版 Xリンクのタップ判定を文字幅だけにする */
+.sp-meta-x {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: flex-start;
+    /* ★ 横方向に伸びないようにする */
+    padding-right: 0;
+    /* もしパディングを付けたくなければ0のままでOK */
+}
 
 /* ボタン行 */
 .sp-actions button {
