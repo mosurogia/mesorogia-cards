@@ -552,7 +552,6 @@ body {
 .meta-x::before {
     content: "𝕏⇒";
     font-size: 0.78em;
-    margin-right: -5px;
 }
 
 /* Xリンク */
