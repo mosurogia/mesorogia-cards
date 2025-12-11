@@ -1,0 +1,643 @@
+
+/*=====サーチバー=======*/
+.search-bar {
+    position: sticky;
+    top: 0px;
+    background: #fff;
+    z-index: 2000;
+    display: flex;
+    gap: 0.3rem;
+    padding: 4px;
+    border-bottom: 1px solid #ccc;
+}
+@media (max-width: 768px) {
+        .search-bar {
+                gap: 3px;
+                align-items: center;
+            }
+        }
+
+@media (max-width: 768px) {
+    /* 共通寸法（高さ・文字） */
+    .search-bar #keyword,
+    .search-bar #toggleOwnedBtn,
+    .search-bar #sort-select,
+    .search-bar button[onclick*="openFilterModal"] {
+        height: 1.8rem;
+        line-height: 1.2rem;
+    }
+}
+
+/*キーワード検索*/
+.search-bar input {
+    order: 1;
+    flex: 1;
+    font-size: 16px;
+    padding: 6px 12px;
+    height: 36px;
+    box-sizing: border-box;
+}
+@media (max-width: 768px) {
+    .search-bar input {
+        font-size: clamp(5px, 2.5vw, 18px);
+        padding: 5px;
+        grid-area: kw;
+        min-width: 0;
+    }
+}
+
+
+/*並び替え*/
+select {
+    font-size: 0.8rem;
+}
+#sort-select {
+    order: 3;
+    white-space: nowrap;
+    width: auto;
+    flex: 0 0 auto;
+    min-width: 4rem;
+    font-size: clamp(5px, 3vw, 18px);
+}
+
+
+
+
+/* 所持カード反映：ニュートラル */
+#toggleOwnedBtn {
+    order: 2;
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    color: #1f3f5f;
+    border: 1px solid #b5d9f3;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: filter .15s ease, transform .06s ease;
+}
+
+/* フィルター：アクセント（サイト基調の紫） */
+.search-bar button[onclick*="openFilterModal"] {
+    order: 4;
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    color: #1f3f5f;
+    border: 1px solid #b5d9f3;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: filter .15s ease, transform .06s ease, box-shadow .15s ease;
+    padding: 0;
+    font-size: 1.05rem;
+}
+@media (max-width: 768px) {
+        .search-bar button {
+            font-size: clamp(12px, 2vw, 18px);
+        }
+    }
+/* フィルター＆所持ボタン同一デザイン */
+#toggleOwnedBtn:hover ,.search-bar button[onclick*="openFilterModal"]:hover {
+    filter: brightness(0.98);
+    box-shadow: 0 1px 4px rgba(90, 150, 200, 0.25);
+}
+
+#toggleOwnedBtn:active ,.search-bar button[onclick*="openFilterModal"]:active {
+    transform: translateY(1px);
+}
+
+
+
+
+/*======モーダル======*/
+#filterModal {
+    display: none;
+    flex-direction: column;
+    max-height: 120vh;
+    overflow-y: auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 0px 15px 0px 15px;
+    border-radius: 10px;
+    max-width: 950px;
+    width: 90%;
+    max-height: 85%;
+    overflow-y: auto;
+    position: relative;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+/*フィルタータイトル*/
+.filter-maintitle {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0 -15px 8px;
+    /* modal-content の左右パディングと揃える */
+    padding: 10px 15px;
+    font-size: clamp(14px, 3.5vw, 20px);
+    background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, .92) 100%);
+    border-bottom: 1px solid #eee;
+}
+
+/*タイトル*/
+.filter-title {
+    display: block;
+    margin: 3px 2px;
+    font-weight: 700;
+    font-size: clamp(12px, 2.8vw, 16px);
+    /* 既存より読みやすく */
+}
+
+/* ボタン群 */
+.filter-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-auto-flow: dense;
+    gap: 8px;
+    align-items: stretch;
+    font-size: initial;
+}
+@media (max-width: 480px) {
+    .filter-group {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 6px;
+    }
+}
+
+
+/* 各カテゴリブロック */
+.filter-block {
+    margin: 5px 2px;
+}
+.filter-block+.filter-block {
+    border-top: 1px dashed rgba(0, 0, 0, .08);
+}
+
+
+
+
+/*各フィルターボタン*/
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    background: #f7f7f9;
+    color: #222;
+    font-size: clamp(.6rem, 2.5vw, 1rem);
+    line-height: 1.1;
+    letter-spacing: .02em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s ease, background-color .15s ease, transform .06s ease;
+}
+
+.filter-btn:hover {
+    background: #f0f0f5;
+    border-color: rgba(0, 0, 0, .2);
+}
+
+.filter-btn:active {
+    transform: translateY(1px);
+}
+
+/*選択中フィルターボタン*/
+.filter-btn.selected {
+    background: #2b90ff;
+    border-color: #2b90ff;
+    color: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .06), inset 0 0 0 1px rgba(255, 255, 255, .18);
+}
+
+.filter-btn:focus-visible {
+    outline: 2px solid #2b90ff;
+    outline-offset: 2px;
+}
+
+/* === 横幅いっぱいを1行で完結（改行なし） === */
+.filter-group[data-key="所持フィルター"],
+.filter-group[data-key="BP（ブレッシングポイント）要素"],
+.filter-group[data-key="レアリティ"],
+.filter-group[data-key="タイプ"]{
+    grid-template-columns: none !important;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    /* スクロールしやすく */
+}
+
+.filter-group[data-key="所持フィルター"] .filter-btn,
+.filter-group[data-key="BP（ブレッシングポイント）要素"] .filter-btn,
+.filter-group[data-key="レアリティ"] .filter-btn,
+.filter-group[data-key="タイプ"] .filter-btn {
+    width: 100%;
+    white-space: nowrap;
+    scroll-snap-align: start;
+}
+
+/* フィルター内の説明テキスト（控えめ表示） */
+.filter-help {
+    margin: 2px 4px 4px;
+    font-size: clamp(10px, 2.2vw, 11px);
+    line-height: 1.3;
+    color: #666;
+}
+
+/* 所持フィルター専用（少しだけ詰める） */
+.owned-filter-help {
+    margin-top: 0;
+}
+
+/* タイトル＋？ボタンの横並び */
+.filter-title-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 所持フィルターの？ボタン */
+.filter-help-btn {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    color: #555;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-help-btn:hover {
+    background: #f3f3f3;
+}
+
+.filter-help-btn.active {
+    background: #2b90ff;
+    border-color: #2b90ff;
+    color: #fff;
+}
+
+/* フィルター内の説明テキスト（デフォルト非表示） */
+.filter-help {
+    display: none;
+    margin: 2px 4px 4px;
+    font-size: clamp(10px, 2.2vw, 11px);
+    line-height: 1.3;
+    color: #666;
+}
+
+/* 所持フィルター専用（少しだけ詰める） */
+.owned-filter-help {
+    margin-top: 0;
+}
+
+/* ？ボタンON時にだけ表示 */
+.filter-help.is-open {
+    display: block;
+}
+
+/* カテゴリ*/
+.filter-group[data-key="カテゴリ"] {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+@media (max-width: 480px) {
+    .filter-group[data-key="カテゴリ"] {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}
+
+/*パック名 */
+.filter-group[data-key="パック名"] {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+@media (max-width: 480px) {
+    .filter-group[data-key="パック名"] {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+}
+.filter-group[data-key="パック名"] .filter-btn {
+    display: block;
+    white-space: normal;
+    min-height: 42px;
+    line-height: 1.25;
+    max-height: 4em;
+    overflow: hidden;
+}
+
+/*パック名*/
+.filter-btn .pack-kana {
+    font-size: .8em;
+    opacity: .85;
+}
+
+/*コストパワー横並び*/
+.filter-range-wrapper {
+    display: grid;
+    align-items: center;
+    column-gap: 8px;
+}
+.filter-range-wrapper .filter-group {
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    justify-content: start;
+}
+/* 「～」の見た目（余白を極小に） */
+.filter-range-wrapper .tilde {
+    display: inline-block;
+    margin: 0 4px;
+    /* 視認性用にごく少しだけ */
+    line-height: 1;
+}
+
+/*コストパワーボタン幅調整*/
+.filter-group select {
+    width: 6rem;
+    height: 1.8rem;
+    padding-left: .5rem;
+    font-size: clamp(.7rem, 2.6vw, .9rem);
+    line-height: 1.2;
+}
+@media (max-width: 768px) {
+    .filter-group select {
+        height: 1.5rem;
+        padding: 0 .35rem;
+        font-size: clamp(.6rem, 2.4vw, .85rem);
+    }
+}
+
+/*さらに詳しい条件フィルター*/
+.filter-subtitle {
+    margin: 14px 2px 8px;
+    font-size: clamp(.8rem, 2.9vw, 1.1rem);
+    font-weight: 700;
+    color: #333;
+    padding-top: 6px;
+    border-top: 2px solid #eee;
+}
+
+/*詳細フィルター*/
+#extra-conditions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-group[data-key="特殊効果"] {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+@media (max-width: 768px) {
+    .filter-group[data-key="特殊効果"] {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}
+
+/* その他フィルター */
+.filter-group[data-key="その他"] {
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+}
+.filter-group[data-key="その他"] .filter-btn {
+    padding: 6px 8px;
+    white-space: nowrap;
+}
+
+/*下部ボタン類固定表示 === */
+.modal-footer {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 10px 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .85), #fff 22px);
+    backdrop-filter: blur(2px);
+    border-top: 1px solid #eee;
+}
+/*下部ボタン*/
+.modal-buttun {
+    font-size: 16px;
+    min-height: 36px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+
+/* ===== 選択中フィルタの固定バー ===== */
+#active-chips-bar {
+    position: sticky;
+    top: var(--chips-offset, 0px);
+    z-index: 2000;
+    background: linear-gradient(180deg, #fff 0%, #fff 70%, rgba(255, 255, 255, .85) 100%);
+    border-bottom: 1px solid #e7e7e7;
+    backdrop-filter: saturate(120%) blur(2px);
+
+}
+
+#active-chips-bar .chips-scroll {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    /* 1行固定 */
+    scrollbar-width: thin;
+}
+
+#active-chips-bar .chip-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 6px;
+    padding: 3px 8px;
+    font-size: clamp(.6rem, 2.6vw, .75rem);
+    /* 小さめに */
+    border-radius: 999px;
+    border: 1px solid #ffb7c9;
+    background: #fff6f9;
+    color: #9b355e;
+    user-select: none;
+}
+
+#active-chips-bar .chip-mini .x {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: .75rem;
+    line-height: 1;
+    padding: 0;
+}
+
+/* クリア全解除 */
+#active-chips-bar .chip-clear {
+    border-color: #bbb;
+    color: #444;
+    background: #f7f7f7;
+}
+
+/* モバイルはさらに控えめに */
+@media (max-width: 768px) {
+    #active-chips-bar {
+        top: var(--chips-offset, 0px);
+    }
+
+    #active-chips-bar .chip-mini {
+        gap: 4px;
+    }
+}
+
+
+/*=====カード一覧======*/
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.card {
+    width: calc(100% / 7 - 5px);
+    box-sizing: border-box;
+    position: relative;
+}
+@media (max-width: 1024px) {
+    .card {
+        width: calc(100% / 5 - 4px);
+    }
+}
+@media (max-width: 768px) {
+    .card {
+        width: calc(100% / 4 - 4px);
+        font-size: .75rem;
+        padding: 0px;
+    }
+}
+/*非表示種族*/
+.hidden-by-grayscale {
+    display: none !important;
+}
+/*詳細展開ボタン*/
+.zoom-btn {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto;
+
+}
+
+.card.grayscale .zoom-btn {
+    z-index: 10;
+    pointer-events: auto;
+}
+
+/*ズーム画像*/
+.card-zoom{
+    width: 100%;
+}
+
+
+/*=====カード詳細======*/
+.card-detail {
+    display: none;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    box-sizing: border-box;
+}
+/*カード名*/
+.card-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.3em;
+}
+/*種族、カテゴリ*/
+.card-meta {
+    color: #333;
+    margin-bottom: 0.5em;
+}
+/*カード効果*/
+.card-effect {
+    line-height: 1.5;
+}
+
+/*タイプ別背景色*/
+.type-アタッカー {
+    background: rgba(125, 91, 155, 0.5); /* 紫 */
+}
+
+.type-チャージャー {
+    background: rgba(119, 170, 212, 0.5); /* 水色 */
+}
+
+.type-ブロッカー {
+    background: rgba(214, 212, 204, 0.5); /* 灰色 */
+}
+
+/*種族別枠線色*/
+.race-ドラゴン {
+    border: 6px solid rgb(200, 40, 40);
+}
+
+.race-アンドロイド {
+    border: 6px solid rgb(40, 200, 200);
+}
+
+.race-エレメンタル {
+    border: 6px solid rgb(40, 180, 90);
+}
+
+.race-ルミナス {
+    border: 6px solid rgb(240, 200, 40);
+}
+
+.race-シェイド {
+    border: 6px solid rgb(150, 100, 180);
+}
+
+.race-イノセント {
+    border: 6px solid silver;
+}
+
+.race-旧神 {
+    border: 6px solid;
+    border-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 215, 140, 0.8),
+            rgba(180, 255, 255, 0.7),
+            rgba(220, 180, 255, 0.7),
+            rgba(255, 255, 255, 0.6)) 1;
+}
+
+@media (max-width: 768px) {
+.card-detail {
+        font-size: 13px;
+    }
+}

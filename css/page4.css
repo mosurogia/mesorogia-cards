@@ -126,6 +126,62 @@ body {
     }
 }
 
+/* フィルターモーダル本体 */
+
+.post-filter-modal {
+    width: min(480px, 95vw);
+    background: #fff;
+    border-radius: 14px;
+    padding: 0;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    animation: modalFade .15s ease-out;
+}
+
+.modal-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-head .filter-maintitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 16px 18px;
+}
+
+.modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.modal-close-x {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+@keyframes modalFade {
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
 /* 左右に分割 */
 .list-controls-left {
     display: flex;
@@ -153,11 +209,8 @@ body {
     box-shadow: 0 1px 6px rgba(0, 0, 0, .06);
 }
 
-.list-controls-hint {
-    color: #9ca3af;
-    font-size: 0.78rem;
-    white-space: nowrap;
-}
+
+
 
 /* スマホでは縦並びに */
 @media (max-width: 600px) {
@@ -168,10 +221,6 @@ body {
 
     .list-controls-right {
         text-align: left;
-    }
-
-    .list-controls-hint {
-        white-space: normal;
     }
 }
 
@@ -189,6 +238,11 @@ body {
     padding: 6px 10px;
     font-size: 1.25rem;
     cursor: pointer;
+}
+@media (max-width: 1024px) {
+    .btn-ghost {
+        font-size: 1rem;
+    }
 
 }
 
@@ -396,6 +450,22 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+/* スマホでの長押し画像メニュー＆選択を抑制 */
+@media (max-width: 768px) {
+
+    .thumb-box,
+    .thumb-box img {
+        -webkit-touch-callout: none;
+        /* 長押しメニュー抑制（iOS / 一部Android） */
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* 画像自体はイベントを拾わず、親の thumb-box で拾う */
+    .thumb-box img {
+        pointer-events: none;
+    }
 }
 
 /* メタ情報（タイトルなど） */
@@ -831,7 +901,8 @@ body {
 
     /* 代表カードレイアウトの下に来る summary/tags 用 */
     .post-detail-summary,
-    .post-detail-tags {
+    .post-detail-tags,
+    .post-detail-beta-note{
         grid-column: 1 / -1;
         /* 左右2カラムにまたがる */
     }
@@ -1579,13 +1650,6 @@ body {
     未実装 / 将来用スタイル
 /*========================*/
 
-/* ベータ版注意書き */
-.post-detail-beta-note {
-    margin-top: 4px;
-    font-size: .78rem;
-    color: #6b7280;
-    grid-column: 1 / -1;
-}
 
 /* ベータ版お知らせ共通ブロック */
 .beta-note {
