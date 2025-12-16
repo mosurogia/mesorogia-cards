@@ -172,7 +172,17 @@ window.splitPackName   = splitPackName;
 window.makePackSlug    = makePackSlug;
 window.loadPackCatalog = loadPackCatalog;
 
-
+// ========================
+// 投稿・デッキ共通：タグ定義
+// ========================
+window.POST_TAG_CANDIDATES ??= [
+  "初心者向け",
+  "趣味構築",
+  "ランク戦用",
+  "大会入賞",
+  "格安デッキ",
+  "回廊用"
+];
 
 
 // カテゴリ順を定義（番号は飛び飛びでもOK）

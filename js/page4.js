@@ -30,8 +30,17 @@ const DeckPostApp = (() => {
     token: '', // ログイン済みなら共通Authから拾う
   };
 
-  // ★ DeckPost 一覧の初期描画が完了したかどうか
-  let initialized = false;
+// ★ DeckPost の状態を、投稿フィルター用に外へ公開
+window.__DeckPostState = state;
+
+// ===== 投稿フィルター状態 =====
+window.PostFilterState ??= {
+  selectedTags: new Set(), // 既存（自動＋選択タグ）
+  selectedUserTags: new Set(), // ★ 追加（ユーザー定義タグ）
+};
+
+// ★ DeckPost 一覧の初期描画が完了したかどうか
+let initialized = false;
 
 // ===== マイ投稿用ステート =====
 const postState = {
@@ -605,6 +614,91 @@ async function apiList({ limit = PAGE_LIMIT, offset = 0, mine = false }) {
   }
 
   // ===== タグ／種族まわり =====
+  // ===== フィルター用：投稿からタグ一覧を集める =====
+function collectAllAutoTags() {
+  const set = new Set();
+
+  for (const item of state.list.allItems || []) {
+    const auto = String(item.tagsAuto || '');
+    const pick = String(item.tagsPick || '');
+    const s = [auto, pick].filter(Boolean).join(',');
+    if (!s) continue;
+
+    s.split(',').forEach(x => {
+      const tag = x.trim();
+      if (tag) set.add(tag);
+    });
+  }
+  // 表示順は適当に五十音順
+  return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+}
+
+// ===== モーダル内：タグチェックボックス描画 =====
+function renderFilterAutoTags() {
+  const box = document.getElementById('filter-auto-tags');
+  if (!box) return;
+
+  const tags = collectAllAutoTags();
+  box.innerHTML = '';
+
+  if (!tags.length) {
+    box.innerHTML = '<p style="font-size:.85rem;color:#666;">まだタグ付きの投稿がありません。</p>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+
+  for (const tag of tags) {
+    const id = 'flt-auto-' + tag.replace(/[^\w\u3040-\u30ff\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff-]/g, '_');
+    const checked = filterState.autoTags.has(tag);
+
+    const label = document.createElement('label');
+    label.className = 'filter-chip'; // 必要ならCSS側で定義
+
+    label.innerHTML = `
+      <input type="checkbox"
+             value="${escapeHtml(tag)}"
+             ${checked ? 'checked' : ''}>
+      <span>${escapeHtml(tag)}</span>
+    `;
+    frag.appendChild(label);
+  }
+
+  box.appendChild(frag);
+}
+
+// モーダル内のチェック状態 → filterState に反映
+function updateFilterStateFromModal() {
+  filterState.autoTags.clear();
+
+  const box = document.getElementById('filter-auto-tags');
+  if (!box) return;
+
+  box.querySelectorAll('input[type="checkbox"]:checked').forEach(chk => {
+    const v = (chk.value || '').trim();
+    if (v) filterState.autoTags.add(v);
+  });
+}
+
+// フィルターのリセット
+function resetFilters() {
+  filterState.autoTags.clear();
+
+  window.PostFilterState.userTagQuery = '';
+  const input = document.getElementById('userTagQuery');
+  if (input) input.value = '';
+
+  const box = document.getElementById('filter-auto-tags');
+  if (box) {
+    box.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+      chk.checked = false;
+    });
+  }
+
+  rebuildFilteredItems();
+  loadListPage(1);
+}
+
 
   // メイン種族 → 背景色
   const RACE_BG_MAP = {
@@ -1622,7 +1716,7 @@ function wireCardEvents(root){
     return pick(state.list.items) || pick(state.mine.items) || null;
   }
 
-  // スマホ版：代表カード長押しでデッキリスト簡易表示
+  // スマホ版：代表カードタップでデッキリスト簡易表示
   function setupDeckPeekOnSp(){
     const isSp = () => window.matchMedia('(max-width: 768px)').matches;
 
@@ -1669,11 +1763,10 @@ function wireCardEvents(root){
 
       // 一旦表示してサイズを取る
       pane.style.display = 'block';
-      pane.style.width   = '';     // 一度リセット
+      pane.style.width   = '';
       pane.style.right   = 'auto';
       pane.style.bottom  = 'auto';
 
-      // 幅は画面の 70% までにして、代表カード横に収まるように
       const maxW = Math.min(window.innerWidth * 0.7, 460);
       pane.style.width = maxW + 'px';
 
@@ -1708,49 +1801,41 @@ function wireCardEvents(root){
     const root = document.getElementById('postList');
     if (!root) return;
 
-    let pressing = false;
-
-    const startHandler = (e) => {
+    // ★ スマホ時：代表カード（thumb-box）タップで表示
+    root.addEventListener('click', (e) => {
       if (!isSp()) return;
 
-      // 代表カード部分（thumb-box）だけ反応させる
       const thumb = e.target.closest('.thumb-box');
       if (!thumb) return;
 
       const art = thumb.closest('.post-card.post-card--sp');
       if (!art) return;
 
-      pressing = true;
       showForArticle(art, thumb);
-    };
 
-    const endHandler = () => {
-      if (!pressing) return;
-      pressing = false;
-      hideOverlay();
-    };
+      // このタップで即座に「外側タップ判定」で閉じられないようにする
+      e.stopPropagation();
+    });
 
-    // PointerEvent 優先
-    if (window.PointerEvent){
-      root.addEventListener('pointerdown', startHandler);
-      window.addEventListener('pointerup', endHandler);
-      window.addEventListener('pointercancel', endHandler);
-    } else {
-      // 古い環境向けフォールバック
-      root.addEventListener('touchstart', startHandler, { passive: true });
-      window.addEventListener('touchend', endHandler);
-      window.addEventListener('touchcancel', endHandler);
-    }
-
-    // スクロールや画面タップでも閉じる
+    // スクロールで閉じる
     window.addEventListener('scroll', hideOverlay, { passive: true });
+
+    // オーバーレイ外をタップしたら閉じる
     document.addEventListener('click', (e) => {
       const pane = document.getElementById('post-deckpeek-overlay');
       if (!pane || pane.style.display === 'none') return;
-      if (e.target.closest('#post-deckpeek-overlay')) return; // オーバーレイ内クリックは無視
+      if (e.target.closest('#post-deckpeek-overlay')) return; // 内側タップは無視
       hideOverlay();
     });
+
+    // ★ thumb-box 上のコンテキストメニュー（画像長押しメニュー）を抑制
+    root.addEventListener('contextmenu', (e) => {
+      if (e.target.closest('.thumb-box')) {
+        e.preventDefault();
+      }
+    });
   }
+
 
     // ===== 並び替え（投稿日ベース） =====
   function getPostTime(item){
@@ -1795,24 +1880,73 @@ function wireCardEvents(root){
   }
 
 
-    // ===== 一覧：フィルタ＆ソート結果を作り直す =====
-  function rebuildFilteredItems(){
-    const base    = state.list.allItems || [];
-    const sortKey = state.list.sortKey || 'new';
+// ===== 一覧：フィルタ＆ソート結果を作り直す =====
+function rebuildFilteredItems(){
+  const base    = state.list.allItems || [];
+  const sortKey = state.list.sortKey || 'new';
 
-    // ★ 将来ここでフィルタ処理を挟む：
-    // let filtered = base.filter(...条件...);
-    let filtered = base.slice();
+  let filtered = base.slice();
 
-    // 並び替え
-    filtered = sortItems(filtered, sortKey);
+  // ★ 投稿フィルター（タグ） — window.PostFilterState を見る
+  const fs = window.PostFilterState;
 
-    state.list.filteredItems = filtered;
+  // ① 投稿タグ（自動＋選択タグ）：AND（全部含む）
+  if (fs?.selectedTags?.size) {
+    const selected = Array.from(fs.selectedTags);
 
-    const total = filtered.length;
-    state.list.total      = total;
-    state.list.totalPages = Math.max(1, Math.ceil(Math.max(total, 1) / PAGE_LIMIT));
+    filtered = filtered.filter(item => {
+      const all = [item.tagsAuto, item.tagsPick].filter(Boolean).join(',');
+      if (!all) return false;
+
+      const set = new Set(
+        all.split(',').map(s => s.trim()).filter(Boolean)
+      );
+
+      // AND 条件：選択したタグを全部含む
+      return selected.every(t => set.has(t));
+    });
   }
+
+
+  // ★ ユーザータグ検索（複数選択 OR）
+  const selUserTags = Array.from(window.PostFilterState?.selectedUserTags || []);
+  if (selUserTags.length) {
+    // かな/カナ混合に対応するための正規化（ひらがな⇔カタカナ差を吸収）
+    const toHira = (s) => String(s || '').replace(/[\u30a1-\u30f6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+    const norm = (s) => toHira(String(s || '').trim().toLowerCase());
+
+    const selNorm = selUserTags.map(norm).filter(Boolean);
+
+    filtered = filtered.filter(item => {
+      const raw = String(item.tagsUser || '');
+      if (!raw) return false;
+
+      const tags = raw.split(',')
+        .map(t => t.trim())
+        .filter(Boolean);
+
+      const tagNorm = tags.map(norm);
+
+      // OR：どれか1つでも一致
+      return selNorm.some(t => tagNorm.includes(t));
+    });
+  }
+
+
+  // 並び替え
+  filtered = sortItems(filtered, sortKey);
+
+  state.list.filteredItems = filtered;
+
+  const total = filtered.length;
+  state.list.total      = total;
+  state.list.totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(total, 1) / PAGE_LIMIT)
+  );
+}
+
+
 
 
     // ===== 一覧用：ページャUI更新 =====
@@ -1862,15 +1996,21 @@ function wireCardEvents(root){
   }
 
 
+  // モーダルから呼ぶ用：現在のチェック状態でフィルタを反映
+function applyFilters() {
+  updateFilterStateFromModal();  // チェック → filterState へ
+  rebuildFilteredItems();        // フィルタ＋ソート計算
+  loadListPage(1);               // 1ページ目を再描画
+}
 
-  // 並び替え変更時：全件からフィルタ＆ソートし直して1ページ目を描画
-  function applySortAndRerenderList(){
-    if (!state.list.allItems || !state.list.allItems.length){
-      return;
-    }
-    rebuildFilteredItems();
-    loadListPage(1);
-  }
+// モーダル外から呼ぶ用：並び替えやフィルター適用後に一覧を再計算して再描画
+function applySortAndRerenderList(resetToFirstPage = false){
+  rebuildFilteredItems();
+
+  // どのページを描画するか
+  const page = resetToFirstPage ? 1 : (state.list.currentPage || 1);
+  loadListPage(page);
+}
 
 
   // ===== 一覧用：指定ページを描画（クライアント側ページング） =====
@@ -1940,7 +2080,7 @@ function wireCardEvents(root){
       state.list.sortKey = sortSelect.value || 'new';
       sortSelect.addEventListener('change', () => {
         state.list.sortKey = sortSelect.value || 'new';
-        applySortAndRerenderList();
+        window.DeckPostApp?.applySortAndRerenderList?.();
       });
     }
 
@@ -1979,9 +2119,9 @@ function wireCardEvents(root){
 
     // ⑥ フィルターボタンはまだプレースホルダ
 
-    document.getElementById('filterBtn')?.addEventListener('click', () => {
+    /*document.getElementById('filterBtn')?.addEventListener('click', () => {
       alert('フィルタ機能はベータ版では準備中です。');
-    });
+    });*/
 
 
     // ⑤ マイ投稿へ（ツールバーのボタン）
@@ -2035,7 +2175,13 @@ function wireCardEvents(root){
     init();
   }
 
-  return { init };
+  return {
+    init,
+    // ★ 投稿フィルターから呼び出すために公開
+    applySortAndRerenderList,
+  };
 })();
 
+// グローバル公開
+window.DeckPostApp = DeckPostApp;
 

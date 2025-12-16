@@ -31,6 +31,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/common-page24.css">
+    <link rel="stylesheet" href="css/common-page124.css">
     <link rel="stylesheet" href="css/common-page234.css">
     <link rel="stylesheet" href="css/page4.css">
 
@@ -52,7 +53,7 @@
     </header>
 
 <!-- タブバー -->
-<div class="tab-bar">
+<div class="tab-bar" style="display: none;">
     <div class="tab active" id="title-list" onclick="switchTab('tab-post-list', this)">
         <span>📤 投稿一覧</span>
     </div>
@@ -64,7 +65,7 @@
 
 <!--投稿一覧タブ -->
 <div class="tab-content active" id="tab-post-list">
-    <main id="post-app" class="page" aria-labelledby="title-list">
+    <main id="post-app" aria-labelledby="title-list">
 
         <!-- ツールバー -->
         <div class="toolbar" id="toolbar">
@@ -82,7 +83,7 @@
 
         <!-- 並び替え・フィルターバー -->
         <div class="list-controls" id="listControls">
-            <div class="list-controls-left">
+            <div class="list-controls-filter">
                 <label class="sort-label">
                     並び替え：
                     <select id="sortSelect" class="ctrl-select">
@@ -95,12 +96,13 @@
                     フィルター
                 </button>
             </div>
-            <div class="list-controls-right">
-                <!-- （ベータ版の説明は下の共通ブロックへ移動） -->
+            <!-- 選択中チップ（投稿フィルター用） -->
+            <div id="active-chips-bar" style="display:none;">
+                <div class="chips-scroll"></div>
             </div>
         </div>
 
-        <!-- ▼ フィルタ機能 ベータ版お知らせ -->
+        <!-- ▼ フィルタ機能 ベータ版お知らせ
         <section class="beta-note beta-note--filter" id="betaFilterNote">
             <div class="beta-note-icon">🧪</div>
             <div class="beta-note-body">
@@ -111,7 +113,7 @@
                 </p>
             </div>
         </section>
-        <!-- ▲ フィルタ機能 ベータ版お知らせ -->
+        -- ▲ フィルタ機能 ベータ版お知らせ -->
 
 
         <!-- =========================
@@ -307,6 +309,80 @@
             </div>
     </main>
 
+    <!-- ▼ 投稿フィルター モーダル -->
+    <div id="postFilterModal" class="modal" style="display:none;">
+        <div class="modal-content post-filter-modal" role="dialog" aria-modal="true" aria-labelledby="postFilterTitle">
+            <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
+
+            <div id="main-filters">
+                <!-- タグで絞り込み -->
+                <div class="filter-block">
+                    <strong class="filter-title">タグで絞り込み</strong>
+                    <p class="filter-help">
+                        自動タグ・選択タグをもとに投稿を絞り込めます。
+                    </p>
+                    <div id="postFilterTagArea" class="filter-group" data-key="投稿タグ">
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </div>
+                <!-- ユーザータグで絞り込み -->
+                <div class="filter-block">
+                    <strong class="filter-title">ユーザータグで絞り込み</strong>
+                    <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
+
+                    <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
+
+                    <div class="user-tag-panel">
+                        <!-- サジェスト＋選択中エリア -->
+                        <div class="user-tag-subtitle">候補（クリックで追加）</div>
+                        <div id="userTagSuggest" class="user-tag-suggest">
+                            <!-- ★ 初期から置いておく：空表示（ここに候補が出ます / 候補がありません） -->
+                            <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
+
+                            <!-- ★ 候補チップはここにだけ描画する -->
+                            <div class="user-tag-suggest-items" data-user-tag-items></div>
+                        </div>
+
+                    <div class="user-tag-subtitle">選択中(複数選択可)</div>
+                    <div id="userTagSelectedArea" class="user-tag-selected-area">
+                        <!-- ★ 初期から置いておく：未選択表示 -->
+                        <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
+
+                        <!-- ★ 選択チップはここにだけ描画する -->
+                        <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ▼ カード検索機能 ベータ版お知らせ -->
+            <section class="beta-note " style="margin-top: 12px;">
+                <div class="beta-note-icon">🧪</div>
+                <div class="beta-note-body">
+                    <p class="beta-note-title">カード検索機能はベータ版では準備中です</p>
+                    <p class="beta-note-text">
+                        投稿フィルター内でのカード名・条件検索機能は、<br>
+                        今後のアップデートで実装予定です。
+                    </p>
+                </div>
+            </section>
+            <!-- ▲ カード検索機能 ベータ版お知らせ -->
+
+            <div class="modal-footer">
+                <button class="modal-buttun" type="button" id="postFilterApplyBtn">
+                    この条件で絞り込む
+                </button>
+                <button class="modal-buttun" type="button" id="postFilterResetBtn">
+                    リセット
+                </button>
+                <button class="modal-buttun modal-close-btn" type="button" id="postFilterCloseBtn">
+                    閉じる
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ▲ 投稿フィルター モーダル -->
+
 
         <!-- ▼ ログイン / 新規登録 モーダル -->
         <div class="account-modal" id="authLoginModal" style="display:none;">
@@ -477,6 +553,7 @@
 
     <!-- スクリプト群 -->
     <script src="js/common.js"></script>
+    <script src="js/common-page124.js"></script>
     <script src="js/common-page24.js"></script>
     <script src="js/common-page234.js"></script>
     <script src="js/page4.js"></script>

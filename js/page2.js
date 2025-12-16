@@ -4355,11 +4355,6 @@ window.onUserTagAdded = function(tag){
 /* ✅ 保存キー（選択状態を保持） */
 const SELECT_TAGS_KEY = 'dm_post_select_tags_v1';
 
-/*選択タグ設定*/
-window.POST_TAG_CANDIDATES ??= [
-  "初心者向け","趣味構築","ランク戦用","大会入賞","格安デッキ","回廊用"
-];
-/*"アグロ","ミッドレンジ","コントロール","コンボ","バーン",*/
 
 
 // ===== カード読み込み完了後のフック =====
@@ -4412,7 +4407,7 @@ const USER_TAG_MAX = 10;
 const USER_TAG_LEN = 20;
 
 // その後に通常の定数定義（必要なら）
-const POST_TAG_CANDIDATES = window.POST_TAG_CANDIDATES;
+const POST_TAG_CANDIDATES = window.POST_TAG_CANDIDATES || [];
 
 
 

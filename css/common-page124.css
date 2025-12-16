@@ -425,6 +425,9 @@ select {
     white-space: nowrap;
 }
 
+
+
+
 /*下部ボタン類固定表示 === */
 .modal-footer {
     position: sticky;
@@ -451,10 +454,9 @@ select {
     position: sticky;
     top: var(--chips-offset, 0px);
     z-index: 2000;
-    background: linear-gradient(180deg, #fff 0%, #fff 70%, rgba(255, 255, 255, .85) 100%);
     border-bottom: 1px solid #e7e7e7;
     backdrop-filter: saturate(120%) blur(2px);
-
+    padding: 2px 0;
 }
 
 #active-chips-bar .chips-scroll {
@@ -487,6 +489,12 @@ select {
     font-size: .75rem;
     line-height: 1;
     padding: 0;
+}
+
+/* オリジナル（ユーザー）タグ */
+.chip-mini.chip-user {
+    background: rgba(120, 160, 255, 0.15);
+    border: 1px dashed rgba(120, 160, 255, 0.6);
 }
 
 /* クリア全解除 */
