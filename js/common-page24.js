@@ -1386,19 +1386,61 @@ window.setCampaignDetailRules = function(camp){
     drawEl.innerHTML = escapeHtml_(DEFAULT_DRAW_TEXT).replaceAll('\n','<br>');
   }
 
-  // 報酬：rulesJSON.prizes だけ参照
-  if (prizesEl){
-    const prizes = Array.isArray(rules.prizes) ? rules.prizes.filter(Boolean) : [];
-    if (!prizes.length) {
-      prizesEl.textContent = '（報酬：準備中）';
-    } else {
-      prizesEl.innerHTML =
-        `<ul class="campaign-prize-list">` +
-        prizes.map(p=>`<li>${escapeHtml_(p)}</li>`).join('') +
-        `</ul>`;
-    }
+  if (!prizesEl) return;
+
+  // ---- 報酬：新旧どっちでも表示できるようにする ----
+  // 旧: rules.prizes = ["...","..."]
+  // 新: rules.prize = { lottery:[{label,amount,winners}], selection:[...] }
+
+  // 1) 旧形式（prizes配列）
+  const legacy = Array.isArray(rules.prizes) ? rules.prizes.filter(Boolean) : [];
+
+  // 2) 新形式（prize.lottery / prize.selection）
+  const prizeObj = rules.prize || {};
+  const lottery  = Array.isArray(prizeObj.lottery)   ? prizeObj.lottery   : [];
+  const selection= Array.isArray(prizeObj.selection) ? prizeObj.selection : [];
+
+  // 表示用文字列生成
+  const fmt = (p) => {
+    const label   = String(p?.label ?? '').trim();
+    const amount  = Number(p?.amount ?? 0);
+    const winners = Number(p?.winners ?? p?.qty ?? 0);
+    const yen = amount ? `${amount.toLocaleString()}円` : '';
+    const win = winners ? `${winners}名` : '';
+    const mid = [yen, win].filter(Boolean).join(' / ');
+    return `${label || '賞'}${mid ? `（${mid}）` : ''}`;
+  };
+
+  const blocks = [];
+
+  if (lottery.length){
+    blocks.push(`<div class="campaign-prize-block"><b>【抽選枠】</b><ul class="campaign-prize-list">${
+      lottery.map(p=>`<li>${escapeHtml_(fmt(p))}</li>`).join('')
+    }</ul></div>`);
   }
+  if (selection.length){
+    blocks.push(`<div class="campaign-prize-block"><b>【選考枠】</b><ul class="campaign-prize-list">${
+      selection.map(p=>`<li>${escapeHtml_(fmt(p))}</li>`).join('')
+    }</ul></div>`);
+  }
+
+  if (blocks.length){
+    prizesEl.innerHTML = blocks.join('');
+    return;
+  }
+
+  // 新形式が無い場合は旧形式で表示
+  if (legacy.length){
+    prizesEl.innerHTML =
+      `<ul class="campaign-prize-list">` +
+      legacy.map(p=>`<li>${escapeHtml_(p)}</li>`).join('') +
+      `</ul>`;
+    return;
+  }
+
+  prizesEl.textContent = '（報酬：準備中）';
 };
+
 
 
 
