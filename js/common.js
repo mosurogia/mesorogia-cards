@@ -25,7 +25,7 @@ const BASE_PATH = '';
 // 今後 URL を変更したいときは、基本的にここの値だけ変えればOK。
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbxvbf2efsfaGlIjhZRTGEq5v1g5Ubm--dMW9RK_KWVv_rkABCuKgNlauIa7kvs-J8ZB/exec';
+  'https://script.google.com/macros/s/AKfycbyUa7Fl7wt0HoO7sapj4fKTFO9EfwI0s1-6AeV2VuyVVUi-neieJ9xrMoYKYm04v2M1/exec';
 
 // 用途別のエイリアス（必要なら今後増やしてOK）
 window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE; // デッキ投稿・一覧など
