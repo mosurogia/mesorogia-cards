@@ -80,6 +80,28 @@
             </button>
         </div>
 
+        <!-- キャンペーン情報バー（開催中のみ表示） -->
+        <div id="campaign-banner" class="campaign-banner" style="display:none;">
+            <!-- ① 上段：🎉 + キャンペーン名 + 期間 -->
+            <div class="campaign-banner-title-row">
+                <span class="campaign-banner-emoji" aria-hidden="true">🎉</span>
+
+                <span class="campaign-banner-title" id="campaign-banner-title">キャンペーン</span>
+                <span class="campaign-banner-range" id="campaign-banner-range"></span>
+            </div>
+
+            <!-- ② 下段：宣伝文 + 詳細ボタン（スマホでも横並び固定） -->
+            <div class="campaign-banner-cta-row">
+                <div class="campaign-banner-desc" id="campaign-banner-text">
+                    デッキを投稿して、キャンペーンに参加しよう！<br>
+                    <strong>詳しい参加条件や報酬は、詳細をチェック！</strong>
+                </div>
+
+                <button type="button" class="campaign-btn campaign-banner-btn" data-open="campaignDetailModal">
+                    詳細 ▶
+                </button>
+            </div>
+        </div>
 
         <!-- 並び替え・フィルターバー -->
         <div class="list-controls" id="listControls">

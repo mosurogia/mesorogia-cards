@@ -24,13 +24,20 @@ window.switchTab = function switchTab(targetId, el) {
     // 例：info-tab / post-tab のコンテナ
     contents = Array.from(next.querySelectorAll(':scope > .tab-content'));
   } else {
-    // 2) 上段タブ（build / edit など）：タブバー直後から連続する兄弟 .tab-content のみ対象
+    // 2) 上段タブ（build/edit）
+    // tab-bar直後にバナー等が挟まってもOKにする：最初の .tab-content までスキップ
     let cur = tabBar.nextElementSibling;
+
+    while (cur && !(cur.classList && cur.classList.contains('tab-content'))) {
+      cur = cur.nextElementSibling;
+    }
+
     while (cur && cur.classList && cur.classList.contains('tab-content')) {
       contents.push(cur);
       cur = cur.nextElementSibling;
     }
   }
+
 
   // 3) 同一グループ内だけ active を張り替え
   tabBar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

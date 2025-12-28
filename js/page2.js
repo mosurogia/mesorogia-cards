@@ -5094,6 +5094,12 @@ async function renderPostSelectTags() {
   // 基本タグ + カテゴリ（五十音）
   const merged = buildMergedTagList(POST_TAG_CANDIDATES, categoryTags);
 
+    // ★アクティブキャンペーンがあるなら、選択タグ候補に必ず含める（1キャンペーン前提）
+  const campTag = String(window.__activeCampaignTag || '').trim();
+  if (campTag && !merged.includes(campTag)) {
+    merged.unshift(campTag); // 先頭に出す（邪魔なら push に変更OK）
+  }
+
   // コラボカードがある場合だけ、候補リストに「コラボカードあり」を追加
   if (hasCollab && !merged.includes('コラボカードあり')) {
     merged.push('コラボカードあり');
@@ -5548,6 +5554,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 同意チェック初期化
   bindMinimalAgreeCheck();
 
+  // ★ 追加：キャンペーンミニ通知（開催中のみ表示）
+  try { renderDeckmakerCampaignMiniNotice(); } catch(e){ console.warn('campaign mini error', e); }
+
+  // ★ 追加：キャンペーンバナー（開催中のみ表示）
+  try { renderDeckmakerCampaignBanner(); } catch(e){ console.warn('campaign banner error', e); }
+
+
   // 投稿リセットボタン
   const resetBtn = document.getElementById('post-reset');
   if (resetBtn) {
@@ -5803,6 +5816,24 @@ function openPostSuccessModal(opts = {}) {
     nameEl.textContent = deckName || '（デッキ名）';
   }
 
+  // キャンペーン表示（開催中のみ）
+  const campBox = document.getElementById('post-success-campaign');
+  const campText = document.getElementById('post-success-campaign-text');
+  const camp = opts.campaign || null;
+  if (campBox && campText) {
+    if (camp && (camp.isActive === true || String(camp.isActive) === 'true') && String(camp.campaignId || '')) {
+      const title = String(camp.title || 'キャンペーン');
+      const start = camp.startAt ? new Date(camp.startAt) : null;
+      const end   = camp.endAt   ? new Date(camp.endAt)   : null;
+      const fmt = (d)=> (d && !isNaN(d)) ? formatYmd(d) : '';
+      const range = (start||end) ? `（${fmt(start)}〜${fmt(end)}）` : '';
+      campText.textContent = `${title}${range}：今回の投稿は自動で対象になります。`;
+      campBox.style.display = '';
+    } else {
+      campBox.style.display = 'none';
+    }
+  }
+
   modal.style.display = 'flex'; // 他モーダルに合わせてflex
   document.body.style.overflow = 'hidden';
 
@@ -5963,20 +5994,28 @@ async function updatePostSuccessPreview() {
 // 例）ブラウザのコンソールで
 //   debugShowPostSuccessModal('テストデッキ');
 // と叩くと、投稿なしでモーダルだけ確認できます。
-window.debugShowPostSuccessModal = function(deckName){
+// deckName: 任意のデッキ名（省略可）
+// postId: 任意の投稿ID（省略可）
+// campaign: 任意のキャンペーン情報オブジェクト（省略可）
+window.debugShowPostSuccessModal = async function(deckName){
+  let campaign = null;
+  try { campaign = await (window.fetchActiveCampaign?.() || Promise.resolve(null)); } catch(_){ campaign = null; }
+
   openPostSuccessModal({
     deckName:
       (deckName ||
         (window.readDeckNameInput?.() || '').trim() ||
-        'テスト用デッキ')
+        'テスト用デッキ'),
+    campaign,
   });
 };
 
 
 
 // 送信（デッキコードは任意：空なら検証スキップ）
-async function submitDeckPost(e){
+async function submitDeckPost(e, opts = {}) {
   e?.preventDefault();
+
 
   // すでに送信処理中なら無視（トーストだけ出す）
   if (isPostingDeck) {
@@ -6030,6 +6069,41 @@ async function submitDeckPost(e){
     }
   }
 
+// ===== ここでキャンペーン確認を挟む =====
+let joinCampaign = false;
+
+let camp = null;
+try { camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null)); } catch(_){ camp = null; }
+
+const isActive =
+  camp &&
+  (camp.isActive === true || String(camp.isActive) === 'true') &&
+  String(camp.campaignId || '');
+
+if (isActive) {
+  const result = window.checkCampaignEligibility_?.(camp) || { ok:false, reasons:['条件判定関数が未設定です'] };
+
+  if (result.ok) {
+    // ★ 条件OKなら、確認なしで自動でキャンペーン参加
+    joinCampaign = true;
+  } else {
+    // ★ 条件NGのときだけ「投稿するか？」を聞く（参加しない投稿はここでのみ発生）
+    const reasons = Array.isArray(result.reasons) ? result.reasons : [];
+    const ok = window.confirm(
+      'キャンペーン条件を満たしていませんが、投稿は可能です。\n\n未達条件：\n- ' +
+      (reasons.length ? reasons.join('\n- ') : '（詳細不明）') +
+      '\n\nOK：投稿する（キャンペーン不参加）\nキャンセル：やめる'
+    );
+    if (!ok) {
+      isPostingDeck = false;
+      return false;
+    }
+    joinCampaign = false;
+  }
+}
+// ===== キャンペーン確認ここまで =====
+
+
   const btn = document.getElementById('post-submit');
   const spinner = document.getElementById('post-loading');
 
@@ -6058,6 +6132,9 @@ async function submitDeckPost(e){
   const feat = buildDeckFeaturesForPost();
   const payload = { ...base, ...feat };
 
+    payload.joinCampaign = !!joinCampaign;
+    payload.campaignId   = (joinCampaign && isActive) ? String(camp.campaignId || '') : '';
+
   // 代表カード情報を追加
   payload.repCd = window.representativeCd || '';
   payload.repImg = payload.repCd
@@ -6085,7 +6162,11 @@ async function submitDeckPost(e){
       document.getElementById('post-deck-name')?.value ||
       '').trim();
 
-    openPostSuccessModal({ deckName });
+    const postId = String(json.postId || '');
+    let campaign = null;
+    try { campaign = await (window.fetchActiveCampaign?.() || Promise.resolve(null)); } catch(_){ campaign = null; }
+
+    openPostSuccessModal({ deckName, postId, campaign });
 
   } else {
     if (json.error === 'too_many_posts') {
@@ -6125,21 +6206,14 @@ async function submitDeckPost(e){
 }
 
 
-// 投稿フォームにイベントアタッチ
-function showSuccessCheck() {
-  const el = document.getElementById('success-check');
-  if (!el) return;
-
-  el.style.display = 'flex';
-  el.style.animation = 'popin 0.25s ease forwards';
-
-  setTimeout(() => {
-    el.style.animation = 'fadeout 0.5s ease forwards';
-  }, 1800);
-
-  setTimeout(() => {
-    el.style.display = 'none';
-  }, 2400);
+// 共通：innerHTML用エスケープ
+function escapeHtml_(s){
+  return String(s)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#39;");
 }
 
 
@@ -6273,9 +6347,357 @@ document.addEventListener('DOMContentLoaded', () => {
 //#endregion
 
 
+/*======================================================
+  12) キャンペーン関連
+======================================================*/
+//#region 12. キャンペーン関連（条件チェック・参加確認）
+  // // ここに：キャンペーン関連の処理
+// ===== キャンペーン（ミニ告知：タブバー直下） =====
+async function renderDeckmakerCampaignMiniNotice(){
+  const box  = document.getElementById('campaign-mini');
+  const text = document.getElementById('campaign-mini-text');
+  if (!box || !text) return;
+
+  let camp = null;
+  try {
+    camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null));
+  } catch(_) {}
+
+  const isActive =
+    camp &&
+    (camp.isActive === true || String(camp.isActive) === 'true') &&
+    String(camp.campaignId || '');
+
+  if (!isActive) {
+    box.style.display = 'none';
+    return;
+  }
+
+  const title = String(camp.title || '').trim();
+
+  // ★「入りきらない時だけ」改行される
+  const msg = title
+    ? `${escapeHtml_(title)}開催中！<wbr>デッキ投稿募集中！`
+    : `キャンペーン開催中！<wbr>デッキ投稿募集中！`;
+
+  text.innerHTML = msg;
+  box.style.display = '';
+}
+
+
+// ===== キャンペーンバナー（デッキメーカー：投稿ボタン上） =====
+async function renderDeckmakerCampaignBanner(){
+  const box = document.getElementById('campaign-banner');
+  const titleEl = document.getElementById('campaign-banner-title');
+  const textEl  = document.getElementById('campaign-banner-text');
+  const rangeEl = document.getElementById('campaign-banner-range');
+  if (!box || !titleEl || !textEl) return;
+
+  let camp = null;
+  try { camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null)); } catch(_){ camp = null; }
+
+  const isActive =
+    camp && (camp.isActive === true || String(camp.isActive) === 'true') && String(camp.campaignId||'');
+
+  if (!isActive) {
+    box.style.display = 'none';
+    return;
+  }
+
+  const rawTitle = String(camp.title || 'キャンペーン');
+  const start = camp.startAt ? new Date(camp.startAt) : null;
+  const end   = camp.endAt   ? new Date(camp.endAt)   : null;
+
+  const fmt = (d)=> (d && !isNaN(d)) ? formatYmd(d) : '';
+  const computedRange = (start||end) ? `${fmt(start)}〜${fmt(end)}` : '';
+
+  const titleHasRange = /[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]/.test(rawTitle);
+  const cleanTitle = rawTitle
+    .replace(/[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]\s*/g, '')
+    .trim();
+
+  titleEl.textContent = cleanTitle || 'キャンペーン';
+  if (rangeEl) rangeEl.textContent = (!titleHasRange && computedRange) ? computedRange : '';
+
+  // 文言（基本形）
+  textEl.textContent =
+    'デッキを投稿して、キャンペーンに参加しよう！ 詳しい参加条件や報酬は、詳細をチェック！';
+
+  box.style.display = '';
+
+// --- ここから追記：キャンペーンタグをグローバル共有（1キャンペーン前提） ---
+window.__activeCampaign = camp;
+window.__activeCampaignTag = (cleanTitle || 'キャンペーン').trim();
+
+  // バナーUI（対象タグ行）
+  const tagRow  = document.getElementById('campaign-banner-tagrow');
+  const tagBtn  = document.getElementById('campaign-tag-toggle');
+
+  // ★ 毎回ここで最新のログイン状態を取る（固定しない）
+  const getAuthState = ()=>{
+    const A = window.Auth;
+    const loggedIn = !!(A?.user && A?.token && A?.verified); // ←あなたのAuth仕様に合わせてOK
+    const xAccount = String(A?.user?.x || '').trim();
+    const hasX = !!xAccount;
+    return { loggedIn, hasX, xAccount };
+  };
+
+    // ===== 対象判定：チェックリスト更新 =====
+  const criteriaRoot = box.querySelector('.campaign-criteria');
+
+  function updateCriteriaUI({ isLoggedIn, hasX, hasTag }){
+    if (!criteriaRoot) return;
+    const map = { login: !!isLoggedIn, x: !!hasX, tag: !!hasTag };
+
+    criteriaRoot.querySelectorAll('.criteria-item').forEach(el=>{
+      const key = el.dataset.criteria;
+      const ok = !!map[key];
+      el.classList.toggle('is-ok', ok);
+      el.classList.toggle('is-ng', !ok);
+    });
+  }
+
+  window.updateCampaignBannerEligibility_ = function(){
+    const st = getAuthState();
+    updateCriteriaUI({
+      isLoggedIn: st.loggedIn,
+      hasX: st.hasX,
+      hasTag: isCampaignTagSelected(),
+    });
+  };
+
+
+  // ===== キャンペーンタグ（選択タグと同期・ログイン前でも操作OK） =====
+  const campTag = ()=> String(window.__activeCampaignTag || '').trim();
+
+  const isCampaignTagSelected = ()=>{
+    const tag = campTag();
+    if (!tag) return false;
+    try {
+      const set = readSelectedTags?.(); // Set
+      return !!(set && set.has && set.has(tag));
+    } catch(_) { return false; }
+  };
+
+  const setCampaignTagSelected = (on)=>{
+    const tag = campTag();
+    if (!tag) return;
+
+    // 1) データ更新（これが正）
+    try{
+      const set = readSelectedTags?.() || new Set();
+      if (on) set.add(tag); else set.delete(tag);
+      writeSelectedTags?.(set);
+    }catch(_){}
+
+    // 2) #select-tags 側の見た目同期（あれば）
+    const wrap = document.getElementById('select-tags');
+    if (wrap){
+      const chip = wrap.querySelector(`.chip[data-label="${CSS.escape(tag)}"]`);
+      if (chip) chip.classList.toggle('active', !!on);
+    }
+
+    // 3) バナー側タグ自体も active 同期
+    if (tagBtn){
+      tagBtn.classList.toggle('active', !!on);
+      tagBtn.setAttribute('aria-pressed', String(!!on));
+    }
+
+    // 4) チェック更新
+    try{ window.updateCampaignBannerEligibility_?.(); }catch(_){}
+  };
+
+  const refreshCampaignTagUI = ()=>{
+    if (!tagRow || !tagBtn) return;
+    tagRow.style.display = '';
+    tagBtn.textContent = campTag() || 'キャンペーン';
+    tagBtn.disabled = false;              // ★ ログイン前でも押せる
+    setCampaignTagSelected(isCampaignTagSelected()); // 見た目だけ同期
+  };
+
+  if (tagRow && tagBtn){
+    tagBtn.onclick = ()=>{
+      const next = !isCampaignTagSelected(); // ★ auth関係なくトグル
+      setCampaignTagSelected(next);
+    };
+    refreshCampaignTagUI();
+  }
+
+
+  // ★ ログイン/ログアウト/プロフィール更新のたびに再描画（既存hookに追記）
+  if (!window.__campaignTagHooked) {
+    window.__campaignTagHooked = true;
+
+    const orig = window.onDeckPostAuthChanged;
+    window.onDeckPostAuthChanged = function(...args){
+      try { orig?.apply(this, args); } catch(_) {}
+      try { refreshCampaignTagUI(); } catch(_) {}
+    };
+  }
+
+  // 初回判定
+  window.updateCampaignBannerEligibility_();
+
+}
+
+
+// 投稿フォームにイベントアタッチ
+function showSuccessCheck() {
+  const el = document.getElementById('success-check');
+  if (!el) return;
+
+  el.style.display = 'flex';
+  el.style.animation = 'popin 0.25s ease forwards';
+
+  setTimeout(() => {
+    el.style.animation = 'fadeout 0.5s ease forwards';
+  }, 1800);
+
+  setTimeout(() => {
+    el.style.display = 'none';
+  }, 2400);
+}
+
+
+// ===== キャンペーン確認モーダル =====
+async function onClickPostButton() {
+  const camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null));
+
+  const isActive =
+    camp &&
+    (camp.isActive === true || String(camp.isActive) === 'true');
+
+  // キャンペーンが無ければ即投稿
+  if (!isActive) {
+    submitPost({ joinCampaign: false });
+    return;
+  }
+
+  const result = checkCampaignEligibility_(camp);
+
+  // 条件OK
+  if (result.ok) {
+    openCampaignConfirmModal({
+      mode: 'ok',
+      onJoin: () => submitPost({ joinCampaign: true }),
+      onSkip: () => submitPost({ joinCampaign: false })
+    });
+  }
+  // 条件NG
+  else {
+    openCampaignConfirmModal({
+      mode: 'ng',
+      reasons: result.reasons,
+      onProceed: () => submitPost({ joinCampaign: false })
+    });
+  }
+}
+
+// ===== submitPost：onClickPostButton() → submitDeckPost() の橋渡し =====
+function submitPost({ joinCampaign }) {
+  // joinCampaign の意思決定だけ submitDeckPost に渡す
+  window.__joinCampaign = !!joinCampaign;
+
+  // submitDeckPost は form submit 経由でも direct call でもOK
+  submitDeckPost(null, { joinCampaign: window.__joinCampaign });
+}
+
+
+// ===== キャンペーン参加条件チェック =====
+function checkCampaignEligibility_(camp) {
+  const reasons = [];
+
+  // ログイン必須
+  if (!window.Auth?.user) {
+    reasons.push('ログインが必要です');
+  }
+
+  // Xアカウント必須
+  const x = document.getElementById('auth-x')?.value?.trim();
+  if (!x) {
+    reasons.push('Xアカウントが未入力です');
+  }
+
+  // 対象タグ必須（将来拡張しやすい）
+  const tags = window.getSelectedTags?.() || [];
+  if (camp.requiredTag && !tags.includes(camp.requiredTag)) {
+    reasons.push(`「${camp.requiredTag}」タグが必要です`);
+  }
+
+  return {
+    ok: reasons.length === 0,
+    reasons
+  };
+}
+
+// グローバルから使えるように
+window.checkCampaignEligibility_ = checkCampaignEligibility_;
+
+function openCampaignConfirmModal({ mode, reasons = [], onJoin, onSkip, onProceed }) {
+  const modal = document.createElement('div');
+  modal.className = 'campaign-confirm-modal';
+
+  const body =
+    mode === 'ok'
+      ? `
+        <h3>🎉 キャンペーン開催中！</h3>
+        <p>このデッキはキャンペーン条件を満たしています。</p>
+        <p>キャンペーンに参加して投稿しますか？</p>
+      `
+      : `
+        <h3>⚠ キャンペーン開催中</h3>
+        <p>以下の条件を満たしていません：</p>
+        <ul>${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+        <p>キャンペーンには参加できませんが、投稿は可能です。</p>
+      `;
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      ${body}
+      <div class="modal-actions">
+        ${
+          mode === 'ok'
+            ? `
+              <button class="primary">参加して投稿</button>
+              <button class="ghost">参加せず投稿</button>
+            `
+            : `<button class="primary">投稿する</button>`
+        }
+        <button class="cancel">キャンセル</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const btns = modal.querySelectorAll('button');
+  btns.forEach(btn => {
+    btn.onclick = () => {
+      modal.remove();
+      if (btn.classList.contains('primary')) {
+        mode === 'ok' ? onJoin?.() : onProceed?.();
+      }
+      if (btn.classList.contains('ghost')) onSkip?.();
+    };
+  });
+}
+
+// 投稿フォームの submit イベントにキャンペーン確認を挟む
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('deck-post-form');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    onClickPostButton(); // ← キャンペーン確認→投稿 の入口
+  });
+});
+
+
+//#endregion
 
 /*======================================================
-  12) 共通ユーティリティ
+  13) 共通ユーティリティ
 ======================================================*/
 //#region 12. 共通関数・ユーティリティ
 

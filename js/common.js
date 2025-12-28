@@ -25,7 +25,7 @@ const BASE_PATH = '';
 // 今後 URL を変更したいときは、基本的にここの値だけ変えればOK。
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbz-06SQ40MQOBW6wC7LCiuGUYzL5m17hl6pwe4tIUJLgeCbond6vs5FIys6wXw2njMd/exec';
+  'https://script.google.com/macros/s/AKfycbxvbf2efsfaGlIjhZRTGEq5v1g5Ubm--dMW9RK_KWVv_rkABCuKgNlauIa7kvs-J8ZB/exec';
 
 // 用途別のエイリアス（必要なら今後増やしてOK）
 window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE; // デッキ投稿・一覧など
@@ -382,3 +382,39 @@ function sortCards() {
 
   global.OwnedStore = OwnedStore;
 })(window);
+
+
+/*====================
+    キャンペーン（フロント共通）
+=====================*/
+
+// 開催中キャンペーンを取得（GAS: mode=campaignGetActive）
+// - deckmaker / deck-post どちらでも使うため common.js に置く
+// - 30秒キャッシュ
+(function(){
+  let _campCache = { t:0, v:null };
+
+  window.fetchActiveCampaign = async function fetchActiveCampaign(opts = {}){
+    const ttlMs = Number(opts.ttlMs || 30000);
+    const now = Date.now();
+    if (_campCache.v && (now - _campCache.t) < ttlMs) return _campCache.v;
+
+    const base = window.DECKPOST_API_BASE || window.GAS_API_BASE;
+    if (!base) return null;
+
+    try{
+      const res = await fetch(`${base}?mode=campaignGetActive`, {
+        method : 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body   : JSON.stringify({}), // bodyは空でOK（modeはクエリで渡す）
+      });
+      const json = await res.json();
+      const camp = (json && json.ok) ? (json.campaign || null) : null;
+      _campCache = { t: now, v: camp };
+      return camp;
+    }catch(_){
+      return null;
+    }
+  };
+})();
+

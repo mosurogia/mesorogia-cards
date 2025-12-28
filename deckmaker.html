@@ -70,6 +70,22 @@
     </div>
 </div>
 
+<!-- キャンペーン告知（ミニ：タブバー直下 / 開催中のみ表示） -->
+<div id="campaign-mini" class="campaign-mini" style="display:none;">
+    <div class="campaign-mini-inner">
+        <span class="campaign-mini-emoji" aria-hidden="true">🎉</span>
+
+        <!-- ★JSが差し込む先（id一致必須） -->
+        <span id="campaign-mini-text" class="campaign-mini-text"></span>
+
+        <!-- ★ここだけがモーダル起動 -->
+        <button type="button" class="campaign-mini-link" data-open="campaignDetailModal">
+            詳細
+        </button>
+    </div>
+</div>
+
+
 <!--デッキ構築タブ-->
 <div class="tab-content active" id="build">
 
@@ -630,6 +646,51 @@
                 <div id="post-loading" class="loading-spinner" style="display:none;"></div>
             </div>
 
+            <!-- キャンペーン告知（投稿ボタン上：開催中のみ表示） -->
+            <div id="campaign-banner" class="campaign-banner" style="display:none;">
+                <!-- ① 上段：🎉 + キャンペーン名 + 期間 -->
+                <div class="campaign-banner-title-row">
+                    <span class="campaign-banner-emoji" aria-hidden="true">🎉</span>
+                    <span class="campaign-banner-title" id="campaign-banner-title">キャンペーン</span>
+                    <span class="campaign-banner-range" id="campaign-banner-range"></span>
+                </div>
+
+                <!-- ② 下段：宣伝文 + 詳細ボタン（スマホでも横並び固定） -->
+                <div class="campaign-banner-cta-row">
+                    <div class="campaign-banner-desc" id="campaign-banner-text">
+                        デッキを投稿して、キャンペーンに参加しよう！<span class="sp-break"></span>
+                        <strong>詳しい参加条件や報酬は、詳細をチェック！</strong>
+                    </div>
+
+                    <button type="button" class="campaign-btn campaign-banner-btn" data-open="campaignDetailModal">
+                        詳細 ▶
+                    </button>
+                </div>
+                <!-- ③ 対象判定（まずは簡易：後でタグ連動に発展させる） -->
+                    <div class="campaign-criteria">
+                        <div class="criteria-item" data-criteria="login">
+                            <span class="criteria-check"></span>
+                            <span class="criteria-text">アカウントログイン</span>
+                        </div>
+
+                        <div class="criteria-item" data-criteria="x">
+                            <span class="criteria-check"></span>
+                            <span class="criteria-text">Xアカウント記入</span>
+                        </div>
+
+                        <div class="criteria-item" data-criteria="tag">
+                            <span class="criteria-check"></span>
+                            <span class="criteria-text">下にあるタグをタップ！</span>
+                        </div>
+                    </div>
+                <!-- ④ 対象タグ（キャンペーン参加トグル：見た目は選択タグchipと同じ） -->
+                    <div id="campaign-banner-tagrow" class="tag-chips campaign-tagrow" style="display:none;">
+                        <button type="button" id="campaign-tag-toggle" class="chip" aria-pressed="false">
+                            （対象タグ）
+                        </button>
+                    </div>
+                </div>
+
                 <div class="post-actions">
                     <button type="button" id="post-open-imagegen">画像生成</button>
                     <button type="button" id="post-reset">投稿リセット</button>
@@ -719,6 +780,16 @@
                     Xで投稿したことをシェアしてみましょう！<br>
                     ポスト用のデッキリスト画像は、下の「画像生成」から保存できます。
                     </p>
+
+                    <!-- キャンペーン案内（開催中のみ表示） -->
+                    <div id="post-success-campaign" class="beta-note" style="display:none; margin-top:10px;">
+                        <div class="beta-note-icon">🎁</div>
+                        <div class="beta-note-body">
+                            <div class="beta-note-title">キャンペーン開催中</div>
+                            <div id="post-success-campaign-text">（キャンペーン情報）</div>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- 右側のプレビュー領域 -->
                 <div id="post-success-preview" class="post-success-preview"></div>

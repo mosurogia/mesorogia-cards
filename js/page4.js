@@ -431,6 +431,34 @@ async function apiList({ limit = PAGE_LIMIT, offset = 0, mine = false }) {
   return resJsonp;
 }
 
+// ===== キャンペーンタグ一覧取得 =====
+async function apiCampaignTags(){
+  const qs = new URLSearchParams();
+  qs.set('mode', 'campaignTags');
+
+  const url = `${GAS_BASE}?${qs.toString()}`;
+
+  // 1) fetch(JSON) を試す
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (Array.isArray(data.tags) || data.ok !== undefined || data.error)) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn('apiCampaignTags: fetch failed, fallback to JSONP', err);
+  }
+
+  // 2) フォールバック（JSONP）
+  return await jsonpRequest(url);
+}
 
 
 
@@ -626,7 +654,7 @@ function collectAllAutoTags() {
 
     s.split(',').forEach(x => {
       const tag = x.trim();
-      if (tag) set.add(tag);
+      if (tag && shouldShowTag_(tag)) set.add(tag);
     });
   }
   // 表示順は適当に五十音順
@@ -729,6 +757,7 @@ function resetFilters() {
     return s.split(',')
       .map(x => x.trim())
       .filter(Boolean)
+      .filter(shouldShowTag_) // ★ 追加
       .map(x => `<span class="chip">${escapeHtml(x)}</span>`)
       .join('');
   }
@@ -740,9 +769,33 @@ function resetFilters() {
     return s.split(',')
       .map(x => x.trim())
       .filter(Boolean)
+      .filter(shouldShowTag_) // ★ 追加
       .map(x => `<span class="chip">${escapeHtml(x)}</span>`)
       .join('');
   }
+
+
+  // ===== キャンペーンタグ表示制御 =====
+function shouldShowTag_(tag){
+  const t = String(tag || '').trim();
+  if (!t) return false;
+
+  const set = window.__campaignTagSet;
+  const isCampaignTag = (set instanceof Set) && set.size && set.has(t);
+
+  // キャンペーンタグじゃなければ常に表示
+  if (!isCampaignTag) return true;
+
+  // キャンペーンタグの場合：
+  // 開催中 → 今回のキャンペーンタグだけ表示
+  // 期間外 → 全部非表示
+  const activeTag = String(window.__activeCampaignTag || '').trim();
+  const isRunning = !!window.__isCampaignRunning;
+
+  if (isRunning && activeTag) return t === activeTag;
+  return false;
+}
+
 
   // ===== サムネイル画像 =====
   function cardThumb(src, title){
@@ -1444,7 +1497,7 @@ function oneCard(item){
 
             <div class="post-detail-beta-note beta-note">
               ※ レアリティ構成・コスト分布などの詳細な分析も準備中です。<br>
-              　 ベータ版では準備中です。
+              　 今後追加予定ですのでお楽しみに！
             </div>
 
         </div>
@@ -2057,6 +2110,60 @@ function applySortAndRerenderList(resetToFirstPage = false){
   }
 
 
+// ===== キャンペーンバナー =====
+async function renderCampaignBanner(){
+  const box = document.getElementById('campaign-banner');
+  const titleEl = document.getElementById('campaign-banner-title');
+  const textEl  = document.getElementById('campaign-banner-text');
+  const rangeEl = document.getElementById('campaign-banner-range');
+  if (!box || !titleEl || !textEl) return;
+
+  let camp = null;
+  try { camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null)); } catch(_){ camp = null; }
+
+  const isActive = camp && (camp.isActive === true || String(camp.isActive) === 'true') && String(camp.campaignId||'');
+  if (!isActive) {
+    box.style.display = 'none';
+    // ★ 追加：開催してないのでキャンペーンタグは非表示側へ
+    window.__isCampaignRunning = false;
+    window.__activeCampaignTag = '';
+    return;
+  }
+
+  const rawTitle = String(camp.title || 'キャンペーン');
+  const start = camp.startAt ? new Date(camp.startAt) : null;
+  const end   = camp.endAt   ? new Date(camp.endAt)   : null;
+
+  const fmt = (d)=> (d && !isNaN(d)) ? fmtDate(d) : '';
+  const computedRange = (start||end) ? `${fmt(start)}〜${fmt(end)}` : '';
+
+  // titleに日程が含まれるパターン（(2025/..〜..) / （2025/..〜..）など）
+  const titleHasRange = /[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]/.test(rawTitle);
+
+  // タイトルから日程括弧を除去してスッキリさせる
+  const cleanTitle = rawTitle
+    .replace(/[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]\s*/g, '')
+    .trim();
+
+  titleEl.textContent = cleanTitle || 'キャンペーン';
+
+  // ★ 追加：開催中。今回のキャンペーンタグ（= cleanTitle）を保存
+  window.__isCampaignRunning = true;
+  window.__activeCampaignTag = cleanTitle || '';
+
+  if (rangeEl) {
+    // titleに日程が含まれてるなら、ここは出さない（2重防止）
+    rangeEl.textContent = (!titleHasRange && computedRange) ? computedRange : '';
+  }
+
+  // 位置依存をやめて、どの端末でも自然な文に
+  textEl.textContent =
+    'デッキを投稿して、キャンペーンに参加しよう！ 詳しい参加条件や報酬は、詳細をチェック！';
+
+  box.style.display = '';
+}
+
+
 
   // ===== 初期化 =====
   async function init(){
@@ -2067,6 +2174,20 @@ function applySortAndRerenderList(resetToFirstPage = false){
     } catch (e) {
       console.error('カードマスタ読み込みに失敗しました', e);
     }
+
+        // ①.2 歴代キャンペーンタグ一覧（表示制御用）
+    try {
+      const res = await apiCampaignTags();
+      const tags = (res && res.ok && Array.isArray(res.tags)) ? res.tags : [];
+      window.__campaignTagSet = new Set((tags || []).map(t => String(t).trim()).filter(Boolean));
+    } catch (e) {
+      console.warn('campaignTags load failed', e);
+      window.__campaignTagSet = new Set();
+    }
+
+
+    // ①.5 キャンペーンバナー（開催中のみ表示）
+    try { await renderCampaignBanner(); } catch(e){ console.warn('campaign banner error', e); }
 
     // ② トークン
     state.token = resolveToken();

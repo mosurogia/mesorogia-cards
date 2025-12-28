@@ -35,7 +35,7 @@
 
 .tab-content {
     display: none;
-    padding: 4px;
+    padding: 0 4px;
 }
 
 .tab-content.active {
