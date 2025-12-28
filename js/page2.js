@@ -5827,7 +5827,7 @@ function openPostSuccessModal(opts = {}) {
       const end   = camp.endAt   ? new Date(camp.endAt)   : null;
       const fmt = (d)=> (d && !isNaN(d)) ? formatYmd(d) : '';
       const range = (start||end) ? `（${fmt(start)}〜${fmt(end)}）` : '';
-      campText.textContent = `${title}${range}：今回の投稿は自動で対象になります。`;
+      campText.textContent = `${title}${range}`;
       campBox.style.display = '';
     } else {
       campBox.style.display = 'none';
