@@ -6011,6 +6011,24 @@ window.debugShowPostSuccessModal = async function(deckName){
 };
 
 
+// 文字列CSV / 配列どっちでも対応して tag を除去する
+function stripTagAny_(v, tag){
+  const t = String(tag || '').trim();
+  if (!t) return v;
+
+  // 配列
+  if (Array.isArray(v)){
+    return v.map(x=>String(x||'').trim()).filter(x=>x && x !== t);
+  }
+
+  // CSV文字列
+  const s = String(v || '');
+  if (!s) return s;
+
+  const arr = s.split(',').map(x=>x.trim()).filter(Boolean).filter(x=>x !== t);
+  return arr.join(',');
+}
+
 
 // 送信（デッキコードは任意：空なら検証スキップ）
 async function submitDeckPost(e, opts = {}) {
@@ -6143,13 +6161,25 @@ if (isActive) {
 
 
   try {
-    const res = await fetch(`${GAS_POST_ENDPOINT}?mode=post`, {
-      method : 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body   : JSON.stringify(payload),
-    });
+  // camp から「今回のキャンペーンタグ名」を取る（camp側の実データに合わせて）
+  const campaignTag = String(camp?.tag || camp?.entryTag || camp?.campaignTag || '').trim();
 
+  // joinCampaign=false のときはタグを剥がす（誤解防止）
+  if (!joinCampaign && campaignTag) {
+    payload.selectTags = stripTagAny_(payload.selectTags, campaignTag);
+    payload.tagsPick   = stripTagAny_(payload.tagsPick,   campaignTag); // あればでOK
+  }
+
+  // 参加しないなら campaignId も空にしておく
+  if (!joinCampaign) payload.campaignId = '';
+
+  const res = await fetch(`${GAS_POST_ENDPOINT}?mode=post`, {
+    method : 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body   : JSON.stringify(payload),
+  });
   const json = await res.json();
+
 
   if (json.ok) {
     // 成功トースト＋チェックアニメ
