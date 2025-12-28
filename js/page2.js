@@ -1859,15 +1859,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
 //代表カードクラス付与
-  function updateRepresentativeHighlight() {
-    document.querySelectorAll(".deck-entry").forEach(el => {
-      el.classList.remove("representative");
-      if (el.dataset.cd === representativeCd) {
-        el.classList.add("representative");
-      }
-    });
-  }
+function updateRepresentativeHighlight() {
+  const rep = String(representativeCd || '').padStart(5,'0').slice(0,5);
+  const targets = document.querySelectorAll(".deck-card, .deck-entry"); // 両対応
+
+  targets.forEach(el => {
+    el.classList.remove("representative");
+    const raw = el.dataset.cd || el.getAttribute('data-cd') || '';
+    const cd  = String(raw).padStart(5,'0').slice(0,5);
+    if (rep && cd === rep) el.classList.add("representative");
+  });
+}
 
 //代表カードデッキ情報表示
 function updateDeckSummaryDisplay() {
@@ -2097,20 +2101,18 @@ cardOpSetRepBtn?.addEventListener('click', (e) => {
   e.stopPropagation();
   if (!_cardOpCurrentCd) return;
 
-  // 代表カードを設定。辞書から名称を取得して helper で統一的に更新
   try {
     const infoMap = window.cardMap || window.allCardsMap || {};
     const info = infoMap[_cardOpCurrentCd] || {};
     setRepresentativeCard(_cardOpCurrentCd, info.name || '');
   } catch (_) {
-    // 失敗時でもカードIDだけ指定して更新
     setRepresentativeCard(_cardOpCurrentCd, '');
   }
-  // オートセーブ
-  if (typeof scheduleAutosave === 'function') scheduleAutosave();
-  // モーダルを閉じる
-  closeCardOpModal();
+
+  if (typeof scheduleAutosave === 'function') scheduleAutosave();// オートセーブ
+  closeCardOpModal();// モーダル閉じる
 });
+
 
 
 
