@@ -491,7 +491,7 @@
     display: block;
     border-radius: 6px;
 }
-/*代表カード*/
+/*メインカード*/
 .deck-entry.representative {
     outline: 3px solid crimson;
     outline-offset: -2px;
@@ -952,7 +952,7 @@
     resize: vertical;
 }
 
-/* ==== タップ可能な代表カード名の強調 ==== */
+/* ==== タップ可能なメインカード名の強調 ==== */
 .tap-target {
     text-decoration: underline dotted;
     text-underline-offset: 2px;
@@ -979,7 +979,7 @@
     color: #6a5acd;
 }
 
-/*代表カード説明*/
+/*メインカード説明*/
 .post-representative-hint{
     font-size: .65rem;
     color: #6b7280;

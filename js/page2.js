@@ -1883,6 +1883,60 @@ function updateDeckSummaryDisplay() {
   if (postEl) postEl.textContent = name;
 }
 
+/*
+ * 代表カードをまとめて設定・表示更新する関数
+ *
+ * この関数は代表カードIDと表示名を受け取り、内部状態とグローバル状態
+ * (代表カード番号) を同期させます。さらに hidden バリデータや表示用
+ * 要素の更新も行い、選択済み代表カードを使ったバリデーションが常に
+ * 正しく機能するようにします。代表カードを変更／復元するすべての
+ * 処理からこの関数を呼び出してください。
+ *
+ * @param {string} cd  カードID（数値文字列でも可）
+ * @param {string} name 表示名（カード名）。省略時は cardMap から取得。
+ */
+function setRepresentativeCard(cd, name = '') {
+  // 正規化：空白や null を扱いやすいようにゼロ埋めした5桁文字列に統一
+  const norm = String(cd || '').padStart(5, '0');
+  // 内部状態とグローバル状態を更新
+  representativeCd = norm;
+  window.representativeCd = norm;
+
+  // 非表示のバリデーション用入力にも値をセットしてエラーをリセット
+  const repValidator = document.getElementById('post-rep-validator');
+  if (repValidator) {
+    repValidator.value = norm;
+    // カスタムバリデーションをクリアしておく
+    if (typeof repValidator.setCustomValidity === 'function') {
+      repValidator.setCustomValidity('');
+    }
+  }
+
+  // 表示名が渡されていない場合、カード辞書から補完
+  let resolvedName = name;
+  if (!resolvedName) {
+    try {
+      const map = window.cardMap || window.allCardsMap || {};
+      if (map[norm] && map[norm].name) {
+        resolvedName = map[norm].name;
+      }
+    } catch (_) {}
+  }
+  // デッキ情報側と投稿情報側の代表カード表示を更新
+  const infoEl = document.getElementById('deck-representative');
+  const postEl = document.getElementById('post-representative');
+  if (infoEl) infoEl.textContent = resolvedName || '';
+  if (postEl) postEl.textContent = resolvedName || '';
+
+  // ハイライトやデッキ情報表示も更新
+  if (typeof updateRepresentativeHighlight === 'function') {
+    updateRepresentativeHighlight();
+  }
+  if (typeof updateDeckSummaryDisplay === 'function') {
+    updateDeckSummaryDisplay();
+  }
+}
+
 
 //#endregion 代表カード選択モーダル
 
@@ -2043,16 +2097,18 @@ cardOpSetRepBtn?.addEventListener('click', (e) => {
   e.stopPropagation();
   if (!_cardOpCurrentCd) return;
 
-  // 代表カードに設定（デッキ外は不可にしたいなら if(!(deck?.[_cardOpCurrentCd]>0)) return;）
-  representativeCd = _cardOpCurrentCd;
-  window.representativeCd = representativeCd;
-
-  // 画面を即時同期
-  updateRepresentativeHighlight?.();
-  updateDeckSummaryDisplay?.();
-  scheduleAutosave?.();
-
-  // お好みでモーダルを閉じるなら↓
+  // 代表カードを設定。辞書から名称を取得して helper で統一的に更新
+  try {
+    const infoMap = window.cardMap || window.allCardsMap || {};
+    const info = infoMap[_cardOpCurrentCd] || {};
+    setRepresentativeCard(_cardOpCurrentCd, info.name || '');
+  } catch (_) {
+    // 失敗時でもカードIDだけ指定して更新
+    setRepresentativeCard(_cardOpCurrentCd, '');
+  }
+  // オートセーブ
+  if (typeof scheduleAutosave === 'function') scheduleAutosave();
+  // モーダルを閉じる
   closeCardOpModal();
 });
 
@@ -4088,7 +4144,8 @@ function deleteDeckFromIndex(index) {
 
   // データ初期化
   Object.keys(deck).forEach(k => delete deck[k]);
-  representativeCd = null;
+  // 代表カード状態を完全にリセット
+  setRepresentativeCard(null, '');
 
   //デッキ名（情報タブ＆投稿タブ）も空に
   writeDeckNameInput(''); // info側（#info-deck-name）
@@ -6056,7 +6113,7 @@ async function submitDeckPost(e, opts = {}) {
     repValidator.setCustomValidity('');
     const hasRep = !!window.representativeCd;
     if (!hasRep) {
-      repValidator.setCustomValidity('代表カードを1枚選択してください');
+      repValidator.setCustomValidity('メインカードを選択してください');
       repValidator.reportValidity();
       isPostingDeck = false; // ★ 戻す
       return false;
@@ -6140,8 +6197,15 @@ if (isActive) {
 
     if (cds.length) {
       cds.sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
-      window.representativeCd = cds[0];
-      console.warn('[post] representativeCd が空だったため、自動で代表カードを補完しました:', window.representativeCd);
+      const autoCd = cds[0];
+      // 自動補完時も helper を使って正しく代表カードを設定
+      try {
+        const info = (window.cardMap || window.allCardsMap || {})[autoCd] || {};
+        setRepresentativeCard(autoCd, info.name || '');
+      } catch (_) {
+        setRepresentativeCard(autoCd, '');
+      }
+      console.warn('[post] representativeCd が空だったため、自動で代表カードを補完しました:', autoCd);
     }
   }
 
@@ -6328,16 +6392,15 @@ function buildRepSelectGrid() {
     // ★ クリックで代表カードに設定
     wrap.addEventListener('click', () => {
       const newCd = String(cd);
-
-      // 代表カードを更新
-      representativeCd = newCd;
-      window.representativeCd = representativeCd;
-
-      // 画面を同期
-      updateRepresentativeHighlight?.();
-      updateDeckSummaryDisplay?.();
-      scheduleAutosave?.();
-
+      // カード情報から名前を取得し、統一関数で代表カードを更新
+      try {
+        const info = cardMap && cardMap[newCd] ? cardMap[newCd] : null;
+        setRepresentativeCard(newCd, info && info.name ? info.name : '');
+      } catch (_) {
+        setRepresentativeCard(newCd, '');
+      }
+      // オートセーブ
+      if (typeof scheduleAutosave === 'function') scheduleAutosave();
       // モーダルを閉じる
       closeRepSelectModal();
     });

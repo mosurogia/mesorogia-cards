@@ -1849,3 +1849,7 @@ body {
     font-size: .88rem;
     margin: 0;
 }
+
+.btn-add-compare {
+    display: none;
+}

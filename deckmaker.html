@@ -258,11 +258,11 @@
                     </div>
                 </div>
 
-                <!-- 代表カード -->
+                <!-- メインカード -->
                 <div class="info-row">
                     <div class="info-label">メインカード</div>
                     <div class="info-value">
-                        <span id="deck-representative" class="tap-target" role="button" aria-label="代表カードを選択（タップで開く）"></span><br><span class="post-representative-hint">
+                        <span id="deck-representative" class="tap-target" role="button" aria-label="メインカードを選択（タップで開く）"></span><br><span class="post-representative-hint">
                             デッキ投稿に表示するサムネカードです、クリック／タップで選択できます。
                         </span></div>
                 </div>
@@ -411,15 +411,15 @@
                     </div>
                 </div>
 
-                <!-- 代表カード -->
+                <!-- メインカード -->
                 <div class="info-row">
                     <label class="info-label">メインカード</label>
                 <div class="info-value">
-                    <span id="post-representative" class="tap-target" role="button" aria-label="代表カードを選択（タップで開く）"></span><br>
+                    <span id="post-representative" class="tap-target" role="button" aria-label="メインカードを選択（タップで開く）"></span><br>
                     <span class="post-representative-hint">
-                        保存デッキや投稿時の代表カードのサムネカードです、カード名をタップして選択できます。
+                        保存デッキや投稿時のサムネカードです、カード名をタップして選択できます。
                     </span>
-                    <!-- 代表カード未選択時のバルーン表示用（見えない入力） -->
+                    <!-- メインカード未選択時のバルーン表示用（見えない入力） -->
                     <input type="text" id="post-rep-validator" aria-hidden="true" tabindex="-1"
                         style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;border:none;padding:0;margin:0;">
                 </div>
@@ -982,9 +982,9 @@
                     <button type="button" class="cardop-btn grow" id="cardOpInc">＋</button>
                 </div>
 
-                <!-- 操作：2行目（代表カードにする） -->
+                <!-- 操作：2行目（メインカードにする） -->
                 <div class="cardop-row">
-                    <button type="button" class="cardop-btn primary full" id="cardOpSetRep">このカードを代表カードにする</button>
+                    <button type="button" class="cardop-btn primary full" id="cardOpSetRep">このカードをメインカードにする</button>
                 </div>
 
                 <!-- 効果一覧 -->
@@ -993,10 +993,10 @@
         </div>
     </div>
 
-    <!-- ▼ 代表カード：選択モーダル -->
+    <!-- ▼ メインカード：選択モーダル -->
     <div class="modal" id="repSelectModal" style="display:none;">
         <div class="modal-content cardnote-modal">
-            <h3 class="filter-maintitle">代表カードを選択</h3>
+            <h3 class="filter-maintitle">メインカードを選択</h3>
             <div id="repSelectGrid" class="cardnote-grid"><!-- JSで5列グリッド生成 --></div>
             <div class="modal-footer" style="gap:.5rem;">
                 <button type="button" id="repSelectClose" class="modal-buttun">閉じる</button>
