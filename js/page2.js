@@ -6436,11 +6436,16 @@ window.__activeCampaignTag = (cleanTitle || 'キャンペーン').trim();
   // ★ 毎回ここで最新のログイン状態を取る（固定しない）
   const getAuthState = ()=>{
     const A = window.Auth;
-    const loggedIn = !!(A?.user && A?.token && A?.verified); // ←あなたのAuth仕様に合わせてOK
-    const xAccount = String(A?.user?.x || '').trim();
+    const loggedIn = !!(A?.user && A?.token && A?.verified);
+
+    // ★ Auth.user.x ではなく入力欄を参照
+    const xRaw = document.getElementById('auth-x')?.value || '';
+    const xAccount = String(xRaw).trim().replace(/^@+/, ''); // @ありでもOK
     const hasX = !!xAccount;
+
     return { loggedIn, hasX, xAccount };
   };
+
 
     // ===== 対象判定：チェックリスト更新 =====
   const criteriaRoot = box.querySelector('.campaign-criteria');
@@ -6540,6 +6545,9 @@ window.__activeCampaignTag = (cleanTitle || 'キャンペーン').trim();
 
 }
 
+document.getElementById('auth-x')?.addEventListener('input', () => {
+  window.updateCampaignBannerEligibility_?.();
+});
 
 // 投稿フォームにイベントアタッチ
 function showSuccessCheck() {
