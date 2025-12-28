@@ -6615,28 +6615,29 @@ function submitPost({ joinCampaign }) {
 function checkCampaignEligibility_(camp) {
   const reasons = [];
 
-  // ログイン必須
-  if (!window.Auth?.user) {
-    reasons.push('ログインが必要です');
-  }
+  // ログイン必須（バナーと同条件に揃えるなら token/verified も見る）
+  const A = window.Auth;
+  const loggedIn = !!(A?.user && A?.token && A?.verified);
+  if (!loggedIn) reasons.push('ログインが必要です');
 
-  // Xアカウント必須
-  const x = document.getElementById('auth-x')?.value?.trim();
-  if (!x) {
-    reasons.push('Xアカウントが未入力です');
-  }
+  // Xアカウント必須（入力欄を参照、@ありでもOK）
+  const xRaw = document.getElementById('auth-x')?.value || '';
+  const x = String(xRaw).trim().replace(/^@+/, '');
+  if (!x) reasons.push('Xアカウントが未入力です');
 
-  // 対象タグ必須（将来拡張しやすい）
-  const tags = window.getSelectedTags?.() || [];
-  if (camp.requiredTag && !tags.includes(camp.requiredTag)) {
-    reasons.push(`「${camp.requiredTag}」タグが必要です`);
-  }
+  // ★ 対象タグ必須（バナーと同じ：window.__activeCampaignTag を選択しているか）
+  const needTag = String(window.__activeCampaignTag || '').trim();
+  let hasTag = false;
+  try {
+    const set = readSelectedTags?.() || new Set(); // page2.js内で使ってるやつ
+    hasTag = !!(needTag && set.has(needTag));
+  } catch (_) {}
+  if (!hasTag) reasons.push('キャンペーンタグが未選択です');
 
-  return {
-    ok: reasons.length === 0,
-    reasons
-  };
+  return { ok: reasons.length === 0, reasons };
 }
+window.checkCampaignEligibility_ = checkCampaignEligibility_;
+
 
 // グローバルから使えるように
 window.checkCampaignEligibility_ = checkCampaignEligibility_;
