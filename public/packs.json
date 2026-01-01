@@ -29,6 +29,20 @@
       "selector": "#pack-drawn-sword"
     },
     {
+      "en": "Ensemble of Slience",
+      "jp": "「無音の合唱曲」",
+      "slug": "ensemble-of-slience",
+      "key": "ensemble-of-slience",
+      "selector": "#pack-ensemble-of-slience"
+    },
+    {
+      "en": "その他特殊カード",
+      "jp": "",
+      "slug": "その他特殊カード",
+      "key": "その他特殊カード",
+      "selector": "#pack-その他特殊カード"
+    },
+    {
       "en": "コラボカード",
       "jp": "",
       "slug": "コラボカード",
@@ -41,7 +55,9 @@
     "Beyond the Sanctuary",
     "Creeping Souls",
     "Drawn Sword",
+    "Ensemble of Slience",
     "その他カード",
+    "その他特殊カード",
     "コラボカード"
   ]
 }
