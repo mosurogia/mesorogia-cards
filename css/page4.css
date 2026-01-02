@@ -686,6 +686,24 @@ body {
     right: 0;
 }
 
+/* 削除ボタン（見た目は後で調整OK） */
+.delete-btn {
+    appearance: none;
+    border: 1px solid rgba(0, 0, 0, .15);
+    background: #fff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+/* 右上固定（fav-btn と同じ） */
+.sp-head-right .delete-btn,
+.pc-head-right .delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 /* タグ全体のくくり */
 .post-tags-wrap {
     padding: 3px 0;
@@ -1247,8 +1265,7 @@ body {
 /* タグ全体（横スクロール＋折り返しなし） */
 .post-tags {
     display: flex;
-    flex-wrap: nowrap;
-    /* 1行に並べる */
+    flex-wrap: wrap;
     overflow-x: auto;
     /* 横方向にスクロール */
     overflow-y: hidden;
@@ -1388,6 +1405,108 @@ body {
     font-size: 1.2rem;
     padding: 5px 0;
 }
+
+/* デッキ解説 見出し行（編集ボタン右寄せ） */
+.post-detail-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.post-detail-heading-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-decknote-edit,
+.btn-decknote-save,
+.btn-decknote-cancel {
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: .85rem;
+}
+
+.btn-decknote-save {
+    background: #eef7ff;
+    border-color: #cfe6ff;
+}
+
+/* deckmakerのプリセットUIをpage4にも持ってくる（無い場合） */
+.note-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.note-presets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 32px);
+    gap: 6px;
+}
+
+.note-preset-btn {
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: .85rem;
+}
+
+/* 個別カラー */
+.note-preset-btn[data-preset="deck-overview"] {
+    background: linear-gradient(90deg, #68a6ff, #a4d0ff);
+    box-shadow: 0 2px 6px rgba(104, 166, 255, 0.25);
+}
+
+.note-preset-btn[data-preset="play-guide"] {
+    background: linear-gradient(90deg, #fbbf24, #fde68a);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+}
+
+.note-preset-btn[data-preset="matchup"] {
+    background: linear-gradient(90deg, #f87171, #fca5a5);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+}
+
+.note-preset-btn[data-preset="results"] {
+    background: linear-gradient(90deg, #34d399, #a7f3d0);
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.note-preset-btn:hover {
+    background: #f6f6ff;
+}
+
+.decknote-editor-hint {
+    margin-top: 6px;
+    color: #777;
+    font-size: .8rem;
+}
+
+.decknote-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    resize: vertical;
+    line-height: 1.6;
+    font-size: .95rem;
+    margin-top: 6px;
+}
+
+.decknote-editor-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
 
 .post-detail-body {
     font-size: .9rem;
