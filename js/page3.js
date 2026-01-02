@@ -412,7 +412,7 @@ function buildShareText({
   sum,                // { ownedTypes, totalTypes, typePercent } を利用
   packName = '',      // 追加で表示したいパック名（任意）
   packSum = null,     // そのパックのサマリー（任意）
-  url = 'https://mosurogia.github.io/cardcheker/', // 既存どおり
+  url = 'https://mosurogia.github.io/mesorogia-cards/cardcheker.html', // 既存どおり
   useFullWidthHash = false, // 半角ハッシュ（#）
 } = {}) {
   const hashTag = useFullWidthHash ? '＃神託のメソロギア' : '#神託のメソロギア';
