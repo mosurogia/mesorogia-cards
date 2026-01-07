@@ -1452,8 +1452,9 @@ body {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    display: none;
     background: rgba(0, 0, 0, .15);
+    /* display:flex; align-items:flex-end; は削除 */
+    /* padding-bottom も削除 */
 }
 
 #cardDetailDrawer .carddetail-drawer-inner {
@@ -1466,18 +1467,17 @@ body {
     border-radius: 18px 18px 0 0;
     box-shadow: 0 -18px 50px rgba(0, 0, 0, .22);
 
-    /* iOSのアドレスバー伸縮対策で dvh を優先 */
+    width: 100%;
     max-height: min(72dvh, 72vh);
-
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
-    /* “浮き/ブレ”対策の定番 */
     transform: translate3d(0, 0, 0);
     will-change: transform;
+    backface-visibility: hidden;
 
-    /* ホームバー分の余白（iPadでも効く） */
-    padding-bottom: env(safe-area-inset-bottom);
+    /* safe-area は “中身の余白” として足す（浮かせない） */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
 }
 
 /* PCでは基本使わない前提：背景を透明に */
