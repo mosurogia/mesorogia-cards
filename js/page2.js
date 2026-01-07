@@ -834,6 +834,8 @@ const DeckAutosave = (() => { // オートセーブ機能の名前空間
 // ★ GAS: 他ユーザーの userTags 候補取得 API
 // ===============================
 async function fetchUserTagCandidatesFromGAS(keyword = '') {
+  const base = window.DECKPOST_API_BASE || window.GAS_API_BASE;
+  if (!base) return [];
   try {
     const base = window.DECKPOST_API_BASE || window.GAS_API_BASE;
     const params = new URLSearchParams({
@@ -5824,7 +5826,14 @@ return {
                  .map(el => el.textContent.trim()).filter(Boolean),
   selectTags: Array.from(document.querySelectorAll('#select-tags .chip.active'))
                  .map(el => el.textContent.trim()).filter(Boolean),
-  userTags  : Array.isArray(window.PostUserTags) ? window.PostUserTags.slice(0, 3) : [],
+  userTags: (() => {
+  try {
+    const tags = (typeof window.readUserTags === 'function') ? window.readUserTags() : [];
+    return Array.isArray(tags) ? tags.slice(0, 3) : [];
+  } catch(_) {
+    return [];
+  }
+})(),
   token,
   poster: { name: posterName, x: posterX, username },
   };

@@ -972,7 +972,6 @@ body {
         /* 中で分割スクロールさせるため */
         display: flex;
         flex-direction: column;
-        gap: 10px;
     }
 
     /* デッキリスト本体：長い時だけここがスクロール */
@@ -985,6 +984,7 @@ body {
     /* カード詳細：下に固定しつつ、長文は中でスクロール */
     .post-detail-deckcol .carddetail-dock {
         flex: 0 0 auto;
+        margin-top: 0;
     }
 }
 
@@ -2135,9 +2135,13 @@ body {
 
 .deckcode-head {
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
     margin-bottom: 8px;
+}
+
+@media (max-width: 420px) {
+    .deckcode-actions {
+        flex-direction: column;
+    }
 }
 
 .deckcode-title {

@@ -15,6 +15,23 @@ const cardMap = {};
 window.deck = deck;
 window.cardMap = cardMap;
 
+// ========================
+// 共通：HTMLエスケープ
+// ========================
+window.escapeHtml_ = window.escapeHtml_ || function (s) {
+  return String(s ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+};
+
+// 旧互換（escapeHtml を使っている箇所があっても落ちない）
+window.escapeHtml = window.escapeHtml || window.escapeHtml_;
+
+
+
 // common.js などグローバルに置く
 // ローカル開発なら '', GitHub Pages なら '/mesorogia-cards/' などに調整
 const BASE_PATH = '';

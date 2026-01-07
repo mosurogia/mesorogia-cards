@@ -1329,8 +1329,41 @@ btnReset?.addEventListener('click', () => {
   renderSelectedUserTagChips();
 });
 
-function buildTagButtons() {
+// ===== 開催中キャンペーンタグ（なければ空文字）=====
+async function getActiveCampaignTag_(){
+  try{
+    // 1) page4 側で「開催中＆今回タグ（= cleanTitle）」を持っているならそれを最優先
+    const running = !!window.__isCampaignRunning;
+    const active  = String(window.__activeCampaignTag || '').trim();
+    if (running && active) return active;
+    if (!running) return '';
+
+    // 2) 念のため、fetchActiveCampaign からも復元（tag か title 由来）
+    if (typeof window.fetchActiveCampaign !== 'function') return '';
+    const camp = await window.fetchActiveCampaign();
+
+    // まず camp.tag
+    const tag = String(camp?.tag || '').trim();
+    if (tag) return tag;
+
+    // 無い場合は title から（page4 と同じ「日程括弧除去」）
+    const rawTitle = String(camp?.title || '').trim();
+    if (!rawTitle) return '';
+    const cleanTitle = rawTitle
+      .replace(/[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]\s*/g, '')
+      .trim();
+    return cleanTitle || '';
+  }catch(_){
+    return '';
+  }
+}
+
+
+// ★ async にする
+async function buildTagButtons() {
   if (!tagArea) return;
+
+  const campaignTag = await getActiveCampaignTag_(); // ★ 追加
 
   const ds    = window.__DeckPostState;
   const items = ds?.list?.allItems || [];
@@ -1344,7 +1377,6 @@ function buildTagButtons() {
   const RACE_SET = new Set(RACE_ORDER);
 
   const isCategoryTag = (t) => {
-    // common.js にある getCategoryOrder を利用（存在しなければ false）
     try {
       return (typeof getCategoryOrder === 'function') && (getCategoryOrder(t) < 9999);
     } catch (_) {
@@ -1361,7 +1393,6 @@ function buildTagButtons() {
     const auto = String(item.tagsAuto || '');
     const pick = String(item.tagsPick || '');
 
-    // all（存在判定用）
     [auto, pick].filter(Boolean).join(',').split(',').forEach((raw) => {
       const t = String(raw || '').trim();
       if (!t) return;
@@ -1369,7 +1400,6 @@ function buildTagButtons() {
       if (t === 'コラボカードあり') hasCollab = true;
     });
 
-    // auto（自動タグ枠用）
     auto.split(',').forEach((raw) => {
       const t = String(raw || '').trim();
       if (!t) return;
@@ -1379,10 +1409,8 @@ function buildTagButtons() {
   });
 
   // ===== グループ別に並べる =====
-  // 1) 初期タグ（POST_TAG_CANDIDATES）※存在するものだけ表示
   const groupBase = BASE_TAGS.filter(t => presentAll.has(t));
 
-  // 2) 自動タグ（種族/カテゴリ/初期タグは除外）＋コラボ
   const groupAuto = Array.from(presentAuto)
     .filter(t =>
       t !== 'コラボカードあり' &&
@@ -1393,13 +1421,11 @@ function buildTagButtons() {
     .sort((a,b)=>a.localeCompare(b,'ja'));
 
   if (hasCollab && !groupBase.includes('コラボカードあり')) {
-    groupAuto.push('コラボカードあり'); // 自動タグの“後ろ”に置く
+    groupAuto.push('コラボカードあり');
   }
 
-  // 3) 種族
   const groupRace = RACE_ORDER.filter(t => presentAll.has(t));
 
-  // 4) カテゴリ（カテゴリ順 → 同順は五十音）
   const groupCategory = Array.from(presentAll)
     .filter(t => isCategoryTag(t) && t !== 'ノーカテゴリ')
     .sort((a,b)=>{
@@ -1409,9 +1435,10 @@ function buildTagButtons() {
       return a.localeCompare(b,'ja');
     });
 
-  // ===== 最終リスト（重複除去しながら結合）=====
+  // ===== 最終リスト =====
   const ordered = [];
   const seen = new Set();
+
   [groupBase, groupAuto, groupRace, groupCategory].forEach(arr => {
     arr.forEach(t => {
       if (!t || seen.has(t)) return;
@@ -1420,6 +1447,13 @@ function buildTagButtons() {
     });
   });
 
+  // ★ キャンペーン時のみ：最後に追加（投稿にまだ無くても出す）
+  if (campaignTag && !seen.has(campaignTag)) {
+    seen.add(campaignTag);
+    ordered.push(campaignTag);
+  }
+
+  
   // ===== 描画 =====
   tagArea.innerHTML = '';
 
@@ -1431,37 +1465,45 @@ function buildTagButtons() {
     return;
   }
 
-ordered.forEach((tag) => {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'filter-btn post-filter-tag-btn';
-  btn.dataset.tag = tag;
+  ordered.forEach((tag) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn post-filter-tag-btn';
+    btn.dataset.tag = tag;
 
-  // ★ カテゴリタグだけ「（」の前で改行
-  if (isCategoryTag(tag) && tag.includes('（')) {
-    btn.innerHTML = tag.replace('（', '<br>（');
-  } else {
-    btn.textContent = tag;
-  }
+    // カテゴリ改行
+    const isCat = isCategoryTag(tag);
+    if (isCat && tag.includes('（')) {
+      btn.innerHTML = tag.replace('（', '<br>（');
+    } else {
+      btn.textContent = tag;
+    }
 
-  if (filterState.selectedTags.has(tag)) {
-    btn.classList.add('selected');
-  }
+    // ★ キャンペーンタグの装飾（見た目＋先頭に🎉）
+    if (campaignTag && tag === campaignTag) {
+      btn.classList.add('is-campaign-tag');
+      // innerHTMLを使ってるカテゴリでも崩れないように text を上書き
+      btn.textContent = `🎉 ${tag}`;
+    }
 
-  btn.addEventListener('click', () => {
-    const nowSelected = btn.classList.toggle('selected');
-    if (nowSelected) filterState.selectedTags.add(tag);
-    else filterState.selectedTags.delete(tag);
+    if (filterState.selectedTags.has(tag)) {
+      btn.classList.add('selected');
+    }
+
+    btn.addEventListener('click', () => {
+      const nowSelected = btn.classList.toggle('selected');
+      if (nowSelected) filterState.selectedTags.add(tag);
+      else filterState.selectedTags.delete(tag);
+    });
+
+    tagArea.appendChild(btn);
   });
-
-  tagArea.appendChild(btn);
-});
 }
 
 
     // ---- 開閉まわり ----
-    function openModal() {
-      buildTagButtons();            // 投稿タグ
+    async function openModal() {
+      await buildTagButtons();          // 投稿タグ
       renderUserTagSuggest([]);     // 「ここに候補が出ます」
       renderSelectedUserTagChips(); // 選択中(青チップ)を state から再描画
       modal.style.display = 'flex';
@@ -1472,7 +1514,7 @@ ordered.forEach((tag) => {
 
     btnOpen?.addEventListener('click', (e) => {
       e.preventDefault();
-      openModal();
+      openModal().catch(console.warn); // ★ async保険
     });
     btnClose?.addEventListener('click', closeModal);
     document.addEventListener('keydown', (e) => {

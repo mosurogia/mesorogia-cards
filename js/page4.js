@@ -1889,17 +1889,27 @@ function buildCardSp(item, opts = {}){
     ? `<button class="delete-btn" type="button" data-postid="${escapeHtml(item.postId || '')}" aria-label="投稿を削除">🗑</button>`
     : `<button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>`;
 
-  // デッキコード（スマホ用：幅いっぱいボタン）
-  const code = item.shareCode || '';
-  const codeBtnHtml = code ? `
-        <div class="post-detail-code-body">
-          <button type="button"
-            class="btn-copy-code-wide"
-            data-code="${escapeHtml(code)}">
-            デッキコードをコピー
-          </button>
-        </div>
-  ` : '';
+    // デッキコード（スマホ）
+    const codeNorm = String(item.shareCode || '').trim();
+
+    // 1) マイ投稿は「管理UI」を表示（未登録でも出す）
+    const codeManageHtml = isMine
+      ? buildDeckCodeBoxHtml_(item.postId || '', codeNorm)
+      : '';
+
+    // 2) 既存の「デッキコードをコピー」導線（登録済みの時だけ）
+    const codeCopyBtnHtml = codeNorm ? `
+          <div class="post-detail-code-body">
+            <button type="button"
+              class="btn-copy-code-wide"
+              data-code="${escapeHtml(codeNorm)}">
+              デッキコードをコピー
+            </button>
+          </div>
+    ` : '';
+
+const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
+
 
   // カード解説：閲覧時は「ある時だけ表示」／マイ投稿は編集できるよう常に表示
   const hasCardNotes =
@@ -2896,6 +2906,86 @@ function isDeckCodeLike_(raw){
   return true;
 }
 
+// DeckCode管理ボックスHTML（マイ投稿用：PC右ペイン/スマホ詳細で共通）
+function buildDeckCodeBoxHtml_(postId, codeNorm){
+  const code = String(codeNorm || '').trim();
+  const isSet = !!code;
+  const badgeClass = isSet ? 'is-set' : 'is-empty';
+  const badgeText  = isSet ? '登録済み' : '未登録';
+  const preview = isSet
+    ? `${code.slice(0, 8)}...${code.slice(-6)}`
+    : '貼り付けると、他の人がすぐデッキを使えます';
+
+  return `
+    <div class="deckcode-box" data-postid="${escapeHtml(postId || '')}">
+      <div class="deckcode-head">
+        <div class="deckcode-status">
+          <div class="deckcode-title">デッキコード管理</div>
+          <span class="deckcode-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="deckcode-preview">${escapeHtml(preview)}</div>
+      </div>
+
+      <div class="deckcode-actions">
+        ${isSet ? `
+          <button type="button" class="modal-buttun btn-deckcode-copy" data-code="${escapeHtml(code)}">コピー</button>
+          <button type="button" class="modal-buttun btn-deckcode-edit" data-code="${escapeHtml(code)}">編集</button>
+          <button type="button" class="modal-buttun btn-deckcode-delete">削除</button>
+        ` : `
+          <button type="button" class="modal-buttun btn-deckcode-add">＋追加</button>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function cssEscape_(s){
+  const v = String(s ?? '');
+  if (window.CSS && typeof window.CSS.escape === 'function') return window.CSS.escape(v);
+  // フォールバック（最低限）
+  return v.replace(/[^a-zA-Z0-9_\-]/g, (c)=>`\\${c}`);
+}
+
+// 画面上のデッキコードUIを「現在のstate」に合わせて更新（PC右ペイン/スマホ詳細どちらにも効かせる）
+function refreshDeckCodeUIs_(postId){
+  const pid = String(postId || '').trim();
+  if (!pid) return;
+
+  const it = findItemById_(pid) || { postId: pid, shareCode: '' };
+  const codeNorm = String(it.shareCode || '').trim();
+
+  // 1) deckcode-box を差し替え
+  const boxHtml = buildDeckCodeBoxHtml_(pid, codeNorm);
+  const escPid = cssEscape_(pid);
+  document.querySelectorAll(`.deckcode-box[data-postid="${escPid}"]`).forEach(el => {
+    el.outerHTML = boxHtml;
+  });
+
+  // 2) スマホ詳細内の「デッキコードをコピー」導線（btn-copy-code-wide）も追従
+  document.querySelectorAll(`.post-card[data-postid="${escPid}"]`).forEach(card => {
+    const firstSection = card.querySelector('.post-detail .post-detail-section'); // デッキリスト節（先頭）
+    if (!firstSection) return;
+
+    let body = firstSection.querySelector('.post-detail-code-body');
+    if (codeNorm){
+      if (!body){
+        body = document.createElement('div');
+        body.className = 'post-detail-code-body';
+        body.innerHTML = `
+          <button type="button" class="btn-copy-code-wide" data-code="${escapeHtml(codeNorm)}">デッキコードをコピー</button>
+        `;
+        firstSection.appendChild(body);
+      } else {
+        const btn = body.querySelector('.btn-copy-code-wide');
+        if (btn) btn.dataset.code = codeNorm;
+      }
+    } else {
+      if (body) body.remove();
+    }
+  });
+}
+
+
 function showMiniToast_(text){
   let toast = document.getElementById('mini-toast');
   if (!toast){
@@ -2978,6 +3068,7 @@ function patchItemShareCode_(postId, shareCode){
   (postState?.list?.items || []).forEach(patch);
 }
 
+
 // クリック委任
 document.addEventListener('click', async (e)=>{
   // 右ペイン（マイ投稿）: 追加/編集
@@ -3030,6 +3121,7 @@ document.addEventListener('click', async (e)=>{
     }
 
     patchItemShareCode_(postId, '');
+    refreshDeckCodeUIs_(postId);
     renderDetailPaneForItem(
       findItemById_(postId) || { postId },
       root.id || 'postDetailPaneMine'
@@ -3105,6 +3197,7 @@ document.addEventListener('click', async (e)=>{
     }
 
     patchItemShareCode_(postId, code);
+    refreshDeckCodeUIs_(postId); 
     closeDeckCodeModal_();
 
     const pane = document.getElementById('postDetailPaneMine') || document.getElementById('postDetailPane');
