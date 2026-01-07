@@ -1813,6 +1813,9 @@ function buildCardPc(item, opts = {}){
       <div class="post-detail" hidden>
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキリスト</div>
+          <div class="post-decklist-hint">
+            👇 カードをタップすると詳細が表示されます
+          </div>
           ${deckList}
           ${codeBtnHtml}
         </div>
@@ -2001,6 +2004,9 @@ function buildCardSp(item, opts = {}){
 
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキリスト</div>
+          <div class="post-decklist-hint">
+            👇 カードをタップすると詳細が表示されます
+          </div>
           ${deckList}
           ${codeBtnHtml}
         </div>
@@ -2463,6 +2469,9 @@ function oneCard(item, opts = {}){
         <aside class="post-detail-deckcol">
           <div class="post-detail-section">
             <div class="post-detail-heading">デッキリスト</div>
+            <div class="post-decklist-hint">
+              👇 カードをタップすると詳細が表示されます
+            </div>
             ${deckListHtml}
             ${codeBtnHtml}
           </div>
@@ -3663,7 +3672,7 @@ async function renderCampaignBanner(){
   async function init(){
     // ① カードマスタ読み込み（デッキリスト・カード解説で使う）
     try {
-      showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+      showListStatusMessage('loading', '投稿一覧を読み込み中です…(5秒ほどかかります)');
     } catch (e) {
       // showListStatusMessage が未定義の場合は無視
     }
@@ -3696,7 +3705,7 @@ async function renderCampaignBanner(){
     // ④一覧データを段階的に取得 → 初期描画
     try {
       state.list.loading = true;
-      showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+      showListStatusMessage('loading', '投稿一覧を読み込み中です…(5秒ほどかかります)');
       // ★ 改善版：一度のリクエストで全件取得してフィルタ・ソートを行う
       // これにより投稿一覧を2回呼び出す必要がなくなり、最新投稿表示までの時間が短縮される
       await fetchAllList();         // state.list.allItems に全件を入れる（FETCH_LIMIT=100）

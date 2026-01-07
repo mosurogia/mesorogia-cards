@@ -1457,16 +1457,27 @@ body {
 }
 
 #cardDetailDrawer .carddetail-drawer-inner {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
+
     background: #fff;
     border-radius: 18px 18px 0 0;
     box-shadow: 0 -18px 50px rgba(0, 0, 0, .22);
-    max-height: 72vh;
+
+    /* iOSのアドレスバー伸縮対策で dvh を優先 */
+    max-height: min(72dvh, 72vh);
+
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+
+    /* “浮き/ブレ”対策の定番 */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+
+    /* ホームバー分の余白（iPadでも効く） */
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* PCでは基本使わない前提：背景を透明に */
@@ -1491,6 +1502,13 @@ body {
     margin-bottom: 2px;
     font-size: 1.2rem;
     padding: 5px 0;
+}
+
+.post-decklist-hint {
+    font-size: 0.78rem;
+    color: #6b7280;
+    margin: 0 0 4px;
+    padding-left: 2px;
 }
 
 /* デッキ解説 見出し行（編集ボタン右寄せ） */
