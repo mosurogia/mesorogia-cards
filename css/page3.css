@@ -735,21 +735,21 @@ section h4 {
     }
 }
     /* レアリティ別グラデ枠線 */
-    .card.rarity-legend {
-        border-image: linear-gradient(90deg, #91e4fb 0%, #ffffff 70%, #91e4fb 100%) 1;
-    }
+.card.rarity-legend {
+    border-image: var(--rarity-border-legend) 1;
+}
 
-    .card.rarity-gold {
-        border-image: linear-gradient(90deg, gold 0%, #fff5cc 70%, gold 100%) 1;
-    }
+.card.rarity-gold {
+    border-image: var(--rarity-border-gold) 1;
+}
 
-    .card.rarity-silver {
-        border-image: linear-gradient(90deg, silver 0%, #f0f0f0 70%, silver 100%) 1;
-    }
+.card.rarity-silver {
+    border-image: var(--rarity-border-silver) 1;
+}
 
-    .card.rarity-bronze {
-        border-image: linear-gradient(90deg, peru 0%, #ffd9b3 70%, peru 100%) 1;
-    }
+.card.rarity-bronze {
+    border-image: var(--rarity-border-bronze) 1;
+}
 
     /* 所持カード分析タブは既定で薄い枠があるため上書き */
     .owned-card-grid .card {
@@ -1126,16 +1126,7 @@ section h4 {
 
 }
 
-
-/*種族背景色*/
-:root {
-    --race-dragon: #e24545;
-    --race-android: #2dbec0;
-    --race-elemental: #2ab76a;
-    --race-luminous: #e8c82b;
-    --race-shade: #8b64b8;
-    --race-innocent: #9aa0a6;
-}
+/*種族別背景色+種族色変数設定*/
 .owned-race-ドラゴン {
     background: rgba(255, 100, 100, 0.1);
     --race-accent: var(--race-dragon);

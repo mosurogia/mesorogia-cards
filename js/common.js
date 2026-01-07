@@ -25,7 +25,7 @@ const BASE_PATH = '';
 // 今後 URL を変更したいときは、基本的にここの値だけ変えればOK。
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbxTcpKA0EYZISJ73wHDJ_Sp94A3SK2e5aeGqXoOSXwwD7VT8nvSsD6KYetiuU-Df6gt/exec';
+  'https://script.google.com/macros/s/AKfycbyOdtj9u9ZW1hXgQIXDPmXc_kOY5B9lcVHpSDAa4-4uonmR12DxVdQqtSI3R8t7quRK/exec';
 
 // 用途別のエイリアス（必要なら今後増やしてOK）
 window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE; // デッキ投稿・一覧など
@@ -63,7 +63,10 @@ function buildCardMapFromCards(cards){
       rarity : card.rarity || '',
       packName : card.pack_name || '',
       category : card.category  || '',
-      // 使いそうなフィールドはここに増やしていけばOK
+      effect_name1: card.effect_name1 || '',
+      effect_text1: card.effect_text1 || '',
+      effect_name2: card.effect_name2 || '',
+      effect_text2: card.effect_text2 || '',
     };
   }
 }
@@ -191,12 +194,14 @@ const order = {
 "聖焔龍（フォルティア）": 11,
 "ドラゴライダー": 12,
 "電竜": 13,
+"メロウディア": 14,
 "メイドロボ": 21,
 "アドミラルシップ": 22,
 "テックノイズ": 23,
 "ナチュリア": 31,
 "鬼刹（きせつ）": 32,
 "風花森（ふかしん）":33,
+"秘饗（バンケット）": 34,
 "ロスリス": 41,
 "白騎士": 42,
 "愚者愚者（クラウンクラウド）":43,

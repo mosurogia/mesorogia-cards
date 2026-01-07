@@ -586,10 +586,16 @@ select {
     font-size: 1.2rem;
     margin-bottom: 0.3em;
 }
-/*種族、カテゴリ*/
+
+/*パック名、種族、カテゴリ*/
 .card-meta {
     color: #333;
     margin-bottom: 0.5em;
+}
+/*パック名*/
+.card-meta.card-pack {
+    font-size: 0.8em;
+    margin-bottom: 2px;
 }
 /*カード効果*/
 .card-effect {

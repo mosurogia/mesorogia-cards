@@ -61,9 +61,13 @@ function expandCard(clickedCard) {
   cloned.classList.add('active');
   cloned.setAttribute('data-cd', cd);
 
-  const cards = Array.from(grid.children).filter(
-    c => c.classList.contains("card") && c.style.display !== "none"
-  );
+  const cards = Array.from(grid.children).filter((c) => {
+    if (!c.classList?.contains('card')) return false;
+    if (!c.offsetParent) return false; // display:none の場合 null
+    const cs = window.getComputedStyle ? getComputedStyle(c) : null;
+    if (cs && (cs.display === 'none' || cs.visibility === 'hidden')) return false;
+    return true;
+  });
   const clickedIndex = cards.indexOf(clickedCard);
 
   let columns = 7;
@@ -882,6 +886,8 @@ function cycleOwnedFilter(btn) {
 
 
 function applyFilters() {
+  const opened = document.querySelector('.card-detail.active');
+  if (opened) opened.remove();
   const keyword = document.getElementById("keyword").value.trim().toLowerCase();
   const tokens  = keyword.split(/\s+/).filter(Boolean);
 

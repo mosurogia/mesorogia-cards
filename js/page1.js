@@ -50,7 +50,7 @@ function generateCardListElement(card) {
   cardDiv.setAttribute('data-heal', String(card.heal ?? "").toLowerCase());
   cardDiv.setAttribute('data-power_up', String(card.power_up ?? "").toLowerCase());
   cardDiv.setAttribute('data-power_down', String(card.power_down ?? "").toLowerCase());
-  
+
 // リンクカード情報（コラボカードかどうか）と性能元カードの cd を data 属性に含める
   if (typeof card.link !== 'undefined') {
     cardDiv.setAttribute('data-link', String(card.link).toLowerCase());
@@ -118,6 +118,9 @@ function generateDetailHtml(card) {
   return `
     <div class="card-detail ${typeClass} ${raceClass}" data-name="${card.name}" id="${detailId}">
       <div class="card-name">${card.name}</div>
+      <div class="card-meta card-pack">
+      ${card.pack_name || ''}
+      </div>
       <div class="card-meta">
         <span class="card-race">${card.race}</span> /
         <span class="card-category">${card.category}</span>

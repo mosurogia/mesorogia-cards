@@ -7,6 +7,20 @@ const DeckPostApp = (() => {
   // 共通定義からベースURLを取得
   const GAS_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE;
 
+  // 共通：innerHTML用エスケープ（common.js の escapeHtml_ を優先）
+  function escapeHtml(s){
+    const fn = window.escapeHtml_ || window.escapeHtml;
+    if (typeof fn === 'function') return fn(s);
+
+    // 最終フォールバック
+    return String(s ?? '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'","&#39;");
+  }
+
   const state = {
     list: {
       allItems: [],        // ★ 全投稿（一覧タブ用）
@@ -18,6 +32,10 @@ const DeckPostApp = (() => {
       currentPage: 1,
       totalPages: 1,
       total: 0,
+      // ページ単位のキャッシュ（キー=ページ番号, 値=items配列）
+      pageCache: {},
+      // ★ 一覧データを全件取得済みかどうか
+      hasAllItems: false,
     },
     // ★ マイ投稿用（ページング）
     mine: {
@@ -54,22 +72,21 @@ const postState = {
 };
 
 // 共通：カードリスト描画（postList と同じ oneCard を流用）
-function renderPostListInto(targetId, items){
+function renderPostListInto(targetId, items, opts = {}){
   const box = document.getElementById(targetId);
   if (!box) return;
 
-  // いったん中身をクリア
   box.replaceChildren();
 
-  // oneCard は HTMLElement を返すので、フラグメント経由で追加
   const frag = document.createDocumentFragment();
   (items || []).forEach(it => {
-    const node = oneCard(it);
+    const node = oneCard(it, opts);   // ★ opts を渡す
     if (node) frag.appendChild(node);
   });
 
   box.appendChild(frag);
 }
+
 
 // 投稿一覧用：「読み込み中 / エラー」メッセージ表示
 function showListStatusMessage(type, text){
@@ -183,7 +200,7 @@ function updateMinePager(page, totalPages, totalCount){
       postState.mine.items      = items;
       postState.mine.loading    = false;
 
-      renderPostListInto('myPostList', items);
+      renderPostListInto('myPostList', items, { mode: 'mine' });
 
       updateMinePager(page, totalPages, total);
       updateMinePagerUI();
@@ -231,6 +248,40 @@ function updateMinePager(page, totalPages, totalCount){
 
   }
 
+// =========================
+// マイ投稿：説明モーダル
+// =========================
+(function(){
+  function openMineHelp(){
+    const m = document.getElementById('mineHelpModal');
+    if (m) m.style.display = 'flex';
+  }
+  function closeMineHelp(){
+    const m = document.getElementById('mineHelpModal');
+    if (m) m.style.display = 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('mineHelpBtn');
+    const closeBtn = document.getElementById('mineHelpCloseBtn');
+    const modal = document.getElementById('mineHelpModal');
+
+    if (btn) btn.addEventListener('click', openMineHelp);
+    if (closeBtn) closeBtn.addEventListener('click', closeMineHelp);
+
+    // 背景クリックで閉じる
+    if (modal){
+      modal.addEventListener('click', (e)=>{
+        if (e.target === modal) closeMineHelp();
+      });
+    }
+
+    // Esc で閉じる
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape') closeMineHelp();
+    });
+  });
+})();
 
 
 
@@ -490,7 +541,96 @@ async function apiCampaignTags(){
     // 何も total が返ってこなかった場合は all.length を優先
     state.list.allItems = all;
     state.list.total    = total || all.length;
+    // ★ 全件取得済みフラグとページキャッシュを更新
+    state.list.hasAllItems = true;
+    // すでに全件取得した場合はページキャッシュをクリアして再構築対象にする
+    state.list.pageCache = {};
   }
+
+
+  // ===== 投稿デッキメモ更新API =====
+async function gasPost_(payload){
+  const base = window.DECKPOST_API_BASE || window.GAS_API_BASE || '';
+  if (!base) return { ok:false, error:'api base not set' };
+
+  const mode = String(payload?.mode || 'post');   // ★ここ追加
+  const url  = base + '?mode=' + encodeURIComponent(mode);
+
+  try{
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload || {})
+    });
+    const json = await res.json().catch(()=>null);
+    return json || { ok:false, error:'invalid response' };
+  }catch(err){
+    return { ok:false, error:'network' };
+  }
+}
+
+// ===== 投稿デッキメモ更新API =====
+async function updateDeckNote_(postId, deckNote){
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  return await gasPost_({
+    mode: 'update',
+    token,
+    postId,
+    deckNote: String(deckNote || '')
+  });
+}
+
+// ===== 投稿カード解説更新API =====
+async function updateCardNotes_(postId, cardNotes){
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  const list = Array.isArray(cardNotes) ? cardNotes : [];
+  const payloadNotes = list
+    .map(r=>{
+      const cdRaw = String(r?.cd||'').trim();
+      const cd = cdRaw ? cdRaw.padStart(5,'0') : ''; // ★ 未選択は空のまま
+      const text = String(r?.text||'');
+      return { cd, text };
+    })
+    // ★ 保存時：カード未選択の解説ブロックは除外（ブロックごと消す）
+    .filter(r=>!!r.cd);
+
+  return await gasPost_({
+    mode: 'update',
+    token,
+    postId,
+    cardNotes: payloadNotes
+  });
+}
+
+// ===== 投稿デッキコード更新API =====
+async function updateDeckCode_(postId, shareCode){
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  return await gasPost_({
+    mode: 'update',
+    token,
+    postId: String(postId || '').trim(),
+    shareCode: String(shareCode || '')
+  });
+}
+
+
+// ===== 投稿削除API =====
+async function deletePost_(postId){
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  return await gasPost_({
+    mode: 'delete',
+    token,
+    postId: String(postId || '').trim()
+  });
+}
 
   // ===== いいね関連API =====
   /**
@@ -906,21 +1046,266 @@ function buildDeckListHtml(item){
     return String(a[0]).localeCompare(String(b[0]));
   });
 
+// タイル形式で並べる
 const tiles = entries.map(([cd, n]) => {
   const cd5  = String(cd).padStart(5, '0');
   const card = cardMap[cd5] || {};
   const name = card.name || cd5;
   const src  = `img/${cd5}.webp`;
   return `
-    <div class="deck-entry">
+    <div class="deck-entry" data-cd="${cd5}" role="button" tabindex="0">
       <img src="${src}" alt="${escapeHtml(name)}" loading="lazy">
       <div class="count-badge">x${n}</div>
     </div>
   `;
 }).join('');
 
+
   return `<div class="post-decklist">${tiles}</div>`;
 }
+
+// =========================
+// デッキリスト：カード詳細（PC=ドック表示 / SP=下からドロワー）
+// =========================
+
+// carddetail用：HTMLエスケープ（共通があればそれを使う）
+const escHtml_ = (s) => {
+  const fn = window.escapeHtml_ || window.escapeHtml; // 他ページの共通を優先
+  if (typeof fn === 'function') return fn(s);
+  // 最終フォールバック
+  return String(s ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#39;");
+};
+
+
+// テキストの改行を <br> に
+function nl2br_(s){
+  return String(s || '').replace(/\r\n/g, '\n').replace(/\n/g, '<br>');
+}
+
+
+
+// レアリティキー（legend/gold/silver/bronze）に正規化
+function rarityKeyForPage4_(rarity){
+  const r = String(rarity || '').trim();
+
+  // cards_latest.json の値（日本語）に合わせる
+  if (r === 'レジェンド') return 'legend';
+  if (r === 'ゴールド')   return 'gold';
+  if (r === 'シルバー')   return 'silver';
+  if (r === 'ブロンズ')   return 'bronze';
+
+  // 保険（英語が来ても死なない）
+  const low = r.toLowerCase();
+  if (low.includes('legend')) return 'legend';
+  if (low.includes('gold'))   return 'gold';
+  if (low.includes('silver')) return 'silver';
+  if (low.includes('bronze')) return 'bronze';
+
+  return '';
+}
+
+// pill用クラス（page4専用）
+function rarityPillClassForPage4_(rarity){
+  const k = rarityKeyForPage4_(rarity);
+  return k ? `carddetail-rarity--${k}` : '';
+}
+
+// 表示ラベル（基本はJSONの日本語をそのまま表示）
+function rarityLabelForPage4_(rarity){
+  const r = String(rarity || '').trim();
+  if (!r) return '';
+  return r; // "レジェンド" 等
+}
+
+
+// カード詳細HTML（画像あり）
+function buildCardDetailHtml_(cd5){
+  const cardMap = window.cardMap || {};
+  const c = cardMap[String(cd5 || '').padStart(5,'0')] || {};
+
+  const name = c.name || cd5;
+
+  const packRaw = c.packName || '';
+  const pack = packRaw
+    ? (window.splitPackName ? window.splitPackName(packRaw) : { en: String(packRaw), jp: '' })
+    : null;
+
+  const cat = c.category || '';
+  const img = `img/${String(cd5).padStart(5,'0')}.webp`;
+
+  // ★ 追加：レアリティpill
+  const rarityLabel = rarityLabelForPage4_(c.rarity);
+  const rarityCls   = rarityPillClassForPage4_(c.rarity);
+
+  const e1n = c.effect_name1 || '';
+  const e1t = c.effect_text1 || '';
+  const e2n = c.effect_name2 || '';
+  const e2t = c.effect_text2 || '';
+
+  const effectBlocks = `
+    ${e1n || e1t ? `
+      <div class="carddetail-effect">
+        ${e1n ? `<div class="carddetail-effect-name">${escHtml_(e1n)}</div>` : ''}
+        ${e1t ? `<div class="carddetail-effect-text">${nl2br_(escHtml_(e1t))}</div>` : ''}
+      </div>
+    ` : ''}
+    ${e2n || e2t ? `
+      <div class="carddetail-effect">
+        ${e2n ? `<div class="carddetail-effect-name">${escHtml_(e2n)}</div>` : ''}
+        ${e2t ? `<div class="carddetail-effect-text">${nl2br_(escHtml_(e2t))}</div>` : ''}
+      </div>
+    ` : ''}
+    ${(!e1n && !e1t && !e2n && !e2t) ? `
+      <div class="carddetail-empty">カードテキストが未登録です。</div>
+    ` : ''}
+  `;
+
+  return `
+    <div class="carddetail-head">
+      <div class="carddetail-thumb">
+        <img src="${img}" alt="${escHtml_(name)}" loading="lazy"
+             onerror="this.onerror=null;this.src='img/00000.webp';">
+      </div>
+
+      <div class="carddetail-meta">
+        <div class="carddetail-name">${escHtml_(name)}</div>
+
+        <div class="carddetail-sub">
+          ${pack ? `
+            <div class="carddetail-pack">
+              ${pack.en ? `<div class="carddetail-pack-en">${escHtml_(pack.en)}</div>` : ''}
+              ${pack.jp ? `<div class="carddetail-pack-jp">${escHtml_(pack.jp)}</div>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="carddetail-cat+rarity">
+          ${cat ? `<span class="carddetail-cat">${escHtml_(cat)}</span>` : ''}
+
+          ${rarityLabel ? `
+            <span class="carddetail-rarity ${rarityCls}">
+              ${escHtml_(rarityLabel)}
+            </span>
+          ` : ''}
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="carddetail-close" aria-label="閉じる">×</button>
+    </div>
+
+    <div class="carddetail-body">
+      ${effectBlocks}
+    </div>
+  `;
+}
+
+// PC用：右ペイン内に「ドック（小さめ詳細枠）」を確保して返す
+function ensureCardDetailDockPc_(root){
+  if (!root) return null;
+
+  let dock = root.querySelector('.carddetail-dock');
+  if (dock) return dock;
+
+  const deckcol = root.querySelector('.post-detail-deckcol');
+  if (!deckcol) return null;
+
+  const sec = document.createElement('div');
+  sec.className = 'post-detail-section carddetail-dock';
+  sec.innerHTML = `
+    <div class="post-detail-heading">カード詳細</div>
+    <div class="carddetail-inner">
+      <div class="carddetail-empty">デッキリストのカードをタップすると表示されます。</div>
+    </div>
+  `;
+
+  // ★最優先：デッキコード（コピーボタン）の直下に入れる
+  const codeBody = deckcol.querySelector('.post-detail-code-body');
+  if (codeBody){
+    codeBody.insertAdjacentElement('afterend', sec);
+    return sec;
+  }
+
+  // 次点：デッキリストセクションの直下
+  const decklistEl  = deckcol.querySelector('.post-decklist');
+  const decklistSec = decklistEl?.closest('.post-detail-section');
+  if (decklistSec){
+    decklistSec.insertAdjacentElement('afterend', sec);
+    return sec;
+  }
+
+  // 保険：末尾
+  deckcol.appendChild(sec);
+  return sec;
+}
+
+
+// SP用：画面下ドロワーを1つだけ生成
+function ensureCardDetailDrawerSp_(){
+  let drawer = document.getElementById('cardDetailDrawer');
+  if (drawer) return drawer;
+
+  drawer = document.createElement('div');
+  drawer.id = 'cardDetailDrawer';
+  drawer.style.display = 'none';
+  drawer.innerHTML = `
+    <div class="carddetail-drawer-inner">
+      <div class="carddetail-inner"></div>
+    </div>
+  `;
+  document.body.appendChild(drawer);
+
+  // 外側タップで閉じる（中は閉じない）
+  drawer.addEventListener('click', (e)=>{
+    if (e.target === drawer) {
+      drawer.style.display = 'none';
+    }
+  });
+
+  return drawer;
+}
+
+// 実際に表示（PC/SP切替）
+function openCardDetailFromDeck_(cd5, clickedEl){
+  const cd = String(cd5 || '').padStart(5,'0');
+  if (!cd) return;
+
+  const html = buildCardDetailHtml_(cd);
+
+  const isPcWide = window.matchMedia('(min-width: 1024px)').matches;
+
+  if (isPcWide){
+    // 右ペインの「今開いている投稿」を探す
+    const root = clickedEl?.closest?.('.post-detail-inner') || document.querySelector('.post-detail-inner');
+    const dock = ensureCardDetailDockPc_(root);
+    const inner = dock?.querySelector?.('.carddetail-inner');
+    if (inner) inner.innerHTML = html;
+
+    // close
+    dock?.querySelector?.('.carddetail-close')?.addEventListener('click', ()=>{
+      if (inner) inner.innerHTML = `<div class="carddetail-empty">デッキリストのカードをタップすると表示されます。</div>`;
+    }, { once:true });
+
+    return;
+  }
+
+  // SP：下からドロワー（背景操作は“完全ブロック”しない/見た目は軽い）
+  const drawer = ensureCardDetailDrawerSp_();
+  const inner  = drawer.querySelector('.carddetail-inner');
+  if (inner) inner.innerHTML = html;
+
+  drawer.style.display = 'block';
+
+  // ×で閉じる
+  inner?.querySelector?.('.carddetail-close')?.addEventListener('click', ()=>{
+    drawer.style.display = 'none';
+  }, { once:true });
+}
+
 
 // =============================
 // 簡易デッキ統計（タイプ構成だけ）
@@ -1022,8 +1407,305 @@ function buildCardNotesHtml(item){
 }
 
 
+// =========================
+// カード解説：編集UI（deckmaker互換）
+// =========================
+let __cardNotesEditorBound = false;
+let __cardNotesPickContext = null; // { rootEl, rowEl, item }
+
+function ensureCardNoteSelectModal_(){
+  if (document.getElementById('cardNoteSelectModal')) return;
+
+  // deck-post.html に無い場合でも動くようにJS生成
+  const wrap = document.createElement('div');
+  wrap.className = 'modal';
+  wrap.id = 'cardNoteSelectModal';
+  wrap.style.display = 'none';
+  wrap.innerHTML = `
+    <div class="modal-content cardnote-modal">
+      <h3 class="filter-maintitle">カードを選択</h3>
+      <div id="cardNoteCandidates" class="cardnote-grid"></div>
+      <div class="modal-footer" style="gap:.5rem;">
+        <button type="button" id="cardNoteClose" class="modal-buttun">閉じる</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+}
+
+function openCardNoteSelectModal_(candidates){
+  ensureCardNoteSelectModal_();
+  const modal = document.getElementById('cardNoteSelectModal');
+  const grid  = document.getElementById('cardNoteCandidates');
+  const close = document.getElementById('cardNoteClose');
+  if (!modal || !grid) return;
+
+  grid.replaceChildren();
+
+  // ===== 既にカード解説で選ばれているカードは disabled にする =====
+  // ※ 同じ行の再選択はできるように、現在行の cd は除外する
+  const used = new Set();
+  const currentCd = String(__cardNotesPickContext?.rowEl?.dataset?.cd || '').trim().padStart(5,'0');
+
+  try{
+    const rootEl = __cardNotesPickContext?.rootEl;
+    if (rootEl){
+      rootEl.querySelectorAll('.post-card-note').forEach(row=>{
+        const cd = String(row.dataset.cd || '').trim().padStart(5,'0');
+        if (cd) used.add(cd);
+      });
+    }
+  }catch(_){}
+
+  if (currentCd) used.delete(currentCd);
+
+  // candidates: [{cd5,name,count}] を想定
+  (candidates || []).forEach(c=>{
+    const cd5 = String(c?.cd5 || '').trim().padStart(5,'0');
+    if (!cd5) return;
+
+    const cell = document.createElement('div');
+    cell.className = 'item';
+    cell.dataset.cd = cd5;
+
+    if (used.has(cd5)) cell.classList.add('disabled');
+
+    const img = document.createElement('img');
+    img.src = `img/${cd5}.webp`;
+    img.alt = c?.name || '';
+    img.loading = 'lazy';
+    img.onerror = ()=>{ img.onerror=null; img.src='img/00000.webp'; };
+    cell.appendChild(img);
+
+    // ★ 枚数バッジは不要（表示しない）
+
+    grid.appendChild(cell);
+  });
+
+  modal.style.display = 'flex';
+
+  const onClose = ()=>{
+    modal.style.display = 'none';
+    close?.removeEventListener('click', onClose);
+  };
+  close?.addEventListener('click', onClose);
+
+  // 背景クリックで閉じる
+  modal.addEventListener('click', (e)=>{
+    if (e.target === modal) onClose();
+  }, { once:true });
+}
+
+function readCardNotesFromEditor_(root){
+  const rows = Array.from(root.querySelectorAll('.post-card-note'));
+  return rows.map(row=>{
+    const cd = String(row.dataset.cd || '').trim();
+    const ta = row.querySelector('textarea.note');
+    const text = ta ? String(ta.value || '') : '';
+    return { cd, text };
+  });
+}
+
+function syncCardNotesHidden_(root){
+  const hidden = root.querySelector('#post-card-notes-hidden');
+  if (!hidden) return;
+  hidden.value = JSON.stringify(readCardNotesFromEditor_(root));
+}
+
+function makeCardNoteRow_(r){
+  const cdRaw = String(r?.cd || '').trim();
+  const cd5 = cdRaw ? cdRaw.padStart(5,'0') : '';
+  const cardMap = window.cardMap || {};
+  const name = cd5 ? ((cardMap[cd5]||{}).name || 'カード名未登録') : 'カードを選択';
+  const img  = cd5 ? `img/${cd5}.webp` : 'img/00000.webp';
+
+  const div = document.createElement('div');
+  div.className = 'post-card-note';
+  div.dataset.index = '0';
+  div.dataset.cd = cd5;
+
+  div.innerHTML = `
+    <div class="left">
+      <div class="thumb">
+        <img alt="" src="${img}" onerror="this.onerror=null;this.src='img/00000.webp'">
+      </div>
+      <div class="actions">
+        <button type="button" class="note-move" data-dir="-1">↑</button>
+        <button type="button" class="note-move" data-dir="1">↓</button>
+        <button type="button" class="note-remove">削除</button>
+      </div>
+    </div>
+    <button type="button" class="pick-btn">${escapeHtml(name)}</button>
+    <textarea class="note" placeholder="このカードの採用理由・使い方など"></textarea>
+  `;
+
+  const ta = div.querySelector('textarea.note');
+  if (ta) ta.value = String(r?.text || '');
+
+  return div;
+}
+
+function renumberCardNoteRows_(root){
+  Array.from(root.querySelectorAll('.post-card-note')).forEach((row, i)=>{
+    row.dataset.index = String(i);
+  });
+}
+
+function renderCardNotesRows_(root, list){
+  const box = root.querySelector('#post-card-notes');
+  if (!box) return;
+  box.replaceChildren();
+  (list || []).forEach(r=> box.appendChild(makeCardNoteRow_(r)));
+  renumberCardNoteRows_(root);
+  syncCardNotesHidden_(root);
+}
+
+function getDeckCandidatesFromItem_(item){
+  const cardMap = window.cardMap || {};
+  let deck = item?.deck || item?.cardsJSON || item?.cards || null;
+
+  // cardsJSON が文字列で来るケース（DeckPostsの列保存）に対応
+  if (typeof deck === 'string'){
+    const raw = deck.trim();
+    if (raw){
+      try { deck = JSON.parse(raw); } catch(_){ /* noop */ }
+    }
+  }
+
+  let cds = [];
+  if (deck && typeof deck === 'object' && !Array.isArray(deck)){
+    cds = Object.keys(deck);
+  } else if (Array.isArray(deck)){
+    cds = deck.map(x=>String(x?.cd || x || ''));
+  }
+
+  const uniq = Array.from(new Set(
+    cds.map(x=>String(x||'').trim().padStart(5,'0')).filter(Boolean)
+  ));
+
+  return uniq.map(cd5=>({ cd5, name: (cardMap[cd5]||{}).name || 'カード名未登録' }));
+}
+
+function validateCardNotes_(root){
+  const validator = root.querySelector('#post-cardnote-validator');
+  if (!validator) return true;
+  validator.setCustomValidity('');
+
+  const list = readCardNotesFromEditor_(root);
+  const bad = list.find(r => r.cd && !String(r.text||'').trim());
+  if (bad){
+    validator.setCustomValidity('カード解説：カードを選んだ行は、解説も入力してください。');
+    validator.reportValidity();
+    return false;
+  }
+  return true;
+}
+
+// ★ 右ペインに挿入された editor を初期化（1回だけ）
+function initCardNotesEditor_(editorRoot, item){
+  if (!editorRoot) return;
+
+  const initial = Array.isArray(item?.cardNotes) ? item.cardNotes : [];
+
+  // 既にバインド済みでも、表示内容は都度最新に寄せる（SPでの再編集に必要）
+  if (editorRoot.__bound){
+    renderCardNotesRows_(editorRoot, initial);
+    return;
+  }
+  editorRoot.__bound = true;
+
+  renderCardNotesRows_(editorRoot, initial);
+
+  editorRoot.addEventListener('click', (e)=>{
+    const t = e.target;
+
+    // 追加
+    if (t && t.id === 'add-card-note'){
+      const box = editorRoot.querySelector('#post-card-notes');
+      if (!box) return;
+      const row = makeCardNoteRow_({ cd:'', text:'' });
+      box.appendChild(row);
+      renumberCardNoteRows_(editorRoot);
+      syncCardNotesHidden_(editorRoot);
+      row.querySelector('.pick-btn')?.click();
+      return;
+    }
+
+    // 削除
+    if (t && t.classList.contains('note-remove')){
+      const row = t.closest('.post-card-note');
+      row?.remove();
+      renumberCardNoteRows_(editorRoot);
+      syncCardNotesHidden_(editorRoot);
+      return;
+    }
+
+    // 移動
+    if (t && t.classList.contains('note-move')){
+      const dir = Number(t.dataset.dir || 0);
+      const row = t.closest('.post-card-note');
+      const box = editorRoot.querySelector('#post-card-notes');
+      if (!row || !box || !dir) return;
+
+      if (dir < 0){
+        const prev = row.previousElementSibling;
+        if (prev) box.insertBefore(row, prev);
+      } else {
+        const next = row.nextElementSibling;
+        if (next) box.insertBefore(next, row);
+      }
+      renumberCardNoteRows_(editorRoot);
+      syncCardNotesHidden_(editorRoot);
+      return;
+    }
+
+    // カード選択
+    if (t && t.classList.contains('pick-btn')){
+      const row = t.closest('.post-card-note');
+      if (!row) return;
+
+      __cardNotesPickContext = { rootEl: editorRoot, rowEl: row, item };
+      openCardNoteSelectModal_(getDeckCandidatesFromItem_(item));
+      return;
+    }
+  });
+
+  editorRoot.addEventListener('input', (e)=>{
+    if (e.target && e.target.matches('textarea.note')){
+      syncCardNotesHidden_(editorRoot);
+    }
+  });
+}
+
+// モーダル選択（グローバル委任）
+document.addEventListener('click', (e)=>{
+  const cell = e.target?.closest?.('#cardNoteCandidates .item');
+  if (!cell || !__cardNotesPickContext) return;
+  if (cell.classList.contains('disabled')) return;
+
+  const cd5 = String(cell.dataset.cd || '').trim().padStart(5,'0');
+  const cardMap = window.cardMap || {};
+  const name = (cardMap[cd5]||{}).name || 'カード名未登録';
+
+  const { rootEl, rowEl } = __cardNotesPickContext;
+
+  rowEl.dataset.cd = cd5;
+  rowEl.querySelector('.pick-btn')?.replaceChildren(document.createTextNode(name));
+  const img = rowEl.querySelector('.thumb img');
+  if (img) img.src = `img/${cd5}.webp`;
+
+  syncCardNotesHidden_(rootEl);
+
+  const modal = document.getElementById('cardNoteSelectModal');
+  if (modal) modal.style.display = 'none';
+  __cardNotesPickContext = null;
+});
+
+
+
 // ===== 1枚カードレンダリング（PC用） =====
-function buildCardPc(item){
+function buildCardPc(item, opts = {}){
+  const isMine = (opts.mode === 'mine');
   const time     = item.updatedAt || item.createdAt || '';
   const mainRace = getMainRace(item.races);
   const bg       = raceBg(item.races);
@@ -1044,11 +1726,15 @@ function buildCardPc(item){
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
   // ===== いいね関連 =====
-  const likeCount = Number(item.likeCount || 0);
+ const likeCount = Number(item.likeCount || 0);
   const liked     = !!item.liked;
   const favClass  = liked ? ' active' : '';
   const favSymbol = liked ? '★' : '☆';
   const favText   = `${favSymbol}${likeCount}`;
+
+  const headRightBtnHtml = isMine
+    ? `<button class="delete-btn" type="button" data-postid="${escapeHtml(item.postId || '')}" aria-label="投稿を削除">🗑</button>`
+    : `<button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>`;
 
   // ★ デッキコードコピー用ボタン（PC 詳細内）
   const codeBtnHtml = code ? `
@@ -1108,10 +1794,7 @@ function buildCardPc(item){
             </div>
           </div>
 
-          <!-- いいねボタン -->
-          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">
-            ${favText}
-          </button>
+          ${headRightBtnHtml}
 
           <!-- アクション（比較のみ） -->
           <div class="post-actions pc-actions">
@@ -1172,7 +1855,8 @@ function buildCardPc(item){
 
 
 // ===== 1枚カードレンダリング（スマホ用） =====
-function buildCardSp(item){
+function buildCardSp(item, opts = {}){
+  const isMine = (opts.mode === 'mine');
   const time     = item.updatedAt || item.createdAt || '';
   const mainRace = getMainRace(item.races);
   const bg       = raceBg(item.races);
@@ -1191,12 +1875,16 @@ function buildCardSp(item){
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
-  // ===== いいね関連 =====
+// ===== いいね関連（今のまま残してOK：一覧側で使う） =====
   const likeCount = Number(item.likeCount || 0);
   const liked     = !!item.liked;
   const favClass  = liked ? ' active' : '';
   const favSymbol = liked ? '★' : '☆';
   const favText   = `${favSymbol}${likeCount}`;
+
+  const headRightBtnHtml = isMine
+    ? `<button class="delete-btn" type="button" data-postid="${escapeHtml(item.postId || '')}" aria-label="投稿を削除">🗑</button>`
+    : `<button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>`;
 
   // デッキコード（スマホ用：幅いっぱいボタン）
   const code = item.shareCode || '';
@@ -1210,19 +1898,53 @@ function buildCardSp(item){
         </div>
   ` : '';
 
-  // カード解説があるかどうか判定
+  // カード解説：閲覧時は「ある時だけ表示」／マイ投稿は編集できるよう常に表示
   const hasCardNotes =
     Array.isArray(item.cardNotes) &&
     item.cardNotes.some(r => r && (r.cd || r.text));
 
-  const cardNotesSection = hasCardNotes ? `
+  const cardNotesSection = (!isMine && !hasCardNotes) ? '' : `
         <div class="post-detail-section">
-          <div class="post-detail-heading">カード解説</div>
-          <div class="post-detail-body post-detail-body--notes">
+
+          <div class="post-detail-heading-row post-detail-heading-row--cards">
+            <div class="post-detail-heading">カード解説</div>
+            ${isMine ? `
+              <div class="post-detail-heading-actions">
+                <button type="button" class="btn-cardnotes-edit">編集</button>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- 表示モード -->
+          <div class="cardnotes-view">
             ${cardNotesHtml}
           </div>
+
+          ${isMine ? `
+            <!-- 編集モード -->
+            <div class="cardnotes-editor" hidden
+                 data-original='${escapeHtml(JSON.stringify(item.cardNotes || []))}'>
+              <div class="info-value" style="width:100%">
+                <div id="post-card-notes"></div>
+                <input type="hidden" id="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
+
+                <input type="text" id="post-cardnote-validator" aria-hidden="true" tabindex="-1"
+                  style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;border:none;padding:0;margin:0;">
+
+                <div class="add-note-box">
+                  <button type="button" id="add-card-note" class="add-note-btn">カード解説を追加</button>
+                  <div class="post-hint" style="opacity:.8">※カードを選んで簡単な解説や採用理由を書けます</div>
+                </div>
+
+                <div class="decknote-editor-actions" style="margin-top:.6rem;">
+                  <button type="button" class="btn-cardnotes-save">保存</button>
+                  <button type="button" class="btn-cardnotes-cancel">キャンセル</button>
+                </div>
+              </div>
+            </div>
+          ` : ''}
         </div>
-  ` : '';
+  `;
 
   return el(`
     <article class="post-card post-card--sp" data-postid="${item.postId}" style="${bg ? `--race-bg:${bg};` : ''}">
@@ -1257,9 +1979,7 @@ function buildCardSp(item){
             </div>
           </div>
 
-          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">
-            ${favText}
-          </button>
+          ${headRightBtnHtml}
         </div>
       </div>
 
@@ -1277,6 +1997,8 @@ function buildCardSp(item){
 
       <!-- 詳細（折りたたみ） -->
       <div class="post-detail" hidden>
+        ${isMine ? `<div class="post-detail-inner" data-postid="${escapeHtml(item.postId || '')}">` : ''}
+
         <div class="post-detail-section">
           <div class="post-detail-heading">デッキリスト</div>
           ${deckList}
@@ -1302,9 +2024,49 @@ function buildCardSp(item){
         ` : ''}
 
         <div class="post-detail-section">
-          <div class="post-detail-heading">デッキ解説</div>
+
+          <div class="post-detail-heading-row">
+            <div class="post-detail-heading">デッキ解説</div>
+            ${isMine ? `
+              <div class="post-detail-heading-actions">
+                <button type="button" class="btn-decknote-edit">編集</button>
+              </div>
+            ` : ''}
+          </div>
+
           <div class="post-detail-body post-detail-body--decknote">
-            ${deckNoteHtml}
+
+            <!-- 表示モード -->
+            <div class="decknote-view">
+              ${deckNoteHtml || '<div style="color:#777;font-size:.9rem;">まだ登録されていません。</div>'}
+            </div>
+
+            ${isMine ? `
+              <!-- 編集モード -->
+              <div class="decknote-editor" hidden>
+                <div class="note-toolbar">
+                  <div class="note-presets-grid">
+                    <button type="button" class="note-preset-btn" data-preset="deck-overview">デッキ概要</button>
+                    <button type="button" class="note-preset-btn" data-preset="play-guide">プレイ方針</button>
+                    <button type="button" class="note-preset-btn" data-preset="matchup">対面考察</button>
+                    <button type="button" class="note-preset-btn" data-preset="results">実績レポート</button>
+                  </div>
+                </div>
+
+                <div class="decknote-editor-hint">
+                  ※上のプリセットボタンを押すと定型文が挿入されます。
+                </div>
+
+                <textarea class="decknote-textarea" rows="14"
+                  data-original="${escapeHtml(deckNote || '')}"
+                >${escapeHtml(deckNote || '')}</textarea>
+
+                <div class="decknote-editor-actions">
+                  <button type="button" class="btn-decknote-save">保存</button>
+                  <button type="button" class="btn-decknote-cancel">キャンセル</button>
+                </div>
+              </div>
+            ` : ''}
           </div>
         </div>
 
@@ -1313,6 +2075,8 @@ function buildCardSp(item){
         <div class="post-detail-footer">
           <button type="button" class="btn-detail-close">閉じる</button>
         </div>
+
+        ${isMine ? `</div>` : ''}
       </div>
 
     </article>
@@ -1322,9 +2086,9 @@ function buildCardSp(item){
 
 
 // ===== 1枚カードレンダリング（PC/SP切り替え） =====
-function oneCard(item){
+function oneCard(item, opts = {}){
   const isSp = window.matchMedia('(max-width: 768px)').matches;
-  return isSp ? buildCardSp(item) : buildCardPc(item);
+  return isSp ? buildCardSp(item, opts) : buildCardPc(item, opts);
 }
 
   // 一覧レンダリング
@@ -1393,6 +2157,8 @@ function oneCard(item){
     const pane = document.getElementById(paneId || 'postDetailPane');
     if (!pane || !item) return;
 
+    const isMinePane = (paneId === 'postDetailPaneMine');
+
     const time       = item.updatedAt || item.createdAt || '';
     const mainRace   = getMainRace(item.races);
     const oldGod     = getOldGodNameFromItem(item) || 'なし';
@@ -1430,16 +2196,58 @@ function oneCard(item){
     const simpleStats = buildSimpleDeckStats(item);
     const typeMixText = simpleStats?.typeText || '';
 
-        // デッキコードコピー ボタン（あれば）
-    const codeBtnHtml = code ? `
-      <div class="post-detail-code-body">
-        <button type="button"
-          class="btn-copy-code-wide"
-          data-code="${escapeHtml(code)}">
-          デッキコードをコピー
-        </button>
-      </div>
+    // ===== デッキコード（右ペイン）=====
+    const codeNorm = String(code || '').trim();
+
+    // 既存の「デッキコードをコピー」ボタンは維持（閲覧導線）
+    const codeCopyBtnHtml = codeNorm ? `
+          <div class="post-detail-code-body">
+            <button type="button"
+              class="btn-copy-code-wide"
+              data-code="${escapeHtml(codeNorm)}">
+              デッキコードをコピー
+            </button>
+          </div>
     ` : '';
+
+    // マイ投稿（編集可能）だけ：管理UIを追加
+    const codeManageHtml = isMinePane ? (() => {
+      const isSet = !!codeNorm;
+      const badgeClass = isSet ? 'is-set' : 'is-empty';
+      const badgeText  = isSet ? '登録済み' : '未登録';
+      const preview = isSet
+        ? `${codeNorm.slice(0, 8)}...${codeNorm.slice(-6)}`
+        : '貼り付けると、他の人がすぐデッキを使えます';
+
+      return `
+        <div class="deckcode-box" data-postid="${escapeHtml(item.postId || '')}">
+          <div class="deckcode-head">
+            <div class="deckcode-status">
+              <div class="deckcode-title">デッキコード管理</div>
+              <span class="deckcode-badge ${badgeClass}">${badgeText}</span>
+            </div>
+            <div class="deckcode-preview">${escapeHtml(preview)}</div>
+          </div>
+
+          <div class="deckcode-actions">
+            ${isSet ? `
+              <button type="button" class="modal-buttun btn-deckcode-copy" data-code="${escapeHtml(codeNorm)}">コピー</button>
+              <button type="button" class="modal-buttun btn-deckcode-edit" data-code="${escapeHtml(codeNorm)}">編集</button>
+              <button type="button" class="modal-buttun btn-deckcode-delete">削除</button>
+            ` : `
+              <button type="button" class="modal-buttun btn-deckcode-add">＋追加</button>
+            `}
+          </div>
+        </div>
+      `;
+    })() : '';
+
+    // 既存の変数名互換：renderの後半で使うので
+    const codeBtnHtml = `
+      ${codeManageHtml}
+      ${codeCopyBtnHtml}
+    `;
+
 
 
     // ============================
@@ -1449,6 +2257,9 @@ function oneCard(item){
       <div class="post-detail-panel is-active" data-panel="info">
 
         <div class="post-detail-main">
+
+          <!-- 上段：代表カード＋タイトル＋投稿者 -->
+          <div class="post-detail-main-top">
           <!-- 左：代表カード -->
           <div class="post-detail-main-left">
             ${repImg ? `
@@ -1479,6 +2290,9 @@ function oneCard(item){
               </div>
             </header>
           </div>
+          </div>
+
+          <!-- 中段：デッキ分析 -->
 
             <div class="post-detail-summary">
               <dt>デッキ枚数</dt><dd>${item.count || 0}枚</dd>
@@ -1505,28 +2319,115 @@ function oneCard(item){
     `;
 
     // ============================
-    // ② デッキ解説パネル
+    // ② デッキ解説パネル（★マイ投稿のみ編集UIあり）
     // ============================
-    const tabNote = `
-      <div class="post-detail-panel" data-panel="note">
-        <div class="post-detail-section">
-          <div class="post-detail-heading">デッキ解説</div>
-          <div class="post-detail-body">
-            ${deckNoteHtml || '<div style="color:#777;font-size:.9rem;">まだ登録されていません。</div>'}
+
+      const tabNote = `
+        <div class="post-detail-panel" data-panel="note">
+          <div class="post-detail-section">
+
+            <div class="post-detail-heading-row">
+              <div class="post-detail-heading">デッキ解説</div>
+
+              ${isMinePane ? `
+                <div class="post-detail-heading-actions">
+                  <button type="button" class="btn-decknote-edit">編集</button>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="post-detail-body">
+
+              <!-- 表示モード -->
+              <div class="decknote-view">
+                ${deckNoteHtml || '<div style="color:#777;font-size:.9rem;">まだ登録されていません。</div>'}
+              </div>
+
+              ${isMinePane ? `
+                <!-- 編集モード -->
+                <div class="decknote-editor" hidden>
+                  <div class="note-toolbar">
+                    <div class="note-presets-grid">
+                      <button type="button" class="note-preset-btn" data-preset="deck-overview">デッキ概要</button>
+                      <button type="button" class="note-preset-btn" data-preset="play-guide">プレイ方針</button>
+                      <button type="button" class="note-preset-btn" data-preset="matchup">対面考察</button>
+                      <button type="button" class="note-preset-btn" data-preset="results">実績レポート</button>
+                    </div>
+                  </div>
+
+                  <div class="decknote-editor-hint">
+                    ※上のプリセットボタンを押すと定型文が挿入されます。
+                  </div>
+
+                  <textarea class="decknote-textarea" rows="14"
+                    data-original="${escapeHtml(deckNote || '')}"
+                  >${escapeHtml(deckNote || '')}</textarea>
+
+                  <div class="decknote-editor-actions">
+                    <button type="button" class="btn-decknote-save">保存</button>
+                    <button type="button" class="btn-decknote-cancel">キャンセル</button>
+                  </div>
+
+                </div>
+              ` : ''}
+
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+
 
     // ============================
-    // ③ カード解説パネル
+    // ③ カード解説パネル（★マイ投稿のみ編集UIあり）
     // ============================
     const tabCards = `
       <div class="post-detail-panel" data-panel="cards">
         <div class="post-detail-section">
-          <div class="post-detail-heading">カード解説</div>
+
+          <div class="post-detail-heading-row post-detail-heading-row--cards">
+            <div class="post-detail-heading">カード解説</div>
+
+            ${isMinePane ? `
+              <div class="post-detail-heading-actions">
+                <button type="button" class="btn-cardnotes-edit">編集</button>
+              </div>
+            ` : ''}
+          </div>
+
           <div class="post-detail-body">
-            ${cardNotesHtml}
+
+            <!-- 表示モード -->
+            <div class="cardnotes-view">
+              ${cardNotesHtml}
+            </div>
+
+            ${isMinePane ? `
+              <!-- 編集モード（deckmakerと同じUI） -->
+              <div class="cardnotes-editor" hidden
+                   data-original='${escapeHtml(JSON.stringify(item.cardNotes || []))}'>
+                <div class="info-value" style="width:100%">
+                  <div id="post-card-notes"></div>
+
+                  <!-- ▼ 復元データミラー用（JSON文字列） -->
+                  <input type="hidden" id="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
+
+                  <!-- カード解説バリデーション用 -->
+                  <input type="text" id="post-cardnote-validator" aria-hidden="true" tabindex="-1"
+                    style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;border:none;padding:0;margin:0;">
+
+                  <div class="add-note-box">
+                    <button type="button" id="add-card-note" class="add-note-btn">カード解説を追加</button>
+                    <div class="post-hint" style="opacity:.8">※カードを選んで簡単な解説や採用理由を書けます</div>
+                  </div>
+
+                  <div class="decknote-editor-actions" style="margin-top:.6rem;">
+                    <button type="button" class="btn-cardnotes-save">保存</button>
+                    <button type="button" class="btn-cardnotes-cancel">キャンセル</button>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+
           </div>
         </div>
       </div>
@@ -1585,6 +2486,303 @@ function oneCard(item){
 
   }
 
+// =========================
+// マイ投稿：デッキ解説 編集UI
+// =========================
+const DECKNOTE_PRESETS = {
+  "deck-overview":
+`【デッキ概要】
+どんなコンセプトで作ったか、狙いの動きなど。
+
+【キーカード】
+主軸となるカード・シナジー解説。
+
+【入れ替え候補】
+なぜこの構成にしたのか、他構築との差別化など。`,
+
+  "play-guide":
+`【マリガン基準】
+初手で意識するカード、キープ基準など。
+
+【試合の立ち回り】
+〈序盤〉
+〈中盤〉
+〈終盤〉
+
+【プレイのコツ】
+状況判断やよくあるミスなど。`,
+
+  "matchup":
+`【環境での立ち位置】
+どんな相手に強いか・苦手かなど。
+
+【相性一覧】
+〈有利対面〉
+〈不利対面〉
+
+【対策カード】
+環境・メタに合わせた調整案など。`,
+
+  "results":
+`【使用環境】
+使用期間・レート帯・環境など（例：シーズン〇〇／レート1600帯）
+
+【戦績】
+総試合数・勝敗（ざっくりでもOK）
+
+【課題・改善点】
+苦手な対面や構築上の弱点、今後調整したい点。
+
+【まとめ】
+使ってみた全体の印象、成果や気づきなど。`,
+};
+
+function appendPresetToTextarea_(ta, presetKey){
+  if (!ta) return;
+  const preset = DECKNOTE_PRESETS[presetKey];
+  if (!preset) return;
+
+  const cur = ta.value || '';
+  if (!cur.trim()) {
+    ta.value = preset;
+  } else {
+    const sep = cur.endsWith('\n') ? '\n' : '\n\n';
+    ta.value = cur + sep + preset;
+  }
+  ta.focus();
+}
+
+// クリック委任（右ペインは描画し直すので委任が安全）
+document.addEventListener('click', async (e) => {
+  // 編集開始
+  if (e.target.matches('.btn-decknote-edit')) {
+    const section = e.target.closest('.post-detail-section');
+    const view = section?.querySelector('.decknote-view');
+    const editor = section?.querySelector('.decknote-editor');
+    if (!section || !view || !editor) return;
+
+    view.hidden = true;
+    editor.hidden = false;
+    return;
+  }
+
+  // キャンセル
+  if (e.target.matches('.btn-decknote-cancel')) {
+    const section = e.target.closest('.post-detail-section');
+    const view = section?.querySelector('.decknote-view');
+    const editor = section?.querySelector('.decknote-editor');
+    const ta = section?.querySelector('.decknote-textarea');
+    if (!section || !view || !editor || !ta) return;
+
+    // 元に戻す
+    const original = ta.dataset.original ?? '';
+    ta.value = original;
+    editor.hidden = true;
+    view.hidden = false;
+    return;
+  }
+
+  // 保存（GASへ保存してからUI確定）
+  if (e.target.matches('.btn-decknote-save')) {
+    const section = e.target.closest('.post-detail-section');
+    const root    = e.target.closest('.post-detail-inner') || e.target.closest('[data-postid]');
+    const view    = section?.querySelector('.decknote-view');
+    const editor  = section?.querySelector('.decknote-editor');
+    const ta      = section?.querySelector('.decknote-textarea');
+    if (!section || !view || !editor || !ta || !root) return;
+
+    const postId = String(root.dataset.postid || '').trim();
+    if (!postId) return;
+
+    const raw = (ta.value || '').trim();
+
+    // ★ 差分チェック（変更なしならAPI呼ばない）
+    const origRaw = String(ta.dataset.original ?? '').trim();
+    if (raw === origRaw) {
+      editor.hidden = true;
+      view.hidden = false;
+      showActionToast('変更はありません');
+      return;
+    }
+
+    const saveBtn = e.target;
+    const prevText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中…';
+
+    try {
+      const r = await updateDeckNote_(postId, raw); // ★ await 必須
+      if (!r || !r.ok) {
+        alert((r && r.error) || '保存に失敗しました');
+        return; // 失敗時は編集状態を維持
+      }
+
+      view.innerHTML = raw
+        ? buildDeckNoteHtml(raw)
+        : '<div style="color:#777;font-size:.9rem;">まだ登録されていません。</div>';
+
+      ta.dataset.original = raw;
+
+      const item = findPostItemById(postId);
+      if (item) {
+        item.deckNote = raw;
+        item.updatedAt = new Date().toISOString();
+      }
+
+      editor.hidden = true;
+      view.hidden = false;
+
+      // ✅ 保存完了トースト
+      showActionToast('デッキ解説を更新しました');
+
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = prevText;
+    }
+    return;
+  }
+
+
+  // =========================
+  // カード解説（マイ投稿だけ編集）
+  // =========================
+  if (e.target.matches('.btn-cardnotes-edit')) {
+    const section = e.target.closest('.post-detail-section');
+    const view = section?.querySelector('.cardnotes-view');
+    const editor = section?.querySelector('.cardnotes-editor');
+    if (!section || !view || !editor) return;
+
+    // 対象投稿を引く
+    const root = e.target.closest('.post-detail-inner') || e.target.closest('[data-postid]');
+    const postId = String(root?.dataset?.postid || '').trim();
+    const item = findPostItemById(postId) || {};
+
+    initCardNotesEditor_(editor, item);
+
+    view.hidden = true;
+    editor.hidden = false;
+    return;
+  }
+
+  if (e.target.matches('.btn-cardnotes-cancel')) {
+    const section = e.target.closest('.post-detail-section');
+    const view = section?.querySelector('.cardnotes-view');
+    const editor = section?.querySelector('.cardnotes-editor');
+    if (!section || !view || !editor) return;
+
+    // originalへ戻す
+    let orig = [];
+    try { orig = JSON.parse(editor.dataset.original || '[]') || []; } catch(_) { orig = []; }
+    renderCardNotesRows_(editor, orig);
+
+    editor.hidden = true;
+    view.hidden = false;
+    return;
+  }
+
+  if (e.target.matches('.btn-cardnotes-save')) {
+    const section = e.target.closest('.post-detail-section');
+    const view = section?.querySelector('.cardnotes-view');
+    const editor = section?.querySelector('.cardnotes-editor');
+    const root = e.target.closest('.post-detail-inner') || e.target.closest('[data-postid]');
+    const postId = String(root?.dataset?.postid || '').trim();
+    if (!section || !view || !editor || !postId) return;
+
+    if (!validateCardNotes_(editor)) return;
+
+    // ★ 未選択（カード未指定）の解説ブロックは、保存時にブロックごと削除
+    editor.querySelectorAll('.post-card-note').forEach(row=>{
+      const cd = String(row.dataset.cd || '').trim();
+      if (!cd) row.remove();
+    });
+    renumberCardNoteRows_(editor);
+    syncCardNotesHidden_(editor);
+
+    const listRaw = readCardNotesFromEditor_(editor)
+      .map(r=>({ cd:String(r.cd||'').trim().padStart(5,'0'), text:String(r.text||'').replace(/\r\n/g,'\n').trim() }))
+      .filter(r => !!r.cd); // cd があるものだけ保存
+
+    // ★ 差分チェック（変更なしならAPI呼ばない）
+    const normalizeNotes = (arr)=>{
+      const list = Array.isArray(arr) ? arr : [];
+      return list
+        .map(x=>({
+          cd: String(x?.cd || '').trim().padStart(5,'0'),
+          text: String(x?.text || '').replace(/\r\n/g,'\n').trim(),
+        }))
+        .filter(x=>!!x.cd);
+    };
+
+    let origList = [];
+    try { origList = JSON.parse(editor.dataset.original || '[]') || []; } catch(_) { origList = []; }
+
+    const nextNorm = normalizeNotes(listRaw);
+    const origNorm = normalizeNotes(origList);
+
+    if (JSON.stringify(nextNorm) === JSON.stringify(origNorm)) {
+      editor.hidden = true;
+      view.hidden = false;
+      showActionToast('変更はありません');
+      return;
+    }
+
+    const btn = e.target;
+    const prevText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '保存中…';
+
+    try {
+      const r = await updateCardNotes_(postId, listRaw);
+      if (!r || !r.ok) {
+        alert((r && r.error) || '保存に失敗しました');
+        return;
+      }
+
+      // 状態更新
+      const item = findPostItemById(postId);
+      if (item) {
+        item.cardNotes = listRaw;
+        item.updatedAt = new Date().toISOString();
+      }
+
+      // view更新
+      view.innerHTML = buildCardNotesHtml({ cardNotes: listRaw });
+      editor.dataset.original = JSON.stringify(listRaw);
+
+      editor.hidden = true;
+      view.hidden = false;
+
+      // ✅ 保存完了トースト
+      showActionToast('カード解説を更新しました');
+
+
+    } finally {
+      btn.disabled = false;
+      btn.textContent = prevText;
+    }
+    return;
+  }
+
+});
+
+// =========================
+// プリセットボタン：定型文挿入
+// =========================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.note-preset-btn');
+  if (!btn) return;
+
+  // どのプリセットか
+  const key = String(btn.dataset.preset || '').trim();
+  if (!key) return;
+
+  // 同じ「デッキ解説」セクション内の textarea を探す
+  const section = btn.closest('.post-detail-section');
+  const ta = section?.querySelector('.decknote-textarea');
+  if (!ta) return;
+
+  appendPresetToTextarea_(ta, key);
+});
 
 
 // カードクリック → 右ペインに反映（PCのみ）
@@ -1650,6 +2848,7 @@ function setupDetailTabs(){
     }, 1600);
   }
 
+  // デッキコードコピー ボタンのセットアップ
   function setupCodeCopyButtons(){
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.btn-copy-code-wide');
@@ -1670,6 +2869,289 @@ function setupDetailTabs(){
     });
   }
 
+// =========================
+// マイ投稿：デッキコード 追加/編集/削除（PC）
+// =========================
+function normalizeDeckCode_(s){
+  return String(s || '').replace(/\s+/g, '').trim();
+}
+
+// 「デッキコードっぽいか」判定（厳密解析はしない）
+function isDeckCodeLike_(raw){
+  const s = normalizeDeckCode_(raw);
+  if (!s) return false;
+  if (s.length < 40) return false;               // 短すぎはNG
+  if (s.length > 600) return false;              // 異常に長いのは一旦NG
+  // base64/base64urlっぽい文字種 + / + = など許容
+  if (!/^[A-Za-z0-9+/_=\-]+$/.test(s)) return false;
+  return true;
+}
+
+function showMiniToast_(text){
+  let toast = document.getElementById('mini-toast');
+  if (!toast){
+    toast = document.createElement('div');
+    toast.id = 'mini-toast';
+    toast.style.position = 'fixed';
+    toast.style.left = '50%';
+    toast.style.bottom = '18px';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.padding = '10px 14px';
+    toast.style.borderRadius = '999px';
+    toast.style.background = 'rgba(17,24,39,.92)';
+    toast.style.color = '#fff';
+    toast.style.fontSize = '.9rem';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity .18s ease';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = String(text || '');
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ toast.style.opacity = '0'; }, 1400);
+}
+
+function openDeckCodeModal_(postId, currentCode){
+  const modal   = document.getElementById('deckCodeEditModal');
+  const preview = document.getElementById('deckCodePreview');
+  const judge   = document.getElementById('deckCodeJudge');
+  const save    = document.getElementById('deckCodeSaveBtn');
+  const paste   = document.getElementById('deckCodePasteBtn');
+  if (!modal || !preview || !judge || !save || !paste) return;
+
+  modal.dataset.postid = String(postId || '');
+
+  const cur = normalizeDeckCode_(currentCode);
+  modal.dataset.original  = cur;   // 登録済みの値
+  modal.dataset.candidate = '';    // 貼り付け後の保存対象（ここに入った時だけ保存できる）
+
+  // プレビュー（登録済みなら表示、未登録なら案内）
+  preview.textContent = cur
+    ? String(currentCode || '')
+    : '未貼り付けです（「クリップボードから貼り付け」を押してください）';
+
+  // 判定欄（開いた時点では「貼り付け待ち」）
+  judge.className = 'deckcode-judge';
+  judge.textContent = cur
+    ? '登録済みです（更新する場合は「クリップボードから貼り付け」を押してください）'
+    : '未貼り付けです（「クリップボードから貼り付け」を押してください）';
+
+  save.disabled = true;
+  paste.disabled = false;
+
+  modal.style.display = 'flex';
+}
+
+
+function closeDeckCodeModal_(){
+  const modal = document.getElementById('deckCodeEditModal');
+  if (modal) modal.style.display = 'none';
+}
+
+// state / postState の item を更新（見た目即反映用）
+function patchItemShareCode_(postId, shareCode){
+  const pid = String(postId || '').trim();
+  const patch = (it)=>{
+    if (!it) return;
+    if (String(it.postId||'') === pid){
+      it.shareCode = String(shareCode || '');
+    }
+  };
+
+  // 一覧
+  (state?.list?.items || []).forEach(patch);
+  (state?.list?.allItems || []).forEach(patch);
+
+  // マイ投稿
+  (state?.mine?.items || []).forEach(patch);
+  (postState?.mine?.items || []).forEach(patch);
+  (postState?.list?.items || []).forEach(patch);
+}
+
+// クリック委任
+document.addEventListener('click', async (e)=>{
+  // 右ペイン（マイ投稿）: 追加/編集
+  const addBtn  = e.target.closest('.btn-deckcode-add');
+  const editBtn = e.target.closest('.btn-deckcode-edit');
+  if (addBtn || editBtn){
+    const root = e.target.closest('.post-detail-inner');
+    const postId = root?.dataset?.postid || root?.querySelector('.deckcode-box')?.dataset?.postid || '';
+    const cur = editBtn ? (editBtn.dataset.code || '') : '';
+    if (!postId) return;
+    openDeckCodeModal_(postId, cur);
+    return;
+  }
+
+  // 右ペイン（マイ投稿）: コピー（小）
+  const copyBtn = e.target.closest('.btn-deckcode-copy');
+  if (copyBtn){
+    const code = copyBtn.dataset.code || '';
+    if (!code) return;
+    if (navigator.clipboard?.writeText){
+      try{
+        await navigator.clipboard.writeText(code);
+        // 既存トーストも使える
+        if (typeof showCodeCopyToast === 'function') showCodeCopyToast();
+        else showMiniToast_('デッキコードをコピーしました');
+      }catch(_){}
+    }
+    return;
+  }
+
+  // 右ペイン（マイ投稿）: 削除（確認→API）
+  const delBtn = e.target.closest('.btn-deckcode-delete');
+  if (delBtn){
+    const root = e.target.closest('.post-detail-inner');
+    const postId = String(root?.dataset?.postid || '').trim();
+    if (!postId) return;
+
+    // ★ confirm() ではなく、既存の削除確認モーダルを使う
+    const msg =
+  `デッキコードを削除します。
+  削除すると元に戻せません。よろしいですか？`;
+
+    const ok = await confirmDeleteByModal_(msg);
+    if (!ok) return;
+
+    const r = await updateDeckCode_(postId, '');
+    if (!r || !r.ok){
+      alert((r && r.error) || '削除に失敗しました');
+      return;
+    }
+
+    patchItemShareCode_(postId, '');
+    renderDetailPaneForItem(
+      findItemById_(postId) || { postId },
+      root.id || 'postDetailPaneMine'
+    );
+    showMiniToast_('デッキコードを削除しました');
+    return;
+  }
+
+
+  // モーダル：貼り付け（★判定はここだけ）
+  if (e.target && e.target.id === 'deckCodePasteBtn'){
+    const modal   = document.getElementById('deckCodeEditModal');
+    const preview = document.getElementById('deckCodePreview');
+    const judge   = document.getElementById('deckCodeJudge');
+    const save    = document.getElementById('deckCodeSaveBtn');
+    if (!modal || !preview || !judge || !save) return;
+
+    if (!navigator.clipboard?.readText){
+      alert('この環境ではクリップボードの読み取りができません');
+      return;
+    }
+
+    try{
+      const text = await navigator.clipboard.readText();
+      const raw  = String(text || '');
+
+      // 表示（改行もそのまま見せる）
+      preview.textContent = raw || '（クリップボードが空でした）';
+
+      const ok = isDeckCodeLike_(raw);
+      judge.className = 'deckcode-judge ' + (ok ? 'ok' : 'ng');
+      judge.textContent = ok ? '✅ デッキコード形式です' : '❌ デッキコードではありません';
+      save.disabled = !ok;
+
+      // ★ 保存対象は candidate にだけ入れる（textareaはもう無い）
+      modal.dataset.candidate = ok ? normalizeDeckCode_(raw) : '';
+
+      if (ok) showMiniToast_('クリップボードから貼り付けました');
+    }catch(_){
+      alert('クリップボードの読み取りに失敗しました（権限をご確認ください）');
+    }
+    return;
+  }
+
+
+
+  // モーダル：data-close
+  const close = e.target.closest('[data-close="deckCodeEditModal"]');
+  if (close){
+    closeDeckCodeModal_();
+    return;
+  }
+
+  // モーダル：保存
+  if (e.target && e.target.id === 'deckCodeSaveBtn'){
+    const modal = document.getElementById('deckCodeEditModal');
+    if (!modal) return;
+
+    const postId = modal.dataset.postid || '';
+    const code   = String(modal.dataset.candidate || '').trim();
+    if (!postId) return;
+
+    // 念のため
+    if (!code || !isDeckCodeLike_(code)){
+      alert('デッキコードではありません（形式が違います）');
+      return;
+    }
+
+    const r = await updateDeckCode_(postId, code);
+    if (!r || !r.ok){
+      alert((r && r.error) || '保存に失敗しました');
+      return;
+    }
+
+    patchItemShareCode_(postId, code);
+    closeDeckCodeModal_();
+
+    const pane = document.getElementById('postDetailPaneMine') || document.getElementById('postDetailPane');
+    if (pane){
+      renderDetailPaneForItem(findItemById_(postId) || { postId, shareCode: code }, pane.id);
+    }
+    showMiniToast_('デッキコードを保存しました');
+    return;
+  }
+
+});
+
+// 背景クリックで閉じる（既存 modal と同じ）
+document.addEventListener('click', (e)=>{
+  const modal = document.getElementById('deckCodeEditModal');
+  if (!modal) return;
+  if (e.target === modal) closeDeckCodeModal_();
+});
+
+// postId から item を探す（安全側）
+function findItemById_(postId){
+  const pid = String(postId || '').trim();
+  const pools = [
+    state?.mine?.items,
+    postState?.mine?.items,
+    state?.list?.items,
+    state?.list?.allItems,
+    postState?.list?.items
+  ].filter(Boolean);
+
+  for (const arr of pools){
+    const hit = arr.find(it => String(it?.postId||'') === pid);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+
+// =========================
+// デッキリストのカード画像タップ → カード詳細
+// =========================
+document.addEventListener('click', (e) => {
+  const cell = e.target.closest('.post-decklist .deck-entry');
+  if (!cell) return;
+
+  const cd5 = String(cell.dataset.cd || '').trim().padStart(5,'0');
+  if (!cd5) return;
+
+  // 他の「カード全体クリック」等に波及させない
+  e.preventDefault();
+  e.stopPropagation();
+
+  openCardDetailFromDeck_(cd5, cell);
+});
+
+
 
   // ===== 小物 =====
   function fmtDate(v){
@@ -1683,12 +3165,6 @@ function setupDetailTabs(){
     }catch(_){ return ''; }
   }
 
-  // HTMLエスケープ
-  function escapeHtml(s){
-    return String(s||'')
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
 
 // ===== イベント配線 =====
 function wireCardEvents(root){
@@ -1762,12 +3238,21 @@ function wireCardEvents(root){
 
 
 
-  // 指定 postId の投稿オブジェクトを state から探す
-  function findPostItemById(postId){
-    const id = String(postId);
-    const pick = (arr) => (arr || []).find(it => String(it.postId) === id);
-    return pick(state.list.items) || pick(state.mine.items) || null;
-  }
+// 指定 postId の投稿オブジェクトを state から探す（反映漏れ防止で探索範囲を拡大）
+function findPostItemById(postId){
+  const id = String(postId);
+
+  const pick = (arr) => (arr || []).find(it => String(it.postId) === id);
+
+  return (
+    pick(state.mine.items) ||
+    pick(state.list.items) ||
+    pick(state.list.filteredItems) ||
+    pick(state.list.allItems) ||
+    null
+  );
+}
+
 
   // スマホ版：代表カードタップでデッキリスト簡易表示
   function setupDeckPeekOnSp(){
@@ -2050,17 +3535,26 @@ function rebuildFilteredItems(){
 
 
   // モーダルから呼ぶ用：現在のチェック状態でフィルタを反映
-function applyFilters() {
+async function applyFilters() {
   updateFilterStateFromModal();  // チェック → filterState へ
+  // フィルタ・ソート適用前に全件取得されていない場合は取得する
+  if (!state.list.hasAllItems) {
+    await fetchAllList();
+  }
   rebuildFilteredItems();        // フィルタ＋ソート計算
   loadListPage(1);               // 1ページ目を再描画
 }
 
 // モーダル外から呼ぶ用：並び替えやフィルター適用後に一覧を再計算して再描画
-function applySortAndRerenderList(resetToFirstPage = false){
+async function applySortAndRerenderList(resetToFirstPage = false){
+  // 全件取得されていない場合は取得する
+  if (!state.list.hasAllItems) {
+    // fetchAllList() は一覧全件を読み込んで state.list.allItems に格納する
+    await fetchAllList();
+  }
+  // フィルター・並び替えを再計算
   rebuildFilteredItems();
-
-  // どのページを描画するか
+  // 描画するページを決めて再描画
   const page = resetToFirstPage ? 1 : (state.list.currentPage || 1);
   loadListPage(page);
 }
@@ -2169,25 +3663,19 @@ async function renderCampaignBanner(){
   async function init(){
     // ① カードマスタ読み込み（デッキリスト・カード解説で使う）
     try {
+      showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+    } catch (e) {
+      // showListStatusMessage が未定義の場合は無視
+    }
+    try {
       await ensureCardMapLoaded();
       console.log('cardMap loaded, size =', Object.keys(window.cardMap || {}).length);
     } catch (e) {
       console.error('カードマスタ読み込みに失敗しました', e);
     }
 
-        // ①.2 歴代キャンペーンタグ一覧（表示制御用）
-    try {
-      const res = await apiCampaignTags();
-      const tags = (res && res.ok && Array.isArray(res.tags)) ? res.tags : [];
-      window.__campaignTagSet = new Set((tags || []).map(t => String(t).trim()).filter(Boolean));
-    } catch (e) {
-      console.warn('campaignTags load failed', e);
-      window.__campaignTagSet = new Set();
-    }
-
-
-    // ①.5 キャンペーンバナー（開催中のみ表示）
-    try { await renderCampaignBanner(); } catch(e){ console.warn('campaign banner error', e); }
+    // ①.2 歴代キャンペーンタグ＆バナーの読み込みは初期描画後に遅延実行する（一覧ロードを優先）
+    // ここでは何もしない。window.__campaignTagSet などは後続タスクで初期化される。
 
     // ② トークン
     state.token = resolveToken();
@@ -2205,18 +3693,18 @@ async function renderCampaignBanner(){
       });
     }
 
-    // ④ 一覧データをすべて取得 → 初期描画
+    // ④一覧データを段階的に取得 → 初期描画
     try {
       state.list.loading = true;
-      // 投稿一覧の空欄部分に「読み込み中」を表示
       showListStatusMessage('loading', '投稿一覧を読み込み中です…');
-
-      await fetchAllList();
-      rebuildFilteredItems();
-      loadListPage(1);  // 正常終了したらカード一覧で上書きされる
+      // ★ 改善版：一度のリクエストで全件取得してフィルタ・ソートを行う
+      // これにより投稿一覧を2回呼び出す必要がなくなり、最新投稿表示までの時間が短縮される
+      await fetchAllList();         // state.list.allItems に全件を入れる（FETCH_LIMIT=100）
+      rebuildFilteredItems();       // フィルタ適用＆並び替え
+      state.list.currentPage = 1;   // 初期ページを 1 に設定
+      loadListPage(1);              // 最初のページを描画
     } catch (e) {
       console.error('初期一覧取得に失敗しました', e);
-      // 投稿一覧の空欄部分に「読み込み失敗」を表示
       showListStatusMessage('error', '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。');
     } finally {
       state.list.loading = false;
@@ -2287,6 +3775,29 @@ async function renderCampaignBanner(){
 
     // ★ 初期描画完了フラグ
     initialized = true;
+
+    // ⑨ キャンペーン情報を遅延読み込みしてバナーを表示（非同期）
+    // requestIdleCallback が使える場合はアイドル時に、なければ少し遅延させて実行する
+    const loadCampaignInfo = async () => {
+      try {
+        const res = await apiCampaignTags();
+        const tags = (res && res.ok && Array.isArray(res.tags)) ? res.tags : [];
+        window.__campaignTagSet = new Set((tags || []).map(t => String(t).trim()).filter(Boolean));
+      } catch (e) {
+        console.warn('campaignTags load failed', e);
+        window.__campaignTagSet = new Set();
+      }
+      try {
+        await renderCampaignBanner();
+      } catch (e) {
+        console.warn('campaign banner error', e);
+      }
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(loadCampaignInfo, { timeout: 3000 });
+    } else {
+      setTimeout(loadCampaignInfo, 300);
+    }
   }
 
   // DOMReady
@@ -2298,11 +3809,268 @@ async function renderCampaignBanner(){
 
   return {
     init,
-    // ★ 投稿フィルターから呼び出すために公開
     applySortAndRerenderList,
+
+    // ★ マイ投稿を今のページで再読み込み
+    reloadMine: async () => {
+      const p = state.mine.page || 1;
+      await loadMinePage(p);
+    },
+
+    // （任意）外からページ指定して読みたいなら
+    loadMinePage,
   };
 })();
 
 // グローバル公開
 window.DeckPostApp = DeckPostApp;
 
+
+// =========================
+// DeckPost API（グローバル）
+// =========================
+async function gasPostDeckPost_(payload){
+  const base = window.DECKPOST_API_BASE || window.GAS_API_BASE || '';
+  if (!base) return { ok:false, error:'api base not set' };
+
+  const mode = String(payload?.mode || 'post');
+  const url  = base + '?mode=' + encodeURIComponent(mode);
+
+  try{
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload || {})
+    });
+    const json = await res.json().catch(()=>null);
+    return json || { ok:false, error:'invalid response' };
+  }catch(_){
+    return { ok:false, error:'network' };
+  }
+}
+
+window.updateDeckNote_ = async (postId, deckNote) => {
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  return await gasPostDeckPost_({
+    mode: 'update',
+    token,
+    postId: String(postId || '').trim(),
+    deckNote: String(deckNote || '')
+  });
+};
+
+window.deletePost_ = async (postId) => {
+  const token = (window.Auth && window.Auth.token) || '';
+  if (!token) return { ok:false, error:'auth required' };
+
+  return await gasPostDeckPost_({
+    mode: 'delete',
+    token,
+    postId: String(postId || '').trim()
+  });
+};
+
+
+/*-----------------------
+デッキ編集＆削除機能
+------------------------*/
+
+// =========================
+// 削除確認モーダル（JS生成）
+// =========================
+function ensureDeleteConfirmModal_(){
+  if (document.getElementById('deleteConfirmModal')) return;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'deleteConfirmModal';
+  wrap.className = 'account-modal';
+  wrap.style.display = 'none';
+
+  wrap.innerHTML = `
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle">
+      <div class="account-modal-head">
+        <h3 id="deleteConfirmTitle">投稿の削除確認</h3>
+        <button type="button" class="account-close" data-close="deleteConfirmModal" aria-label="閉じる">×</button>
+      </div>
+
+      <div class="account-modal-body">
+        <p id="deleteConfirmText" style="margin:0; line-height:1.6;"></p>
+        <p style="margin:.6rem 0 0; color:#b00020; font-weight:700;">
+          ※ 削除すると元に戻せません
+        </p>
+      </div>
+
+      <div class="account-modal-footer">
+        <button type="button" class="btn ghost" data-delete-cancel>キャンセル</button>
+        <button type="button" class="btn danger" data-delete-ok>削除する</button>
+      </div>
+    </div>
+  `;
+
+  // 背景クリックで閉じる
+  wrap.addEventListener('click', (e) => {
+    if (e.target === wrap) closeDeleteModal_();
+  });
+
+  document.body.appendChild(wrap);
+
+  // ×ボタン / キャンセルは共通で閉じる（OKは Promise 側で処理）
+  wrap.querySelector('[data-close="deleteConfirmModal"]')?.addEventListener('click', closeDeleteModal_);
+  wrap.querySelector('[data-delete-cancel]')?.addEventListener('click', closeDeleteModal_);
+}
+
+function openDeleteModal_(text){
+  ensureDeleteConfirmModal_();
+  const m = document.getElementById('deleteConfirmModal');
+  const t = document.getElementById('deleteConfirmText');
+  if (t) t.textContent = String(text || '');
+  if (m) m.style.display = 'flex';
+}
+
+function closeDeleteModal_(){
+  const m = document.getElementById('deleteConfirmModal');
+  if (m) m.style.display = 'none';
+}
+
+// 「削除する / キャンセル」を Promise で待つ
+function confirmDeleteByModal_(text){
+  ensureDeleteConfirmModal_();
+  openDeleteModal_(text);
+
+  return new Promise((resolve) => {
+    const m = document.getElementById('deleteConfirmModal');
+    const okBtn = m.querySelector('[data-delete-ok]');
+    const cancelBtn = m.querySelector('[data-delete-cancel]');
+    const closeBtn = m.querySelector('[data-close="deleteConfirmModal"]');
+
+    const cleanup = () => {
+      okBtn?.removeEventListener('click', onOk);
+      cancelBtn?.removeEventListener('click', onCancel);
+      closeBtn?.removeEventListener('click', onCancel);
+      closeDeleteModal_();
+    };
+
+    const onOk = () => { cleanup(); resolve(true); };
+    const onCancel = () => { cleanup(); resolve(false); };
+
+    okBtn?.addEventListener('click', onOk);
+    cancelBtn?.addEventListener('click', onCancel);
+    closeBtn?.addEventListener('click', onCancel);
+  });
+}
+
+
+// ===== マイ投稿：削除ボタン（GASへ削除）=====
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('#myPostList .delete-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const postId = String(btn.dataset.postid || '').trim();
+  if (!postId) return;
+
+  // タイトルを拾って確認文を丁寧に
+  const card  = btn.closest('.post-card');
+  const title = card?.querySelector('.sp-title')?.textContent?.trim()
+            || card?.querySelector('.pc-title')?.textContent?.trim()
+            || 'この投稿';
+
+  const msg =
+`「${title}」を削除します。
+削除すると元に戻せません。よろしいですか？`;
+
+  // ★ confirm → モーダル
+  const ok = await confirmDeleteByModal_(msg);
+  if (!ok) return;
+
+  btn.disabled = true;
+
+  try{
+    const r = await window.deletePost_(postId);
+    if (!r || !r.ok){
+      alert((r && r.error) || '削除に失敗しました');
+      return;
+    }
+
+    // ✅ 削除完了トースト
+    showActionToast('投稿を削除しました');
+
+    // ✅ 右ペイン（マイ投稿側）で表示中なら空に
+    const paneMine = document.getElementById('postDetailPaneMine');
+    if (paneMine){
+      const showingId = paneMine.querySelector('.post-detail-inner')?.dataset?.postid;
+      if (String(showingId || '') === postId){
+        paneMine.innerHTML = `
+          <div class="post-detail-empty">
+            <div class="post-detail-empty-icon">👈</div>
+            <div class="post-detail-empty-text">
+              <div class="post-detail-empty-title">デッキ詳細パネル</div>
+              <p class="post-detail-empty-main">
+                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
+                ここにそのデッキの詳細が表示されます。
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ✅ 右ペイン（一覧側）で表示中でも空に（同一投稿が開かれてる可能性）
+    const paneList = document.getElementById('postDetailPane');
+    if (paneList){
+      const showingId = paneList.querySelector('.post-detail-inner')?.dataset?.postid;
+      if (String(showingId || '') === postId){
+        paneList.innerHTML = `
+          <div class="post-detail-empty">
+            <div class="post-detail-empty-icon">👈</div>
+            <div class="post-detail-empty-text">
+              <div class="post-detail-empty-title">デッキ詳細パネル</div>
+              <p class="post-detail-empty-main">
+                左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
+                ここにそのデッキの詳細が表示されます。
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ✅ 一覧データも即時から削除（“投稿一覧の一新” = 表示の整合性を取る）
+    const S = window.__DeckPostState;
+    if (S?.list){
+      S.list.allItems = (S.list.allItems || []).filter(it => String(it.postId || '') !== postId);
+      S.list.total = (S.list.allItems || []).length;
+    }
+
+    // ✅ まずは「マイ投稿」を再読み込み（ページャ/件数も正しくなる）
+    await window.DeckPostApp?.reloadMine?.();
+
+    // ✅ 一覧も再描画（今のページを維持してフィルタ/ソート反映）
+    window.DeckPostApp?.applySortAndRerenderList?.();
+
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+
+// ===== 汎用トースト（削除/保存など）=====
+function showActionToast(message){
+  let toast = document.getElementById('action-toast');
+  if (!toast){
+    toast = document.createElement('div');
+    toast.id = 'action-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = String(message || '');
+
+  toast.classList.add('is-visible');
+  if (toast._timer) clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove('is-visible');
+  }, 1800);
+}

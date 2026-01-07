@@ -1,3 +1,22 @@
+
+:root {
+    /* ===== 種族カラー（所持率チェッカー由来） ===== */
+    --race-dragon: #e24545;
+    --race-android: #2dbec0;
+    --race-elemental: #2ab76a;
+    --race-luminous: #e8c82b;
+    --race-shade: #8b64b8;
+    --race-innocent: #9aa0a6;
+    /* 旧神など “アクセント” 用（必要なら後で変更OK） */
+    --race-accent: var(--race-dragon);
+
+    /* ===== レアリティ：グラデ枠線 ===== */
+    --rarity-border-legend: linear-gradient(90deg, #91e4fb 0%, #ffffff 70%, #91e4fb 100%);
+    --rarity-border-gold: linear-gradient(90deg, gold 0%, #fff5cc 70%, gold 100%);
+    --rarity-border-silver: linear-gradient(90deg, silver 0%, #f0f0f0 70%, silver 100%);
+    --rarity-border-bronze: linear-gradient(90deg, peru 0%, #ffd9b3 70%, peru 100%);
+}
+
 body {
     margin: 0;
     font-family: sans-serif;
@@ -162,3 +181,6 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+
+

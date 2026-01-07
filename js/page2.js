@@ -201,6 +201,9 @@ function generateDetailHtml(card) {
   return `
     <div class="card-detail ${typeClass} ${raceClass}" data-name="${card.name}" id="${detailId}">
       <div class="card-name">${card.name}</div>
+      <div class="card-meta card-pack">
+      ${card.pack_name || ''}
+      </div>
       <div class="card-meta">
         <span class="card-race">${card.race}</span> /
         <span class="card-category">${card.category}</span>
@@ -5665,6 +5668,17 @@ function getAuthSafe(){
   };
 }
 
+// デッキ内のカード枚数を {cd: count} 形式で返すヘルパー
+function buildCardsForPost_() {
+  const deckObj = window.deck || {};
+  const out = {};
+  for (const [cd, nRaw] of Object.entries(deckObj)) {
+    const n = Number(nRaw) || 0;
+    if (n > 0) out[String(cd).padStart(5, '0')] = n;
+  }
+  return out;
+}
+
 // --- デッキ特徴量（コスト/パワー/タイプ内訳）を計算して投稿用にまとめる ---
 function buildDeckFeaturesForPost() {
   // 既存の deck オブジェクト（cd -> 枚数）を利用
@@ -6216,8 +6230,12 @@ if (isActive) {
   const feat = buildDeckFeaturesForPost();
   const payload = { ...base, ...feat };
 
-    payload.joinCampaign = !!joinCampaign;
-    payload.campaignId   = (joinCampaign && isActive) ? String(camp.campaignId || '') : '';
+  // ここでカード枚数を追加
+  payload.cards = buildCardsForPost_();
+  payload.cardsJSON = JSON.stringify(payload.cards);
+
+  payload.joinCampaign = !!joinCampaign;
+  payload.campaignId   = (joinCampaign && isActive) ? String(camp.campaignId || '') : '';
 
   // 代表カード情報を追加
   payload.repCd = window.representativeCd || '';

@@ -124,19 +124,6 @@
             </div>
         </div>
 
-        <!-- ▼ フィルタ機能 ベータ版お知らせ
-        <section class="beta-note beta-note--filter" id="betaFilterNote">
-            <div class="beta-note-icon">🧪</div>
-            <div class="beta-note-body">
-                <p class="beta-note-title">フィルタ機能はベータ版では準備中です</p>
-                <p class="beta-note-text">
-                    現在のベータ版では投稿一覧のフィルタ機能はまだ利用できません。<br>
-                    今後のアップデートで追加予定です。
-                </p>
-            </div>
-        </section>
-        -- ▲ フィルタ機能 ベータ版お知らせ -->
-
 
         <!-- =========================
                      一覧＋詳細：マスタ詳細レイアウト
@@ -205,21 +192,48 @@
         <!-- 上段：ヘッダー（戻る＋タイトル） -->
         <div class="mine-header">
             <button id="backToListBtn" class="btn-ghost" type="button">← 戻る</button>
-            <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
+
+            <div class="mine-header-title">
+                <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
+                <button id="mineHelpBtn" class="mine-help-btn" type="button" aria-label="マイ投稿の説明">
+                    ?
+                </button>
+            </div>
         </div>
 
-        <!-- ▼ マイ投稿 編集機能 ベータ版お知らせ -->
-        <section class="beta-note beta-note--mine" id="betaMineNote">
-            <div class="beta-note-icon">🧪</div>
-            <div class="beta-note-body">
-                <p class="beta-note-title">マイ投稿の編集機能はベータ版では準備中です</p>
-                <p class="beta-note-text">
-                    現在のベータ版では「マイ投稿」の編集機能はまだ利用できません。<br>
-                    今後のアップデートで追加予定です。
-                </p>
+        <!-- ▼ マイ投稿：説明モーダル -->
+        <div id="mineHelpModal" class="modal" style="display:none;">
+            <div class="modal-content mine-help-modal" role="dialog" aria-modal="true" aria-labelledby="mineHelpTitle">
+                <h3 id="mineHelpTitle" class="filter-maintitle">マイ投稿について</h3>
+
+                <div class="mine-header-note" style="margin:0;">
+                    <p class="mine-header-lead">
+                        マイページでは、ログインすることで<strong>自分が投稿したデッキ</strong>を確認できます。
+                    </p>
+
+                    <ul class="mine-header-list">
+                        <li>🗂 自分のデッキ投稿を一覧で確認できます</li>
+                        <li>✏️ 投稿したデッキの<strong>デッキ解説編集</strong>ができます</li>
+                        <li>🗑 不要になったデッキ投稿の<strong>削除</strong>ができます</li>
+                    </ul>
+
+                    <div class="mine-header-beta">
+                        🧪 <strong>ベータ版のお知らせ</strong><br>
+                        今後のアップデートで、以下の機能を追加予定です。
+                        <ul>
+                            <li>❤️ いいねしたデッキ一覧の表示</li>
+                            <li>🏷 タグの編集機能</li>
+                            <li>🃏 デッキコード・デッキ内容の編集機能</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
+                    <button type="button" class="btn-ghost" id="mineHelpCloseBtn">閉じる</button>
+                </div>
             </div>
-        </section>
-        <!-- ▲ マイ投稿 編集機能 ベータ版お知らせ -->
+        </div>
+
 
         <!-- 上段：ログイン状況枠 -->
         <section class="mine-login-section">
@@ -547,6 +561,56 @@
 </div>
 
 
+
+<!-- ▼ カード解説：候補選択モーダル（マイ投稿編集でも使用） -->
+<div class="modal" id="cardNoteSelectModal" style="display:none;">
+    <div class="modal-content cardnote-modal">
+        <h3 class="filter-maintitle">カードを選択</h3>
+        <div id="cardNoteCandidates" class="cardnote-grid"><!-- JSで5列グリッド生成 --></div>
+
+        <div class="modal-footer" style="gap:.5rem;">
+            <button type="button" id="cardNoteClose" class="modal-buttun">閉じる</button>
+        </div>
+    </div>
+</div>
+
+<!-- ▼ デッキコード：編集モーダル（マイ投稿編集用） -->
+<div class="modal" id="deckCodeEditModal" style="display:none;">
+    <div class="modal-content deckcode-modal" role="dialog" aria-modal="true" aria-labelledby="deckCodeEditTitle">
+        <h3 id="deckCodeEditTitle" class="filter-maintitle">デッキコードを編集</h3>
+
+        <div class="deckcode-modal-body">
+            <div class="deckcode-paste-row">
+                <button type="button" id="deckCodePasteBtn" class="modal-buttun deckcode-btn deckcode-btn--paste">
+                    クリップボードから貼り付け
+                </button>
+                <div class="post-hint deckcode-hint">
+                    ※ 貼り付け時にデッキコード形式か自動判定します
+                </div>
+            </div>
+
+            <!-- 入力欄は廃止：表示だけ -->
+            <div id="deckCodePreview" class="deckcode-preview-modal-modal" aria-label="デッキコード表示欄">
+                未貼り付けです（「クリップボードから貼り付け」を押してください）
+            </div>
+
+            <div id="deckCodeJudge" class="deckcode-judge" aria-live="polite"></div>
+        </div>
+
+        <div class="modal-footer deckcode-footer">
+            <button type="button" class="modal-buttun deckcode-btn deckcode-btn--cancel" data-close="deckCodeEditModal">
+                キャンセル
+            </button>
+            <button type="button" id="deckCodeSaveBtn" class="modal-buttun deckcode-btn deckcode-btn--save" disabled>
+                保存
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
 <!--フッター-->
 <footer>
     <div>
@@ -572,6 +636,9 @@
         @192837465aruneo
     </a>
 </footer>
+
+<!--上部に戻るボタン-->
+<button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
     <!-- スクリプト群 -->
     <script src="js/common.js"></script>
