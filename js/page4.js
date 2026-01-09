@@ -1790,7 +1790,7 @@ function buildCardPc(item, opts = {}){
             ` : ''}
 
             <div class="sp-meta-date">
-              ${fmtDate(time)}
+              ${fmtPostDates_(item)}
             </div>
           </div>
 
@@ -1988,7 +1988,7 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
             ` : ''}
 
             <div class="sp-meta-date">
-              ${fmtDate(time)}
+              ${fmtPostDates_(item)}
             </div>
           </div>
 
@@ -2298,7 +2298,7 @@ function oneCard(item, opts = {}){
               <div class="post-detail-meta">
                 <span>${escapeHtml(item.posterName || item.username || '')}</span>
                 ${posterXHtml ? `<span>/ ${posterXHtml}</span>` : ''}
-                ${fmtDate(time) ? `<span>/ ${fmtDate(time)}</span>` : ''}
+                ${fmtPostDates_(item) ? `<span>/ ${fmtPostDates_(item)}</span>` : ''}
               </div>
 
               <div class="post-detail-actions">
@@ -3197,7 +3197,7 @@ document.addEventListener('click', async (e)=>{
     }
 
     patchItemShareCode_(postId, code);
-    refreshDeckCodeUIs_(postId); 
+    refreshDeckCodeUIs_(postId);
     closeDeckCodeModal_();
 
     const pane = document.getElementById('postDetailPaneMine') || document.getElementById('postDetailPane');
@@ -3255,7 +3255,7 @@ document.addEventListener('click', (e) => {
 
 
 
-  // ===== 小物 =====
+  // ===== 投稿日・更新日のフォーマット =====
   function fmtDate(v){
     if (!v) return '';
     try{
@@ -3265,6 +3265,20 @@ document.addEventListener('click', (e) => {
             da = d.getDate().toString().padStart(2,'0');
       return `${y}/${m}/${da}`;
     }catch(_){ return ''; }
+  }
+
+  // 投稿日+（更新日）表示：更新が無い/同日なら投稿日だけ
+  function fmtPostDates_(item){
+    const cRaw = item?.createdAt || '';
+    const uRaw = item?.updatedAt || '';
+    const c = fmtDate(cRaw);
+    const u = fmtDate(uRaw);
+
+    if (!c && !u) return '';
+    // 更新日が無い / 作成日が無い / 同日なら「投稿日」だけ
+    if (!u || !c || u === c) return c || u;
+
+    return `${c}（更新日${u}）`;
   }
 
 
