@@ -936,6 +936,31 @@ function shouldShowTag_(tag){
   return false;
 }
 
+// キャンペーンタグの表示/非表示を一括更新
+function refreshCampaignTagChips_(){
+  const set = window.__campaignTagSet;
+  if (!(set instanceof Set) || !set.size) return;
+
+  const roots = [
+    document.getElementById('postList'),
+    document.getElementById('myPostList'),
+  ].filter(Boolean);
+
+  for (const root of roots){
+    const chips = root.querySelectorAll('.chip');
+    chips.forEach(el => {
+      const t = (el.textContent || '').trim();
+      if (!t) return;
+
+      // キャンペーンタグだけ判定して、表示/非表示を更新
+      if (set.has(t)){
+        el.style.display = shouldShowTag_(t) ? '' : 'none';
+      }
+    });
+  }
+}
+
+
 
   // ===== サムネイル画像 =====
   function cardThumb(src, title){
@@ -2103,7 +2128,7 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
 
 // ===== 1枚カードレンダリング（PC/SP切り替え） =====
 function oneCard(item, opts = {}){
-  const isSp = window.matchMedia('(max-width: 768px)').matches;
+  const isSp = window.matchMedia('(max-width: 1023px)').matches;
   return isSp ? buildCardSp(item, opts) : buildCardPc(item, opts);
 }
 
@@ -3372,7 +3397,7 @@ function findPostItemById(postId){
 
   // スマホ版：代表カードタップでデッキリスト簡易表示
   function setupDeckPeekOnSp(){
-    const isSp = () => window.matchMedia('(max-width: 768px)').matches;
+    const isSp = () => window.matchMedia('(max-width: 1023px)').matches;
 
     function ensureOverlay(){
       let pane = document.getElementById('post-deckpeek-overlay');
@@ -3885,9 +3910,38 @@ async function renderCampaignBanner(){
     // ⑧ 右ペイン詳細タブ
     setupDetailTabs();
 
-
     // ⑩ スマホ版：代表カード長押しでデッキリスト簡易表示
     setupDeckPeekOnSp();
+
+    // 回転/リサイズ時に再描画（PC/SP境界またぎ対策）
+    (() => {
+      const isPcWide = () => window.matchMedia('(min-width: 1024px)').matches;
+      let last = isPcWide();
+      let tid = null;
+
+      const onChange = () => {
+        clearTimeout(tid);
+        tid = setTimeout(() => {
+          // 1) SPの簡易オーバーレイが出っぱなしなら閉じる
+          const pane = document.getElementById('post-deckpeek-overlay');
+          if (pane) pane.style.display = 'none';
+
+          // 2) 1023/1024 を跨いだら一覧を再描画
+          const now = isPcWide();
+          if (now !== last) {
+            last = now;
+            if (typeof applySortAndRerenderList === 'function') {
+              applySortAndRerenderList();
+            } else if (window.DeckPostApp?.applySortAndRerenderList) {
+              window.DeckPostApp.applySortAndRerenderList();
+            }
+          }
+        }, 120);
+      };
+
+      window.addEventListener('resize', onChange, { passive: true });
+      window.addEventListener('orientationchange', onChange, { passive: true });
+    })();
 
     // ★ 初期描画完了フラグ
     initialized = true;
@@ -3908,6 +3962,7 @@ async function renderCampaignBanner(){
       } catch (e) {
         console.warn('campaign banner error', e);
       }
+      refreshCampaignTagChips_();// タグチップ更新
     };
     if (typeof window.requestIdleCallback === 'function') {
       window.requestIdleCallback(loadCampaignInfo, { timeout: 3000 });

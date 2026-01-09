@@ -20,6 +20,33 @@ function formatYmd(d = new Date()) {
   return `${y}/${m}/${da}`;
 }
 
+// 投稿者名バリデーション
+function looksLikeEmail_(s){
+  const t = String(s || '').trim();
+  if (!t) return false;
+  // メールっぽい（ゆるめ）
+  const re = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+  return re.test(t);
+}
+
+function validatePosterNameOrThrow_(name){
+  const t = String(name || '').trim();
+
+  // まず @ を禁止（メール/連絡先混入を強く抑止）
+  if (/[＠@]/.test(t) || looksLikeEmail_(t)) {
+    throw new Error('投稿者名にメールアドレス（または@）は入れられません。表示名だけにしてください。');
+  }
+  // ついでに連絡先っぽいのを軽く抑止（任意）
+  if (/https?:\/\//i.test(t)) {
+    throw new Error('投稿者名にURLは入れられません。表示名だけにしてください。');
+  }
+
+  return t;
+
+
+}
+
+
 // === デッキ名 入出力（情報タブ/投稿タブ 共通）===
 // グローバル公開してどこからでも使えるようにする
 window.readDeckNameInput = function () {
@@ -5506,12 +5533,33 @@ async function doPaste(){
 
 // === Xハンドル正規化（グローバル） ===
 function normalizeHandle(v=''){
-  v = String(v).trim();
-  if (!v) return '';
-  v = v.replace(/^https?:\/\/(www\.)?x\.com\//i,''); // URLで来たらドメイン除去
-  v = v.replace(/^@+/,'');  // 先頭@を削除
-  return '@' + v;
+  let s = String(v || '').trim();
+  if (!s) return '';
+
+  // 全角→半角（＠含む） + 空白除去
+  try { s = s.normalize('NFKC'); } catch(_) {}
+  s = s.replace(/\s+/g, '');
+
+  // URL貼り付け対策（x.com / twitter.com）
+  s = s.replace(/^https?:\/\/(www\.)?(x\.com|twitter\.com)\//i, '');
+
+  // クエリ/パスが付いてたら切る（/ ? # 以降を捨てる）
+  s = s.split(/[/?#]/)[0];
+
+  // どこにあっても @ は全部消して、最後に先頭へ1個だけ付ける
+  s = s.replace(/[＠@]/g, '');
+
+  if (!s) return '';
+  return '@' + s;
 }
+
+function isValidXHandle(norm){
+  const user = String(norm || '').replace(/^@/, '');
+  // Xのユーザー名は英数_で最大15文字（一般的仕様）
+  return /^[A-Za-z0-9_]{1,15}$/.test(user);
+}
+
+
 
 
 /*同意チェック*/
@@ -5764,8 +5812,25 @@ function buildDeckPostPayload(){
   const shareCode = document.getElementById('post-share-code')?.value.trim() || '';
 
   // 投稿者名・X
-  const posterInp = document.getElementById('auth-display-name')?.value.trim() || '';
-  const posterXIn = normalizeHandle(document.getElementById('auth-x')?.value || '');
+  let posterInp = '';
+  {
+    const el = document.getElementById('auth-display-name');
+    if (el) {
+      // メアドっぽい投稿者名を弾く（validatePosterNameOrThrow_ を使う）
+      posterInp = validatePosterNameOrThrow_(el.value);
+      el.value = posterInp; // 正規化した値を入力欄にも反映
+    }
+  }
+
+  let posterXIn = '';
+  {
+    const el = document.getElementById('auth-x');
+    if (el) {
+      posterXIn = normalizeHandle(el.value || '');
+      el.value = posterXIn; // @の正規化を入力欄にも反映
+    }
+  }
+
 
   // deck を {cd: count} 形式へ（GAS の buildDeckFeatures_ が解釈しやすい形）
   let cardsMap = {};
@@ -6129,6 +6194,19 @@ async function submitDeckPost(e, opts = {}) {
   // 0) 通常の required チェック
   if (form && !form.reportValidity()) {
     isPostingDeck = false; // ★ ここで必ず戻す
+    return false;
+  }
+
+    // 投稿者名/X をここで正規化＆検証（エラーはトースト表示）
+  try {
+    const nameEl = document.getElementById('auth-display-name');
+    if (nameEl) nameEl.value = validatePosterNameOrThrow_(nameEl.value);
+
+    const xEl = document.getElementById('auth-x');
+    if (xEl) xEl.value = normalizeHandle(xEl.value || '');
+  } catch (err) {
+    showPostToast(err?.message || '入力内容を確認してください', 'danger', true);
+    isPostingDeck = false;
     return false;
   }
 
@@ -6690,7 +6768,10 @@ function showSuccessCheck() {
 
 
 // ===== キャンペーン確認モーダル =====
-async function onClickPostButton() {
+async function onClickPostButton(){
+  const posterInp = document.getElementById('auth-display-name');
+  const posterName = (posterInp?.value || '').trim();
+
   const camp = await (window.fetchActiveCampaign?.() || Promise.resolve(null));
 
   const isActive =
@@ -6818,11 +6899,61 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('deck-post-form');
   if (!form) return;
 
+  // 送信時：キャンペーン確認→投稿
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     onClickPostButton(); // ← キャンペーン確認→投稿 の入口
   });
+
+  // X を確認（プロフィールを開く）
+  const xBtn = document.getElementById('x-link-btn');
+  const xEl  = document.getElementById('auth-x');
+  if (!xBtn || !xEl) return;
+
+  xBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const norm = normalizeHandle(xEl.value);
+    if (norm) xEl.value = norm;
+
+    const user = String(norm || '').replace(/^@/, '').trim();
+    if (!user){
+      alert('Xアカウント名を入力してください');
+      return;
+    }
+    if (!isValidXHandle(norm)){
+      alert('Xアカウント名が不正です（英数と_、最大15文字）');
+      return;
+    }
+
+    window.open(`https://x.com/${encodeURIComponent(user)}`, '_blank', 'noopener');
+  });
+
+    // アカウントデータ側の「Xを確認」も開けるように（任意）
+  const acctBtn = document.getElementById('acct-x-open');
+  const acctEl  = document.getElementById('acct-x');
+  if (acctBtn && acctEl){
+    acctBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const norm = normalizeHandle(acctEl.value);
+      if (norm) acctEl.value = norm;
+
+      const user = String(norm || '').replace(/^@/, '').trim();
+      if (!user){
+        alert('Xアカウント名を入力してください');
+        return;
+      }
+      if (!isValidXHandle(norm)){
+        alert('Xアカウント名が不正です（英数と_、最大15文字）');
+        return;
+      }
+      window.open(`https://x.com/${encodeURIComponent(user)}`, '_blank', 'noopener');
+    });
+  }
+
 });
+
 
 
 //#endregion

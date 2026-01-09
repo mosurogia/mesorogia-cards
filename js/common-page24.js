@@ -1162,6 +1162,49 @@ async function doLogout(){
   }
 }
 
+  // ===== X handle 正規化/検証（page2 と揃える） =====
+  function normalizeHandle(raw){
+    let s = String(raw || '').trim();
+    if (!s) return '';
+
+    // 全角→半角（＠含む） + 空白除去
+    try { s = s.normalize('NFKC'); } catch(_) {}
+    s = s.replace(/\s+/g, '');
+
+    // URL貼り付け対策
+    s = s.replace(/^https?:\/\/(www\.)?(x\.com|twitter\.com)\//i, '');
+
+    // クエリ/パス除去
+    s = s.split(/[/?#]/)[0];
+
+    // @ は全部消して、先頭に1個だけ付け直す（途中@も消える）
+    s = s.replace(/[＠@]/g, '');
+
+    if (!s) return '';
+    return '@' + s;
+  }
+
+
+  function isValidXHandle(handle){
+    const h = String(handle || '').trim();
+    // @ + 英数/_ 1〜15文字
+    return /^@[A-Za-z0-9_]{1,15}$/.test(h);
+  }
+
+  // ★ 追加：他IIFEから使えるようにグローバル公開
+  window.normalizeHandle  = normalizeHandle;
+  window.isValidXHandle   = isValidXHandle;
+  window.isEmailLikeName_ = isEmailLikeName_;
+
+  // ===== 投稿者名のメアド混入対策（page2 と揃える） =====
+  function isEmailLikeName_(s){
+    const v = String(s || '').trim();
+    if (!v) return false;
+    if (/^mailto:/i.test(v)) return true;
+    if (/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(v)) return true;
+    return false;
+  }
+
 
   // DOM 結線
   window.addEventListener('DOMContentLoaded', () => {
@@ -1525,14 +1568,26 @@ window.setCampaignDetailRules = function(camp){
       });
     }
 
-    // X確認
+    // X確認（page2 と同じ仕様：正規化→検証→open）
     const xBtn = $('#acct-x-open');
     const xInput = $('#acct-x');
     if (xBtn && xInput){
-      xBtn.addEventListener('click', ()=>{
-        const val = xInput.value.replace(/^@/, '').trim();
-        if(!val){ alert('Xアカウント名を入力してください'); return; }
-        window.open(`https://x.com/${val}`, '_blank');
+      xBtn.addEventListener('click', (e)=>{
+        e.preventDefault();
+
+        const norm = normalizeHandle(xInput.value);
+        if (norm) xInput.value = norm;
+
+        const user = String(norm || '').replace(/^@/, '').trim();
+        if (!user){
+          alert('Xアカウント名を入力してください');
+          return;
+        }
+        if (!isValidXHandle(norm)){
+          alert('Xアカウント名が不正です（英数と_、最大15文字）');
+          return;
+        }
+        window.open(`https://x.com/${encodeURIComponent(user)}`, '_blank', 'noopener');
       });
     }
 
@@ -1579,8 +1634,8 @@ window.setCampaignDetailRules = function(camp){
     // 入力（変更希望）
     const newLogin = (document.getElementById('acct-login-name')?.value || '').trim();
     const newPass  = (document.getElementById('acct-password')?.value || '').trim();
-    const newName  = (document.getElementById('acct-poster-name')?.value || '').trim();
-    const newX     = (document.getElementById('acct-x')?.value || '').trim().replace(/^@+/, '');
+    const newNameRaw = (document.getElementById('acct-poster-name')?.value || '').trim();
+    const newXRaw    = (document.getElementById('acct-x')?.value || '').trim();
 
     // 差分のみ送る（GAS側は loginName で現在ユーザを特定）
     const payload = { loginName: curLogin };
@@ -1591,11 +1646,28 @@ window.setCampaignDetailRules = function(camp){
     if (newPass){
       payload.newPassword = newPass;
     }
-    if (newName && newName !== curName){
-      payload.posterName = newName;
+    // 投稿者名：メアドっぽいのは保存させない
+    if (newNameRaw && isEmailLikeName_(newNameRaw)){
+      alert('投稿者名にメールアドレスは入れないでください');
+      return null; // 呼び出し側でハンドリング
     }
-    if (newX && newX !== curX){
-      payload.xAccount = newX;
+    // X：正規化して検証、OKなら payload へ（保存時もガード）
+    let newXNorm = '';
+    if (newXRaw){
+      const norm = normalizeHandle(newXRaw);
+      if (!isValidXHandle(norm)){
+        alert('Xアカウント名が不正です（英数と_、最大15文字）');
+        return null;
+      }
+      newXNorm = norm.replace(/^@/, ''); // 保存は @なし形式に統一
+    }
+
+    // 差分のみ送る
+    if (newNameRaw && newNameRaw !== curName){
+      payload.posterName = newNameRaw;
+    }
+    if (newXNorm && newXNorm !== curX){
+      payload.xAccount = newXNorm;
     }
     return payload;
   }
@@ -1637,6 +1709,7 @@ window.setCampaignDetailRules = function(camp){
 
     // 1) 差分作成
     const payload = buildPayloadFromForm();
+    if (!payload) return;
 
     // 2) 変更がない場合はブロック
     const keys = Object.keys(payload);

@@ -123,7 +123,7 @@ body {
     cursor: pointer;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     .btn-ghost {
         font-size: 1rem;
     }
@@ -505,6 +505,14 @@ body {
     transform: translateY(-1px);
 }
 
+.post-card--pc {
+    display: none;
+}
+
+.post-card--sp {
+    display: block;
+}
+
 /* サムネイル */
 .thumb-box {
     grid-area: thumb;
@@ -521,7 +529,7 @@ body {
 }
 
 /* スマホでの長押し画像メニュー＆選択を抑制 */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
 
     .thumb-box,
     .thumb-box img {
@@ -629,13 +637,19 @@ body {
 /*---------- 2-2.スマホレイアウト----------*/
 
 /* スマホ版カード全体 */
-.post-card--sp {
-    display: block;
-    padding: 8px 5px;
+@media (max-width: 1023px) {
+    .post-card--pc {
+        display: none;
+    }
+
+    .post-card--sp {
+        display: block;
+    }
 }
 
-/* ホバー効果無効化（スマホ用） */
-@media (max-width: 768px) {
+/* ホバーできない端末では hover 演出を無効化（スマホ/タブレット含む） */
+@media (hover: none),
+(pointer: coarse) {
     .post-card:hover {
         box-shadow: none !important;
         transform: none !important;
@@ -730,7 +744,7 @@ body {
 /*=======================
   X.スマホ用 デッキホバー表示
 ========================*/
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
 
     /* デッキ簡易プレビュー用オーバーレイ */
     #post-deckpeek-overlay {
@@ -770,7 +784,7 @@ body {
 }
 
 /* PCでは念のため強制非表示 */
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
     #post-deckpeek-overlay {
         display: none !important;
     }
@@ -781,10 +795,16 @@ body {
 （PC：2カラム＋左右独立スクロール）
 ========================*/
 
-/* PC版カード全体 */
-.post-card--pc {
-    display: block;
-    padding: 8px 5px;
+
+@media (min-width: 1024px) {
+    .post-card--pc {
+        display: block;
+        padding: 8px 5px;
+    }
+
+    .post-card--sp {
+        display: none;
+    }
 }
 
 .pc-head-left .thumb-box {
@@ -2388,7 +2408,7 @@ body {
     margin-bottom: .5rem;
 }
 
-@media (max-width:1024px) {
+@media (max-width:1023px) {
     .post-card-note {
         grid-template-columns: 90px 1fr;
         gap: .25rem;

@@ -1717,7 +1717,7 @@
     background: #fafafa;
     margin-bottom: .5rem;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     .post-card-note {
         grid-template-columns: 90px 1fr;
         gap: .25rem;
