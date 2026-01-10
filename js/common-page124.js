@@ -1128,7 +1128,9 @@ function resetFilters() {
     const btnClose = document.getElementById('postFilterCloseBtn');
     const btnApply = document.getElementById('postFilterApplyBtn');
     const btnReset = document.getElementById('postFilterResetBtn');
-    const tagArea  = document.getElementById('postFilterTagArea');
+    const deckInfoArea = document.getElementById('postFilterDeckInfoArea');
+    const raceArea     = document.getElementById('postFilterRaceArea');
+    const categoryArea = document.getElementById('postFilterCategoryArea');
 
     // フィルター状態（グローバルに1つ）
     window.PostFilterState = window.PostFilterState || {
@@ -1359,136 +1361,56 @@ async function getActiveCampaignTag_(){
 }
 
 
-// ★ async にする
-async function buildTagButtons() {
-  if (!tagArea) return;
+async function buildTagButtons(){
 
-  const campaignTag = await getActiveCampaignTag_(); // ★ 追加
+  const campaignTag = await getActiveCampaignTag_();
 
-  const ds    = window.__DeckPostState;
-  const items = ds?.list?.allItems || [];
-
-  // ===== 定義 =====
-  const BASE_TAGS = Array.isArray(window.POST_TAG_CANDIDATES)
-    ? window.POST_TAG_CANDIDATES
-    : ["初心者向け","趣味構築","ランク戦用","大会入賞","格安デッキ","回廊用"];
-
-  const RACE_ORDER = ["イノセント","旧神","ドラゴン","アンドロイド","エレメンタル","ルミナス","シェイド"];
-  const RACE_SET = new Set(RACE_ORDER);
-
-  const isCategoryTag = (t) => {
-    try {
-      return (typeof getCategoryOrder === 'function') && (getCategoryOrder(t) < 9999);
-    } catch (_) {
-      return false;
-    }
-  };
-
-  // ===== 投稿からタグを収集 =====
-  const presentAll = new Set();   // tagsAuto+tagsPick の全部
-  const presentAuto = new Set();  // tagsAuto のみ
-  let hasCollab = false;
-
-  items.forEach((item) => {
-    const auto = String(item.tagsAuto || '');
-    const pick = String(item.tagsPick || '');
-
-    [auto, pick].filter(Boolean).join(',').split(',').forEach((raw) => {
-      const t = String(raw || '').trim();
-      if (!t) return;
-      presentAll.add(t);
-      if (t === 'コラボカードあり') hasCollab = true;
-    });
-
-    auto.split(',').forEach((raw) => {
-      const t = String(raw || '').trim();
-      if (!t) return;
-      presentAuto.add(t);
-      if (t === 'コラボカードあり') hasCollab = true;
-    });
-  });
-
-  // ===== グループ別に並べる =====
-  const groupBase = BASE_TAGS.filter(t => presentAll.has(t));
-
-  const groupAuto = Array.from(presentAuto)
-    .filter(t =>
-      t !== 'コラボカードあり' &&
-      !RACE_SET.has(t) &&
-      !isCategoryTag(t) &&
-      !BASE_TAGS.includes(t)
-    )
-    .sort((a,b)=>a.localeCompare(b,'ja'));
-
-  if (hasCollab && !groupBase.includes('コラボカードあり')) {
-    groupAuto.push('コラボカードあり');
-  }
-
-  const groupRace = RACE_ORDER.filter(t => presentAll.has(t));
-
-  const groupCategory = Array.from(presentAll)
-    .filter(t => isCategoryTag(t) && t !== 'ノーカテゴリ')
-    .sort((a,b)=>{
-      const da = getCategoryOrder(a);
-      const db = getCategoryOrder(b);
-      if (da !== db) return da - db;
-      return a.localeCompare(b,'ja');
-    });
-
-  // ===== 最終リスト =====
-  const ordered = [];
-  const seen = new Set();
-
-  [groupBase, groupAuto, groupRace, groupCategory].forEach(arr => {
-    arr.forEach(t => {
-      if (!t || seen.has(t)) return;
-      seen.add(t);
-      ordered.push(t);
-    });
-  });
-
-  // ★ キャンペーン時のみ：最後に追加（投稿にまだ無くても出す）
-  if (campaignTag && !seen.has(campaignTag)) {
-    seen.add(campaignTag);
-    ordered.push(campaignTag);
-  }
-
-  
-  // ===== 描画 =====
-  tagArea.innerHTML = '';
+  // ===== 描画（3ブロック構造）=====
+  deckInfoArea.innerHTML = '';
+  raceArea.innerHTML = '';
+  categoryArea.innerHTML = '';
 
   if (!ordered.length) {
     const p = document.createElement('p');
     p.className = 'filter-wip-text';
     p.textContent = 'まだ絞り込みに使えるタグがありません。';
-    tagArea.appendChild(p);
+    deckInfoArea.appendChild(p); // どこか1つに出す
     return;
   }
 
-  ordered.forEach((tag) => {
+  // セクション生成ヘルパ
+  function makeSection(titleText){
+    const block = document.createElement('div');
+    block.className = 'filter-subblock';
+
+    const title = document.createElement('div');
+    title.className = 'filter-subtitle';
+    title.textContent = titleText;
+
+    const body = document.createElement('div');
+    body.className = 'filter-group';
+
+    block.appendChild(title);
+    block.appendChild(body);
+    return { block, body };
+  }
+
+  function makeTagButton(tag){
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'filter-btn post-filter-tag-btn';
     btn.dataset.tag = tag;
 
-    // カテゴリ改行
     const isCat = isCategoryTag(tag);
-    if (isCat && tag.includes('（')) {
-      btn.innerHTML = tag.replace('（', '<br>（');
-    } else {
-      btn.textContent = tag;
-    }
+    if (isCat && tag.includes('（')) btn.innerHTML = tag.replace('（', '<br>（');
+    else btn.textContent = tag;
 
-    // ★ キャンペーンタグの装飾（見た目＋先頭に🎉）
     if (campaignTag && tag === campaignTag) {
       btn.classList.add('is-campaign-tag');
-      // innerHTMLを使ってるカテゴリでも崩れないように text を上書き
       btn.textContent = `🎉 ${tag}`;
     }
 
-    if (filterState.selectedTags.has(tag)) {
-      btn.classList.add('selected');
-    }
+    if (filterState.selectedTags.has(tag)) btn.classList.add('selected');
 
     btn.addEventListener('click', () => {
       const nowSelected = btn.classList.toggle('selected');
@@ -1496,9 +1418,48 @@ async function buildTagButtons() {
       else filterState.selectedTags.delete(tag);
     });
 
-    tagArea.appendChild(btn);
-  });
+    return btn;
+  }
+
+  // ① デッキ情報
+  const secInfo = makeSection('▼ デッキ情報');
+  [...groupBase, ...groupAuto].forEach(t => secInfo.body.appendChild(makeTagButton(t)));
+  if (campaignTag && !groupBase.includes(campaignTag) && !groupAuto.includes(campaignTag)) {
+    secInfo.body.appendChild(makeTagButton(campaignTag));
+  }
+
+  // ② 種族
+  const secRace = makeSection('▼ 種族');
+  const raceOrder = Array.isArray(window.RACE_ORDER)
+    ? window.RACE_ORDER
+    : ['ドラゴン','アンドロイド','エレメンタル','ルミナス','シェイド'];
+
+  groupRace
+    .filter(t => raceOrder.includes(t))
+    .sort((a,b)=>raceOrder.indexOf(a)-raceOrder.indexOf(b))
+    .forEach(t => secRace.body.appendChild(makeTagButton(t)));
+
+  // ③ カテゴリ（折りたたみ）
+  const details = document.createElement('details');
+  details.className = 'filter-details';
+  details.open = false;
+
+  const summary = document.createElement('summary');
+  summary.className = 'filter-section-title';
+  summary.textContent = '▶ カテゴリ';
+  details.appendChild(summary);
+
+  const catWrap = document.createElement('div');
+  catWrap.className = 'filter-group';
+  groupCategory.forEach(t => catWrap.appendChild(makeTagButton(t)));
+  details.appendChild(catWrap);
+
+  // 追加して完成
+  deckInfoArea.appendChild(secInfo.block);
+  raceArea.appendChild(secRace.block);
+  categoryArea.appendChild(details);
 }
+
 
 
     // ---- 開閉まわり ----
@@ -1645,4 +1606,3 @@ function renderActivePostFilterChips(){
     });
   });
 })();
-

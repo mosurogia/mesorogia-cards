@@ -3,7 +3,7 @@
 (function(){
   const IMG_DIR = 'img/';
   const FALLBACK_IMG = IMG_DIR + '00000.webp';
-  const BRAND_URL = 'https://mosurogia.github.io/mesorogia-cards/deckmaker.html';
+  //const BRAND_URL = 'https://mosurogia.github.io/mesorogia-cards/deckmaker.html';
 
   // ============ 初期化 ============
   window.addEventListener('DOMContentLoaded', () => {
@@ -14,33 +14,38 @@
 
 
   // ============ 画像生成メイン ============
-  async function exportDeckImage(){
-  const deckObj = window.deck || {};
-  const total = Object.values(deckObj).reduce((a,b)=>a+(b|0),0);
-  if (total === 0){ alert('デッキが空です。カードを追加してください。'); return; }
-  if (total > 40){ alert('デッキ枚数が多すぎます（40枚以内にしてください）'); return; }
+  async function exportDeckImage(opts = {}){
+    const data = buildDeckSummaryData(opts);
 
-  const aspect = '3:4';
+    // ✅ 枚数チェックは data.total を使う（投稿もデッキメーカーも同じ基準でOK）
+    const total = data.total || 0;
 
-  const data  = buildDeckSummaryData();
-  const kinds = data.uniqueList?.length || 0;
-  const spec  = getCanvasSpec(aspect, kinds);
-  spec.cols = 5;// 5列固定
+    if (total === 0){ alert('デッキが空です。カードを追加してください。'); return; }
+    if (!opts.skipSizeCheck && total > 40){ alert('デッキ枚数が多すぎます（40枚以内にしてください）'); return; }
 
-  //先にローディングを出す
-  const loader = showLoadingOverlay('画像生成中…');
-  await nextFrame();  // 1フレーム分、描画を譲る
-  await nextFrame();  // 端末によっては2回あるとより安定
+    const aspect = '3:4';
+    const kinds = data.uniqueList?.length || 0;
 
-  // 以降が重い：DOM構築＆画像ロード
-  const node = await buildShareNode(data, spec);
-  document.body.appendChild(node);
+    const spec  = getCanvasSpec(aspect, kinds);
+    // 右下URL：投稿側は opts.brandUrl を優先。無ければ現在ページ
+    spec.brandUrl = String(
+      opts.brandUrl ||
+      (location.origin + location.pathname)
+    );
+    if (typeof opts.showCredit === 'boolean') spec.showCredit = opts.showCredit;
 
-
-  try {
+    // （以降は今のままでOK）
+    const loader = showLoadingOverlay('画像生成中…');
     await nextFrame(); await nextFrame();
-    const scale = getPreferredScale();
-      const target = node;  // 生成ノードを直接キャプチャ
+
+    const node = await buildShareNode(data, spec);
+    document.body.appendChild(node);
+
+    try{
+      await nextFrame(); await nextFrame();
+      const scale = getPreferredScale();
+      const target = node;
+
       const prevOverflow = target.style.overflow;
       target.style.overflow = 'visible';
       target.style.paddingRight = '20px';
@@ -64,16 +69,17 @@
 
       target.style.overflow = prevOverflow;
 
-
-
-    const name = (data.deckName || 'deck').replace(/[\/:*?"<>|]+/g,'_').slice(0,40);
-    const fileName = `${name}_3x4.png`;
-    downloadCanvas(canvas, fileName);
-  } finally {
-    node.remove();
-    hideLoadingOverlay(loader);
+      const name = (data.deckName || 'deck').replace(/[\/:*?"<>|]+/g,'_').slice(0,40);
+      downloadCanvas(canvas, `${name}_3x4.png`);
+    } finally {
+      node.remove();
+      hideLoadingOverlay(loader);
+    }
   }
-}
+
+
+
+
 
   window.exportDeckImage = exportDeckImage;
 
@@ -84,12 +90,48 @@ window.buildDeckSummaryDataForPreview = buildDeckSummaryData;
 window.getCanvasSpecForPreview        = getCanvasSpec;
 
 
-  // ============ データ収集 ============
-  function buildDeckSummaryData(){
-    const deck = window.deck || {};
+  // ============ データ収集（統一版）===========
+  function buildDeckSummaryData(opts = {}){
     const cardMap = window.cardMap || {};
 
+    const normCd = (cd) => String(cd || '').trim().padStart(5,'0');
+
+    // deckRaw を「{cd:count}」に正規化
+    const deckRaw = opts.deck ?? window.deck ?? {};
+    const deck = {};
+
+    // 1) {cd:count} 形式
+    if (deckRaw && typeof deckRaw === 'object' && !Array.isArray(deckRaw)) {
+      for (const [cd, n] of Object.entries(deckRaw)){
+        const k = normCd(cd);
+        const nn = Number(n) || 0;
+        if (nn > 0) deck[k] = (deck[k] || 0) + nn;
+      }
+    }
+
+    // 2) ["00012","00034", ...] みたいな配列（万一来ても耐える）
+    if (Array.isArray(deckRaw)) {
+      for (const cd of deckRaw){
+        const k = normCd(cd);
+        if (!k) continue;
+        deck[k] = (deck[k] || 0) + 1;
+      }
+    }
+
     const entries = Object.entries(deck);
+
+    // deckName（投稿側で上書きしたいので opts 優先）
+    const deckName =
+      String(opts.deckName || '').trim() ||
+      document.getElementById('info-deck-name')?.value?.trim() ||
+      document.getElementById('post-deck-name')?.value?.trim() ||
+      '';
+
+    // 投稿者情報（投稿ページだけ入れたい）
+    const posterName = String(opts.posterName || '').trim();
+    const posterX    = String(opts.posterX || '').trim().replace(/^@/, '');
+
+    // 並び替え（タイプ→コスト→パワー→cd）
     const TYPE_ORDER = { 'チャージャー':0, 'アタッカー':1, 'ブロッカー':2 };
     entries.sort((a,b)=>{
       const A = cardMap[a[0]]||{}, B = cardMap[b[0]]||{};
@@ -100,12 +142,13 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
       return String(a[0]).localeCompare(String(b[0]));
     });
 
-    const deckName = document.getElementById('info-deck-name')?.value?.trim()
-      || document.getElementById('post-deck-name')?.value?.trim()
-      || '';
+    // ★ mainRace：投稿側は opts.mainRace / デッキメーカーは computeMainRace()
+    const mainRace =
+      String(opts.mainRace || '').trim() ||
+      ((typeof computeMainRace === 'function' ? computeMainRace() : '') || '').trim() ||
+      '未選択';
 
-    const mainRace = (typeof computeMainRace==='function' ? computeMainRace() : null) || '未選択';
-
+    // 合計・タイプ枚数
     const typeCounts = { 'チャージャー':0, 'アタッカー':0, 'ブロッカー':0 };
     let total = 0;
     entries.forEach(([cd, n])=>{
@@ -114,25 +157,33 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
       if (t && typeCounts[t] != null) typeCounts[t] += (n|0);
     });
 
-    const uniqueList = entries.map(([cd]) => cd);
-    const countMap   = Object.fromEntries(entries.map(([cd, n]) => [String(cd), n|0]));
+    // レアリティ
     const rarityMap  = { 'レジェンド':0,'ゴールド':0,'シルバー':0,'ブロンズ':0 };
     entries.forEach(([cd, n])=>{
-      const r = cardMap[cd]?.rarity; if (r && rarityMap[r] != null) rarityMap[r] += (n|0);
+      const r = cardMap[cd]?.rarity;
+      if (r && rarityMap[r] != null) rarityMap[r] += (n|0);
     });
 
-    // 代表カード: 指定が有効でデッキ内にある → それ以外は先頭カード
-    const repCd = (window.representativeCd && deck[window.representativeCd])
-      ? window.representativeCd
-      : (entries[0]?.[0] || null);
+    const uniqueList = entries.map(([cd]) => cd);
+    const countMap   = Object.fromEntries(entries.map(([cd, n]) => [String(cd), n|0]));
+
+    // 代表カード: opts指定が最優先 → window指定 → 先頭
+    const wantRep = normCd(opts.representativeCd || '');
+    const repCd =
+      (wantRep && deck[wantRep]) ? wantRep :
+      (window.representativeCd && deck[normCd(window.representativeCd)]) ? normCd(window.representativeCd) :
+      (entries[0]?.[0] || null);
 
     return {
-      deckName, total, mainRace,
+      deckName, posterName, posterX,
+      total, mainRace,
       typeCounts, rarityMap,
       representativeCd: repCd,
       uniqueList, countMap,
     };
   }
+
+
 
   // ============ レイアウト仕様 ============
   function getCanvasSpec(aspect, kinds){
@@ -181,6 +232,7 @@ const height = PADDING + HEADER_H_STD + gridH + FOOTER_H + GRID_PAD_SUM;
       gap: GAP,
       cardW, cardH, rows, // デバッグ・将来調整用
       titleSize,
+      showCredit: false,// 投稿者名/Xはデフォルト表示しない
       theme
     };
   }
@@ -315,7 +367,7 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
     const title = document.createElement('div');
     title.textContent = data.deckName || 'デッキ';
     Object.assign(title.style, {
-      gridColumn: '1 / -1', // タイトルは2列ぶち抜き
+      gridColumn: '1 / -1',
       fontSize: `${spec.titleSize}px`,
       fontWeight: '900',
       letterSpacing: '.4px',
@@ -324,6 +376,30 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
       textOverflow: 'ellipsis',
       color: spec.theme.text,
     });
+
+    // 投稿者名 / X（任意表示）
+    const showCredit = (spec?.showCredit !== false); // デフォルトON（falseで明示的に隠せる）
+    const posterName = String(data?.posterName || data?.poster?.name || '').trim();
+    let posterX = String(data?.posterX || data?.poster?.x || '').trim();
+    posterX = posterX ? ('@' + posterX.replace(/^@/, '')) : '';
+
+    let credit = null;
+    if (showCredit && (posterName || posterX)) {
+      const creditText = [posterName, posterX].filter(Boolean).join(' / ');
+      credit = document.createElement('div');
+      credit.textContent = creditText;
+
+      Object.assign(credit.style, {
+        gridColumn: '1 / -1',
+        marginTop: '2px',
+        fontSize: `${Math.max(18, Math.floor(spec.titleSize * 0.45))}px`,
+        fontWeight: '700',
+        opacity: '0.85',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      });
+    }
 
     // 左列：タイプ構成（絵文字を無くし色チップに）
     const leftRow1 = document.createElement('div');
@@ -394,6 +470,9 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
     // 配置
     // 1行目：タイトル（2列）
     headRight.appendChild(title);
+
+    if (credit) headRight.appendChild(credit);
+
     // 2行目：左=タイプ、右=枚数
     leftRow1.style.gridColumn = '1 / 2';
     rightRow1.style.gridColumn = '2 / 3';
@@ -445,7 +524,7 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
     footer.style.boxShadow = spec.theme.shadow;
 
     const brand = document.createElement('div');
-    brand.textContent = BRAND_URL;
+    brand.textContent = spec.brandUrl || (location.origin + location.pathname);
     brand.style.opacity = '.9';
     brand.style.color = spec.theme.subText;
     footer.appendChild(brand);
@@ -607,168 +686,169 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
   // ============ ユーティリティ ============
   function nextFrame(){ return new Promise(r=>requestAnimationFrame(()=>r())); }
 
-function downloadCanvas(canvas, fileName){
-  // Base64化（iPad/Safari対策：blobだと保存できない）
-  const dataUrl = canvas.toDataURL('image/png');
 
-  // 既に開いてたら消す
-  document.getElementById('deckimg-preview-modal')?.remove();
+  function downloadCanvas(canvas, fileName){
+    // Base64化（iPad/Safari対策：blobだと保存できない）
+    const dataUrl = canvas.toDataURL('image/png');
 
-  // モーダル本体
-  const modal = document.createElement('div');
-  modal.id = 'deckimg-preview-modal';
-  Object.assign(modal.style, {
-    position: 'fixed', inset: 0, zIndex: 9999,
-    background: 'rgba(0,0,0,0.8)',
-    display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'flex-start',
-    overflowY: 'auto',
-    padding: '40px 0',
-    color: '#fff',
-    fontFamily: 'system-ui, sans-serif',
-  });
+    // 既に開いてたら消す
+    document.getElementById('deckimg-preview-modal')?.remove();
 
-  // 🔹 背景スクロール抑制
-  document.body.style.overflow = 'hidden';
+    // モーダル本体
+    const modal = document.createElement('div');
+    modal.id = 'deckimg-preview-modal';
+    Object.assign(modal.style, {
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.8)',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'flex-start',
+      overflowY: 'auto',
+      padding: '40px 0',
+      color: '#fff',
+      fontFamily: 'system-ui, sans-serif',
+    });
 
-  // 閉じるボタン
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = '×';
-  Object.assign(closeBtn.style, {
-    position: 'absolute',
-    top: '16px',
-    right: '16px',
-    background: 'rgba(255,255,255,0.9)',
-    color: '#111',
-    border: 'none',
-    borderRadius: '50%',
-    width: '36px',
-    height: '36px',
-    fontSize: '22px',
-    fontWeight: '700',
-    lineHeight: '1',
-    cursor: 'pointer',
-    boxShadow: '0 0 6px rgba(0,0,0,0.3)',
-  });
-  closeBtn.addEventListener('click', () => {
-    modal.remove();
-    document.body.style.overflow = ''; // 🔹 背景スクロール再許可
-  });
-  modal.appendChild(closeBtn);
+    // 🔹 背景スクロール抑制
+    document.body.style.overflow = 'hidden';
 
-  // 操作バー（保存案内）
-  const bar = document.createElement('div');
-  Object.assign(bar.style, {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: '15px',
-    fontSize: 'clamp(14px, 2vw, 18px)',
-    textAlign: 'center',
-  });
+    // 閉じるボタン
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    Object.assign(closeBtn.style, {
+      position: 'absolute',
+      top: '16px',
+      right: '16px',
+      background: 'rgba(255,255,255,0.9)',
+      color: '#111',
+      border: 'none',
+      borderRadius: '50%',
+      width: '36px',
+      height: '36px',
+      fontSize: '22px',
+      fontWeight: '700',
+      lineHeight: '1',
+      cursor: 'pointer',
+      boxShadow: '0 0 6px rgba(0,0,0,0.3)',
+    });
+    closeBtn.addEventListener('click', () => {
+      modal.remove();
+      document.body.style.overflow = ''; // 🔹 背景スクロール再許可
+    });
+    modal.appendChild(closeBtn);
 
-  const hint = document.createElement('div');
-  const ua = navigator.userAgent.toLowerCase();
-  if (/iphone|ipad|ipod/.test(ua))
-    hint.textContent = '長押しで「写真に追加」や「共有（画像保存）」ができます';
-  else if (/android/.test(ua))
-    hint.textContent = '長押しで「画像をダウンロード」や「共有（画像保存）」ができます';
-  else
-    hint.textContent = '右クリックで「名前を付けて保存」できます';
-  bar.appendChild(hint);
-
-  // 画像と同じ幅のボタンバー（画像の“上”に置く）
-    const btnBar = document.createElement('div');
-    Object.assign(btnBar.style, {
-      width: 'min(80vw, 500px)',   // ★ 画像と同じ幅
-      maxWidth: 'min(80vw, 500px)',
+    // 操作バー（保存案内）
+    const bar = document.createElement('div');
+    Object.assign(bar.style, {
       display: 'flex',
-      gap: '8px',
-      margin: '8px auto 12px',     // 上部少し空けて画像の直前に
-    });
-
-    // ボタン共通スタイル
-    const mkBtn = (label) => {
-      const el = document.createElement('a');
-      el.textContent = label;
-      Object.assign(el.style, {
-        flex: '1 1 0',             // ★ 2つで横幅を等分
-        display: 'inline-block',
-        textAlign: 'center',
-        textDecoration: 'none',
-        background: '#fff',
-        color: '#111',
-        padding: '10px 12px',
-        borderRadius: '10px',
-        fontWeight: '800',
-        fontSize: '14px',
-        boxShadow: '0 2px 8px rgba(0,0,0,.25)',
-      });
-      return el;
-    };
-
-    // ダウンロード（どの端末でも確実に使える）
-    const saveBtn = mkBtn('ダウンロード');
-    saveBtn.href = dataUrl;          // ★ toDataURL をそのまま
-    saveBtn.download = fileName;     // PC なら即保存、モバイルは新規DL
-
-    // 共有（対応端末のみ表示）
-    const shareBtn = mkBtn('共有（画像保存）');
-    if (navigator.share) {
-      shareBtn.href = 'javascript:void(0)';
-      shareBtn.onclick = async () => {
-        try {
-          const b = await (await fetch(dataUrl)).blob();
-          const f = new File([b], fileName, { type: 'image/png' });
-          await navigator.share({ files: [f], title: fileName, text: 'デッキ画像' });
-        } catch (_) { /* キャンセルは無視 */ }
-      };
-    } else {
-      shareBtn.style.display = 'none'; // 未対応環境では非表示（ダウンロードボタンが全幅に）
-    }
-
-        btnBar.appendChild(saveBtn);
-        btnBar.appendChild(shareBtn);
-        modal.appendChild(bar);
-        modal.appendChild(btnBar);
-
-      // 画像
-      const img = document.createElement('img');
-      img.src = dataUrl;
-      Object.assign(img.style, {
-        maxWidth: 'min(80vw, 500px)',
-        height: 'auto',
-        borderRadius: '12px',
-        boxShadow: '0 0 24px rgba(0,0,0,0.6)',
-        objectFit: 'contain',
-      });
-
-
-      // 🔹 背景クリックで閉じる（×ボタンと同処理）
-      modal.addEventListener('click', e => {
-        if (e.target === modal && e.clientY < window.innerHeight * 0.9) {
-          modal.remove();
-          document.body.style.overflow = '';
-        }
-      });
-
-      modal.appendChild(img);
-
-    // 利用許諾メッセージ（画像の直後）
-    const note = document.createElement('div');
-    note.textContent = '※ここで生成した画像はXやDiscordなどに自由に投稿して構いません。';
-    Object.assign(note.style, {
-      width: 'min(80vw, 500px)',      // 画像・ボタンと同じ幅
-      maxWidth: 'min(80vw, 500px)',
-      fontSize: 'clamp(12px, 1.8vw, 14px)',
-      color: 'rgba(255,255,255,0.8)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: '15px',
+      fontSize: 'clamp(14px, 2vw, 18px)',
       textAlign: 'center',
-      margin: '10px auto 16px',       // 中央寄せ
     });
-    modal.appendChild(note);
 
-  document.body.appendChild(modal);
-}
+    const hint = document.createElement('div');
+    const ua = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(ua))
+      hint.textContent = '長押しで「写真に追加」や「共有（画像保存）」ができます';
+    else if (/android/.test(ua))
+      hint.textContent = '長押しで「画像をダウンロード」や「共有（画像保存）」ができます';
+    else
+      hint.textContent = '右クリックで「名前を付けて保存」できます';
+    bar.appendChild(hint);
+
+    // 画像と同じ幅のボタンバー（画像の“上”に置く）
+      const btnBar = document.createElement('div');
+      Object.assign(btnBar.style, {
+        width: 'min(80vw, 500px)',   // ★ 画像と同じ幅
+        maxWidth: 'min(80vw, 500px)',
+        display: 'flex',
+        gap: '8px',
+        margin: '8px auto 12px',     // 上部少し空けて画像の直前に
+      });
+
+      // ボタン共通スタイル
+      const mkBtn = (label) => {
+        const el = document.createElement('a');
+        el.textContent = label;
+        Object.assign(el.style, {
+          flex: '1 1 0',             // ★ 2つで横幅を等分
+          display: 'inline-block',
+          textAlign: 'center',
+          textDecoration: 'none',
+          background: '#fff',
+          color: '#111',
+          padding: '10px 12px',
+          borderRadius: '10px',
+          fontWeight: '800',
+          fontSize: '14px',
+          boxShadow: '0 2px 8px rgba(0,0,0,.25)',
+        });
+        return el;
+      };
+
+      // ダウンロード（どの端末でも確実に使える）
+      const saveBtn = mkBtn('ダウンロード');
+      saveBtn.href = dataUrl;          // ★ toDataURL をそのまま
+      saveBtn.download = fileName;     // PC なら即保存、モバイルは新規DL
+
+      // 共有（対応端末のみ表示）
+      const shareBtn = mkBtn('共有（画像保存）');
+      if (navigator.share) {
+        shareBtn.href = 'javascript:void(0)';
+        shareBtn.onclick = async () => {
+          try {
+            const b = await (await fetch(dataUrl)).blob();
+            const f = new File([b], fileName, { type: 'image/png' });
+            await navigator.share({ files: [f], title: fileName, text: 'デッキ画像' });
+          } catch (_) { /* キャンセルは無視 */ }
+        };
+      } else {
+        shareBtn.style.display = 'none'; // 未対応環境では非表示（ダウンロードボタンが全幅に）
+      }
+
+          btnBar.appendChild(saveBtn);
+          btnBar.appendChild(shareBtn);
+          modal.appendChild(bar);
+          modal.appendChild(btnBar);
+
+        // 画像
+        const img = document.createElement('img');
+        img.src = dataUrl;
+        Object.assign(img.style, {
+          maxWidth: 'min(80vw, 500px)',
+          height: 'auto',
+          borderRadius: '12px',
+          boxShadow: '0 0 24px rgba(0,0,0,0.6)',
+          objectFit: 'contain',
+        });
+
+
+        // 🔹 背景クリックで閉じる（×ボタンと同処理）
+        modal.addEventListener('click', e => {
+          if (e.target === modal && e.clientY < window.innerHeight * 0.9) {
+            modal.remove();
+            document.body.style.overflow = '';
+          }
+        });
+
+        modal.appendChild(img);
+
+      // 利用許諾メッセージ（画像の直後）
+      const note = document.createElement('div');
+      note.textContent = '※ここで生成した画像はXやDiscordなどに自由に投稿して構いません。';
+      Object.assign(note.style, {
+        width: 'min(80vw, 500px)',      // 画像・ボタンと同じ幅
+        maxWidth: 'min(80vw, 500px)',
+        fontSize: 'clamp(12px, 1.8vw, 14px)',
+        color: 'rgba(255,255,255,0.8)',
+        textAlign: 'center',
+        margin: '10px auto 16px',       // 中央寄せ
+      });
+      modal.appendChild(note);
+
+    document.body.appendChild(modal);
+  }
 
 
 

@@ -284,6 +284,396 @@ function updateMinePager(page, totalPages, totalCount){
 })();
 
 
+// =========================
+// 投稿フィルター：モーダル（タグ整理版）
+//  - デッキ情報 / 種族 / カテゴリ（テーマ）に分割表示
+// =========================
+(function(){
+  function openPostFilter(){
+    const m = document.getElementById('postFilterModal');
+    if (m) m.style.display = 'flex';
+  }
+  function closePostFilter(){
+    const m = document.getElementById('postFilterModal');
+    if (m) m.style.display = 'none';
+  }
+
+  // 適用済み（＝一覧に効いている）状態
+  window.PostFilterState ??= {
+    selectedTags: new Set(),
+    selectedUserTags: new Set(),
+  };
+
+  // モーダル操作用（未適用の下書き）
+  window.PostFilterDraft ??= {
+    selectedTags: new Set(),
+    selectedUserTags: new Set(),
+  };
+
+  function syncDraftFromApplied_(){
+    const applied = window.PostFilterState;
+    const draft   = window.PostFilterDraft;
+    draft.selectedTags = new Set(Array.from(applied?.selectedTags || []));
+    draft.selectedUserTags = new Set(Array.from(applied?.selectedUserTags || []));
+  }
+
+  function isCampaignTag_(t){
+    try{
+      const set = window.__campaignTagSet;
+      if (!(set instanceof Set)) return false;
+      return set.has(String(t||'').trim());
+    }catch(_){
+      return false;
+    }
+  }
+
+  function allowCampaignTag_(t){
+    const running = !!window.__isCampaignRunning;
+    const active  = String(window.__activeCampaignTag || '').trim();
+    if (!running || !active) return false;
+    return String(t||'').trim() === active;
+  }
+
+  function getAllPostTagsFromState_(){
+    const items = (window.__DeckPostState?.list?.allItems) || (window.__DeckPostState?.list?.filteredItems) || [];
+    const set = new Set();
+
+    (items || []).forEach(it => {
+      const all = [it?.tagsAuto, it?.tagsPick].filter(Boolean).join(',');
+      if (!all) return;
+
+      all.split(',').map(s=>s.trim()).filter(Boolean).forEach(t=>{
+        // ★ キャンペーンタグは「開催中の今回タグ」以外は候補に入れない
+        if (isCampaignTag_(t) && !allowCampaignTag_(t)) return;
+        set.add(t);
+      });
+    });
+
+    // よく使う候補は常に出す（ただしキャンペーンは例外）
+    (window.POST_TAG_CANDIDATES || []).forEach(t=>{
+      if (isCampaignTag_(t) && !allowCampaignTag_(t)) return;
+      set.add(t);
+    });
+    (window.RACE_ORDER || []).forEach(t=>set.add(t));
+    (window.CATEGORY_LIST || []).forEach(t=>set.add(t));
+
+    // キャンペーンタグ（開催中の今回分だけ）を候補に含める
+    try{
+      const active = String(window.__activeCampaignTag || '').trim();
+      if (active && allowCampaignTag_(active)) set.add(active);
+    }catch(_){}
+
+    return Array.from(set);
+  }
+
+  function classifyTag_(t){
+    const s = String(t||'').trim();
+    if (!s) return 'other';
+
+    // 種族
+    if ((window.RACE_ORDER || []).includes(s)) return 'race';
+
+    // カテゴリ（テーマ）
+    const isCat = (typeof window.getCategoryOrder === 'function')
+      ? (window.getCategoryOrder(s) < 9999)
+      : ((window.CATEGORY_LIST || []).includes(s));
+    if (isCat) return 'category';
+
+    // それ以外はデッキ情報
+    return 'deckinfo';
+  }
+
+  function sortTags_(tags, kind){
+    const arr = (tags || []).map(s=>String(s||'').trim()).filter(Boolean);
+
+    if (kind === 'race'){
+      const order = window.RACE_ORDER || [];
+      return arr.sort((a,b)=>order.indexOf(a) - order.indexOf(b));
+    }
+    if (kind === 'category'){
+      if (typeof window.getCategoryOrder === 'function'){
+        return arr.sort((a,b)=>window.getCategoryOrder(a)-window.getCategoryOrder(b));
+      }
+      const order = window.CATEGORY_LIST || [];
+      return arr.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+    }
+    // deckinfo: POST_TAG_CANDIDATES 優先 → 残りはあいうえお順
+    const cand = window.POST_TAG_CANDIDATES || [];
+    const candSet = new Set(cand);
+    const head = cand.filter(t=>arr.includes(t));
+    const tail = arr.filter(t=>!candSet.has(t)).sort((a,b)=>a.localeCompare(b,'ja'));
+    const out = [];
+    [...head, ...tail].forEach(t=>{ if (!out.includes(t)) out.push(t); });
+    return out;
+  }
+
+  // ▼ モーダル内ボタン描画（draft を見る）
+  function renderTagButtons_(rootEl, tags){
+    if (!rootEl) return;
+    rootEl.replaceChildren();
+
+    const sel = window.PostFilterDraft?.selectedTags;
+    (tags || []).forEach(tag => {
+      const t = String(tag||'').trim();
+      if (!t) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-btn post-filter-tag-btn';
+      btn.dataset.tag = t;
+
+      // カテゴリ改行（（ の前で改行）
+      if (classifyTag_(t) === 'category' && t.includes('（')) {
+        btn.innerHTML = t.replace('（', '<br>（');
+      } else {
+        btn.textContent = t;
+      }
+
+      // 選択状態（CSSは .selected）
+      if (sel?.has(t)) btn.classList.add('selected');
+
+      btn.addEventListener('click', ()=>{
+        const draft = window.PostFilterDraft;
+        draft.selectedTags ??= new Set();
+
+        if (draft.selectedTags.has(t)){
+          draft.selectedTags.delete(t);
+          btn.classList.remove('selected');
+        }else{
+          draft.selectedTags.add(t);
+          btn.classList.add('selected');
+        }
+        // ★ チップ表示は apply のみ（ここでは更新しない）
+      });
+
+      rootEl.appendChild(btn);
+    });
+  }
+
+  function buildPostFilterTagUI_(){
+    const all = getAllPostTagsFromState_();
+    const deckinfo = [];
+    const race = [];
+    const category = [];
+
+    all.forEach(t => {
+      // ★ キャンペーンタグ表示制御をフィルター候補にも適用
+      if (!shouldShowTag_(t)) return;
+
+      const k = classifyTag_(t);
+      if (k === 'race') race.push(t);
+      else if (k === 'category') category.push(t);
+      else if (k === 'deckinfo') deckinfo.push(t);
+    });
+
+    // v2 期待：3エリア
+    const deckEl = document.getElementById('postFilterDeckInfoArea');
+    const raceEl = document.getElementById('postFilterRaceArea');
+    const catEl  = document.getElementById('postFilterCategoryArea');
+
+    renderTagButtons_(deckEl, sortTags_(deckinfo, 'deckinfo'));
+    renderTagButtons_(raceEl, sortTags_(race, 'race'));
+    renderTagButtons_(catEl,  sortTags_(category, 'category'));
+  }
+
+  // ▼ チップバー（適用済み state を見る）
+  function updateActiveChipsBar_(){
+    const bar = document.getElementById('active-chips-bar');
+    const sc  = bar?.querySelector('.chips-scroll');
+    if (!bar || !sc) return;
+
+    const st = window.PostFilterState || {};
+    const tags = Array.from(st.selectedTags || []);
+    const user = Array.from(st.selectedUserTags || []);
+
+    sc.replaceChildren();
+
+    const total = tags.length + user.length;
+    if (!total){
+      bar.style.display = 'none';
+      return;
+    }
+    bar.style.display = '';
+
+    // チップ生成（CSSは .chip-mini）
+    function addChip(label, onRemove, extraClass=''){
+      const chip = document.createElement('span');
+      chip.className = `chip-mini ${extraClass}`.trim();
+      chip.textContent = label;
+
+      const x = document.createElement('button');
+      x.className = 'x';
+      x.type = 'button';
+      x.textContent = '×';
+      x.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        onRemove();
+      });
+
+      chip.appendChild(x);
+      sc.appendChild(chip);
+    }
+
+    // ① 投稿タグ
+    tags.forEach((t)=>{
+      addChip(`🏷️${t}`, ()=>{
+        window.PostFilterState.selectedTags?.delete?.(t);
+        window.PostFilterDraft?.selectedTags?.delete?.(t);
+
+        // モーダル内の見た目も同期（開いてる時だけ）
+        try{
+          document
+            .querySelectorAll(`.post-filter-tag-btn[data-tag="${CSS.escape(t)}"]`)
+            .forEach(btn => btn.classList.remove('selected'));
+        }catch(_){}
+
+        updateActiveChipsBar_();
+        window.DeckPostApp?.applySortAndRerenderList?.(true);
+      }, 'chip-tag');
+    });
+
+    // ② ユーザータグ
+    user.forEach((t)=>{
+      addChip(`✍️${t}`, ()=>{
+        window.PostFilterState.selectedUserTags?.delete?.(t);
+        window.PostFilterDraft?.selectedUserTags?.delete?.(t);
+
+        // モーダル側の青チップも同期（あれば）
+        try{ window.renderSelectedUserTagChips?.(); }catch(_){}
+
+        updateActiveChipsBar_();
+        window.DeckPostApp?.applySortAndRerenderList?.(true);
+      }, 'chip-user');
+    });
+
+    // すべて解除（適用済みをクリア）
+    const clr = document.createElement('span');
+    clr.className = 'chip-mini chip-clear';
+    clr.textContent = 'すべて解除';
+    clr.addEventListener('click', ()=>{
+      window.PostFilterState.selectedTags?.clear?.();
+      window.PostFilterState.selectedUserTags?.clear?.();
+      window.PostFilterDraft.selectedTags?.clear?.();
+      window.PostFilterDraft.selectedUserTags?.clear?.();
+
+      try{
+        document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected'));
+      }catch(_){}
+
+      try{ window.renderSelectedUserTagChips?.(); }catch(_){}
+
+      updateActiveChipsBar_();
+      window.DeckPostApp?.applySortAndRerenderList?.(true);
+    });
+    sc.appendChild(clr);
+  }
+
+  // ▼ details の ▶/▼ 同期（summary の先頭記号を書き換える）
+  function syncDetailsChevron_(details){
+    if (!details) return;
+    const summary = details.querySelector('summary');
+    if (!summary) return;
+
+    const raw = summary.textContent || '';
+    const txt = raw.replace(/^[▶▼]\s*/,'').trim();
+    summary.textContent = `${details.open ? '▼' : '▶'} ${txt}`;
+  }
+
+  function bindChevronSync_(root){
+    const list = root?.querySelectorAll?.('details') || [];
+    list.forEach(d=>{
+      syncDetailsChevron_(d);
+      d.addEventListener('toggle', ()=>syncDetailsChevron_(d));
+    });
+  }
+
+  async function applyPostFilter_(){
+    // 全件が無ければ先に取得 → タグUIも再構築
+    if (!window.__DeckPostState?.list?.hasAllItems){
+      try{ await fetchAllList(); }catch(_){ }
+    }
+
+    // draft → applied へ反映
+    const draft = window.PostFilterDraft;
+    const applied = window.PostFilterState;
+    applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
+    applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
+
+    closePostFilter();
+    updateActiveChipsBar_();
+    await applySortAndRerenderList(true);
+  }
+
+  function resetDraft_(){
+    window.PostFilterDraft ??= { selectedTags:new Set(), selectedUserTags:new Set() };
+    window.PostFilterDraft.selectedTags.clear();
+    window.PostFilterDraft.selectedUserTags.clear();
+
+    // タグボタンの selected を全部外す（モーダル内だけ）
+    try{ document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected')); }catch(_){ }
+
+    // ユーザータグ UI のリセット（存在すれば）
+    const q = document.getElementById('userTagQuery');
+    if (q) q.value = '';
+    try{
+      const items = document.querySelector('[data-user-tag-selected-items]');
+      const empty = document.querySelector('[data-user-tag-selected-empty]');
+      if (items) items.replaceChildren();
+      if (empty) empty.style.display = '';
+    }catch(_){ }
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const openBtn  = document.getElementById('filterBtn');
+    const closeBtn = document.getElementById('postFilterCloseBtn');
+    const applyBtn = document.getElementById('postFilterApplyBtn');
+    const resetBtn = document.getElementById('postFilterResetBtn');
+    const modal    = document.getElementById('postFilterModal');
+
+    if (!modal) return;
+
+    if (openBtn){
+      openBtn.addEventListener('click', async ()=>{
+        // 全件取得済みならそのまま。未取得ならモーダルを開く前に候補を作る
+        if (!window.__DeckPostState?.list?.hasAllItems){
+          try{ await fetchAllList(); }catch(_){ }
+        }
+
+        // ★ モーダルを開くたびに「適用済み → 下書き」を同期
+        syncDraftFromApplied_();
+
+        buildPostFilterTagUI_();
+
+        // ★ フィルターを開く前に campaignTagSet を必ず初期化（遅延読み込み対策）
+        if (!(window.__campaignTagSet instanceof Set)) {
+          try {
+            const res = await apiCampaignTags();
+            const tags = (res && res.ok && Array.isArray(res.tags)) ? res.tags : [];
+            window.__campaignTagSet = new Set(tags.map(t => String(t).trim()).filter(Boolean));
+          } catch (e) {
+            window.__campaignTagSet = new Set();
+          }
+          try { await renderCampaignBanner(); } catch (e) {}
+        }
+
+        // details の ▶/▼ 同期
+        bindChevronSync_(modal);
+
+        openPostFilter();
+      });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closePostFilter);
+    if (applyBtn) applyBtn.addEventListener('click', ()=>{ applyPostFilter_(); });
+    if (resetBtn) resetBtn.addEventListener('click', ()=>{ resetDraft_(); });
+
+    // ★ 画面外タップで閉じるのは禁止（何もしない）
+    // ★ ESCで閉じるのも禁止（何もしない）
+  });
+})();;
+
+
 
   // ★ 1ページあたりの件数（UI表示用）
   const PAGE_LIMIT = 10;
@@ -780,92 +1170,6 @@ async function deletePost_(postId){
     t.innerHTML = html.trim();
     return t.content.firstElementChild;
   }
-
-  // ===== タグ／種族まわり =====
-  // ===== フィルター用：投稿からタグ一覧を集める =====
-function collectAllAutoTags() {
-  const set = new Set();
-
-  for (const item of state.list.allItems || []) {
-    const auto = String(item.tagsAuto || '');
-    const pick = String(item.tagsPick || '');
-    const s = [auto, pick].filter(Boolean).join(',');
-    if (!s) continue;
-
-    s.split(',').forEach(x => {
-      const tag = x.trim();
-      if (tag && shouldShowTag_(tag)) set.add(tag);
-    });
-  }
-  // 表示順は適当に五十音順
-  return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-}
-
-// ===== モーダル内：タグチェックボックス描画 =====
-function renderFilterAutoTags() {
-  const box = document.getElementById('filter-auto-tags');
-  if (!box) return;
-
-  const tags = collectAllAutoTags();
-  box.innerHTML = '';
-
-  if (!tags.length) {
-    box.innerHTML = '<p style="font-size:.85rem;color:#666;">まだタグ付きの投稿がありません。</p>';
-    return;
-  }
-
-  const frag = document.createDocumentFragment();
-
-  for (const tag of tags) {
-    const id = 'flt-auto-' + tag.replace(/[^\w\u3040-\u30ff\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff-]/g, '_');
-    const checked = filterState.autoTags.has(tag);
-
-    const label = document.createElement('label');
-    label.className = 'filter-chip'; // 必要ならCSS側で定義
-
-    label.innerHTML = `
-      <input type="checkbox"
-             value="${escapeHtml(tag)}"
-             ${checked ? 'checked' : ''}>
-      <span>${escapeHtml(tag)}</span>
-    `;
-    frag.appendChild(label);
-  }
-
-  box.appendChild(frag);
-}
-
-// モーダル内のチェック状態 → filterState に反映
-function updateFilterStateFromModal() {
-  filterState.autoTags.clear();
-
-  const box = document.getElementById('filter-auto-tags');
-  if (!box) return;
-
-  box.querySelectorAll('input[type="checkbox"]:checked').forEach(chk => {
-    const v = (chk.value || '').trim();
-    if (v) filterState.autoTags.add(v);
-  });
-}
-
-// フィルターのリセット
-function resetFilters() {
-  filterState.autoTags.clear();
-
-  window.PostFilterState.userTagQuery = '';
-  const input = document.getElementById('userTagQuery');
-  if (input) input.value = '';
-
-  const box = document.getElementById('filter-auto-tags');
-  if (box) {
-    box.querySelectorAll('input[type="checkbox"]').forEach(chk => {
-      chk.checked = false;
-    });
-  }
-
-  rebuildFilteredItems();
-  loadListPage(1);
-}
 
 
   // メイン種族 → 背景色
@@ -1388,6 +1692,116 @@ function buildSimpleDeckStats(item) {
   return { typeText, chg, atk, blk, totalType };
 }
 
+// =============================
+// 簡易デッキ統計（レアリティ構成）
+// =============================
+function buildRarityMixText_(item){
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length || !cardMap) return '';
+
+  let legend = 0, gold = 0, silver = 0, bronze = 0, unknown = 0;
+
+  for (const [cd, nRaw] of Object.entries(deck)) {
+    const n = Number(nRaw || 0) || 0;
+    if (!n) continue;
+
+    const cd5 = String(cd).padStart(5, '0');
+    const r = String((cardMap[cd5] || {}).rarity || '').trim();
+
+    if (r === 'レジェンド') legend += n;
+    else if (r === 'ゴールド') gold += n;
+    else if (r === 'シルバー') silver += n;
+    else if (r === 'ブロンズ') bronze += n;
+    else unknown += n;
+  }
+
+  const total = legend + gold + silver + bronze + unknown;
+  if (!total) return '';
+
+  const parts = [
+    `レジェンド ${legend}枚`,
+    `ゴールド ${gold}枚`,
+    `シルバー ${silver}枚`,
+    `ブロンズ ${bronze}枚`,
+  ];
+  if (unknown) parts.push(`不明 ${unknown}枚`);
+
+  return parts.join(' / ');
+}
+
+function buildRarityStats(item){
+  return { rarityText: buildRarityMixText_(item) || '' };
+}
+
+// =============================
+// 簡易デッキ統計（パック構成） ※表示は一旦 EN 名
+// =============================
+
+// pack_name 例: "BASIC SET「基本セット」" → "BASIC SET"
+function packNameEn_(packName){
+  const s = String(packName || '').trim();
+  if (!s) return '';
+  // 「」があれば手前をEN名として使う
+  const idx = s.indexOf('「');
+  if (idx > 0) return s.slice(0, idx).trim();
+  return s;
+}
+
+// packs.json がどこかでロードされていれば order を使う（無ければ空配列）
+function getPackOrder_(){
+  const p = window.packsData || window.packs || window.__packs || null;
+  const order = p && Array.isArray(p.order) ? p.order : [];
+  return order.map(x => String(x||'').trim()).filter(Boolean);
+}
+
+function buildPackMixText_(item){
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length || !cardMap) return '';
+
+  const counts = Object.create(null);
+  let unknown = 0;
+
+  for (const [cd, nRaw] of Object.entries(deck)) {
+    const n = Number(nRaw || 0) || 0;
+    if (!n) continue;
+
+    const cd5 = String(cd).padStart(5, '0');
+    const packName = (cardMap[cd5] || {}).pack_name || (cardMap[cd5] || {}).packName || '';
+    const en = packNameEn_(packName);
+
+    if (en) counts[en] = (counts[en] || 0) + n;
+    else unknown += n;
+  }
+
+  const keys = Object.keys(counts);
+  if (!keys.length && !unknown) return '';
+
+  // packs.json の順序があればそれを優先し、残りは名前順
+  const order = getPackOrder_();
+  keys.sort((a,b)=>{
+    const ia = order.indexOf(a);
+    const ib = order.indexOf(b);
+    if (ia !== -1 || ib !== -1){
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    }
+    return a.localeCompare(b);
+  });
+
+  const parts = keys.map(k => `${k} ${counts[k]}枚`);
+  if (unknown) parts.push(`UNKNOWN ${unknown}枚`);
+
+  return parts.join(' / ');
+}
+
+function buildPackStats(item){
+  return { packText: buildPackMixText_(item) || '' };
+}
+
+// =========================
 
 
 // ===== 詳細用：カード解説（cardNotes） =====
@@ -1730,28 +2144,18 @@ document.addEventListener('click', (e)=>{
 
 // ===== 1枚カードレンダリング（PC用） =====
 function buildCardPc(item, opts = {}){
-  const isMine = (opts.mode === 'mine');
-  const time     = item.updatedAt || item.createdAt || '';
-  const mainRace = getMainRace(item.races);
+  const isMine   = (opts.mode === 'mine');
   const bg       = raceBg(item.races);
-  const code     = item.shareCode || '';
-  const oldGod   = getOldGodNameFromItem(item) || '';// 旧神名
-  const deckNote = item.deckNote || item.comment || '';
-  const deckNoteHtml = buildDeckNoteHtml(deckNote);
-  const simpleStats = buildSimpleDeckStats(item);// タイプ構成情報
-  const typeMixText = simpleStats?.typeText || '';// タイプ構成テキスト
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
   const tagsUser = tagChipsUser(item.tagsUser);
-  const deckList = buildDeckListHtml(item);
-  const cardNotesHtml = buildCardNotesHtml(item);
 
   const posterXRaw   = (item.posterX || '').trim();
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
   // ===== いいね関連 =====
- const likeCount = Number(item.likeCount || 0);
+  const likeCount = Number(item.likeCount || 0);
   const liked     = !!item.liked;
   const favClass  = liked ? ' active' : '';
   const favSymbol = liked ? '★' : '☆';
@@ -1761,33 +2165,8 @@ function buildCardPc(item, opts = {}){
     ? `<button class="delete-btn" type="button" data-postid="${escapeHtml(item.postId || '')}" aria-label="投稿を削除">🗑</button>`
     : `<button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>`;
 
-  // ★ デッキコードコピー用ボタン（PC 詳細内）
-  const codeBtnHtml = code ? `
-        <div class="post-detail-code-body">
-          <button type="button"
-            class="btn-copy-code-wide"
-            data-code="${escapeHtml(code)}">
-            デッキコードをコピー
-          </button>
-        </div>
-  ` : '';
-
-  // カード解説があるかどうか判定
-  const hasCardNotes =
-    Array.isArray(item.cardNotes) &&
-    item.cardNotes.some(r => r && (r.cd || r.text));
-
-  const cardNotesSection = hasCardNotes ? `
-        <div class="post-detail-section">
-          <div class="post-detail-heading">カード解説</div>
-          <div class="post-detail-body post-detail-body--notes">
-            ${cardNotesHtml}
-          </div>
-        </div>
-  ` : '';
-
   return el(`
-    <article class="post-card post-card--pc" data-postid="${item.postId}" style="${bg ? `--race-bg:${bg};` : ''}">
+    <article class="post-card post-card--pc" data-postid="${escapeHtml(item.postId || '')}" style="${bg ? `--race-bg:${bg};` : ''}">
 
       <!-- 上段：代表カード + 情報（SPと同じ構造） -->
       <div class="sp-head">
@@ -1834,52 +2213,10 @@ function buildCardPc(item, opts = {}){
         <div class="post-tags post-tags-user">${tagsUser}</div>
       </div>
 
-      <!-- 詳細（SPと同じ内容。PC では狭い幅のときだけ使用） -->
-      <div class="post-detail" hidden>
-        <div class="post-detail-section">
-          <div class="post-detail-heading">デッキリスト</div>
-          <div class="post-decklist-hint">
-            👇 カードをタップすると詳細が表示されます
-          </div>
-          ${deckList}
-          ${codeBtnHtml}
-        </div>
-
-        <div class="post-detail-row">
-          <span>種族：${escapeHtml(mainRace || '')}</span>
-        </div>
-
-        <div class="post-detail-row">
-          <span>枚数：${item.count || 0}枚</span>
-        </div>
-
-        <div class="post-detail-row">
-          <span>旧神：${escapeHtml(oldGod || 'なし')}</span>
-        </div>
-
-        ${typeMixText ? `
-        <div class="post-detail-row">
-          <span>タイプ構成：${escapeHtml(typeMixText)}</span>
-        </div>
-        ` : ''}
-
-        <div class="post-detail-section">
-          <div class="post-detail-heading">デッキ解説</div>
-          <div class="post-detail-body post-detail-body--decknote">
-            ${deckNoteHtml}
-          </div>
-        </div>
-
-        ${cardNotesSection}
-
-        <div class="post-detail-footer">
-          <button type="button" class="btn-detail-close">閉じる</button>
-        </div>
-      </div>
-
     </article>
   `);
 }
+
 
 
 // ===== 1枚カードレンダリング（スマホ用） =====
@@ -1893,6 +2230,10 @@ function buildCardSp(item, opts = {}){
   const deckNoteHtml = buildDeckNoteHtml(deckNote);
   const simpleStats = buildSimpleDeckStats(item);// タイプ構成情報
   const typeMixText = simpleStats?.typeText || '';// タイプ構成テキスト
+  const rarityStats = buildRarityStats(item); // レアリティ構成情報
+  const rarityMixText = rarityStats?.rarityText || ''; // レアリティ構成テキスト
+  const packMixText   = buildPackMixText_(item);   // パック構成テキスト（EN）
+
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
   const tagsUser = tagChipsUser(item.tagsUser);
@@ -2038,7 +2379,12 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
         ${isMine ? `<div class="post-detail-inner" data-postid="${escapeHtml(item.postId || '')}">` : ''}
 
         <div class="post-detail-section">
-          <div class="post-detail-heading">デッキリスト</div>
+          <div class="post-detail-heading-row">
+            <div class="post-detail-heading">デッキリスト</div>
+            <div class="post-detail-heading-actions">
+              <button type="button" class="btn-decklist-export">リスト保存</button>
+            </div>
+          </div>
           <div class="post-decklist-hint">
             👇 カードをタップすると詳細が表示されます
           </div>
@@ -2061,6 +2407,18 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
         ${typeMixText ? `
         <div class="post-detail-row">
           <span>タイプ構成：${escapeHtml(typeMixText)}</span>
+        </div>
+        ` : ''}
+
+        ${rarityMixText ? `
+        <div class="post-detail-row">
+          <span>レアリティ構成：${escapeHtml(rarityMixText)}</span>
+        </div>
+        ` : ''}
+
+        ${packMixText ? `
+        <div class="post-detail-row">
+          <span>パック構成：${escapeHtml(packMixText)}</span>
         </div>
         ` : ''}
 
@@ -2233,9 +2591,11 @@ function oneCard(item, opts = {}){
     // カード解説HTML
     const cardNotesHtml = buildCardNotesHtml(item);
 
-    // ★ 簡易デッキ統計（タイプ構成だけ）
-    const simpleStats = buildSimpleDeckStats(item);
-    const typeMixText = simpleStats?.typeText || '';
+    // タイプ構成情報
+    const simpleStats = buildSimpleDeckStats(item); // タイプ構成情報
+    const typeMixText = simpleStats?.typeText || ''; // タイプ構成テキスト
+    const rarityMixText = buildRarityMixText_(item); // レアリティ構成テキスト
+  const packMixText   = buildPackMixText_(item);   // パック構成テキスト（EN）
 
     // ===== デッキコード（右ペイン）=====
     const codeNorm = String(code || '').trim();
@@ -2343,6 +2703,13 @@ function oneCard(item, opts = {}){
                 ? `<dt>タイプ構成</dt><dd>${escapeHtml(typeMixText)}</dd>`
                 : ''
               }
+              ${rarityMixText
+                ? `<dt>レアリティ構成</dt><dd>${escapeHtml(rarityMixText)}</dd>`
+                : ''}
+
+              ${packMixText
+                ? `<dt>パック構成</dt><dd>${escapeHtml(packMixText)}</dd>`
+                : ''}
             </div>
 
             <div class="post-detail-tags">
@@ -2503,7 +2870,12 @@ function oneCard(item, opts = {}){
         <!-- 右カラム：常時表示のデッキリスト＋デッキコードコピー -->
         <aside class="post-detail-deckcol">
           <div class="post-detail-section">
-            <div class="post-detail-heading">デッキリスト</div>
+            <div class="post-detail-heading-row">
+              <div class="post-detail-heading">デッキリスト</div>
+              <div class="post-detail-heading-actions">
+                <button type="button" class="btn-decklist-export">リスト保存</button>
+              </div>
+            </div>
             <div class="post-decklist-hint">
               👇 カードをタップすると詳細が表示されます
             </div>
@@ -2598,6 +2970,51 @@ function appendPresetToTextarea_(ta, presetKey){
 
 // クリック委任（右ペインは描画し直すので委任が安全）
 document.addEventListener('click', async (e) => {
+
+  // デッキリスト：画像保存ボタン → 画像生成モーダルを開く
+  const exportBtn = e.target.closest?.('.btn-decklist-export');
+  if (exportBtn){
+    e.preventDefault();
+    e.stopPropagation();
+
+    const root = e.target.closest('.post-detail-inner') || e.target.closest('[data-postid]');
+    const postId = String(root?.dataset?.postid || '').trim();
+    if (!postId) return;
+
+    const item = findPostItemById(postId);
+    if (!item) return;
+
+    // ✅ 投稿のデッキは「投稿itemから」取る（window.deckを見ない）
+    const deckMap = extractDeckMap(item); // 既にある想定のヘルパ
+
+    // ✅ メイン種族・代表カードも投稿から渡す
+    const mainRace = getMainRace(item.races);
+
+    // 代表カードのcdは、あなたのitem構造に合わせてここだけ調整してOK
+    // 例：item.repCd / item.repCardCd / item.rep / item.repCard など
+    const repCd = String(item.repCd || item.repCardCd || item.rep || '').trim().padStart(5,'0');
+
+    await window.exportDeckImage({
+      deck: deckMap,
+      deckName: item.title || '',
+      posterName: item.posterName || item.poster || '',
+      posterX: item.posterX || item.x || '',
+      mainRace,
+      representativeCd: repCd,
+
+      // 投稿はクレジット出したい（デッキメーカーは false で呼ぶ）
+      showCredit: true,
+
+      // 投稿側は「40超え」はまず起きないので、気になるならスキップ可
+      skipSizeCheck: true,
+    });
+
+    return;
+  }
+
+
+
+
   // 編集開始
   if (e.target.matches('.btn-decknote-edit')) {
     const section = e.target.closest('.post-detail-section');
@@ -2807,6 +3224,100 @@ document.addEventListener('click', async (e) => {
     return;
   }
 
+  // =========================
+  // マイ投稿：削除ボタン
+  // =========================
+    const btn = e.target.closest('#myPostList .delete-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const postId = String(btn.dataset.postid || '').trim();
+  if (!postId) return;
+
+  // タイトルを拾って確認文を丁寧に
+  const card  = btn.closest('.post-card');
+  const title = card?.querySelector('.sp-title')?.textContent?.trim()
+            || card?.querySelector('.pc-title')?.textContent?.trim()
+            || 'この投稿';
+
+  const msg =
+`「${title}」を削除します。
+削除すると元に戻せません。よろしいですか？`;
+
+  // ★ confirm → モーダル
+  const ok = await confirmDeleteByModal_(msg);
+  if (!ok) return;
+
+  btn.disabled = true;
+
+  try{
+    const r = await window.deletePost_(postId);
+    if (!r || !r.ok){
+      alert((r && r.error) || '削除に失敗しました');
+      return;
+    }
+
+    // ✅ 削除完了トースト
+    showActionToast('投稿を削除しました');
+
+    // ✅ 右ペイン（マイ投稿側）で表示中なら空に
+    const paneMine = document.getElementById('postDetailPaneMine');
+    if (paneMine){
+      const showingId = paneMine.querySelector('.post-detail-inner')?.dataset?.postid;
+      if (String(showingId || '') === postId){
+        paneMine.innerHTML = `
+          <div class="post-detail-empty">
+            <div class="post-detail-empty-icon">👈</div>
+            <div class="post-detail-empty-text">
+              <div class="post-detail-empty-title">デッキ詳細パネル</div>
+              <p class="post-detail-empty-main">
+                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
+                ここにそのデッキの詳細が表示されます。
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ✅ 右ペイン（一覧側）で表示中でも空に（同一投稿が開かれてる可能性）
+    const paneList = document.getElementById('postDetailPane');
+    if (paneList){
+      const showingId = paneList.querySelector('.post-detail-inner')?.dataset?.postid;
+      if (String(showingId || '') === postId){
+        paneList.innerHTML = `
+          <div class="post-detail-empty">
+            <div class="post-detail-empty-icon">👈</div>
+            <div class="post-detail-empty-text">
+              <div class="post-detail-empty-title">デッキ詳細パネル</div>
+              <p class="post-detail-empty-main">
+                左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
+                ここにそのデッキの詳細が表示されます。
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ✅ 一覧データも即時から削除（“投稿一覧の一新” = 表示の整合性を取る）
+    const S = window.__DeckPostState;
+    if (S?.list){
+      S.list.allItems = (S.list.allItems || []).filter(it => String(it.postId || '') !== postId);
+      S.list.total = (S.list.allItems || []).length;
+    }
+
+    // ✅ まずは「マイ投稿」を再読み込み（ページャ/件数も正しくなる）
+    await window.DeckPostApp?.reloadMine?.();
+
+    // ✅ 一覧も再描画（今のページを維持してフィルタ/ソート反映）
+    window.DeckPostApp?.applySortAndRerenderList?.();
+
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // =========================
@@ -4131,102 +4642,6 @@ function confirmDeleteByModal_(text){
     closeBtn?.addEventListener('click', onCancel);
   });
 }
-
-
-// ===== マイ投稿：削除ボタン（GASへ削除）=====
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('#myPostList .delete-btn');
-  if (!btn) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const postId = String(btn.dataset.postid || '').trim();
-  if (!postId) return;
-
-  // タイトルを拾って確認文を丁寧に
-  const card  = btn.closest('.post-card');
-  const title = card?.querySelector('.sp-title')?.textContent?.trim()
-            || card?.querySelector('.pc-title')?.textContent?.trim()
-            || 'この投稿';
-
-  const msg =
-`「${title}」を削除します。
-削除すると元に戻せません。よろしいですか？`;
-
-  // ★ confirm → モーダル
-  const ok = await confirmDeleteByModal_(msg);
-  if (!ok) return;
-
-  btn.disabled = true;
-
-  try{
-    const r = await window.deletePost_(postId);
-    if (!r || !r.ok){
-      alert((r && r.error) || '削除に失敗しました');
-      return;
-    }
-
-    // ✅ 削除完了トースト
-    showActionToast('投稿を削除しました');
-
-    // ✅ 右ペイン（マイ投稿側）で表示中なら空に
-    const paneMine = document.getElementById('postDetailPaneMine');
-    if (paneMine){
-      const showingId = paneMine.querySelector('.post-detail-inner')?.dataset?.postid;
-      if (String(showingId || '') === postId){
-        paneMine.innerHTML = `
-          <div class="post-detail-empty">
-            <div class="post-detail-empty-icon">👈</div>
-            <div class="post-detail-empty-text">
-              <div class="post-detail-empty-title">デッキ詳細パネル</div>
-              <p class="post-detail-empty-main">
-                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
-                ここにそのデッキの詳細が表示されます。
-              </p>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    // ✅ 右ペイン（一覧側）で表示中でも空に（同一投稿が開かれてる可能性）
-    const paneList = document.getElementById('postDetailPane');
-    if (paneList){
-      const showingId = paneList.querySelector('.post-detail-inner')?.dataset?.postid;
-      if (String(showingId || '') === postId){
-        paneList.innerHTML = `
-          <div class="post-detail-empty">
-            <div class="post-detail-empty-icon">👈</div>
-            <div class="post-detail-empty-text">
-              <div class="post-detail-empty-title">デッキ詳細パネル</div>
-              <p class="post-detail-empty-main">
-                左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
-                ここにそのデッキの詳細が表示されます。
-              </p>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    // ✅ 一覧データも即時から削除（“投稿一覧の一新” = 表示の整合性を取る）
-    const S = window.__DeckPostState;
-    if (S?.list){
-      S.list.allItems = (S.list.allItems || []).filter(it => String(it.postId || '') !== postId);
-      S.list.total = (S.list.allItems || []).length;
-    }
-
-    // ✅ まずは「マイ投稿」を再読み込み（ページャ/件数も正しくなる）
-    await window.DeckPostApp?.reloadMine?.();
-
-    // ✅ 一覧も再描画（今のページを維持してフィルタ/ソート反映）
-    window.DeckPostApp?.applySortAndRerenderList?.();
-
-  } finally {
-    btn.disabled = false;
-  }
-});
 
 
 // ===== 汎用トースト（削除/保存など）=====

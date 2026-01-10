@@ -361,12 +361,31 @@
                 <!-- タグで絞り込み -->
                 <div class="filter-block">
                     <strong class="filter-title">タグで絞り込み</strong>
-                    <p class="filter-help">
-                        自動タグ・選択タグをもとに投稿を絞り込めます。
-                    </p>
-                    <div id="postFilterTagArea" class="filter-group" data-key="投稿タグ">
-                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    <p class="filter-help">デッキ情報 / 種族 / カテゴリ（テーマ）で整理して表示します。</p>
+
+                    <!-- ▼ デッキ情報（常時表示） -->
+                    <div class="filter-section">
+                        <div class="filter-section-title">▼ デッキ情報</div>
+                        <div id="postFilterDeckInfoArea" class="filter-group" data-key="デッキ情報">
+                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                        </div>
                     </div>
+
+                    <!-- ▼ 種族（常時表示） -->
+                    <div class="filter-section">
+                        <div class="filter-section-title">▼ 種族</div>
+                        <div id="postFilterRaceArea" class="filter-group" data-key="種族">
+                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                        </div>
+                    </div>
+
+                    <!-- ▶ カテゴリ（テーマ）（折りたたみ） -->
+                    <details class="filter-details" id="postFilterCategoryDetails">
+                        <summary class="filter-section-title">▶ カテゴリ（テーマ）</summary>
+                        <div id="postFilterCategoryArea" class="filter-group" data-key="カテゴリ">
+                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                        </div>
+                    </details>
                 </div>
                 <!-- ユーザータグで絞り込み -->
                 <div class="filter-block">

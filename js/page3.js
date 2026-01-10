@@ -741,7 +741,7 @@ async function buildOwnedShareURL(){
 ========================*/
 
 // 種族表示順
-const RACE_ORDER = ['ドラゴン','アンドロイド','エレメンタル','ルミナス','シェイド','イノセント','旧神'];
+const RACE_ORDER = window.RACE_ORDER_all;slice(); // コピーして使う
 
 //種族名→スラッグ化
 const RACE_SLUG = {
