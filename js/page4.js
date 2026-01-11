@@ -1318,6 +1318,17 @@ function extractDeckMap(item){
       }
     }catch(_){}
   }
+  // ---- cdキーを必ず5桁に正規化（repCd照合ズレ防止）----
+  if (deck && typeof deck === 'object') {
+    const norm = {};
+    for (const [cd, n] of Object.entries(deck)) {
+      const cd5 = String(cd || '').trim().padStart(5, '0');
+      const cnt = Number(n || 0) || 0;
+      if (!cd5 || cnt <= 0) continue;
+      norm[cd5] = (norm[cd5] || 0) + cnt;
+    }
+    deck = norm;
+  }
 
   return deck;
 }
@@ -2990,9 +3001,32 @@ document.addEventListener('click', async (e) => {
     // ✅ メイン種族・代表カードも投稿から渡す
     const mainRace = getMainRace(item.races);
 
-    // 代表カードのcdは、あなたのitem構造に合わせてここだけ調整してOK
-    // 例：item.repCd / item.repCardCd / item.rep / item.repCard など
-    const repCd = String(item.repCd || item.repCardCd || item.rep || '').trim().padStart(5,'0');
+    // cd正規化（空なら空のまま）
+    const normCd = (cd) => {
+      const s = String(cd || '').trim();
+      return s ? s.padStart(5, '0') : '';
+    };
+
+    // 代表カード：まずは投稿item（＝シート由来）から探す（空なら空のまま）
+    let repCd = normCd(
+      item.repCd || item.repCardCd || item.rep || item.repCard || item.representativeCd || ''
+    );
+
+    // repImg しか無い場合は、URL/パスから cd を抜く（例: img/80002.webp）
+    if (!repCd) {
+      const src = String(item.repImg || '').trim();
+      const m = src.match(/(?:^|\/)(\d{5})(?:\.(?:webp|png|jpe?g))(?:\?.*)?$/i);
+      if (m) repCd = m[1];
+    }
+
+    // それでも無い / デッキに入ってないなら「安定した順序」でフォールバック
+    if (!repCd || !deckMap?.[repCd]) {
+      repCd = Object.keys(deckMap || {})
+        .map(normCd)
+        .filter(Boolean)
+        .sort((a,b)=>a.localeCompare(b))[0] || '';
+    }
+
 
     await window.exportDeckImage({
       deck: deckMap,
@@ -3010,6 +3044,7 @@ document.addEventListener('click', async (e) => {
     });
 
     return;
+
   }
 
 
