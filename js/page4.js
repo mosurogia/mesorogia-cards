@@ -1268,6 +1268,27 @@ function refreshCampaignTagChips_(){
   const set = window.__campaignTagSet;
   if (!(set instanceof Set) || !set.size) return;
 
+  const isCamp = (t)=> set.has(String(t || '').trim());
+
+  // ① 投稿カード内のタグ順を「通常 → キャンペーン」の順に揃える
+  //    （初期描画時に __campaignTagSet が未ロードだと並び替えが効かないため、ここで矯正）
+  document.querySelectorAll('.post-tags').forEach(box => {
+    // 直下の .chip だけ対象（入れ子対策）
+    const chips = Array.from(box.querySelectorAll(':scope > .chip'));
+    if (chips.length < 2) return;
+
+    const normal = [];
+    const camp   = [];
+    for (const ch of chips){
+      const t = (ch.textContent || '').trim();
+      (isCamp(t) ? camp : normal).push(ch);
+    }
+    if (!camp.length) return;
+
+    box.replaceChildren(...normal, ...camp);
+  });
+
+  // ② 投稿一覧/マイ投稿：キャンペーンタグの状態クラスを付け直す
   const roots = [
     document.getElementById('postList'),
     document.getElementById('myPostList'),
@@ -1280,13 +1301,24 @@ function refreshCampaignTagChips_(){
       if (!t) return;
       if (!set.has(t)) return;
 
-      // いったん状態クラスを剥がして付け直す
       el.classList.remove('is-campaign','is-campaign-active','is-campaign-ended');
       const cls = campaignTagClass_(t);
       if (cls) el.classList.add(...cls.split(/\s+/).filter(Boolean));
     });
   }
+
+  // ③ フィルターボタン側も状態クラスを付け直す
+  document.querySelectorAll('.post-filter-tag-btn').forEach(btn => {
+    const t = (btn.textContent || '').trim();
+    if (!t) return;
+    if (!set.has(t)) return;
+
+    btn.classList.remove('is-campaign','is-campaign-active','is-campaign-ended');
+    const cls = campaignTagClass_(t);
+    if (cls) btn.classList.add(...cls.split(/\s+/).filter(Boolean));
+  });
 }
+
 
 // ===== キャンペーンタグ：状態クラス =====
 function campaignTagClass_(tag){
@@ -1433,6 +1465,137 @@ function getOldGodNameFromItem(item){
   }
 
   return '';
+}
+
+// ===== コスト／パワー分布グラフ（デッキメーカーと同じ方式） =====
+// paneId -> { cost: Chart, power: Chart }
+window.__postDistCharts ??= {};
+
+function renderPostDistCharts_(item, paneId){
+  // Chart.js が無いなら何もしない
+  if (!window.Chart) return;
+
+  // plugin（無ければ握りつぶし）
+  try { Chart.register(window.ChartDataLabels); } catch (_){}
+
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length) return;
+
+  // deckCards（最大40枚なので展開でOK）
+  const deckCards = [];
+  for (const [cd, n] of Object.entries(deck)){
+    const c = cardMap[String(cd).padStart(5,'0')] || {};
+    const cost  = Number(c.cost);
+    const power = Number(c.power);
+    const type  = String(c.type || '');
+    const cnt   = Number(n || 0) || 0;
+    for (let i=0; i<cnt; i++){
+      deckCards.push({
+        cost:  Number.isFinite(cost)  ? cost  : NaN,
+        power: Number.isFinite(power) ? power : NaN,
+        type,
+      });
+    }
+  }
+
+  // 目盛り（固定表示）
+  const alwaysShowCosts  = [2, 4, 6, 8, 10, 12];
+  const alwaysShowPowers = [0, 4, 5, 6, 7, 8, 12, 16];
+
+  const costCount = {};
+  const powerCount = {};
+  deckCards.forEach(c => {
+    if (!Number.isNaN(c.cost))  costCount[c.cost]  = (costCount[c.cost]  || 0) + 1;
+    if (!Number.isNaN(c.power)) powerCount[c.power] = (powerCount[c.power] || 0) + 1;
+  });
+
+  const costLabels = [...new Set([...alwaysShowCosts, ...Object.keys(costCount).map(Number)])].sort((a,b)=>a-b);
+  const powerLabels = [...new Set([...alwaysShowPowers, ...Object.keys(powerCount).map(Number)])].sort((a,b)=>a-b);
+
+    // ===== サマリー（チップ） =====
+  const sumCost = deckCards.reduce((s, c) => s + (Number.isFinite(c.cost) ? c.cost : 0), 0);
+  const costSumEl = document.getElementById(`cost-summary-${paneId}`);
+  if (costSumEl) {
+    costSumEl.innerHTML = `<span class="stat-chip">総コスト ${sumCost}</span>`;
+  }
+
+  const powerSums = { 'チャージャー':0, 'アタッカー':0 };
+  deckCards.forEach(c => {
+    const p = Number.isFinite(c.power) ? c.power : 0;
+    if (c.type in powerSums) powerSums[c.type] += p;
+  });
+  const powerSumEl = document.getElementById(`power-summary-${paneId}`);
+  if (powerSumEl) {
+    powerSumEl.innerHTML = `
+      <span class="type-chip" data-type="チャージャー">チャージャー ${powerSums['チャージャー']}</span>
+      <span class="type-chip" data-type="アタッカー">アタッカー ${powerSums['アタッカー']}</span>
+    `;
+  }
+
+
+  const TYPES = ['チャージャー', 'アタッカー', 'ブロッカー'];
+  const COLORS = {
+    'チャージャー': 'rgba(119, 170, 212, 0.7)',
+    'アタッカー':   'rgba(125, 91, 155, 0.7)',
+    'ブロッカー':   'rgba(214, 212, 204, 0.7)',
+  };
+
+  function buildStackCounts(cards, key, labels) {
+    const table = {};
+    TYPES.forEach(t => { table[t] = Object.fromEntries(labels.map(l => [l, 0])); });
+    cards.forEach(c => {
+      const v = Number(c[key]);
+      const t = c.type;
+      if (!Number.isNaN(v) && table[t] && (v in table[t])) table[t][v]++;
+    });
+    return TYPES.map(t => ({
+      label: t,
+      data: labels.map(l => table[t][l] || 0),
+      backgroundColor: COLORS[t],
+      borderWidth: 0,
+      barPercentage: 0.9,
+      categoryPercentage: 0.9,
+    }));
+  }
+
+  const costDatasets  = buildStackCounts(deckCards, 'cost',  costLabels);
+  const powerDatasets = buildStackCounts(deckCards, 'power', powerLabels);
+
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { stacked: true, grid: { display: false, drawBorder: false }, ticks: { autoSkip: false } },
+      y: { stacked: true, beginAtZero: true, grid: { display: false, drawBorder: false }, ticks: { display: false } }
+    },
+    plugins: {
+      legend: { display: false },
+      datalabels: {
+        display: true,
+        anchor: 'center',
+        align: 'center',
+        formatter: v => v > 0 ? v : '',
+        font: { weight: 600 },
+        clamp: true
+      },
+      tooltip: { enabled: true },
+    },
+  };
+
+  // 既存インスタンス破棄（paneごと）
+  const prev = window.__postDistCharts[paneId];
+  if (prev?.cost)  try{ prev.cost.destroy(); } catch(_){}
+  if (prev?.power) try{ prev.power.destroy(); } catch(_){}
+
+  const costCanvas  = document.getElementById(`costChart-${paneId}`);
+  const powerCanvas = document.getElementById(`powerChart-${paneId}`);
+  if (!costCanvas || !powerCanvas) return;
+
+  const costChart  = new Chart(costCanvas.getContext('2d'),  { type:'bar', data:{ labels:costLabels,  datasets:costDatasets  }, options:commonOptions });
+  const powerChart = new Chart(powerCanvas.getContext('2d'), { type:'bar', data:{ labels:powerLabels, datasets:powerDatasets }, options:commonOptions });
+
+  window.__postDistCharts[paneId] = { cost: costChart, power: powerChart };
 }
 
 
@@ -1829,9 +1992,147 @@ function buildRarityStats(item){
 }
 
 // =============================
+// チップHTML（タイプ構成）
+// =============================
+function buildTypeChipsHtml_(simpleStats){
+  if (!simpleStats) return '';
+  const rows = [
+    ['チャージャー', simpleStats.chg],
+    ['アタッカー',   simpleStats.atk],
+    ['ブロッカー',   simpleStats.blk],
+  ].filter(([,n]) => (Number(n || 0) || 0) > 0);
+
+  if (!rows.length) return '';
+  return rows.map(([t,n]) =>
+    `<span class="type-chip" data-type="${escapeHtml(t)}">${escapeHtml(t)} ${Number(n)}枚</span>`
+  ).join('');
+}
+
+// =============================
+// チップ用（レアリティ構成：数える）
+// =============================
+function buildRarityMixCounts_(item){
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length || !cardMap) return null;
+
+  let legend = 0, gold = 0, silver = 0, bronze = 0, unknown = 0;
+
+  for (const [cd, nRaw] of Object.entries(deck)) {
+    const n = Number(nRaw || 0) || 0;
+    if (!n) continue;
+
+    const cd5 = String(cd).padStart(5, '0');
+    const r = String((cardMap[cd5] || {}).rarity || '').trim();
+
+    if (r === 'レジェンド') legend += n;
+    else if (r === 'ゴールド') gold += n;
+    else if (r === 'シルバー') silver += n;
+    else if (r === 'ブロンズ') bronze += n;
+    else unknown += n;
+  }
+
+  const total = legend + gold + silver + bronze + unknown;
+  if (!total) return null;
+  return { legend, gold, silver, bronze, unknown, total };
+}
+
+function buildRarityChipsHtml_(item){
+  const c = buildRarityMixCounts_(item);
+  if (!c) return '';
+
+  const out = [];
+  if (c.legend) out.push(`<span class="stat-chip carddetail-rarity carddetail-rarity--legend">レジェンド ${c.legend}枚</span>`);
+  if (c.gold)   out.push(`<span class="stat-chip carddetail-rarity carddetail-rarity--gold">ゴールド ${c.gold}枚</span>`);
+  if (c.silver) out.push(`<span class="stat-chip carddetail-rarity carddetail-rarity--silver">シルバー ${c.silver}枚</span>`);
+  if (c.bronze) out.push(`<span class="stat-chip carddetail-rarity carddetail-rarity--bronze">ブロンズ ${c.bronze}枚</span>`);
+  if (c.unknown) out.push(`<span class="stat-chip">不明 ${c.unknown}枚</span>`);
+
+  return out.join('');
+}
+
+// =============================
+// チップ用（パック略称）
+// =============================
+function packAbbr_(enName){
+  const s = String(enName || '').trim();
+  const low = s.toLowerCase();
+
+  // 表記ゆれ吸収（Awaking/Awakening, Slience/Silence）
+  if (low.includes('awakening the oracle') || low.includes('awaking the oracle')) return 'Aパック';
+  if (low.includes('beyond the sanctuary')) return 'Bパック';
+  if (low.includes('creeping souls')) return 'Cパック';
+  if (low.includes('drawn sword')) return 'Dパック';
+  if (low.includes('ensemble of silence') || low.includes('ensemble of slience')) return 'Eパック';
+
+  // packs.json の「コラボカード」などが enName 側に来る可能性もあるので保険
+  if (s.includes('コラボ') || low.includes('collab')) return 'コラボ';
+  if (s.includes('その他特殊') || low.includes('special')) return '特殊';
+  if (s.includes('その他')) return 'その他';
+
+  // 不明はそのまま（ひとまず）
+  return s;
+}
+
+function buildPackMixCounts_(item){
+  const deck = extractDeckMap(item);
+  const cardMap = window.cardMap || {};
+  if (!deck || !Object.keys(deck).length || !cardMap) return null;
+
+  const counts = Object.create(null);
+  let unknown = 0;
+
+  for (const [cd, nRaw] of Object.entries(deck)) {
+    const n = Number(nRaw || 0) || 0;
+    if (!n) continue;
+
+    const cd5 = String(cd).padStart(5, '0');
+    const packName = (cardMap[cd5] || {}).pack_name || (cardMap[cd5] || {}).packName || '';
+    const en = packNameEn_(packName);
+
+    if (en) counts[en] = (counts[en] || 0) + n;
+    else unknown += n;
+  }
+
+  const keys = Object.keys(counts);
+  if (!keys.length && !unknown) return null;
+
+  const order = getPackOrder_();
+  keys.sort((a,b)=>{
+    const ia = order.indexOf(a);
+    const ib = order.indexOf(b);
+    if (ia !== -1 || ib !== -1){
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    }
+    return a.localeCompare(b);
+  });
+
+  return { keys, counts, unknown };
+}
+
+function buildPackChipsHtml_(item){
+  const d = buildPackMixCounts_(item);
+  if (!d) return '';
+
+  const out = [];
+  for (const k of d.keys){
+    const n = Number(d.counts[k] || 0) || 0;
+    if (!n) continue;
+    const abbr = packAbbr_(k);
+    out.push(`<span class="stat-chip">${escapeHtml(abbr)} ${n}枚</span>`);
+  }
+  if (d.unknown){
+    out.push(`<span class="stat-chip">不明 ${Number(d.unknown)}枚</span>`);
+  }
+  return out.join('');
+}
+
+
+// =============================
 // 簡易デッキ統計（パック構成） ※表示は一旦 EN 名
 // =============================
-
 // pack_name 例: "BASIC SET「基本セット」" → "BASIC SET"
 function packNameEn_(packName){
   const s = String(packName || '').trim();
@@ -2352,6 +2653,9 @@ function buildCardSp(item, opts = {}){
   const rarityStats = buildRarityStats(item); // レアリティ構成情報
   const rarityMixText = rarityStats?.rarityText || ''; // レアリティ構成テキスト
   const packMixText   = buildPackMixText_(item);   // パック構成テキスト（EN）
+  const typeChipsHtml   = buildTypeChipsHtml_(simpleStats);
+  const rarityChipsHtml = buildRarityChipsHtml_(item);
+  const packChipsHtml   = buildPackChipsHtml_(item);
 
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
@@ -2517,35 +2821,28 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
           ${codeBtnHtml}
         </div>
 
-        <div class="post-detail-row">
-          <span>種族：${escapeHtml(mainRace || '')}</span>
-        </div>
 
-        <div class="post-detail-row">
-          <span>枚数：${item.count || 0}枚</span>
-        </div>
+        <dl class="post-detail-summary">
+          <dt>種族</dt><dd>${escapeHtml(mainRace || '')}</dd>
+          <dt>枚数</dt><dd>${item.count || 0}枚</dd>
+          <dt>旧神</dt><dd>${escapeHtml(oldGod || 'なし')}</dd>
 
-        <div class="post-detail-row">
-          <span>旧神：${escapeHtml(oldGod || 'なし')}</span>
-        </div>
+          ${typeChipsHtml
+            ? `<dt>タイプ構成</dt><dd><div class="post-detail-chips">${typeChipsHtml}</div></dd>`
+            : ''
+          }
 
-        ${typeMixText ? `
-        <div class="post-detail-row">
-          <span>タイプ構成：${escapeHtml(typeMixText)}</span>
-        </div>
-        ` : ''}
+          ${rarityChipsHtml
+            ? `<dt>レアリティ構成</dt><dd><div class="post-detail-chips">${rarityChipsHtml}</div></dd>`
+            : ''
+          }
 
-        ${rarityMixText ? `
-        <div class="post-detail-row">
-          <span>レアリティ構成：${escapeHtml(rarityMixText)}</span>
-        </div>
-        ` : ''}
+          ${packChipsHtml
+            ? `<dt>パック構成</dt><dd><div class="post-detail-chips">${packChipsHtml}</div></dd>`
+            : ''
+          }
+        </dl>
 
-        ${packMixText ? `
-        <div class="post-detail-row">
-          <span>パック構成：${escapeHtml(packMixText)}</span>
-        </div>
-        ` : ''}
 
         <div class="post-detail-section">
 
@@ -2720,7 +3017,11 @@ function oneCard(item, opts = {}){
     const simpleStats = buildSimpleDeckStats(item); // タイプ構成情報
     const typeMixText = simpleStats?.typeText || ''; // タイプ構成テキスト
     const rarityMixText = buildRarityMixText_(item); // レアリティ構成テキスト
-  const packMixText   = buildPackMixText_(item);   // パック構成テキスト（EN）
+    const packMixText   = buildPackMixText_(item);   // パック構成テキスト（EN）
+    const typeChipsPane   = buildTypeChipsHtml_(simpleStats);
+    const rarityChipsPane = buildRarityChipsHtml_(item);
+    const packChipsPane   = buildPackChipsHtml_(item);
+
 
     // ===== デッキコード（右ペイン）=====
     const codeNorm = String(code || '').trim();
@@ -2784,7 +3085,7 @@ function oneCard(item, opts = {}){
 
         <div class="post-detail-main">
 
-          <!-- 上段：代表カード＋タイトル＋投稿者 -->
+          <!-- 上段：代表カード＋タイトル＋投稿者＋タグ -->
           <div class="post-detail-main-top">
           <!-- 左：代表カード -->
           <div class="post-detail-main-left">
@@ -2814,37 +3115,56 @@ function oneCard(item, opts = {}){
               <div class="post-detail-actions">
                 <button type="button" class="btn-add-compare">比較に追加</button>
               </div>
+              <!-- タグ -->
+              <div class="post-detail-tags">
+                <div class="post-tags post-tags-main">${tagsMain}</div>
+                <div class="post-tags post-tags-user">${tagsUser}</div>
+              </div>
             </header>
           </div>
           </div>
 
-          <!-- 中段：デッキ分析 -->
 
+          <!-- 中段：デッキ分析 -->
             <div class="post-detail-summary">
               <dt>デッキ枚数</dt><dd>${item.count || 0}枚</dd>
               <dt>種族</dt><dd>${escapeHtml(mainRace || '')}</dd>
               <dt>旧神</dt><dd>${escapeHtml(oldGod || 'なし')}</dd>
-              ${typeMixText
-                ? `<dt>タイプ構成</dt><dd>${escapeHtml(typeMixText)}</dd>`
+              ${typeChipsPane
+                ? `<dt>タイプ構成</dt><dd><div class="post-detail-chips">${typeChipsPane}</div></dd>`
                 : ''
               }
-              ${rarityMixText
-                ? `<dt>レアリティ構成</dt><dd>${escapeHtml(rarityMixText)}</dd>`
-                : ''}
-
-              ${packMixText
-                ? `<dt>パック構成</dt><dd>${escapeHtml(packMixText)}</dd>`
-                : ''}
+              ${rarityChipsPane
+                ? `<dt>レアリティ構成</dt><dd><div class="post-detail-chips">${rarityChipsPane}</div></dd>`
+                : ''
+              }
+              ${packChipsPane
+                ? `<dt>パック構成</dt><dd><div class="post-detail-chips">${packChipsPane}</div></dd>`
+                : ''
+              }
             </div>
 
-            <div class="post-detail-tags">
-              <div class="post-tags post-tags-main">${tagsMain}</div>
-              <div class="post-tags post-tags-user">${tagsUser}</div>
-            </div>
+          <!-- チャート表示エリア -->
+            <div class="post-detail-charts" data-postcharts="${escapeHtml(item.postId || '')}">
+              <div class="post-detail-chartbox">
+                <div class="post-detail-charthead">
+                  <div class="post-detail-charttitle">コスト分布</div>
+                  <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(paneId)}"></div>
+                </div>
+                <div class="post-detail-chartcanvas">
+                  <canvas id="costChart-${escapeHtml(paneId)}"></canvas>
+                </div>
+              </div>
 
-            <div class="post-detail-beta-note beta-note">
-              ※ コスト分布などの詳細な分析も準備中です。<br>
-              　 今後追加予定ですのでお楽しみに！
+              <div class="post-detail-chartbox">
+                <div class="post-detail-charthead">
+                  <div class="post-detail-charttitle">パワー分布</div>
+                  <div class="post-detail-chartchips" id="power-summary-${escapeHtml(paneId)}"></div>
+                </div>
+                <div class="post-detail-chartcanvas">
+                  <canvas id="powerChart-${escapeHtml(paneId)}"></canvas>
+                </div>
+              </div>
             </div>
 
         </div>
@@ -3023,6 +3343,13 @@ function oneCard(item, opts = {}){
           alert('比較タブに追加する機能はベータ版では準備中です。');
         });
       }
+    }
+
+    // ✅ 分布グラフ描画（deckmaker と同じ）
+    try {
+      renderPostDistCharts_(item, paneId);
+    } catch (e) {
+      console.warn('renderPostDistCharts_ failed:', e);
     }
 
   }

@@ -1035,9 +1035,7 @@ body {
 
 /* ヘッダー周り（デッキ名など） */
 .post-detail-header {
-    padding: 4px 0 8px;
     border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 8px;
 }
 
 .post-detail-title {
@@ -1062,7 +1060,6 @@ body {
 }
 
 .post-detail-actions {
-    margin-top: 8px;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -1084,11 +1081,143 @@ body {
     box-shadow: 0 1px 6px rgba(0, 0, 0, .06);
 }
 
+/* =========================
+   デッキ情報：分布グラフ
+========================= */
+.post-detail-charts {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.post-detail-chartbox {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px 10px 8px;
+}
+
+.post-detail-charthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.post-detail-charttitle {
+    font-weight: 700;
+    font-size: .9rem;
+    color: #111827;
+    margin: 0;
+}
+
+.post-detail-chartchips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.post-detail-chartcanvas {
+    height: 140px;
+    /* Chart.js は親の高さが必要 */
+}
+
+.post-detail-chartcanvas canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media (min-width:1024px) {
+    .post-detail-chartcanvas {
+        height: 160px;
+    }
+}
+
+/* チップ */
+.stat-chip,
+.type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: .8rem;
+    line-height: 1;
+    border: 1px solid rgba(0, 0, 0, .08);
+    background: #f9fafb;
+    color: #111827;
+    white-space: nowrap;
+}
+
+/* =========================
+   デッキ統計（チップ表示）
+========================= */
+.post-detail-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+/* 右ペイン(dl)の dd 内でも崩れないように */
+.post-detail-summary dd .post-detail-chips {
+    margin-top: 0;
+}
+
+/* =========================
+   レアリティ枠（チップに適用）
+   - border-image を効かせるために border を用意
+========================= */
+.stat-chip.carddetail-rarity {
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    padding: 4px 10px;
+}
+
+/* レアリティ別ボーダー */
+.carddetail-rarity.carddetail-rarity--legend {
+    border-image: var(--rarity-border-legend) 1;
+}
+
+.carddetail-rarity.carddetail-rarity--gold {
+    border-image: var(--rarity-border-gold) 1;
+}
+
+.carddetail-rarity.carddetail-rarity--silver {
+    border-image: var(--rarity-border-silver) 1;
+}
+
+.carddetail-rarity.carddetail-rarity--bronze {
+    border-image: var(--rarity-border-bronze) 1;
+}
+
+/* =========================
+   タイプ別チップカラー
+========================= */
+
+.type-chip[data-type="チャージャー"] {
+    background: rgba(119, 170, 212, 0.18);
+    border-color: rgba(119, 170, 212, 0.35);
+}
+
+.type-chip[data-type="アタッカー"] {
+    background: rgba(125, 91, 155, 0.18);
+    border-color: rgba(125, 91, 155, 0.35);
+}
+
+.type-chip[data-type="ブロッカー"] {
+    background: rgba(214, 212, 204, 0.35);
+    border-color: rgba(214, 212, 204, 0.55);
+}
+
 /* 代表カード＋サマリー2カラム（PC） */
 @media (min-width: 1024px) {
     .post-detail-main {
         display: grid;
-        gap: 14px;
+        gap: 5px;
     }
 
     .post-detail-main-top {
@@ -1131,7 +1260,6 @@ body {
     }
 
 }
-
 
 /* タブバー + タブ中身（右カラム内） */
 .post-detail-tabs {
@@ -1316,7 +1444,6 @@ body {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     /* 5列固定 */
     gap: 4px;
-    padding: 4px 0 8px;
 }
 
 /* デッキリストタブ内だけ少し詰め気味に */
@@ -1566,14 +1693,28 @@ body {
     }
 }
 
-/* 詳細ブロック内テキスト */
-.post-detail-section {
-    margin-top: 8px;
+/* =========================
+   SP：デッキ情報（dl を grid で左右固定）
+========================= */
+.post-card--sp .post-detail-summary {
+    margin: .5rem 0 0 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 5px;
+    row-gap: 6px;
+    font-size: .88rem;
 }
 
-.post-detail-row {
-    margin-top: 4px;
-    font-size: .88rem;
+.post-card--sp .post-detail-summary dt {
+    font-weight: 700;
+    color: #374151;
+    white-space: nowrap;
+    align-self: start;
+}
+
+.post-card--sp .post-detail-summary dd {
+    margin: 0;
+    min-width: 0;
 }
 
 .post-detail-heading {
@@ -1718,7 +1859,7 @@ body {
    デッキコード コピー ボタン
    ========================= */
 .post-detail-code-body {
-    margin: 0.75rem 0;
+    margin: 0.5rem 0 0 ;
 }
 
 .btn-copy-code-wide {
