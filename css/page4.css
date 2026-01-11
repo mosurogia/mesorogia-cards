@@ -1086,7 +1086,7 @@ body {
 ========================= */
 .post-detail-charts {
     display: grid;
-    gap: 10px;
+    gap: 5px;
     margin-top: 10px;
 }
 
@@ -1149,6 +1149,54 @@ body {
     background: #f9fafb;
     color: #111827;
     white-space: nowrap;
+}
+
+/* =========================
+   タブレット：グラフを2列にして見やすく
+========================= */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+    /* グラフ2つを横並び */
+    .post-detail-charts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+        gap: 5px;
+    }
+
+    /* 箱とヘッダーを少し詰める */
+    .post-detail-chartbox {
+        padding: 8px 8px 6px;
+    }
+
+    /* グラフ高さを圧縮（横長感を減らす） */
+    .post-detail-chartcanvas {
+        height: 120px;
+    }
+
+    /* タイトル＋チップを縦積み気味にして窮屈さ回避 */
+    .post-detail-charthead {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .post-detail-chartchips {
+        justify-content: flex-start;
+    }
+
+    /* チップを少し小さく */
+    .stat-chip,
+    .type-chip {
+        font-size: .75rem;
+        padding: 4px 8px;
+    }
+}
+
+/* スマホはさらに少し低く（任意） */
+@media (max-width: 600px) {
+    .post-detail-chartcanvas {
+        height: 110px;
+    }
 }
 
 /* =========================
