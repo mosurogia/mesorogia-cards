@@ -2667,6 +2667,10 @@ function buildCardSp(item, opts = {}){
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
+  // SP用：ChartのID衝突防止（id属性に使うので軽くサニタイズ）
+  const spPaneIdRaw = `sp-${String(item.postId || '')}`;
+  const spPaneId = spPaneIdRaw.replace(/[^a-zA-Z0-9_-]/g, '_');
+
 // ===== いいね関連（今のまま残してOK：一覧側で使う） =====
   const likeCount = Number(item.likeCount || 0);
   const liked     = !!item.liked;
@@ -2842,6 +2846,30 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
             : ''
           }
         </dl>
+
+        <!-- チャート表示エリア（SP：パック構成とデッキ解説の間） -->
+        <div class="post-detail-charts" data-postcharts="${escapeHtml(item.postId || '')}" data-paneid="${escapeHtml(spPaneId)}">
+          <div class="post-detail-chartbox">
+            <div class="post-detail-charthead">
+              <div class="post-detail-charttitle">コスト分布</div>
+              <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(spPaneId)}"></div>
+            </div>
+            <div class="post-detail-chartcanvas">
+              <canvas id="costChart-${escapeHtml(spPaneId)}"></canvas>
+            </div>
+          </div>
+
+          <div class="post-detail-chartbox">
+            <div class="post-detail-charthead">
+              <div class="post-detail-charttitle">パワー分布</div>
+              <div class="post-detail-chartchips" id="power-summary-${escapeHtml(spPaneId)}"></div>
+            </div>
+            <div class="post-detail-chartcanvas">
+              <canvas id="powerChart-${escapeHtml(spPaneId)}"></canvas>
+            </div>
+          </div>
+        </div>
+
 
 
         <div class="post-detail-section">
@@ -4318,9 +4346,34 @@ function wireCardEvents(root){
     // 詳細ボタン（SP用） ※PCで存在しても問題なし
     if (e.target.classList.contains('btn-detail')){
       const d = art.querySelector('.post-detail');
-      if (d) d.hidden = !d.hidden;
+      if (!d) return;
+
+      const willOpen = !!d.hidden;
+      d.hidden = !d.hidden;
+
+      // 開いた瞬間だけ、分布グラフを描画
+      if (willOpen && !d.dataset.chartsRendered) {
+        try {
+          const postId = art.dataset.postid;
+
+          // state から item を引く（一覧描画元）
+          const items =
+            (window.__DeckPostState?.list?.allItems) ||
+            (window.__DeckPostState?.list?.filteredItems) || [];
+          const item = (items || []).find(it => String(it?.postId || '') === String(postId || ''));
+
+          const charts = art.querySelector('.post-detail-charts');
+          const paneId = charts?.dataset?.paneid;
+
+          if (item && paneId) renderPostDistCharts_(item, paneId);
+          d.dataset.chartsRendered = '1';
+        } catch (err) {
+          console.warn('SP renderPostDistCharts_ failed:', err);
+        }
+      }
       return;
     }
+
 
     // 詳細内「閉じる」（SP用）
     if (e.target.classList.contains('btn-detail-close')){
