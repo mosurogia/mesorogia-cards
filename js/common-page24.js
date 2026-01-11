@@ -15,6 +15,10 @@
 
   // ============ 画像生成メイン ============
   async function exportDeckImage(opts = {}){
+
+    if (window.__isExportingDeckImg) return;
+    window.__isExportingDeckImg = true;
+
     const data = buildDeckSummaryData(opts);
 
     // ✅ 枚数チェックは data.total を使う（投稿もデッキメーカーも同じ基準でOK）
@@ -52,26 +56,32 @@
       target.style.paddingBottom = '20px';
       target.scrollTop = 0;
 
-      const canvas = await html2canvas(target, {
-        scale,
-        useCORS: true,
-        backgroundColor: '#fff',
-        scrollX: 0,
-        scrollY: 0,
-        width:  target.scrollWidth,
-        height: target.scrollHeight,
-        windowWidth:  document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight,
-        x: 0,
-        y: 0,
-        allowTaint: false,
-      });
+      const CANVAS_TIMEOUT = 12000;
+
+      const canvas = await Promise.race([
+        html2canvas(target, {
+          scale,
+          useCORS: true,
+          backgroundColor: '#fff',
+          scrollX: 0,
+          scrollY: 0,
+          width:  target.scrollWidth,
+          height: target.scrollHeight,
+          windowWidth:  document.documentElement.scrollWidth,
+          windowHeight: document.documentElement.scrollHeight,
+          x: 0,
+          y: 0,
+          allowTaint: false,
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('html2canvas timeout')), CANVAS_TIMEOUT)),
+      ]);
 
       target.style.overflow = prevOverflow;
 
       const name = (data.deckName || 'deck').replace(/[\/:*?"<>|]+/g,'_').slice(0,40);
       downloadCanvas(canvas, `${name}_3x4.png`);
     } finally {
+      window.__isExportingDeckImg = false;
       node.remove();
       hideLoadingOverlay(loader);
     }
@@ -624,8 +634,18 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
       img.decoding = 'async';
       img.loading = 'eager';
       img.crossOrigin = 'anonymous';
-      img.onload = ()=> resolve(img);
-      img.onerror = ()=> { img.onerror = null; img.src = FALLBACK_IMG; };
+
+      const done = () => resolve(img);
+
+      img.onload = done;
+
+      img.onerror = () => {
+        // fallback へ切り替えた上で、fallback側の onload/onerror でも必ず終わらせる
+        img.onerror = done;
+        img.onload  = done;
+        img.src = FALLBACK_IMG;
+      };
+
       img.src = code5 ? (IMG_DIR + code5 + '.webp') : FALLBACK_IMG;
     });
   }
@@ -859,6 +879,36 @@ function chipRich(html, {bg, border, color='#0f172a', fz=30, pad='10px 14px'} = 
   }
 
 })();
+
+async function generateDeckImageSafe(target){
+  showLoading();
+
+  let timeoutId;
+  try {
+    const canvas = await Promise.race([
+      html2canvas(target, {
+        useCORS: true,
+        backgroundColor: '#fff',
+        scale: 2,
+      }),
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error('html2canvas timeout'));
+        }, 10000); // 10秒
+      })
+    ]);
+
+    clearTimeout(timeoutId);
+    onCanvasReady(canvas);
+
+  } catch (e) {
+    console.error(e);
+    alert('画像生成に失敗しました。ページを再読み込みしてください。');
+  } finally {
+    hideLoading();
+  }
+}
+
 
 
 //=======アカウント関連========

@@ -55,6 +55,7 @@ window.__DeckPostState = state;
 window.PostFilterState ??= {
   selectedTags: new Set(), // 既存（自動＋選択タグ）
   selectedUserTags: new Set(), // ★ 追加（ユーザー定義タグ）
+  selectedPoster: '',   // ★ 追加（投稿者指定）
 };
 
 // ★ DeckPost 一覧の初期描画が完了したかどうか
@@ -302,12 +303,14 @@ function updateMinePager(page, totalPages, totalCount){
   window.PostFilterState ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
+    selectedPoster: '',   // （投稿者指定）
   };
 
   // モーダル操作用（未適用の下書き）
   window.PostFilterDraft ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
+    selectedPoster: '',   // （投稿者指定）
   };
 
   function syncDraftFromApplied_(){
@@ -315,6 +318,7 @@ function updateMinePager(page, totalPages, totalCount){
     const draft   = window.PostFilterDraft;
     draft.selectedTags = new Set(Array.from(applied?.selectedTags || []));
     draft.selectedUserTags = new Set(Array.from(applied?.selectedUserTags || []));
+    draft.selectedPoster = String(applied?.selectedPoster || '');
   }
 
   function isCampaignTag_(t){
@@ -478,42 +482,43 @@ function updateMinePager(page, totalPages, totalCount){
 
   // ▼ チップバー（適用済み state を見る）
   function updateActiveChipsBar_(){
-    const bar = document.getElementById('active-chips-bar');
-    const sc  = bar?.querySelector('.chips-scroll');
-    if (!bar || !sc) return;
+  const bar = document.getElementById('active-chips-bar');
+  const sc  = bar?.querySelector('.chips-scroll');
+  if (!bar || !sc) return;
 
-    const st = window.PostFilterState || {};
-    const tags = Array.from(st.selectedTags || []);
-    const user = Array.from(st.selectedUserTags || []);
+  const st = window.PostFilterState || {};
+  const tags   = Array.from(st.selectedTags || []);
+  const user   = Array.from(st.selectedUserTags || []);
+  const poster = String(st.selectedPoster || '').trim();
 
-    sc.replaceChildren();
+  sc.replaceChildren();
 
-    const total = tags.length + user.length;
-    if (!total){
-      bar.style.display = 'none';
-      return;
-    }
-    bar.style.display = '';
+  const total = tags.length + user.length + (poster ? 1 : 0);
+  if (!total){
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = '';
 
     // チップ生成（CSSは .chip-mini）
-    function addChip(label, onRemove, extraClass=''){
-      const chip = document.createElement('span');
-      chip.className = `chip-mini ${extraClass}`.trim();
-      chip.textContent = label;
+  function addChip(label, onRemove, extraClass=''){
+    const chip = document.createElement('span');
+    chip.className = `chip-mini ${extraClass}`.trim();
+    chip.textContent = label;
 
-      const x = document.createElement('button');
-      x.className = 'x';
-      x.type = 'button';
-      x.textContent = '×';
-      x.addEventListener('click', (e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        onRemove();
-      });
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'x';
+    x.textContent = '×';
+    x.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      onRemove?.();
+    });
 
-      chip.appendChild(x);
-      sc.appendChild(chip);
-    }
+    chip.appendChild(x);
+    sc.appendChild(chip);
+  }
 
     // ① 投稿タグ
     tags.forEach((t)=>{
@@ -528,7 +533,7 @@ function updateMinePager(page, totalPages, totalCount){
             .forEach(btn => btn.classList.remove('selected'));
         }catch(_){}
 
-        updateActiveChipsBar_();
+        window.updateActiveChipsBar_?.();
         window.DeckPostApp?.applySortAndRerenderList?.(true);
       }, 'chip-tag');
     });
@@ -542,10 +547,19 @@ function updateMinePager(page, totalPages, totalCount){
         // モーダル側の青チップも同期（あれば）
         try{ window.renderSelectedUserTagChips?.(); }catch(_){}
 
-        updateActiveChipsBar_();
+        window.updateActiveChipsBar_?.();
         window.DeckPostApp?.applySortAndRerenderList?.(true);
       }, 'chip-user');
     });
+
+    // ③ 投稿者
+    if (poster){
+      addChip(`投稿者:${poster}`, ()=>{
+        window.PostFilterState.selectedPoster = '';
+        window.updateActiveChipsBar_?.();
+        window.DeckPostApp?.applySortAndRerenderList?.(true);
+      }, 'is-poster');
+    }
 
     // すべて解除（適用済みをクリア）
     const clr = document.createElement('span');
@@ -554,8 +568,10 @@ function updateMinePager(page, totalPages, totalCount){
     clr.addEventListener('click', ()=>{
       window.PostFilterState.selectedTags?.clear?.();
       window.PostFilterState.selectedUserTags?.clear?.();
+      window.PostFilterState.selectedPoster = '';
       window.PostFilterDraft.selectedTags?.clear?.();
       window.PostFilterDraft.selectedUserTags?.clear?.();
+      window.PostFilterDraft.selectedPoster = '';
 
       try{
         document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected'));
@@ -563,11 +579,13 @@ function updateMinePager(page, totalPages, totalCount){
 
       try{ window.renderSelectedUserTagChips?.(); }catch(_){}
 
-      updateActiveChipsBar_();
+      window.updateActiveChipsBar_?.();
       window.DeckPostApp?.applySortAndRerenderList?.(true);
     });
     sc.appendChild(clr);
   }
+
+  window.updateActiveChipsBar_ = updateActiveChipsBar_;
 
   // ▼ details の ▶/▼ 同期（summary の先頭記号を書き換える）
   function syncDetailsChevron_(details){
@@ -599,9 +617,10 @@ function updateMinePager(page, totalPages, totalCount){
     const applied = window.PostFilterState;
     applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
     applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
+    applied.selectedPoster = String(draft?.selectedPoster || '');
 
     closePostFilter();
-    updateActiveChipsBar_();
+    window.updateActiveChipsBar_?.();
     await applySortAndRerenderList(true);
   }
 
@@ -609,6 +628,7 @@ function updateMinePager(page, totalPages, totalCount){
     window.PostFilterDraft ??= { selectedTags:new Set(), selectedUserTags:new Set() };
     window.PostFilterDraft.selectedTags.clear();
     window.PostFilterDraft.selectedUserTags.clear();
+    window.PostFilterDraft.selectedPoster = '';
 
     // タグボタンの selected を全部外す（モーダル内だけ）
     try{ document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected')); }catch(_){ }
@@ -2129,6 +2149,25 @@ function initCardNotesEditor_(editorRoot, item){
 
 // モーダル選択（グローバル委任）
 document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.btn-filter-poster');
+  if (!btn) return;
+
+    // 先に止める（これが重要）
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  const posterName = String(btn.dataset.poster || '').trim();
+  if (!posterName) return;
+
+  window.PostFilterState.selectedPoster = posterName;
+  // モーダル下書きも合わせておくと一貫する
+  window.PostFilterDraft.selectedPoster = posterName;
+
+  window.updateActiveChipsBar_?.();
+  window.DeckPostApp?.applySortAndRerenderList?.(true);
+
+
   const cell = e.target?.closest?.('#cardNoteCandidates .item');
   if (!cell || !__cardNotesPickContext) return;
   if (cell.classList.contains('disabled')) return;
@@ -2149,7 +2188,7 @@ document.addEventListener('click', (e)=>{
   const modal = document.getElementById('cardNoteSelectModal');
   if (modal) modal.style.display = 'none';
   __cardNotesPickContext = null;
-});
+}, true);
 
 
 
@@ -2186,13 +2225,19 @@ function buildCardPc(item, opts = {}){
         </div>
 
         <div class="pc-head-right">
-          <div class="sp-title">
+          <div class="post-card-title">
             ${escapeHtml(item.title || '(無題)')}
           </div>
 
           <div class="pc-meta">
-            <div class="sp-meta-name">
+            <div class="meta-name">
               ${escapeHtml(item.posterName || item.username || '')}
+              ${(item.posterName || item.username) ? `
+                <button type="button"
+                  class="btn-filter-poster"
+                  data-poster="${escapeHtml(item.posterName || item.username || '')}"
+                  aria-label="この投稿者で絞り込む">👤</button>
+              ` : ''}
             </div>
 
             ${posterXUser ? `
@@ -2346,13 +2391,19 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
         </div>
 
         <div class="sp-head-right">
-          <div class="sp-title">
+          <div class="post-card-title">
             ${escapeHtml(item.title || '(無題)')}
           </div>
 
           <div class="sp-meta">
-            <div class="sp-meta-name">
+            <div class="meta-name">
               ${escapeHtml(item.posterName || item.username || '')}
+              ${(item.posterName || item.username) ? `
+                <button type="button"
+                  class="btn-filter-poster"
+                  data-poster="${escapeHtml(item.posterName || item.username || '')}"
+                  aria-label="この投稿者で絞り込む">👤</button>
+              ` : ''}
             </div>
 
             ${posterXUser ? `
@@ -3273,7 +3324,7 @@ document.addEventListener('click', async (e) => {
 
   // タイトルを拾って確認文を丁寧に
   const card  = btn.closest('.post-card');
-  const title = card?.querySelector('.sp-title')?.textContent?.trim()
+  const title = card?.querySelector('.post-card-title')?.textContent?.trim()
             || card?.querySelector('.pc-title')?.textContent?.trim()
             || 'この投稿';
 
@@ -4154,6 +4205,15 @@ function rebuildFilteredItems(){
 
       // OR：どれか1つでも一致
       return selNorm.some(t => tagNorm.includes(t));
+    });
+  }
+
+  // ★ 投稿者フィルタ（完全一致）
+  const selPoster = String(fs?.selectedPoster || '').trim();
+  if (selPoster){
+    filtered = filtered.filter(item => {
+      const p = String(item.posterName || item.username || '').trim();
+      return p === selPoster;
     });
   }
 
