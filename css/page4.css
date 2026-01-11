@@ -623,6 +623,7 @@ body {
     padding: 3px 0;
     display: flex;
     flex-direction: column;
+    margin-bottom: 4px;
 }
 
 /* メインタグ*/
@@ -1054,7 +1055,7 @@ body {
 }
 
 .post-detail-tags {
-    margin-top: 6px;
+    margin: 6px 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -1256,6 +1257,38 @@ body {
 
     /* 文字の縁取り（背景色とぶつからない） */
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== キャンペーンタグ（開催中/終了） ===== */
+.chip.is-campaign-ended {
+    opacity: .7;
+    border-style: dashed;
+    filter: grayscale(.2);
+}
+
+.post-filter-tag-btn.is-campaign-ended {
+    opacity: .65;
+    border-style: dashed;
+}
+
+/* 開催中（任意：少し強調） */
+.chip.is-campaign-active {
+    font-weight: 800;
+}
+
+.post-filter-tag-btn.is-campaign-active {
+    font-weight: 800;
+}
+
+.chip.is-campaign-ended::before {
+    content: "終了";
+    display: inline-block;
+    font-size: 10px;
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
 }
 
 /* ===== ユーザータグ（メーカーの青系を明るく） ===== */

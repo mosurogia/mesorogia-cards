@@ -401,15 +401,29 @@ function updateMinePager(page, totalPages, totalCount){
       const order = window.CATEGORY_LIST || [];
       return arr.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
     }
+
     // deckinfo: POST_TAG_CANDIDATES 優先 → 残りはあいうえお順
     const cand = window.POST_TAG_CANDIDATES || [];
     const candSet = new Set(cand);
     const head = cand.filter(t=>arr.includes(t));
     const tail = arr.filter(t=>!candSet.has(t)).sort((a,b)=>a.localeCompare(b,'ja'));
+
+    // キャンペーンタグは最後へ寄せる
+    const isCamp = (t)=>{
+      const set = window.__campaignTagSet;
+      return (set instanceof Set) && set.size && set.has(t);
+    };
+    const tailNormal = tail.filter(t=>!isCamp(t));
+    const tailCamp   = tail.filter(t=> isCamp(t));
+
+    // 重複除去しつつ結合
     const out = [];
-    [...head, ...tail].forEach(t=>{ if (!out.includes(t)) out.push(t); });
+    for (const t of [...head, ...tailNormal, ...tailCamp]){
+      if (!out.includes(t)) out.push(t);
+    }
     return out;
   }
+
 
   // ▼ モーダル内ボタン描画（draft を見る）
   function renderTagButtons_(rootEl, tags){
@@ -425,6 +439,10 @@ function updateMinePager(page, totalPages, totalCount){
       btn.type = 'button';
       btn.className = 'filter-btn post-filter-tag-btn';
       btn.dataset.tag = t;
+
+      // キャンペーンタグは専用クラスを付与
+      const ccls = campaignTagClass_(t);
+      if (ccls) btn.classList.add(...ccls.split(/\s+/).filter(Boolean));
 
       // カテゴリ改行（（ の前で改行）
       if (classifyTag_(t) === 'category' && t.includes('（')) {
@@ -1242,22 +1260,7 @@ async function deletePost_(postId){
   // ===== キャンペーンタグ表示制御 =====
 function shouldShowTag_(tag){
   const t = String(tag || '').trim();
-  if (!t) return false;
-
-  const set = window.__campaignTagSet;
-  const isCampaignTag = (set instanceof Set) && set.size && set.has(t);
-
-  // キャンペーンタグじゃなければ常に表示
-  if (!isCampaignTag) return true;
-
-  // キャンペーンタグの場合：
-  // 開催中 → 今回のキャンペーンタグだけ表示
-  // 期間外 → 全部非表示
-  const activeTag = String(window.__activeCampaignTag || '').trim();
-  const isRunning = !!window.__isCampaignRunning;
-
-  if (isRunning && activeTag) return t === activeTag;
-  return false;
+  return !!t; // 空だけ弾く（キャンペーンでも非表示にしない）
 }
 
 // キャンペーンタグの表示/非表示を一括更新
@@ -1275,15 +1278,75 @@ function refreshCampaignTagChips_(){
     chips.forEach(el => {
       const t = (el.textContent || '').trim();
       if (!t) return;
+      if (!set.has(t)) return;
 
-      // キャンペーンタグだけ判定して、表示/非表示を更新
-      if (set.has(t)){
-        el.style.display = shouldShowTag_(t) ? '' : 'none';
-      }
+      // いったん状態クラスを剥がして付け直す
+      el.classList.remove('is-campaign','is-campaign-active','is-campaign-ended');
+      const cls = campaignTagClass_(t);
+      if (cls) el.classList.add(...cls.split(/\s+/).filter(Boolean));
     });
   }
 }
 
+// ===== キャンペーンタグ：状態クラス =====
+function campaignTagClass_(tag){
+  const t = String(tag || '').trim();
+  if (!t) return '';
+
+  const set = window.__campaignTagSet;
+  const isCampaign = (set instanceof Set) && set.size && set.has(t);
+  if (!isCampaign) return '';
+
+  const activeTag = String(window.__activeCampaignTag || '').trim();
+  const isRunning = !!window.__isCampaignRunning;
+
+  // 開催中かつ今回タグなら active、それ以外は ended 扱い
+  if (isRunning && activeTag && t === activeTag) return 'is-campaign is-campaign-active';
+  return 'is-campaign is-campaign-ended';
+}
+
+// 自動タグ＋選択タグ（上段）
+function tagChipsMain(tagsAuto, tagsPick){
+  const s = [tagsAuto, tagsPick].filter(Boolean).join(',');
+  if (!s) return '';
+
+  const set = window.__campaignTagSet;
+  const isCamp = (t)=> (set instanceof Set) && set.size && set.has(t);
+
+  const arr = s.split(',')
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  // ✅ キャンペーンタグを末尾に寄せる（相対順は維持）
+  const normal = arr.filter(t => !isCamp(t));
+  const camp   = arr.filter(t =>  isCamp(t));
+  const ordered = [...normal, ...camp];
+
+  return ordered
+    .map(x => `<span class="chip ${campaignTagClass_(x)}">${escapeHtml(x)}</span>`)
+    .join('');
+}
+
+// ユーザータグ（下段）
+function tagChipsUser(tagsUser){
+  const s = String(tagsUser || '');
+  if (!s) return '';
+
+  const set = window.__campaignTagSet;
+  const isCamp = (t)=> (set instanceof Set) && set.size && set.has(t);
+
+  const arr = s.split(',')
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  const normal = arr.filter(t => !isCamp(t));
+  const camp   = arr.filter(t =>  isCamp(t));
+  const ordered = [...normal, ...camp];
+
+  return ordered
+    .map(x => `<span class="chip ${campaignTagClass_(x)}">${escapeHtml(x)}</span>`)
+    .join('');
+}
 
 
   // ===== サムネイル画像 =====
@@ -2780,7 +2843,7 @@ function oneCard(item, opts = {}){
             </div>
 
             <div class="post-detail-beta-note beta-note">
-              ※ レアリティ構成・コスト分布などの詳細な分析も準備中です。<br>
+              ※ コスト分布などの詳細な分析も準備中です。<br>
               　 今後追加予定ですのでお楽しみに！
             </div>
 
