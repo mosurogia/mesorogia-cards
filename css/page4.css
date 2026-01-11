@@ -1151,10 +1151,11 @@ body {
     white-space: nowrap;
 }
 
+
 /* =========================
    タブレット：グラフを2列にして見やすく
 ========================= */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 600px) and (max-width: 1023px) {
 
     /* グラフ2つを横並び */
     .post-detail-charts {
@@ -1175,7 +1176,7 @@ body {
 
     /* タイトル＋チップを縦積み気味にして窮屈さ回避 */
     .post-detail-charthead {
-        flex-direction: column;
+        /*flex-direction: column;*/
         align-items: flex-start;
         gap: 6px;
     }
@@ -1189,13 +1190,6 @@ body {
     .type-chip {
         font-size: .75rem;
         padding: 4px 8px;
-    }
-}
-
-/* スマホはさらに少し低く（任意） */
-@media (max-width: 600px) {
-    .post-detail-chartcanvas {
-        height: 110px;
     }
 }
 
