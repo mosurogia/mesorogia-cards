@@ -842,15 +842,16 @@ window.addEventListener('resize', updateChipsOffset);
 document.getElementById("applyFilterBtn")?.addEventListener("click", () => {
   applyFilters(); // ✅ フィルター即適用
 
-  // モーダルを開いた直後に初期表示を作る
-    renderUserTagSuggest([]);        // ←「ここに候補が出ます / 候補がありません」を出す
-    renderSelectedUserTagChips();    // ←「未選択」などを出す
-    updateSuggest();                 // ←（任意）入力済みなら候補更新
+  // ❌ これは deck-post 用なので削除！
+  // renderUserTagSuggest([]);
+  // renderSelectedUserTagChips();
+  // updateSuggest();
 
   // ✅ モーダルを閉じる
   const modal = document.getElementById("filterModal");
   if (modal) modal.style.display = "none";
 });
+
 
 // 所持フィルター切り替えボタンの表示更新（グローバル）
 function updateOwnedCycleBtn(btn) {

@@ -4844,7 +4844,11 @@ const CardNotes = (() => {
       // テキスト反映 & 入力で保存
       const ta = item.querySelector('textarea.note');
       ta.value = row.text || '';
-      ta.addEventListener('input', syncHidden);
+      ta.addEventListener('input', () => {
+        // ★まずモデルへ反映（これが無いとrenderRowsで消える）
+        if (cardNotes[i]) cardNotes[i].text = ta.value;
+        syncHidden();
+      });
 
       // 画像クリックでもピッカー
       item.querySelector('.thumb img')?.addEventListener('click', () => openPickerFor(i));
@@ -4890,7 +4894,18 @@ const CardNotes = (() => {
     return Array.from(set);
   }
   function ensureImg(img, cd){ img.src = cdToImg(cd); img.onerror = () => img.src = 'img/00000.webp'; }
-  const sortByRule = (arr) => arr; // 並び替えがあれば差し替え
+  const sortByRule = (arr) => {
+  const map = window.cardMap || {};
+  return arr.slice().sort((a,b)=>{
+    const A = map[a] || {};
+    const B = map[b] || {};
+    const cA = +A.cost  || 0, cB = +B.cost  || 0;
+    if (cA !== cB) return cA - cB;
+    const pA = +A.power || 0, pB = +B.power || 0;
+    if (pA !== pB) return pA - pB;
+    return String(a).localeCompare(String(b));
+  });
+};
 
   function openPickerFor(index){
     pickingIndex = index|0;

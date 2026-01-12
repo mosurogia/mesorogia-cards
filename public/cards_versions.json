@@ -1,0 +1,35 @@
+{
+  "latest": "2025-12-16",
+  "versions": [
+    {
+      "version": "2025-07-16",
+      "label": "2025-07-16 カード調整",
+      "before": "cards_2025-07-16_before.json",
+      "after": "cards_2025-07-16_after.json"
+    },
+    {
+      "version": "2025-09-18",
+      "label": "2025-09-18 カード調整",
+      "before": "cards_2025-09-18_before.json",
+      "after": "cards_2025-09-18_after.json"
+    },
+    {
+      "version": "2025-10-09",
+      "label": "2025-10-09 カード調整",
+      "before": "cards_2025-10-09_before.json",
+      "after": "cards_2025-10-09_after.json"
+    },
+    {
+      "version": "2025-10-21",
+      "label": "2025-10-21 カード調整",
+      "before": "cards_2025-10-21_before.json",
+      "after": "cards_2025-10-21_after.json"
+    },
+    {
+      "version": "2025-12-16",
+      "label": "2025-12-16 カード調整",
+      "before": "cards_2025-12-16_before.json",
+      "after": "cards_2025-12-16_after.json"
+    }
+  ]
+}

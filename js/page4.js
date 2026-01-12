@@ -51,13 +51,6 @@ const DeckPostApp = (() => {
 // ★ DeckPost の状態を、投稿フィルター用に外へ公開
 window.__DeckPostState = state;
 
-// ===== 投稿フィルター状態 =====
-window.PostFilterState ??= {
-  selectedTags: new Set(), // 既存（自動＋選択タグ）
-  selectedUserTags: new Set(), // ★ 追加（ユーザー定義タグ）
-  selectedPoster: '',   // ★ 追加（投稿者指定）
-};
-
 // ★ DeckPost 一覧の初期描画が完了したかどうか
 let initialized = false;
 
@@ -284,6 +277,49 @@ function updateMinePager(page, totalPages, totalCount){
   });
 })();
 
+// ===== 投稿者キー（グローバル）=====
+// ※ buildCardPc / rebuildFilteredItems / クリック処理 から参照するため window に出す
+
+window.normX_ ??= function normX_(x){
+  let s = String(x || '').trim();
+  if (!s) return '';
+
+  // URL形式も吸収
+  s = s.replace(/^https?:\/\/(www\.)?x\.com\//i, '')
+       .replace(/^https?:\/\/(www\.)?twitter\.com\//i, '');
+
+  // @除去、末尾の/やクエリ除去
+  s = s.replace(/^@+/, '').replace(/[\/?#].*$/, '');
+
+  return s.toLowerCase();
+};
+
+window.normPosterName_ ??= function normPosterName_(name){
+  return String(name || '')
+    .trim()
+    .replace(/\s+/g, ' ');
+};
+
+// 事故防止：もしどこかで normPosterName を呼んでても落ちないように
+window.normPosterName ??= window.normPosterName_;
+
+// ★ ポスターキー生成：X を優先（ログイン有/無で uid が違っても X が同じなら一緒にできる）
+window.posterKeyFromItem_ ??= function posterKeyFromItem_(item){
+  // 1) X（最優先）
+  const x = window.normX_(item?.posterX || item?.x || item?.xAccount || item?.posterXRaw || '');
+  if (x) return `x:${x}`;
+
+  // 2) userId（次点）
+  const uid = String(item?.userId || item?.uid || item?.posterUid || '').trim();
+  if (uid) return `uid:${uid}`;
+
+  // 3) 表示名（最後）
+  const n = window.normPosterName_(item?.posterName || item?.username || '');
+  if (n) return `name:${n}`;
+
+  return '';
+};
+
 
 // =========================
 // 投稿フィルター：モーダル（タグ整理版）
@@ -299,18 +335,22 @@ function updateMinePager(page, totalPages, totalCount){
     if (m) m.style.display = 'none';
   }
 
+
+
   // 適用済み（＝一覧に効いている）状態
   window.PostFilterState ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
-    selectedPoster: '',   // （投稿者指定）
+    selectedPosterKey: '',     // ★追加：絞り込みキー
+    selectedPosterLabel: '',   // ★追加：表示用
   };
 
   // モーダル操作用（未適用の下書き）
   window.PostFilterDraft ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
-    selectedPoster: '',   // （投稿者指定）
+    selectedPosterKey: '',
+    selectedPosterLabel: '',
   };
 
   function syncDraftFromApplied_(){
@@ -318,7 +358,8 @@ function updateMinePager(page, totalPages, totalCount){
     const draft   = window.PostFilterDraft;
     draft.selectedTags = new Set(Array.from(applied?.selectedTags || []));
     draft.selectedUserTags = new Set(Array.from(applied?.selectedUserTags || []));
-    draft.selectedPoster = String(applied?.selectedPoster || '');
+    draft.selectedPosterKey   = String(applied?.selectedPosterKey   || '');
+    draft.selectedPosterLabel = String(applied?.selectedPosterLabel || '');
   }
 
   function isCampaignTag_(t){
@@ -507,11 +548,12 @@ function updateMinePager(page, totalPages, totalCount){
   const st = window.PostFilterState || {};
   const tags   = Array.from(st.selectedTags || []);
   const user   = Array.from(st.selectedUserTags || []);
-  const poster = String(st.selectedPoster || '').trim();
+  const posterLabel = String(st.selectedPosterLabel || '').trim();
+
 
   sc.replaceChildren();
 
-  const total = tags.length + user.length + (poster ? 1 : 0);
+  const total = tags.length + user.length + (posterLabel ? 1 : 0);
   if (!total){
     bar.style.display = 'none';
     return;
@@ -571,9 +613,13 @@ function updateMinePager(page, totalPages, totalCount){
     });
 
     // ③ 投稿者
-    if (poster){
-      addChip(`投稿者:${poster}`, ()=>{
-        window.PostFilterState.selectedPoster = '';
+    if (posterLabel){
+      addChip(`投稿者:${posterLabel}`, ()=>{
+        window.PostFilterState.selectedPosterKey = '';
+        window.PostFilterState.selectedPosterLabel = '';
+        window.PostFilterDraft.selectedPosterKey = '';
+        window.PostFilterDraft.selectedPosterLabel = '';
+
         window.updateActiveChipsBar_?.();
         window.DeckPostApp?.applySortAndRerenderList?.(true);
       }, 'is-poster');
@@ -586,10 +632,10 @@ function updateMinePager(page, totalPages, totalCount){
     clr.addEventListener('click', ()=>{
       window.PostFilterState.selectedTags?.clear?.();
       window.PostFilterState.selectedUserTags?.clear?.();
-      window.PostFilterState.selectedPoster = '';
-      window.PostFilterDraft.selectedTags?.clear?.();
-      window.PostFilterDraft.selectedUserTags?.clear?.();
-      window.PostFilterDraft.selectedPoster = '';
+      window.PostFilterState.selectedPosterKey = '';
+      window.PostFilterState.selectedPosterLabel = '';
+      window.PostFilterDraft.selectedPosterKey = '';
+      window.PostFilterDraft.selectedPosterLabel = '';
 
       try{
         document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected'));
@@ -635,7 +681,8 @@ function updateMinePager(page, totalPages, totalCount){
     const applied = window.PostFilterState;
     applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
     applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
-    applied.selectedPoster = String(draft?.selectedPoster || '');
+    applied.selectedPosterKey   = String(draft?.selectedPosterKey || '');
+    applied.selectedPosterLabel = String(draft?.selectedPosterLabel || '');
 
     closePostFilter();
     window.updateActiveChipsBar_?.();
@@ -646,7 +693,8 @@ function updateMinePager(page, totalPages, totalCount){
     window.PostFilterDraft ??= { selectedTags:new Set(), selectedUserTags:new Set() };
     window.PostFilterDraft.selectedTags.clear();
     window.PostFilterDraft.selectedUserTags.clear();
-    window.PostFilterDraft.selectedPoster = '';
+    window.PostFilterDraft.selectedPosterKey = '';
+    window.PostFilterDraft.selectedPosterLabel = '';
 
     // タグボタンの selected を全部外す（モーダル内だけ）
     try{ document.querySelectorAll('.post-filter-tag-btn.selected').forEach(b=>b.classList.remove('selected')); }catch(_){ }
@@ -1856,40 +1904,35 @@ function ensureCardDetailDrawerSp_(){
 }
 
 // 実際に表示（PC/SP切替）
-function openCardDetailFromDeck_(cd5, clickedEl){
+async function openCardDetailFromDeck_(cd5, clickedEl){
   const cd = String(cd5 || '').padStart(5,'0');
   if (!cd) return;
 
-  const html = buildCardDetailHtml_(cd);
+  // 投稿特定（右ペイン or 直近の post-detail）
+  const root = clickedEl?.closest?.('.post-detail-inner')
+    || document.querySelector('.post-detail-inner');
+
+  const postId = String(root?.dataset?.postid || '').trim();
+  const item = postId ? findItemById_(postId) : null;
+
+  // 投稿日に合う cardMap でカード詳細を生成
+  const html = item
+    ? await withCardMapForPostDate_(item, () => buildCardDetailHtml_(cd))
+    : buildCardDetailHtml_(cd);
 
   const isPcWide = window.matchMedia('(min-width: 1024px)').matches;
 
   if (isPcWide){
-    // 右ペインの「今開いている投稿」を探す
-    const root = clickedEl?.closest?.('.post-detail-inner') || document.querySelector('.post-detail-inner');
     const dock = ensureCardDetailDockPc_(root);
-    const inner = dock?.querySelector?.('.carddetail-inner');
+    const inner = dock?.querySelector('.carddetail-inner');
     if (inner) inner.innerHTML = html;
-
-    // close
-    dock?.querySelector?.('.carddetail-close')?.addEventListener('click', ()=>{
-      if (inner) inner.innerHTML = `<div class="carddetail-empty">デッキリストのカードをタップすると表示されます。</div>`;
-    }, { once:true });
-
     return;
   }
 
-  // SP：下からドロワー（背景操作は“完全ブロック”しない/見た目は軽い）
   const drawer = ensureCardDetailDrawerSp_();
   const inner  = drawer.querySelector('.carddetail-inner');
   if (inner) inner.innerHTML = html;
-
   drawer.style.display = 'block';
-
-  // ×で閉じる
-  inner?.querySelector?.('.carddetail-close')?.addEventListener('click', ()=>{
-    drawer.style.display = 'none';
-  }, { once:true });
 }
 
 
@@ -2513,25 +2556,31 @@ function initCardNotesEditor_(editorRoot, item){
 
 // モーダル選択（グローバル委任）
 document.addEventListener('click', (e)=>{
+  // ===== 投稿者で絞り込み =====
   const btn = e.target.closest('.btn-filter-poster');
-  if (!btn) return;
+  if (btn){
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
 
-    // 先に止める（これが重要）
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
+    const label = String(btn.dataset.poster || '').trim();
+    const key   = String(btn.dataset.posterKey || '').trim() || `name:${normPosterName_(label)}`;
+    if (!key) return;
 
-  const posterName = String(btn.dataset.poster || '').trim();
-  if (!posterName) return;
+    window.PostFilterState.selectedPosterKey   = key;
+    window.PostFilterState.selectedPosterLabel = label;
 
-  window.PostFilterState.selectedPoster = posterName;
-  // モーダル下書きも合わせておくと一貫する
-  window.PostFilterDraft.selectedPoster = posterName;
+    // モーダル下書きも合わせる（あなたの運用に合わせて）
+    window.PostFilterDraft.selectedPosterKey   = key;
+    window.PostFilterDraft.selectedPosterLabel = label;
 
-  window.updateActiveChipsBar_?.();
-  window.DeckPostApp?.applySortAndRerenderList?.(true);
+    window.updateActiveChipsBar_?.();
+    window.DeckPostApp?.applySortAndRerenderList?.(true);
 
+    return; // ← ここ重要：下のカード解説ピックに流さない
+  }
 
+  // ===== カード解説ピック =====
   const cell = e.target?.closest?.('#cardNoteCandidates .item');
   if (!cell || !__cardNotesPickContext) return;
   if (cell.classList.contains('disabled')) return;
@@ -2553,6 +2602,7 @@ document.addEventListener('click', (e)=>{
   if (modal) modal.style.display = 'none';
   __cardNotesPickContext = null;
 }, true);
+
 
 
 
@@ -2600,6 +2650,7 @@ function buildCardPc(item, opts = {}){
                 <button type="button"
                   class="btn-filter-poster"
                   data-poster="${escapeHtml(item.posterName || item.username || '')}"
+                  data-poster-key="${escapeHtml(window.posterKeyFromItem_?.(item) || '')}"
                   aria-label="この投稿者で絞り込む">👤</button>
               ` : ''}
             </div>
@@ -2773,6 +2824,7 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
                 <button type="button"
                   class="btn-filter-poster"
                   data-poster="${escapeHtml(item.posterName || item.username || '')}"
+                  data-poster-key="${escapeHtml(window.posterKeyFromItem_?.(item) || '')}"
                   aria-label="この投稿者で絞り込む">👤</button>
               ` : ''}
             </div>
@@ -4275,6 +4327,107 @@ function findItemById_(postId){
   return null;
 }
 
+// =========================
+// カード履歴（cards_versions.json）から、投稿日に合う cardMap を一時適用
+// =========================
+window.__cardMapCache = window.__cardMapCache || new Map();
+window.__cardVersionsIndex = window.__cardVersionsIndex || null;
+
+// JSON取得（共通）
+async function fetchJson_(url){
+  const res = await fetch(url, { cache: 'force-cache' });
+  if (!res.ok) throw new Error(`fetch failed: ${url} (${res.status})`);
+  return await res.json();
+}
+
+// cards_yyyy-mm-dd_before/after.json を cardMap にする
+async function loadCardMapFile_(fileName){
+  const cache = window.__cardMapCache;
+  if (cache.has(fileName)) return cache.get(fileName);
+
+  const arr = await fetchJson_(cardDataUrl_(fileName));
+  const map = {};
+  for (const c of (arr || [])){
+    const cd5 = String(c.cd || '').padStart(5, '0');
+    if (cd5) map[cd5] = c;
+  }
+  cache.set(fileName, map);
+  return map;
+}
+
+// ===== カードJSONの配置先（public/） =====
+function cardDataBase_(){
+  const b = String(window.CARD_DATA_BASE || 'public/').trim();
+  return b.endsWith('/') ? b : (b + '/');
+}
+function cardDataUrl_(name){
+  return cardDataBase_() + String(name || '').replace(/^\/+/, '');
+}
+
+// cards_versions.json を1回だけ読む
+async function loadCardVersionsIndex_(){
+  if (window.__cardVersionsIndex) return window.__cardVersionsIndex;
+
+  // public/ 配下に置いている前提 → 相対でOK
+  const idx = await fetchJson_(cardDataUrl_('cards_versions.json'));
+  // idx.versions = [{version:'2025-12-16', before:'cards_..._before.json', after:'cards_..._after.json'}, ...]
+  window.__cardVersionsIndex = idx;
+  return idx;
+}
+
+// 投稿日(ISO文字列) から “その時点で正しいファイル” を選ぶ
+function pickSnapshotFileForPostDate_(versions, postDateStr){
+  const post = new Date(postDateStr);
+  if (!isFinite(post)) return null;
+
+  const list = (versions || [])
+    .map(v => ({ ...v, _d: new Date(v.version) }))
+    .filter(v => isFinite(v._d))
+    .sort((a,b) => a._d - b._d);
+
+  if (!list.length) return null;
+
+  // ルール：
+  // - 投稿日が最初の調整日より前 → 「最初の調整日の before」
+  // - それ以降 → 「投稿日以下で最大の調整日の after」
+  if (post < list[0]._d){
+    return list[0].before || null;
+  }
+
+  let last = null;
+  for (const v of list){
+    if (v._d <= post) last = v;
+  }
+  return (last && last.after) ? last.after : null;
+}
+
+// 一時的に window.cardMap を差し替えて fn を実行
+async function withCardMapForPostDate_(item, fn){
+  try{
+    const createdAt = item?.createdAt || item?.updatedAt || '';
+    if (!createdAt) return fn();
+
+    const idx = await loadCardVersionsIndex_();
+    const file = pickSnapshotFileForPostDate_(idx?.versions, createdAt);
+
+    // 該当がないなら latest のまま
+    if (!file) return fn();
+
+    const map = await loadCardMapFile_(file);
+
+    const prev = window.cardMap;
+    window.cardMap = map;
+    try{
+      return fn();
+    } finally {
+      window.cardMap = prev;
+    }
+  } catch (e){
+    console.warn('withCardMapForPostDate_ failed:', e);
+    return fn();
+  }
+}
+
 
 // =========================
 // デッキリストのカード画像タップ → カード詳細
@@ -4611,7 +4764,9 @@ function rebuildFilteredItems(){
 
   // ① 投稿タグ（自動＋選択タグ）：AND（全部含む）
   if (fs?.selectedTags?.size) {
-    const selected = Array.from(fs.selectedTags);
+    const selected = Array.from(fs.selectedTags)
+      .map(s => String(s).trim())
+      .filter(Boolean);
 
     filtered = filtered.filter(item => {
       const all = [item.tagsAuto, item.tagsPick].filter(Boolean).join(',');
@@ -4660,6 +4815,18 @@ function rebuildFilteredItems(){
     });
   }
 
+  // ===== 投稿者フィルタ（キー一致）=====
+  const selKey = String(fs?.selectedPosterKey || '').trim();
+  if (selKey){
+    filtered = filtered.filter(item => window.posterKeyFromItem_(item) === selKey);
+  } else {
+    // 互換：昔の selectedPoster が残ってる場合
+    const selPoster = String(fs?.selectedPoster || '').trim();
+    if (selPoster){
+      const want = `name:${window.normPosterName_(selPoster)}`;
+      filtered = filtered.filter(item => window.posterKeyFromItem_(item) === want);
+    }
+  }
 
   // 並び替え
   filtered = sortItems(filtered, sortKey);
