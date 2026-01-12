@@ -4862,10 +4862,13 @@ const CardNotes = (() => {
   function syncHidden(){
     const out = Array.from(elWrap().querySelectorAll('.post-card-note')).map(n => {
       const i = Number(n.dataset.index || 0);
-      const text = n.querySelector('.note')?.value?.trim() || '';
-      const cd   = String(cardNotes[i]?.cd || '');   // cd は配列を正とする
-      return (cd || text) ? {cd, text} : null;
+      const text = n.querySelector('.note')?.value ?? '';
+      if (cardNotes[i]) cardNotes[i].text = text; // ★モデルへ反映（trimするならここで）
+      const cd   = String(cardNotes[i]?.cd || '');
+      const t    = String(text).trim();
+      return (cd || t) ? { cd, text: t } : null;
     }).filter(Boolean);
+
     if (elHidden()) elHidden().value = JSON.stringify(out);
     if (typeof window.scheduleAutosave === 'function') window.scheduleAutosave();
   }
@@ -4907,7 +4910,29 @@ const CardNotes = (() => {
   });
 };
 
+  function addRow(initial={cd:'', text:''}){
+    syncHidden(); // ★いまの入力を確定してから
+    if (cardNotes.length >= MAX) { alert(`カード解説は最大 ${MAX} 件までです`); return; }
+    cardNotes.push({ cd:String(initial.cd||''), text:String(initial.text||'') });
+    renderRows();
+  }
+
+  function removeRow(index){
+    syncHidden();
+    cardNotes.splice(index,1);
+    renderRows();
+  }
+
+  function moveRow(index, dir){
+    syncHidden();
+    const j = index + dir;
+    if (j < 0 || j >= cardNotes.length) return;
+    [cardNotes[index], cardNotes[j]] = [cardNotes[j], cardNotes[index]];
+    renderRows();
+  }
+
   function openPickerFor(index){
+    syncHidden();
     pickingIndex = index|0;
 
     const list = currentDeckUniqueCds();
