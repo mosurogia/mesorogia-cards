@@ -2456,11 +2456,45 @@ function getDeckCandidatesFromItem_(item){
     cds = deck.map(x=>String(x?.cd || x || ''));
   }
 
-  const uniq = Array.from(new Set(
-    cds.map(x=>String(x||'').trim().padStart(5,'0')).filter(Boolean)
-  ));
+const uniq = Array.from(new Set(
+  cds.map(x=>String(x||'').trim().padStart(5,'0')).filter(Boolean)
+));
 
-  return uniq.map(cd5=>({ cd5, name: (cardMap[cd5]||{}).name || 'カード名未登録' }));
+  // ===== タイプ → コスト → パワー → cd =====
+  const TYPE_ORDER = {
+    'チャージャー': 0,
+    'アタッカー': 1,
+    'ブロッカー': 2,
+  };
+
+  uniq.sort((a, b) => {
+    const A = cardMap[a] || {};
+    const B = cardMap[b] || {};
+
+    // 1. タイプ
+    const tA = TYPE_ORDER[A.type] ?? 99;
+    const tB = TYPE_ORDER[B.type] ?? 99;
+    if (tA !== tB) return tA - tB;
+
+    // 2. コスト
+    const costA = A.cost ?? 999;
+    const costB = B.cost ?? 999;
+    if (costA !== costB) return costA - costB;
+
+    // 3. パワー
+    const powA = A.power ?? 999;
+    const powB = B.power ?? 999;
+    if (powA !== powB) return powA - powB;
+
+    // 4. cd
+    return String(a).localeCompare(String(b));
+  });
+
+  return uniq.map(cd5 => ({
+    cd5,
+    name: (cardMap[cd5] || {}).name || 'カード名未登録'
+  }));
+
 }
 
 function validateCardNotes_(root){

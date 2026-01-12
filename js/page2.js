@@ -4168,38 +4168,69 @@ function deleteDeckFromIndex(index) {
   renderDeckList();//デッキリスト画像更新
 }
 
- // デッキリセット（委譲で拾う：再描画に強い）
-  document.addEventListener('click', (e) => {
-   // どちらのボタンでも拾う（下部/上部）
+// デッキリセット（委譲で拾う：再描画に強い）
+document.addEventListener('click', (e) => {
+  // どちらのボタンでも拾う（下部/上部）
   const btn = e.target.closest('#resetDeckButton, #resetDeckButtonTop');
   if (!btn) return;
 
   if (!confirm('現在のデッキを全てリセットします。よろしいですか？')) return;
 
+  // =====================
   // データ初期化
+  // =====================
   Object.keys(deck).forEach(k => delete deck[k]);
+
   // 代表カード状態を完全にリセット
   setRepresentativeCard(null, '');
 
-  //デッキ名（情報タブ＆投稿タブ）も空に
-  writeDeckNameInput(''); // info側（#info-deck-name）
+  // デッキ名（情報タブ＆投稿タブ）も空に
+  writeDeckNameInput('');
   const postNameEl = document.getElementById('post-deck-name');
-  if (postNameEl) postNameEl.value = '';       // 投稿側（#post-deck-name）
-  if (typeof window.syncDeckNameFields === 'function') window.syncDeckNameFields(); // 念のため同期
-  clearAutosave(); // 🔁 オートセーブも消して復活しないように
+  if (postNameEl) postNameEl.value = '';
+  if (typeof window.syncDeckNameFields === 'function') {
+    window.syncDeckNameFields();
+  }
 
+  // 🔁 オートセーブも消して復活しないように
+  clearAutosave();
 
-  // UI更新（横スクロール保持）
+  // =====================
+  // UI更新
+  // =====================
   withDeckBarScrollKept(() => {
-    updateDeck();       // デッキバー＆サマリー再計算
-    renderDeckList();   // デッキリスト画像エリア再描画
+    updateDeck();
+    renderDeckList();
   });
 
-  // 付随パネルや数値も同期
   updateDeckSummaryDisplay();
   updateExchangeSummary();
-  scheduleAutosave();  //オートセーブ
+
+  // --- デッキ解説 ---
+  const noteMain = document.getElementById('post-note');
+  const noteFull = document.getElementById('note-full-text');
+
+  if (noteMain) {
+    noteMain.value = '';
+    noteMain.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  if (noteFull) {
+    noteFull.value = '';
+  }
+
+  // --- カード解説 ---
+  if (window.CardNotes?.replace) {
+    // 初期状態：空1行（今の仕様と一致）
+    window.CardNotes.replace([{ cd: '', text: '' }]);
+  }
+
+  const hidden = document.getElementById('post-card-notes-hidden');
+  if (hidden) hidden.value = '[]';
+
+  // 最後にオートセーブ再開
+  scheduleAutosave();
 });
+
 
 //#endregion
 
@@ -4896,19 +4927,31 @@ const CardNotes = (() => {
     const set = new Set(Object.keys(window.deck || {}));
     return Array.from(set);
   }
-  function ensureImg(img, cd){ img.src = cdToImg(cd); img.onerror = () => img.src = 'img/00000.webp'; }
-  const sortByRule = (arr) => {
+
+function ensureImg(img, cd){ img.src = cdToImg(cd); img.onerror = () => img.src = 'img/00000.webp'; }
+
+const sortByRule = (arr) => {
   const map = window.cardMap || {};
+  const TYPE_ORDER = { 'チャージャー':0, 'アタッカー':1, 'ブロッカー':2 };
+
   return arr.slice().sort((a,b)=>{
     const A = map[a] || {};
     const B = map[b] || {};
+
+    const tA = TYPE_ORDER[A.type] ?? 99;
+    const tB = TYPE_ORDER[B.type] ?? 99;
+    if (tA !== tB) return tA - tB;
+
     const cA = +A.cost  || 0, cB = +B.cost  || 0;
     if (cA !== cB) return cA - cB;
+
     const pA = +A.power || 0, pB = +B.power || 0;
     if (pA !== pB) return pA - pB;
+
     return String(a).localeCompare(String(b));
   });
 };
+
 
   function addRow(initial={cd:'', text:''}){
     syncHidden(); // ★いまの入力を確定してから
@@ -4994,8 +5037,10 @@ const CardNotes = (() => {
     }
   });
 
-  return { replace, get, addRow };
+  return { replace, get, getList: get, addRow };
 })();
+
+window.CardNotes = CardNotes;
 
 // =========================
 // カード解説ノート：フォールバック & 追加ボタン結線
