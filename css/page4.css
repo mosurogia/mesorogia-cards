@@ -1616,7 +1616,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 20px;
+    padding: 3px 20px;
     border-radius: 200px;
     background: #f9fafb;
 }
@@ -1633,6 +1633,33 @@ body {
     border: 1px solid var(--pack-stroke);
 
     line-height: 1.2;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 左右の角欠け（背景と同じ色で“穴”を作る） */
+.carddetail-pack::before,
+.carddetail-pack::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+
+    /* ここが“抜き色”＝親の背景と同じ */
+    background: #fff;
+
+    border-radius: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.carddetail-pack::before {
+    left: -7px;
+}
+
+.carddetail-pack::after {
+    right: -7px;
 }
 
 .carddetail-cat {
