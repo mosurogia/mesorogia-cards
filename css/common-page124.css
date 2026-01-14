@@ -446,6 +446,52 @@ select {
     border-radius: 8px;
 }
 
+/* ===============
+その他モーダル
+==================*/
+
+
+/* モーダル本体の細かいレイアウト調整 */
+.flow-modal {
+    max-width: 480px;
+    width: 90%;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+/* モーダル閉じるボタン */
+.modal-close-x {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* ===== フィルター利用手順 ===== */
+.flow-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+}
+
+.flow-steps {
+    margin: 0.25rem 0 1rem;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.flow-steps li+li {
+    margin-top: 0.25rem;
+}
+
+.flow-note {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: 0;
+}
 
 /* ===== 選択中フィルタの固定バー ===== */
 #active-chips-bar {
@@ -611,41 +657,6 @@ select {
 
 .type-ブロッカー {
     background: rgba(214, 212, 204, 0.5); /* 灰色 */
-}
-
-/*種族別枠線色*/
-.race-ドラゴン {
-    border: 6px solid rgb(200, 40, 40);
-}
-
-.race-アンドロイド {
-    border: 6px solid rgb(40, 200, 200);
-}
-
-.race-エレメンタル {
-    border: 6px solid rgb(40, 180, 90);
-}
-
-.race-ルミナス {
-    border: 6px solid rgb(240, 200, 40);
-}
-
-.race-シェイド {
-    border: 6px solid rgb(150, 100, 180);
-}
-
-.race-イノセント {
-    border: 6px solid silver;
-}
-
-.race-旧神 {
-    border: 6px solid;
-    border-image: linear-gradient(90deg,
-            rgba(255, 255, 255, 0.6),
-            rgba(255, 215, 140, 0.8),
-            rgba(180, 255, 255, 0.7),
-            rgba(220, 180, 255, 0.7),
-            rgba(255, 255, 255, 0.6)) 1;
 }
 
 @media (max-width: 768px) {

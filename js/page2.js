@@ -2433,6 +2433,8 @@ function updateDeckSummary(deckCards) {
 }
 
 
+
+
 // ===== デッキ分析更新 =====
 function updateDeckAnalysis() {
   // deck と cardMap からカード詳細を展開
@@ -2497,31 +2499,103 @@ if (raritySummary) {
   const costData  = costLabels.map(k => costCount[k]  || 0);
   const powerData = powerLabels.map(k => powerCount[k] || 0);
 
-// 3) 総コスト/パワー表示
+// 3) 総コスト/パワー表示（※先に計算→後で描画）
+
 // 総コスト
 const sumCost = deckCards.reduce((s, c) => s + (c.cost || 0), 0);
+
+// 既存（総コストの数字表示）が残ってるならそのまま
 const sumCostEl = document.getElementById('total-cost');
 if (sumCostEl) sumCostEl.textContent = String(sumCost);
 
-// タイプ別総パワー
+// ✅ グラフタイトル横：総コストチップ
+const costSummary = document.getElementById('cost-summary-deckmaker');
+if (costSummary) {
+  costSummary.innerHTML = `<span class="stat-chip">総コスト ${sumCost}</span>`;
+}
+
+// タイプ別総パワー（←ここを先に計算する！）
 let chargerPower = 0;
 let attackerPower = 0;
+
+// ✅ 平均チャージ量用（実質チャージ = power - cost）
+let chargerChargeSum = 0;   // 実質チャージ量の合計
+let chargerChargeCnt = 0;   // 実質チャージ > 0 の枚数
+
 deckCards.forEach(c => {
-  if (c.type === "チャージャー") {
-    chargerPower += (c.power || 0);
-  } else if (c.type === "アタッカー") {
+  if (c.type === 'チャージャー') {
+    const p = (c.power || 0);
+    const cost = (c.cost || 0);
+
+    // 既存表示用（総チャージャーパワー）
+    chargerPower += p;
+
+    // ✅ 実質チャージ量
+    const charge = p - cost;過剰
+
+    // パワー0・差分0以下は除外
+    if (charge > 0) {
+      chargerChargeSum += charge;
+      chargerChargeCnt += 1;
+    }
+  }
+
+  if (c.type === 'アタッカー') {
     attackerPower += (c.power || 0);
   }
 });
+
+// ✅ 平均チャージ量の表示
+const avgChargeEl = document.getElementById('avg-charge');
+if (avgChargeEl) {
+  const avg = chargerChargeCnt > 0
+    ? (chargerChargeSum / chargerChargeCnt)
+    : null;
+
+  avgChargeEl.textContent = avg !== null ? avg.toFixed(2) : '-';
+}
+
+
+// ✅ マナ効率（供給率） = (総チャージャー量 + 初期マナ4) / 総コスト
+const manaEffEl = document.getElementById('mana-efficiency');
+if (manaEffEl) {
+  const BASE_MANA = 4;
+  const totalMana = chargerPower + BASE_MANA;
+
+  // 供給率（逆数）
+  const manaEff = (sumCost > 0) ? (totalMana / sumCost) : null;
+
+  // 表示ラベル（高いほど良い）
+  let label = '';
+  if (manaEff === null) label = '';
+  else if (manaEff > 1.5) label = 'マナ過剰';
+  else if (manaEff > 0.5) label = '適正';
+  else label = 'マナ不足';
+
+  // 表示
+  if (manaEff !== null) {
+    manaEffEl.textContent = `${manaEff.toFixed(2)}${label ? `（${label}）` : ''}`;
+  } else {
+    manaEffEl.textContent = '-';
+  }
+
+  // クラス付与（高いほど良い）
+  manaEffEl.className = 'mana-eff';
+  if (manaEff !== null) {
+    if (manaEff > 1.1) manaEffEl.classList.add('mana-good');
+    else if (manaEff > 0.9) manaEffEl.classList.add('mana-ok');
+    else manaEffEl.classList.add('mana-bad');
+  }
+}
 
 // 旧UI（テキスト）互換は空にしておく
 const sumPowerEl = document.getElementById('total-power');
 if (sumPowerEl) sumPowerEl.textContent = "";
 
-// 🆕 チップUI（type-summary と同じ仕様）
-const powerWrap = document.getElementById('power-summary');
-if (powerWrap) {
-  powerWrap.innerHTML = `
+// ✅ グラフタイトル横：タイプ別パワーチップ
+const powerSummary = document.getElementById('power-summary-deckmaker');
+if (powerSummary) {
+  powerSummary.innerHTML = `
     <span class="type-chip" data-type="チャージャー">チャージャー ${chargerPower}</span>
     <span class="type-chip" data-type="アタッカー">アタッカー ${attackerPower}</span>
   `;
@@ -2579,8 +2653,8 @@ const commonOptions = {
 if (costChart)  costChart.destroy();
 if (powerChart) powerChart.destroy();
 
-const costCtx  = document.getElementById('costChart')?.getContext('2d');
-const powerCtx = document.getElementById('powerChart')?.getContext('2d');
+const costCtx  = document.getElementById('costChart-deckmaker')?.getContext('2d');
+const powerCtx = document.getElementById('powerChart-deckmaker')?.getContext('2d');
 
 if (costCtx) {
   costChart = new Chart(costCtx, { type: 'bar', data: { labels: costLabels,  datasets: costDatasets  }, options: commonOptions });
@@ -3919,6 +3993,34 @@ function getDeckCardsArray(){
 })();
 
 
+// ===== マナ効率 ヘルプモーダル =====
+(function(){
+  window.addEventListener('DOMContentLoaded', () => {
+    const btn   = document.getElementById('mana-help-btn');
+    const modal = document.getElementById('manaHelpModal');
+    const close = document.getElementById('mana-help-close');
+
+    if (btn && modal) {
+      btn.addEventListener('click', () => {
+        modal.style.display = 'flex'; // 他のmodalと揃える
+      });
+    }
+
+    if (close && modal) {
+      close.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+    }
+
+    // 背景クリックで閉じる（任意だけど便利）
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    }
+  });
+})();
+
 
 
 
@@ -5164,7 +5266,11 @@ function updateAutoTags() {
 
   // === 3.旧神 ===
   const hasOldGod = Object.keys(deck).some(cd => cardMap[cd]?.race === '旧神');
-  if (!hasOldGod) autoTags.push('旧神なし');
+
+  // ✅ レジェンドが1枚も無いなら「旧神なし」は付けない（旧神は全てレジェンドなので重複）
+  if (!hasOldGod && !legendNone) {
+    autoTags.push('旧神なし');
+  }
 
   // === 4.単一英語パックデッキ（A/B/C/Dパックのみ） ===
   // デッキ内のカードについて、pack_name / pack から EN名を取得し、

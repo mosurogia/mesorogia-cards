@@ -15,6 +15,64 @@
     --rarity-border-gold: linear-gradient(90deg, gold 0%, #fff5cc 70%, gold 100%);
     --rarity-border-silver: linear-gradient(90deg, silver 0%, #f0f0f0 70%, silver 100%);
     --rarity-border-bronze: linear-gradient(90deg, peru 0%, #ffd9b3 70%, peru 100%);
+
+    /* ===== パックチップ色 ===== */
+    /*Aパック*/
+    --pack-a-rgb: 190, 55, 55;
+    --pack-a-accent-rgb: 255, 85, 85;
+    /*Bパック*/
+    --pack-b-rgb: 73, 145, 75;
+    --pack-b-accent-rgb: 90, 211, 96;
+    /*Cパック*/
+    --pack-c-rgb: 98, 88, 147;
+    --pack-c-accent-rgb: 127, 110, 167;
+    /*Dパック*/
+    --pack-d-rgb: 78, 138, 172;
+    --pack-d-accent-rgb: 88, 187, 226;
+    /*Eパック*/
+    --pack-e-rgb: 230, 140, 60;
+    --pack-e-accent-rgb: 255, 180, 110;
+    /* 特殊：ダークパープル（異質・限定感） */
+    --pack-special-rgb: 200, 170, 70;
+    --pack-special-accent-rgb: 255, 220, 120;
+    /* コラボ：ゴールド寄り（外部・華やか） */
+    --pack-collab-rgb: 90,85,120;
+    --pack-collab-accent-rgb: 150, 135, 200;
+}
+
+/*========= 種族枠線 ==========*/
+.race-ドラゴン {
+    border: 6px solid rgb(200, 40, 40);
+}
+
+.race-アンドロイド {
+    border: 6px solid rgb(40, 200, 200);
+}
+
+.race-エレメンタル {
+    border: 6px solid rgb(40, 180, 90);
+}
+
+.race-ルミナス {
+    border: 6px solid rgb(240, 200, 40);
+}
+
+.race-シェイド {
+    border: 6px solid rgb(150, 100, 180);
+}
+
+.race-イノセント {
+    border: 6px solid silver;
+}
+
+.race-旧神 {
+    border: 6px solid;
+    border-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 215, 140, 0.8),
+            rgba(180, 255, 255, 0.7),
+            rgba(220, 180, 255, 0.7),
+            rgba(255, 255, 255, 0.6)) 1;
 }
 
 body {
@@ -144,6 +202,33 @@ button,
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
 }
 
+
+/* 「？」ボタン */
+.subtab-help-button {
+    margin: 0 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid #d4d4ff;
+    background: #f5f5ff;
+    color: #555;
+    font-size: .7rem;
+    cursor: pointer;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtab-help-button:hover {
+    background: #e3e3ff;
+}
+
+@media (max-width: 768px) {
+    .subtab-help-button {
+        padding: 3px 6px;
+        font-size: .6rem;
+    }
+}
 
 /*上部に戻るボタン*/
 #scrollTopFixed {

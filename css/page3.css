@@ -593,8 +593,6 @@ section h4 {
 .race-group {
     margin: 0.3rem auto;
     /* 中央寄せ */
-    border: 2px solid #666;
-    /* 枠線は種族ごとに上書きでもOK */
     border-radius: 6px;
     box-sizing: border-box;
     padding: 0.3rem;
@@ -633,41 +631,6 @@ section h4 {
             rgba(180, 255, 255, 0.3),
             rgba(220, 180, 255, 0.3),
             rgba(255, 255, 255, 0.2));
-}
-
-/*========= 種族枠線 ==========*/
-.race-ドラゴン {
-    border: 6px solid rgb(200, 40, 40);
-}
-
-.race-アンドロイド {
-    border: 6px solid rgb(40, 200, 200);
-}
-
-.race-エレメンタル {
-    border: 6px solid rgb(40, 180, 90);
-}
-
-.race-ルミナス {
-    border: 6px solid rgb(240, 200, 40);
-}
-
-.race-シェイド {
-    border: 6px solid rgb(150, 100, 180);
-}
-
-.race-イノセント {
-    border: 6px solid silver;
-}
-
-.race-旧神 {
-    border: 6px solid;
-    border-image: linear-gradient(90deg,
-            rgba(255, 255, 255, 0.6),
-            rgba(255, 215, 140, 0.8),
-            rgba(180, 255, 255, 0.7),
-            rgba(220, 180, 255, 0.7),
-            rgba(255, 255, 255, 0.6)) 1;
 }
 
 /*カード*/

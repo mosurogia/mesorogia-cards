@@ -249,8 +249,7 @@
 }
 @media (max-width: 410px) {
 .deck-summary {
-        width: 95px;
-        font-size: 9px;
+        font-size: 8.5px;
     }
 }
 @media (max-width: 768px) {
@@ -850,34 +849,6 @@
     background: linear-gradient(180deg, #f8fbff 0%, #eaf3ff 100%);
 }
 
-/* サブタブ右側の「？」ボタン */
-.subtab-help-button {
-    margin-left: auto;
-    margin-right: 4px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    border: 1px solid #d4d4ff;
-    background: #f5f5ff;
-    color: #555;
-    font-size: .7rem;
-    cursor: pointer;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.subtab-help-button:hover {
-    background: #e3e3ff;
-}
-
-@media (max-width: 768px) {
-    .subtab-help-button {
-        padding: 3px 6px;
-        font-size: .6rem;
-    }
-}
-
 /*タブ全体レイアウト*/
 .info-section {
     display: flex;
@@ -1042,6 +1013,26 @@
     /* アイコンと文字を離さない */
 }
 
+/* マナ過剰 */
+.mana-good {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+/* 適正 */
+.mana-ok {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+/* マナ不足 */
+.mana-bad {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+
+
 
 /* ===== デッキ情報＆投稿のボタンを統一 ===== */
 .deck-code-controls,
@@ -1189,23 +1180,62 @@
 }
 
 /*グラフ*/
-.chart{
-    max-width: 100%;
-    position: relative;
-    height: 190px;
-    margin-bottom: 20px;
-    background-color: #fff;
+/* ===== デッキメーカー：グラフ見出し＋チップ横並び ===== */
+.deckmaker-charts {
+    display: grid;
+    gap: 10px;
 }
-@media (max-width: 1024px) {
-    .chart {
-        height: 140px;
-        margin-bottom: 15px;
-    }
+
+.chartbox {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px 10px 8px;
 }
-@media (max-width: 768px) {
-.chart {
-        height: 30vw;
-    }
+
+.charthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.charttitle {
+    font-weight: 700;
+    font-size: .9rem;
+    color: #111827;
+    margin: 0;
+}
+
+.chartchips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+/* cost用の stat-chip（なければ追加） */
+.stat-chip {
+    font-size: .75rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #111827;
+    white-space: nowrap;
+}
+
+/* canvasの高さを安定させたい場合 */
+.chartcanvas {
+    height: 160px;
+}
+
+.chartcanvas canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* ===============
@@ -2636,16 +2666,6 @@ font-size: .8rem;
     position: relative;
 }
 
-.modal-close-x {
-    position: absolute;
-    right: 12px;
-    top: 10px;
-    border: none;
-    background: transparent;
-    font-size: 2rem;
-    cursor: pointer;
-}
-
 .post-success-header {
     font-size: 1.1rem;
     font-weight: 700;
@@ -2904,35 +2924,6 @@ font-size: .8rem;
     color: #1d4ed8;
 }
 
-/* モーダル本体の細かいレイアウト調整 */
-.post-flow-modal {
-    max-width: 480px;
-    width: 90%;
-    padding: 1rem;
-    border-radius: 12px;
-}
-
-.post-flow-title {
-    margin: 0 0 0.75rem;
-    font-size: 1.1rem;
-}
-
-.post-flow-steps {
-    margin: 0.25rem 0 1rem;
-    padding-left: 1.25rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.post-flow-steps li+li {
-    margin-top: 0.25rem;
-}
-
-.post-flow-note {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin: 0;
-}
 
 
 

@@ -299,18 +299,54 @@
                     </div>
                 </div>
 
-                <!--総コスト＆パワー-->
+                <!-- マナ効率 -->
                 <div class="info-row">
-                    <div class="info-label">総コスト</div>
-                    <div class="info-value"><span id="total-cost">0</span>コスト</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">総パワー</div>
+                    <div class="info-label">
+                        マナ効率
+                        <button type="button" id="mana-help-btn" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
+                    </div>
                     <div class="info-value">
-                        <div id="power-summary" class="type-summary"></div>
-                        <span id="total-power" style="display:none;"></span>
+                        <span id="mana-efficiency">-</span>
                     </div>
                 </div>
+
+                <!-- 平均チャージ量 -->
+                <div class="info-row">
+                    <div class="info-label">平均チャージ量</div>
+                    <div class="info-value"><span id="avg-charge">-</span></div>
+                </div>
+
+                <!--グラフ分布-->
+                <div class="deckmaker-charts">
+
+                    <!-- コスト分布 -->
+                    <div class="chartbox">
+                        <div class="charthead">
+                            <div class="charttitle">コスト分布</div>
+                            <div class="chartchips" id="cost-summary-deckmaker">
+                                <!-- JSで差し替え -->
+                            </div>
+                        </div>
+                        <div class="chartcanvas">
+                            <canvas id="costChart-deckmaker"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- パワー分布 -->
+                    <div class="chartbox">
+                        <div class="charthead">
+                            <div class="charttitle">パワー分布</div>
+                            <div class="chartchips" id="power-summary-deckmaker">
+                                <!-- JSで差し替え -->
+                            </div>
+                        </div>
+                        <div class="chartcanvas">
+                            <canvas id="powerChart-deckmaker"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
 
                 <!--マリガン練習 -->
                 <div class="mulligan-trainer" id="mulligan-trainer">
@@ -339,16 +375,6 @@
                         </div>
 
                     </div>
-                </div>
-
-                <!--グラフ分布-->
-                <div class="chart">
-                    <div class="info-label">コスト分布</div>
-                    <canvas id="costChart"></canvas>
-                </div>
-                <div class="chart">
-                    <div class="info-label">パワー分布</div>
-                    <canvas id="powerChart"></canvas>
                 </div>
 
                 <!--所持データ情報-->
@@ -1056,25 +1082,51 @@
 
 <!-- デッキ投稿の流れ ヘルプモーダル -->
 <div id="postFlowHelpModal" class="modal" style="display:none;">
-    <div class="modal-content post-flow-modal">
+    <div class="modal-content flow-modal">
         <button id="post-flow-help-close" class="modal-close-x" type="button" aria-label="閉じる">×</button>
 
-        <h3 class="post-flow-title">
+        <h3 class="flow-title">
             <span>❓ デッキ投稿の流れ</span>
         </h3>
 
-        <ol class="post-flow-steps">
+        <ol class="flow-steps">
             <li>「🃏 デッキ構築」タブで、デッキを組みましょう。</li>
             <li>「📋 デッキ情報」内で枚数・種族・レアリティなどを確認しましょう。</li>
             <li>「📤 デッキ投稿」サブタブに進みます。投稿内のデッキ名・投稿コメント・タグなどの記入欄を埋めていきましょう。</li>
             <li>最後に、投稿チェック」にチェックを入れてから、一番下の「デッキを投稿する」ボタンを押したら投稿完了です！</li>
         </ol>
 
-        <p class="post-flow-note">
+        <p class="flow-note">
             ※ 投稿後は「デッキ投稿一覧ページ」にあなたのデッキが追加されます。
         </p>
     </div>
 </div>
+
+<!-- マナ効率 ヘルプモーダル -->
+<div id="manaHelpModal" class="modal" style="display:none;">
+    <div class="modal-content flow-modal">
+        <button id="mana-help-close" class="modal-close-x" type="button" aria-label="閉じる">
+            ×
+        </button>
+
+        <h3 class="flow-title">
+            <span>❓ マナ効率とは？</span>
+        </h3>
+
+        <ol class="flow-steps">
+            <li>マナ効率は「デッキが重いか・軽いか」を見る指標です。</li>
+            <li>（総チャージャー量＋初期マナ4）÷ 総コスト で計算しています。</li>
+            <li>数値が高いほど、マナに余裕があります。</li>
+            <li>数値が低いほど、事故しやすい構成です。</li>
+        </ol>
+
+        <p class="flow-note">
+            ※ あくまで目安です。デッキタイプやプレイ方針によって最適値は変わります。
+        </p>
+    </div>
+</div>
+
+
 
 
 <!-- JS -->

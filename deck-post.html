@@ -610,8 +610,8 @@
             </div>
 
             <!-- 入力欄は廃止：表示だけ -->
-            <div id="deckCodePreview" class="deckcode-preview-modal-modal" aria-label="デッキコード表示欄">
-                未貼り付けです（「クリップボードから貼り付け」を押してください）
+            <div id="deckCodePreview" class="deckcode-preview-modal" aria-label="デッキコード表示欄">
+                ここにデッキコードが表示されます
             </div>
 
             <div id="deckCodeJudge" class="deckcode-judge" aria-live="polite"></div>
@@ -628,8 +628,29 @@
     </div>
 </div>
 
+<!-- ===== マナ効率 ヘルプモーダル ===== -->
+<div id="manaEfficiencyHelpModal" class="modal" style="display:none;">
+    <div class="modal-content flow-modal">
+        <button id="mana-help-close" class="modal-close-x" type="button" aria-label="閉じる">
+            ×
+        </button>
 
+        <h3 class="flow-title">
+            <span>❓ マナ効率とは？</span>
+        </h3>
 
+        <ol class="flow-steps">
+            <li>マナ効率は「デッキが重いか・軽いか」を見る指標です。</li>
+            <li>（総チャージャー量＋初期マナ4）÷ 総コスト で計算しています。</li>
+            <li>数値が高いほど、マナに余裕があります。</li>
+            <li>数値が低いほど、事故しやすい構成です。</li>
+        </ol>
+
+        <p class="flow-note">
+            ※ あくまで目安です。デッキタイプやプレイ方針によって最適値は変わります。
+        </p>
+    </div>
+</div>
 
 <!--フッター-->
 <footer>

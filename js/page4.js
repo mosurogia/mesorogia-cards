@@ -1568,6 +1568,61 @@ function renderPostDistCharts_(item, paneId){
     costSumEl.innerHTML = `<span class="stat-chip">総コスト ${sumCost}</span>`;
   }
 
+
+// ===== マナ効率＆平均チャージ量 =====
+// 実質チャージ = power - cost（差分0以下は除外）
+let chargerChargeSum = 0;
+let chargerChargeCnt = 0;
+
+deckCards.forEach(c => {
+  if (c.type !== 'チャージャー') return;
+
+  const p = Number.isFinite(c.power) ? c.power : 0;
+  const k = Number.isFinite(c.cost)  ? c.cost  : 0;
+
+  const charge = p - k;
+
+  // パワー0含む「差分0以下」は除外（平均・合計どちらにも入れない）
+  if (charge > 0) {
+    chargerChargeSum += charge;
+    chargerChargeCnt += 1;
+  }
+});
+
+// 平均チャージ量
+const avgChargeEl = document.getElementById(`avg-charge-${paneId}`);
+if (avgChargeEl) {
+  const avg = chargerChargeCnt > 0 ? (chargerChargeSum / chargerChargeCnt) : null;
+  avgChargeEl.textContent = (avg !== null) ? avg.toFixed(2) : '-';
+}
+
+// マナ効率（供給率・逆数）= (初期マナ4 + 実質チャージ合計) / 総コスト
+const manaEffEl = document.getElementById(`mana-efficiency-${paneId}`);
+if (manaEffEl) {
+  const BASE_MANA = 4;
+  const totalMana = chargerChargeSum + BASE_MANA;
+  const supply = (sumCost > 0) ? (totalMana / sumCost) : null;
+
+  let label = '';
+  if (supply === null) label = '';
+  else if (supply > 1.11) label = '余裕あり';
+  else if (supply > 0.91) label = '適正';
+  else label = 'やや重め';
+
+  manaEffEl.textContent = (supply !== null)
+    ? `${supply.toFixed(2)}${label ? `（${label}）` : ''}`
+    : '-';
+
+  // クラス（高いほど良い）
+  manaEffEl.className = 'mana-eff';
+  if (supply !== null) {
+    if (supply > 1.11) manaEffEl.classList.add('mana-good');
+    else if (supply > 0.91) manaEffEl.classList.add('mana-ok');
+    else manaEffEl.classList.add('mana-bad');
+  }
+}
+
+
   const powerSums = { 'チャージャー':0, 'アタッカー':0 };
   deckCards.forEach(c => {
     const p = Number.isFinite(c.power) ? c.power : 0;
@@ -1769,6 +1824,13 @@ function buildCardDetailHtml_(cd5){
     ? (window.splitPackName ? window.splitPackName(packRaw) : { en: String(packRaw), jp: '' })
     : null;
 
+  let packKey = '';
+  if (packRaw) {
+    const enName = (typeof packNameEn_ === 'function') ? packNameEn_(packRaw) : String(packRaw);
+    const abbr   = (typeof packAbbr_ === 'function') ? packAbbr_(enName) : '';
+    packKey      = (typeof packKeyFromAbbr_ === 'function') ? packKeyFromAbbr_(abbr) : '';
+  }
+
   const cat = c.category || '';
   const img = `img/${String(cd5).padStart(5,'0')}.webp`;
 
@@ -1811,17 +1873,17 @@ function buildCardDetailHtml_(cd5){
 
         <div class="carddetail-sub">
           ${pack ? `
-            <div class="carddetail-pack">
-              ${pack.en ? `<div class="carddetail-pack-en">${escHtml_(pack.en)}</div>` : ''}
-              ${pack.jp ? `<div class="carddetail-pack-jp">${escHtml_(pack.jp)}</div>` : ''}
-            </div>
+              <div class="carddetail-pack"${packKey ? ` data-pack="${packKey}"` : ''}>
+                ${pack.en ? `<div class="carddetail-pack-en">${escHtml_(pack.en)}</div>` : ''}
+                ${pack.jp ? `<div class="carddetail-pack-jp">${escHtml_(pack.jp)}</div>` : ''}
+              </div>
           ` : ''}
 
-          <div class="carddetail-cat+rarity">
+          <div class="carddetail-cat-rarity">
           ${cat ? `<span class="carddetail-cat">${escHtml_(cat)}</span>` : ''}
 
           ${rarityLabel ? `
-            <span class="carddetail-rarity ${rarityCls}">
+            <span class="stat-chip carddetail-rarity ${rarityCls}">
               ${escHtml_(rarityLabel)}
             </span>
           ` : ''}
@@ -1838,6 +1900,21 @@ function buildCardDetailHtml_(cd5){
   `;
 }
 
+// カード詳細：閉じる
+function closeCardDetail_(){
+  // SP：ドロワーを閉じる
+  const drawer = document.getElementById('cardDetailDrawer');
+  if (drawer) drawer.style.display = 'none';
+
+  // PC：右ペインのドック表示を初期文に戻す（必要なら）
+  document.querySelectorAll('.post-detail-inner .carddetail-dock .carddetail-inner')
+    .forEach(inner => {
+      if (!inner) return;
+      inner.innerHTML = `<div class="carddetail-empty">ここにカードの詳細が表示されます</div>`;
+    });
+}
+
+
 // PC用：右ペイン内に「ドック（小さめ詳細枠）」を確保して返す
 function ensureCardDetailDockPc_(root){
   if (!root) return null;
@@ -1853,7 +1930,7 @@ function ensureCardDetailDockPc_(root){
   sec.innerHTML = `
     <div class="post-detail-heading">カード詳細</div>
     <div class="carddetail-inner">
-      <div class="carddetail-empty">デッキリストのカードをタップすると表示されます。</div>
+      <div class="carddetail-empty">ここにカードの詳細が表示されます</div>
     </div>
   `;
 
@@ -2117,6 +2194,21 @@ function packAbbr_(enName){
   return s;
 }
 
+function packKeyFromAbbr_(abbr){
+  const s = String(abbr || '');
+
+  if (/^([A-E])パック/.test(s)) {
+    return s[0]; // A〜E
+  }
+  if (s.includes('特殊')) {
+    return 'SPECIAL';
+  }
+  if (s.includes('コラボ')) {
+    return 'COLLAB';
+  }
+  return ''; // その他は無色
+}
+
 function buildPackMixCounts_(item){
   const deck = extractDeckMap(item);
   const cardMap = window.cardMap || {};
@@ -2163,11 +2255,15 @@ function buildPackChipsHtml_(item){
   for (const k of d.keys){
     const n = Number(d.counts[k] || 0) || 0;
     if (!n) continue;
+
     const abbr = packAbbr_(k);
-    out.push(`<span class="stat-chip">${escapeHtml(abbr)} ${n}枚</span>`);
+    const packKey = packKeyFromAbbr_(abbr); // A〜Eなら入る
+
+    const attr = packKey ? ` data-pack="${packKey}"` : '';
+    out.push(`<span class="stat-chip pack-chip"${attr}>${escapeHtml(abbr)} ${n}枚</span>`);
   }
   if (d.unknown){
-    out.push(`<span class="stat-chip">不明 ${Number(d.unknown)}枚</span>`);
+    out.push(`<span class="stat-chip pack-chip">不明 ${Number(d.unknown)}枚</span>`);
   }
   return out.join('');
 }
@@ -2931,6 +3027,13 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
             ? `<dt>パック構成</dt><dd><div class="post-detail-chips">${packChipsHtml}</div></dd>`
             : ''
           }
+
+          <dt>マナ効率<button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button></dt>
+          <dd><span id="mana-efficiency-${escapeHtml(spPaneId)}" class="mana-eff">-</span></dd>
+
+          <dt>平均チャージ量</dt>
+          <dd><span id="avg-charge-${escapeHtml(spPaneId)}">-</span></dd>
+
         </dl>
 
         <!-- チャート表示エリア（SP：パック構成とデッキ解説の間） -->
@@ -3256,6 +3359,11 @@ function oneCard(item, opts = {}){
                 ? `<dt>パック構成</dt><dd><div class="post-detail-chips">${packChipsPane}</div></dd>`
                 : ''
               }
+              <dt>マナ効率<button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button></dt>
+              <dd><span id="mana-efficiency-${escapeHtml(paneId)}" class="mana-eff">-</span></dd>
+
+              <dt>平均チャージ量</dt>
+              <dd><span id="avg-charge-${escapeHtml(paneId)}">-</span></dd>
             </div>
 
           <!-- チャート表示エリア -->
@@ -3445,15 +3553,23 @@ function oneCard(item, opts = {}){
       </div>
     `;
 
-   // 右ペイン内の「比較に追加」だけ個別処理したい場合
-    const root = pane.querySelector('.post-detail-inner');
+// 右ペイン内の「比較に追加」だけ個別処理したい場合
+const root = pane.querySelector('.post-detail-inner');
+
+    // PCのときだけカード詳細ドック（空表示）を確保
+    if (root && window.matchMedia('(min-width: 1024px)').matches) {
+      ensureCardDetailDockPc_(root);
+    }
+
     if (root) {
       const compareBtn = root.querySelector(
         '.post-detail-panel[data-panel="info"] .btn-add-compare'
       );
-      if (compareBtn) {
+
+      if (compareBtn && !compareBtn.dataset.wired) {
+        compareBtn.dataset.wired = '1';
         compareBtn.addEventListener('click', (ev) => {
-          ev.stopPropagation(); // カードクリック扱いにならないよう一応止める
+          ev.stopPropagation();
           alert('比較タブに追加する機能はベータ版では準備中です。');
         });
       }
@@ -3910,24 +4026,6 @@ document.addEventListener('click', async (e) => {
   }
 });
 
-// =========================
-// プリセットボタン：定型文挿入
-// =========================
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.note-preset-btn');
-  if (!btn) return;
-
-  // どのプリセットか
-  const key = String(btn.dataset.preset || '').trim();
-  if (!key) return;
-
-  // 同じ「デッキ解説」セクション内の textarea を探す
-  const section = btn.closest('.post-detail-section');
-  const ta = section?.querySelector('.decknote-textarea');
-  if (!ta) return;
-
-  appendPresetToTextarea_(ta, key);
-});
 
 
 // カードクリック → 右ペインに反映（PCのみ）
@@ -3951,68 +4049,8 @@ function showDetailPaneForArticle(art){
   art.classList.add('is-active');
 }
 
-// ===== 右ペイン：タブ切り替え（一覧 / マイ投稿 共通） =====
-function setupDetailTabs(){
-  document.addEventListener('click', (e) => {
-    const tab = e.target.closest('.post-detail-tab');
-    if (!tab) return;
 
-    const root = tab.closest('.post-detail-inner');
-    if (!root) return;
 
-    const key = tab.dataset.tab;
-    if (!key) return;
-
-    // タブの見た目切り替え
-    root.querySelectorAll('.post-detail-tab').forEach(btn => {
-      btn.classList.toggle('is-active', btn === tab);
-    });
-
-    // パネルの表示切り替え
-    root.querySelectorAll('.post-detail-panel').forEach(panel => {
-      panel.classList.toggle('is-active', panel.dataset.panel === key);
-    });
-  });
-}
-
-  // ===== デッキコードコピー（共通ボタン） =====
-  function showCodeCopyToast(){
-    let toast = document.getElementById('code-copy-toast');
-    if (!toast){
-      toast = document.createElement('div');
-      toast.id = 'code-copy-toast';
-      toast.textContent = 'デッキコードをコピーしました';
-      document.body.appendChild(toast);
-    }
-    toast.classList.add('is-visible');
-    if (toast._timer){
-      clearTimeout(toast._timer);
-    }
-    toast._timer = setTimeout(() => {
-      toast.classList.remove('is-visible');
-    }, 1600);
-  }
-
-  // デッキコードコピー ボタンのセットアップ
-  function setupCodeCopyButtons(){
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.btn-copy-code-wide');
-      if (!btn) return;
-
-      const code = btn.dataset.code || '';
-      if (!code) return;
-
-      if (navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(code)
-          .then(() => {
-            showCodeCopyToast();
-          })
-          .catch(() => {
-            // 失敗しても何もしない（必要なら alert など）
-          });
-      }
-    });
-  }
 
 // =========================
 // マイ投稿：デッキコード 追加/編集/削除（PC）
@@ -4379,15 +4417,25 @@ async function loadCardMapFile_(fileName){
   const cache = window.__cardMapCache;
   if (cache.has(fileName)) return cache.get(fileName);
 
-  const arr = await fetchJson_(cardDataUrl_(fileName));
+  const raw = await fetchJson_(cardDataUrl_(fileName));
   const map = {};
-  for (const c of (arr || [])){
-    const cd5 = String(c.cd || '').padStart(5, '0');
-    if (cd5) map[cd5] = c;
+
+  if (Array.isArray(raw)){
+    for (const c of raw){
+      const cd5 = String(c.cd || '').padStart(5,'0');
+      if (cd5) map[cd5] = c;
+    }
+  } else if (raw && typeof raw === 'object'){
+    for (const [cd, c] of Object.entries(raw)){
+      const cd5 = String(cd).padStart(5,'0');
+      map[cd5] = c;
+    }
   }
+
   cache.set(fileName, map);
   return map;
 }
+
 
 // ===== カードJSONの配置先（public/） =====
 function cardDataBase_(){
@@ -4422,8 +4470,16 @@ function pickSnapshotFileForPostDate_(versions, postDateStr){
   if (!list.length) return null;
 
   // ルール：
-  // - 投稿日が最初の調整日より前 → 「最初の調整日の before」
-  // - それ以降 → 「投稿日以下で最大の調整日の after」
+  // ✅ versions の最古日より前の投稿は、最古日の before を使う
+  // ✅ versions の最古日〜最新日の間の投稿は、該当する日の after を使う
+
+  // ✅ versionsの最新日より後の投稿は、スナップショットに固定しない（= latest を使う）
+  const newest = list[list.length - 1];
+  if (post > newest._d) {
+  console.info('[cardMap] future post, fallback to latest:', postDateStr);
+  return null;
+  }
+
   if (post < list[0]._d){
     return list[0].before || null;
   }
@@ -4463,23 +4519,6 @@ async function withCardMapForPostDate_(item, fn){
 }
 
 
-// =========================
-// デッキリストのカード画像タップ → カード詳細
-// =========================
-document.addEventListener('click', (e) => {
-  const cell = e.target.closest('.post-decklist .deck-entry');
-  if (!cell) return;
-
-  const cd5 = String(cell.dataset.cd || '').trim().padStart(5,'0');
-  if (!cd5) return;
-
-  // 他の「カード全体クリック」等に波及させない
-  e.preventDefault();
-  e.stopPropagation();
-
-  openCardDetailFromDeck_(cd5, cell);
-});
-
 
 
   // ===== 投稿日・更新日のフォーマット =====
@@ -4511,10 +4550,109 @@ document.addEventListener('click', (e) => {
 
 // ===== イベント配線 =====
 function wireCardEvents(root){
-  root.addEventListener('click', (e) => {
+  if (root.__wiredCardEvents) return;
+  root.__wiredCardEvents = true;
+  root.addEventListener('click', async (e) => {
+
+    // =========================
+    // 0) グローバル（post-card 外も含む）先に処理
+    // =========================
+
+    // (A) 右ペイン：タブ切り替え（一覧/マイ投稿共通）
+    const tab = e.target.closest('.post-detail-tab');
+    if (tab){
+      const rootEl = tab.closest('.post-detail-inner');
+      const key = tab.dataset.tab;
+      if (rootEl && key){
+        rootEl.querySelectorAll('.post-detail-tab').forEach(btn => {
+          btn.classList.toggle('is-active', btn === tab);
+        });
+        rootEl.querySelectorAll('.post-detail-panel').forEach(panel => {
+          panel.classList.toggle('is-active', panel.dataset.panel === key);
+        });
+      }
+      return;
+    }
+
+    // (B) デッキコードコピー（横長ボタン）
+    const wideCopy = e.target.closest('.btn-copy-code-wide');
+    if (wideCopy){
+      const code = wideCopy.dataset.code || '';
+      if (code && navigator.clipboard?.writeText){
+        try{
+          await navigator.clipboard.writeText(code);
+          if (typeof showCodeCopyToast === 'function') showCodeCopyToast();
+        }catch(_){}
+      }
+      return;
+    }
+
+    // (C) デッキリストのカード画像タップ → カード詳細
+    const cell = e.target.closest('.post-decklist .deck-entry');
+    if (cell){
+      const cd5 = String(cell.dataset.cd || '').trim().padStart(5,'0');
+      if (cd5){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation(); // ★保険
+        openCardDetailFromDeck_(cd5, cell);
+      }
+      return;
+    }
+
+    // (D) carddetail-close（←これを最優先で拾うと「閉じるが効かない」を防げる）
+    const closeBtn = e.target.closest('.carddetail-close');
+    if (closeBtn){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation(); // ★残ってる他リスナーを止める保険
+      closeCardDetail_();
+      return;
+    }
+
+    // (E) マナ効率ヘルプモーダル（deck-post）
+    // 開く（aria-label に "マナ効率" が含まれる ? ボタン）
+    const helpBtn = e.target.closest('.subtab-help-button');
+    if (helpBtn){
+      const label = String(helpBtn.getAttribute('aria-label') || '');
+      if (label.includes('マナ効率')){
+        const modal = document.getElementById('manaEfficiencyHelpModal');
+        if (modal) modal.style.display = 'flex';
+        return;
+      }
+    }
+    // 閉じる（×）
+    if (e.target.id === 'mana-help-close'){
+      const modal = document.getElementById('manaEfficiencyHelpModal');
+      if (modal) modal.style.display = 'none';
+      return;
+    }
+    // 背景クリックで閉じる
+    const manaModal = document.getElementById('manaEfficiencyHelpModal');
+    if (manaModal && e.target === manaModal){
+      manaModal.style.display = 'none';
+      return;
+    }
+
+    // (F) プリセットボタン：定型文挿入（統合したい場合）
+    const presetBtn = e.target.closest('.note-preset-btn');
+    if (presetBtn){
+      const key = String(presetBtn.dataset.preset || '').trim();
+      const section = presetBtn.closest('.post-detail-section');
+      const ta = section?.querySelector('.decknote-textarea');
+      if (key && ta){
+        appendPresetToTextarea_(ta, key);
+      }
+      return;
+    }
+
+    // =========================
+    // 1) ここから下は「post-card 内」の既存処理
+    // =========================
     const art = e.target.closest('.post-card');
     if (!art) return;
 
+    // --- 以降は既存の wireCardEvents の中身をそのまま ---
     const isPcWide = window.matchMedia('(min-width: 1024px)').matches;
 
     // 0) いいねボタンを先に処理（PC/SP共通）
@@ -4524,7 +4662,6 @@ function wireCardEvents(root){
       if (postId) {
         handleToggleLike(postId, favBtn);
       }
-      // 他のハンドラには進まず終了
       return;
     }
 
@@ -5150,17 +5287,10 @@ async function renderCampaignBanner(){
       }
     });
 
-
     // ⑦ デリゲートイベント
     wireCardEvents(document);
 
-    // デッキコードコピー ボタン（PC右ペイン／SP共通）
-    setupCodeCopyButtons();
-
-    // ⑧ 右ペイン詳細タブ
-    setupDetailTabs();
-
-    // ⑩ スマホ版：代表カード長押しでデッキリスト簡易表示
+    // ⑧ SP版：代表カードタップでデッキリスト簡易表示
     setupDeckPeekOnSp();
 
     // 回転/リサイズ時に再描画（PC/SP境界またぎ対策）
@@ -5193,7 +5323,7 @@ async function renderCampaignBanner(){
       window.addEventListener('orientationchange', onChange, { passive: true });
     })();
 
-    // ★ 初期描画完了フラグ
+    // 二重初期化防止
     initialized = true;
 
     // ⑨ キャンペーン情報を遅延読み込みしてバナーを表示（非同期）
@@ -5245,6 +5375,8 @@ async function renderCampaignBanner(){
 
 // グローバル公開
 window.DeckPostApp = DeckPostApp;
+
+
 
 
 // =========================
