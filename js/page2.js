@@ -3083,15 +3083,35 @@ document.addEventListener('DOMContentLoaded', ()=>{
 (() => {
   const HAND_SIZE = 4;
 
+  // 手札タイプスロットの初期値取得（現在の手札並びをテンプレにする）
+  function getInitialHandTypeSlots(){
+  const map = window.cardMap || window.allCardsMap || {};
+  // 今の state.hand の並び（= 画面の並び）をテンプレにする
+  return state.hand.map(h => map[String(h.cd)]?.type || '');
+  }
+
+    // 要素取得
     const els = {
     trainer:   document.getElementById('mulligan-trainer'),
     warning:   document.getElementById('mull-warning'),
     hand:      document.getElementById('mull-hand'),
     btn:       document.getElementById('btn-mull-or-reset'),
     remainList:document.getElementById('mull-remaining-by-type'),
+    outcomeBox: document.getElementById('mull-outcome-probs'),
   };
 
   if (!els.trainer) return; // 他ページ安全化
+
+  // 「確率表示」箱が無ければ生成（残り山札の下に入れる）
+if (!els.outcomeBox) {
+  const host = els.remainList?.closest?.('.mull-remaining') || els.trainer;
+  const box = document.createElement('div');
+  box.id = 'mull-outcome-probs';
+  box.className = 'mull-outcome';
+  host.appendChild(box);
+  els.outcomeBox = box;
+}
+
 
    // 共有（common.js）
   const getDeckObject = () => (window.deck || {});
@@ -3147,8 +3167,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // 初期配り（※毎回の「手札リセット」でdiscardedはリセット）
   function dealInitialHand(){
+    ensureMullHandChips();// chips確保
     // 初期はデッキ全体から引く
-  state.pool = shuffleInPlace(expandFromCountMap(buildDeckCountMap()));
+    state.pool = shuffleInPlace(expandFromCountMap(buildDeckCountMap()));
     state.hand = [];
 
     for (let i=0; i<HAND_SIZE; i++){
@@ -3160,45 +3181,67 @@ document.addEventListener('DOMContentLoaded', ()=>{
     refreshUI();
   }
 
-    // 手札描画
-  function renderHand(){
-    els.hand.innerHTML = '';
-    state.hand.forEach((slot) => {
-      const wrap = document.createElement('div');
-      wrap.className = 'card-thumb';
-      wrap.dataset.selected = slot.selected ? 'true' : 'false';
+  // 手札描画
+  function ensureMullHandChips(){
+    const layout = els.trainer?.querySelector?.('.mull-layout');
+    if (!layout) return null;
 
-      const img = document.createElement('img');
-      img.alt = '';
-      img.decoding = 'async';
-      img.loading  = 'lazy';
-      img.src      = `img/${slot.cd}.webp`;
-      img.onerror  = function(){
-        this.remove();
-        const title = document.createElement('div');
-        title.className = 'title-fallback';
-        const info = getCardInfo(slot.cd);
-        title.textContent = info?.name ? `${info.name}（${slot.cd}）` : `No Image (${slot.cd})`;
-        wrap.appendChild(title);
+    let chips = layout.querySelector('.mull-hand-chips');
+    if (!chips){
+      chips = document.createElement('div');
+      chips.className = 'mull-hand-chips';
+      chips.setAttribute('aria-label', '残りの山札（タイプ別）');
 
-        const errImg = document.createElement('img');
-        errImg.alt = '';
-        errImg.src = 'img/00000.webp';
-        errImg.style.display = 'none';
-        wrap.appendChild(errImg);
-      };
+      const ul = document.createElement('ul');
+      ul.id = 'mull-remaining-by-type';
+      ul.className = 'mull-remaining-list';
 
-      // タップで選択トグル
-      wrap.addEventListener('click', () => {
-        slot.selected = !slot.selected;
-        wrap.dataset.selected = slot.selected ? 'true' : 'false';
-        refreshUI();
-      });
+      chips.appendChild(ul);
 
-      wrap.appendChild(img);
-      els.hand.appendChild(wrap);
-    });
+      // ✅ hand-area の “直前” に入れる（上に出る）
+      const hand = layout.querySelector('#mull-hand');
+      layout.insertBefore(chips, hand || layout.firstChild);
+    }
+    return chips;
   }
+
+
+function renderHand(){
+  els.hand.innerHTML = ''; // クリア
+
+  state.hand.forEach((slot) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-thumb';
+    wrap.dataset.selected = slot.selected ? 'true' : 'false';
+
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.loading  = 'lazy';
+    img.src      = `img/${slot.cd}.webp`;
+    img.onerror  = function(){
+      this.remove();
+      const title = document.createElement('div');
+      title.className = 'title-fallback';
+      const info = getCardInfo(slot.cd);
+      title.textContent = info?.name
+        ? `${info.name}（${slot.cd}）`
+        : `No Image (${slot.cd})`;
+      wrap.appendChild(title);
+    };
+
+    wrap.addEventListener('click', () => {
+      slot.selected = !slot.selected;
+      wrap.dataset.selected = slot.selected ? 'true' : 'false';
+      refreshUI();
+    });
+
+    wrap.appendChild(img);
+    els.hand.appendChild(wrap);
+  });
+}
+
+
 
 
   // タイプ別：残り山枚数
@@ -3214,6 +3257,147 @@ function tallyPoolByType() {
   return counts;
 }
 
+// 組み合わせ計算 nCk
+function comb(n, k){
+  n = n|0; k = k|0;
+  if (k < 0 || n < 0 || k > n) return 0;
+  k = Math.min(k, n - k);
+  if (k === 0) return 1;
+  let num = 1, den = 1;
+  for (let i=1; i<=k; i++){
+    num *= (n - (k - i));
+    den *= i;
+  }
+  return num / den;
+}
+// タイプ別：キープ分
+function tallyKeptByType(){
+  const counts = { 'チャージャー':0, 'アタッカー':0, 'ブロッカー':0 };
+  const map = window.cardMap || window.allCardsMap || {};
+  for (const h of state.hand){
+    if (h.selected) continue; // ←キープ分だけ数える
+    const t = map[String(h.cd)]?.type;
+    if (t === 'チャージャー' || t === 'アタッカー' || t === 'ブロッカー') counts[t]++;
+  }
+  return counts;
+}
+
+// マリガン後の手札タイプ構成確率計算＆表示
+function renderMulliganOutcomeProbs(){
+  if (!els.outcomeBox) return;
+
+  const k = state.hand.filter(h => h.selected).length;
+
+  // ✅ 未選択でも“枠は表示”してプレースホルダを出す
+  if (k <= 0){
+    els.outcomeBox.innerHTML = `
+      <div class="mull-remaining-title">マリガン後の手札</div>
+      <div class="mull-outcome-note">ここにマリガン後の手札構成予測が表示されます</div>
+    `;
+    return;
+  }
+
+  // 母集団＝「手札4枚を除いた残り山札（タイプ別）」
+  const pool = tallyPoolByType();
+  const C = pool['チャージャー']|0;
+  const A = pool['アタッカー']|0;
+  const B = pool['ブロッカー']|0;
+  const N = C + A + B;
+
+  const denom = comb(N, k);
+  if (!denom){
+    els.outcomeBox.innerHTML = `
+      <div class="mull-remaining-title">マリガン後の手札</div>
+      <div class="mull-outcome-note">※ 引き直し枚数に対して山札が不足しています</div>
+    `;
+    return;
+  }
+
+  const kept = tallyKeptByType();// キープ分タイプ数
+  const baseSlots = getInitialHandTypeSlots();// 手札タイプスロットの初期値取得
+
+  const rows = [];
+  for (let c=0; c<=k; c++){
+    for (let a=0; a<=k-c; a++){
+      const b = k - c - a;
+      if (c > C || a > A || b > B) continue;
+
+      const p = (comb(C,c) * comb(A,a) * comb(B,b)) / denom;
+
+      const finC = kept['チャージャー'] + c;
+      const finA = kept['アタッカー'] + a;
+      const finB = kept['ブロッカー'] + b;
+
+      // 4枚ぶんのタイプ配列（初期スロット順を維持して、マリガン枠だけ埋める）
+      const typeArr = baseSlots.slice();
+
+      // マリガンした枚数 = k なので、テンプレ上で「selectedだった位置」を空けて埋めたい。
+      // ただ renderMulliganOutcomeProbs は“確率一覧”なので、実際の selected 位置を使うのが自然。
+      const targets = [];
+      for (let i=0;i<state.hand.length;i++){
+        if (state.hand[i].selected) targets.push(i);
+      }
+
+      // この確率行で引けるタイプの“内訳”を配列化（順序はどれでもOK。ここでは C→A→B）
+      const drawTypes = [];
+      for (let i=0;i<c;i++) drawTypes.push('チャージャー');
+      for (let i=0;i<a;i++) drawTypes.push('アタッカー');
+      for (let i=0;i<b;i++) drawTypes.push('ブロッカー');
+
+      // 空きスロットに順番に差し込む
+      for (let j=0; j<targets.length; j++){
+        const pos = targets[j];
+        typeArr[pos] = drawTypes[j] || typeArr[pos] || '';
+      }
+
+      rows.push({ typeArr, p });
+    }
+  }
+
+  // 確率高い順
+  rows.sort((x,y)=> y.p - x.p);
+  // 上位10件まで
+  //rows.length = Math.min(rows.length, 10);
+
+  // 表示
+  els.outcomeBox.innerHTML = `
+    <div class="mull-remaining-title">マリガン後の手札</div>
+    <div class="mull-outcome-grid">
+      ${rows.map((r, idx) => `
+        <div class="mull-outcome-row2">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="mull-outcome-rank">#${idx+1}</span>
+              <div class="mull-outcome-hand">
+                ${(r.typeArr || []).map((t, i) => {
+                  const h = state.hand[i];
+                  const isKept = h && !h.selected; // 選択してない＝キープ枠
+                  const cd = isKept ? String(h.cd) : '';
+                  const imgHtml = isKept
+                    ? `<img alt="" loading="lazy" decoding="async"
+                            src="img/${cd}.webp"
+                            onerror="this.src='img/00000.webp'">`
+                    : '';
+
+                  return `
+                    <div class="mull-outcome-card"
+                        data-type="${t || ''}"
+                        data-fixed="${isKept ? '1' : '0'}">
+                      ${imgHtml}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          <div class="mull-outcome-pct">${(r.p*100).toFixed(2)}%</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+
+
+// タイプ別：残り山枚数表示更新
 function renderRemainingByType() {
   if (!els.remainList) return;
   const types = [
@@ -3253,7 +3437,9 @@ window.addEventListener('resize', () => {
     const hasDeck  = deckSize >= 30;
     const anySelected = state.hand.some(h => h.selected);
     const canReset    = hasDeck && deckSize >= HAND_SIZE;
-    const canMull     = hasDeck && anySelected && state.pool.length > 0;
+    const selN = state.hand.filter(h => h.selected).length;
+    const livePoolLen = buildPoolExcludingCurrentHand().length;
+    const canMull = hasDeck && selN > 0 && livePoolLen >= selN;
 
     // 警告
       if (!hasDeck) {
@@ -3275,7 +3461,9 @@ window.addEventListener('resize', () => {
     }
 
     renderRemainingByType();
+    renderMulliganOutcomeProbs();
   }
+
 
   // マリガン（“今回”返したカードだけ抽選から除外）
   function doMulligan(){
@@ -3345,7 +3533,9 @@ window.addEventListener('resize', () => {
 })();
 
 
-
+/* =========================
+    🆕 不足カード集計＋表示ロジック
+    ========================= */
 
 // 所持データが変わったら自動で再計算（OwnedStore.onChange があるので利用）
 if (window.OwnedStore?.onChange) {
@@ -3364,13 +3554,37 @@ function groupShortageByRarity(shortages){
   return sum;
 }
 
+// ===== 不足カードをレアリティ別に集計（保険：未定義ならここで生やす）=====
+window.groupShortageByRarity = window.groupShortageByRarity || function(shortages){
+  const sum = { LEGEND:0, GOLD:0, SILVER:0, BRONZE:0 };
+  if (!Array.isArray(shortages)) return sum;
+
+  const cardMapLocal = window.cardMap || window.allCardsMap || {};
+  const rarityToKeyJPLocal = window.rarityToKeyJP || function(r){
+    // ここはあなたの既存の変換に合わせてください（最低限の保険）
+    if (r === 'レジェンド' || r === 'LEGEND') return 'LEGEND';
+    if (r === 'ゴールド'   || r === 'GOLD')   return 'GOLD';
+    if (r === 'シルバー'   || r === 'SILVER') return 'SILVER';
+    if (r === 'ブロンズ'   || r === 'BRONZE') return 'BRONZE';
+    return null;
+  };
+
+  shortages.forEach(s=>{
+    const info = cardMapLocal[String(s.cd)] || {};
+    const key = rarityToKeyJPLocal(info.rarity);
+    if (key) sum[key] += (s.shortage|0);
+  });
+  return sum;
+};
+
+
 /** コンパクト不足UIの描画 */
 function renderShortageCompact(shortages){
   const line  = document.getElementById('shortage-summary-line');
   const list  = document.getElementById('shortage-collapsible');
   if (!line || !list) return;
 
-  const sum = groupShortageByRarity(shortages);
+  const sum = window.groupShortageByRarity(shortages);
 
   // リスト描画
   line.innerHTML = `
@@ -3472,6 +3686,7 @@ function renderShortageCompact(shortages){
 }
 
 }
+
 
 
 // ==== 未所持カード画像プレビュー共通層 ====

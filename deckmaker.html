@@ -266,7 +266,7 @@
                 <div class="info-row">
                     <div class="info-label">メインカード</div>
                     <div class="info-value">
-                        <span id="deck-representative" class="tap-target" role="button" aria-label="メインカードを選択（タップで開く）"></span><br><span class="post-representative-hint">
+                        <span id="deck-representative" class="tap-target" role="button" aria-label="メインカードを選択（タップで開く）"></span><br><span class="representative-hint">
                             デッキ投稿に表示するサムネカードです、クリック／タップで選択できます。
                         </span></div>
                 </div>
@@ -352,12 +352,24 @@
                 <div class="mulligan-trainer" id="mulligan-trainer">
                     <div class="mull-remaining-title">マリガンシミュレーション</div>
 
+                    <!-- ✅ タイトル直下：説明（mull-hint） -->
+                    <div class="mull-topinfo">
+                        <div class="mull-hint">
+                            画像をタップで選択／解除できます。※選択したカードはマリガン対象から除外されます。
+                        </div>
+                    </div>
+
                     <!-- デッキ不足メッセージ -->
                     <div class="mull-warning" id="mull-warning" hidden>
                         デッキにカードを追加してください（30枚以上が必要です）
                     </div>
 
                     <div class="mull-layout">
+                        <!-- 残り山札（枚数） -->
+                        <div class="mull-hand-chips" aria-label="残りの山札（タイプ別）">
+                            <span class="mull-hand-chips-label">残りの山札：</span>
+                            <ul id="mull-remaining-by-type" class="mull-remaining-list"></ul>
+                        </div>
                         <!-- 手札4枚 -->
                         <div class="hand-area" id="mull-hand">
                             <!-- JSで4枚分のカードが入ります -->
@@ -366,16 +378,16 @@
                         <!-- 操作画面 -->
                         <div class="mull-actions">
                             <button type="button" id="btn-mull-or-reset" class="btn-mulligan" disabled>手札リセット</button>
-                            <div class="mull-hint">画像をタップで選択／解除できます。※選択したカードはマリガン対象から除外されます。</div>
-                            <div class="mull-remaining">
-                                <div class="mull-remaining-title">残りの山札（タイプ別）</div>
-                                <ul id="mull-remaining-by-type" class="mull-remaining-list"></ul>
+
+                            <!-- ✅ リセットボタン直下：マリガン後手札構成（常時表示） -->
+                            <div id="mull-outcome-probs" class="mull-outcome">
+                                <div class="mull-remaining-title">マリガン後の手札</div>
+                                <div class="mull-outcome-note">ここにマリガン後の手札構成予測が表示されます</div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
+
 
                 <!--所持データ情報-->
                 <div class="owned-info" id="owned-info">
@@ -446,7 +458,7 @@
                     <label class="info-label">メインカード</label>
                 <div class="info-value">
                     <span id="post-representative" class="tap-target" role="button" aria-label="メインカードを選択（タップで開く）"></span><br>
-                    <span class="post-representative-hint">
+                    <span class="representative-hint">
                         保存デッキや投稿時のサムネカードです、カード名をタップして選択できます。
                     </span>
                     <!-- メインカード未選択時のバルーン表示用（見えない入力） -->

@@ -951,7 +951,7 @@
 }
 
 /*メインカード説明*/
-.post-representative-hint{
+.representative-hint{
     font-size: .65rem;
     color: #6b7280;
     user-select: none;
@@ -1261,8 +1261,8 @@
 .mull-layout {
     display: grid;
     grid-template-columns: 1fr;
-    margin: 10px 0 5px;
-    gap: 12px;
+    margin: 5px 0;
+    gap: 10px;
     align-items: start;
 }
 
@@ -1282,6 +1282,7 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 5px;
     padding: 0 5px;
+    position: relative;
 }
 
 .card-thumb {
@@ -1340,6 +1341,9 @@
     padding: 0 5px;
     gap: 8px;
     min-width: 180px;
+    display: grid;
+        gap: 8px;
+        padding: 0 5px;
 }
 
 .mull-actions .btn-mulligan {
@@ -1377,7 +1381,20 @@
         font-size:clamp(.75rem, 2.4vw, 1.1rem)
 }
 
+/* ✅ hand右上：3タイプチップ（1列表示） */
+.mull-hand-chips {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
 
+.mull-hand-chips-label {
+    font-size: .72rem;
+    color: #6b7280;
+    font-weight: 700;
+    white-space: nowrap;
+}
 
 /* タイプ別 残り枚数（可変省略対応） */
 .mull-remaining-list {
@@ -1385,7 +1402,7 @@
     gap: 6px;
     overflow: hidden;
     padding: 0;
-    margin: 6px 0 0;
+    margin: 0;
     white-space: nowrap;
 }
 
@@ -1402,6 +1419,10 @@
     line-height: 1.2;
     min-width: 0;
     overflow: hidden;
+    font-size: clamp(11px, 1.4vw, 16px);
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(4px);
 }
 
 /* タイプ名だけを省略対象にする */
@@ -1434,6 +1455,133 @@
     background: rgba(214, 212, 204, .5);
     border-color: rgba(214, 212, 204, .8);
 }
+
+/*=================
+マリガン後手札タイプ構成
+=================*/
+/* マリガン後の手札レパートリー（色だけ4枚＋％） */
+.mull-outcome {
+    margin-top: 2px;
+    border-top: 1px dashed #e5e7eb;
+    --mull-mini-w: clamp(28px, 7vw, 46px);
+}
+
+/* 行を2列で並べる */
+.mull-outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+}
+
+/* スマホは1列に落とす */
+@media (max-width: 520px) {
+    .mull-outcome-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 1行（カード）を“箱”として少し整える */
+.mull-outcome-row2 {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-top: 0;
+    /* gridに任せる */
+    padding: 6px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .65);
+}
+
+/* ランク番号 */
+.mull-outcome-rank {
+    font-weight: 800;
+    font-size: .75rem;
+    opacity: .75;
+    margin-right: 6px;
+}
+
+/* 4枚の“色カード” → 1枚の幅を固定して小さくする */
+.mull-outcome-hand {
+    display: grid;
+    grid-template-columns: repeat(4, var(--mull-mini-w));
+    gap: 5px;
+    width: fit-content;
+    /* 横に伸びない */
+    justify-content: start;
+}
+
+/* 画像なしのカード（比率424/532） */
+.mull-outcome-card {
+    aspect-ratio: 424 / 532;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: rgba(255, 255, 255, .9);
+    position: relative;
+    overflow: hidden;
+}
+
+.mull-outcome-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 固定枠（画像あり）は背景を消す */
+.mull-outcome-card[data-fixed="1"] {
+    background: transparent;
+}
+
+/* タイプ別の淡色背景（mrt-chip と同配色を流用） */
+.mull-outcome-card[data-type="チャージャー"] {
+    background: rgba(119, 170, 212, .2);
+    border-color: rgba(119, 170, 212, .4);
+}
+
+.mull-outcome-card[data-type="アタッカー"] {
+    background: rgba(125, 91, 155, .2);
+    border-color: rgba(125, 91, 155, .4);
+}
+
+.mull-outcome-card[data-type="ブロッカー"] {
+    background: rgba(214, 212, 204, .5);
+    border-color: rgba(214, 212, 204, .8);
+}
+
+/* % */
+.mull-outcome-pct {
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    color: #111827;
+    white-space: nowrap;
+    font-size: .85rem;
+    min-width: 5.5ch;
+    text-align: right;
+}
+
+/* ちょい説明 */
+.mull-outcome-note {
+    margin-top: 6px;
+    padding: 10px 12px;
+    border: 1px solid #dbeafe;
+    /* うす青 */
+    background: #eff6ff;
+    /* うす青背景 */
+    color: #1e3a8a;
+    /* 濃いめ青文字 */
+    border-radius: 10px;
+    text-align: center;
+    /* ✅中央 */
+    font-weight: 700;
+    /* ✅目立たせる */
+    font-size: clamp(.75rem, 2.4vw, 1rem);
+    letter-spacing: .01em;
+}
+
+
+
 
 /* ===== 所持データ（コンパクト版） ===== */
 .owned-info {
