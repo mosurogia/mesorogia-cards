@@ -1629,9 +1629,9 @@ if (manaEffEl) {
 
   let label = '';
   if (supply === null) label = '';
-  else if (supply > 1.11) label = '余裕あり';
-  else if (supply > 0.91) label = '適正';
-  else label = 'やや重め';
+  else if (supply > 1.5) label = 'マナ多め';
+  else if (supply > 1) label = '適正';
+  else label = 'マナ少なめ';
 
   manaEffEl.textContent = (supply !== null)
     ? `${supply.toFixed(2)}${label ? `（${label}）` : ''}`
@@ -2328,6 +2328,7 @@ function buildPackChipsHtml_(item){
 
 // ============================
 // パック構成チップ → デッキ内カードをパック枠線で強調（再タップで解除）
+// ＋ 対象以外を薄くする（is-pack-focus）
 // ============================
 document.addEventListener('click', (e) => {
   const chip = e.target.closest('.pack-chip');
@@ -2335,29 +2336,41 @@ document.addEventListener('click', (e) => {
 
   const pack = chip.dataset.pack || null;
 
-  // すでに同じチップがONなら：全部解除して終了
+  // ★ 押したチップが属する「その投稿」内だけに効かせる
+  const root = chip.closest('.post-detail-inner') || document;
+  const decklist = root.querySelector('.post-decklist');
+  if (!decklist) return;
+
+  // 解除処理（同じチップを再タップ）
   if (chip.classList.contains('is-active')) {
-    document.querySelectorAll('.pack-chip.is-active')
+    root.querySelectorAll('.pack-chip.is-active')
       .forEach(el => el.classList.remove('is-active'));
-    document.querySelectorAll('.deck-entry.pack-hl')
+    root.querySelectorAll('.deck-entry.pack-hl')
       .forEach(el => el.classList.remove('pack-hl'));
+
+    // ★ 薄くする状態も解除
+    decklist.classList.remove('is-pack-focus');
     return;
   }
 
   // それ以外：一旦全部OFF → 押したパックだけON
-  document.querySelectorAll('.pack-chip.is-active')
+  root.querySelectorAll('.pack-chip.is-active')
     .forEach(el => el.classList.remove('is-active'));
-  document.querySelectorAll('.deck-entry.pack-hl')
+  root.querySelectorAll('.deck-entry.pack-hl')
     .forEach(el => el.classList.remove('pack-hl'));
 
-  // 不明（data-pack無し）はONにしない（必要ならここは変えてOK）
+  // 不明（data-pack無し）はONにしない
   if (!pack) return;
 
   chip.classList.add('is-active');
-  document.querySelectorAll(`.deck-entry[data-pack="${pack}"]`)
-    .forEach(el => el.classList.add('pack-hl'));
-});
 
+  // ★ pack-hl 付与（枠線）
+  root.querySelectorAll(`.deck-entry[data-pack="${pack}"]`)
+    .forEach(el => el.classList.add('pack-hl'));
+
+  // ★ 対象以外を薄くするモードON
+  decklist.classList.add('is-pack-focus');
+});
 
 
 // =============================
@@ -3119,11 +3132,16 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
             : ''
           }
 
-          <dt>マナ効率<button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button></dt>
-          <dd><span id="mana-efficiency-${escapeHtml(spPaneId)}" class="mana-eff">-</span></dd>
-
-          <dt>平均チャージ量</dt>
-          <dd><span id="avg-charge-${escapeHtml(spPaneId)}">-</span></dd>
+          <dt>
+            マナ効率
+            <button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
+          </dt>
+          <dd class="mana-eff-row">
+            <span id="mana-efficiency-${escapeHtml(spPaneId)}" class="mana-eff">-</span>
+            <span class="avg-charge-inline">
+              （平均チャージ量：<span id="avg-charge-${escapeHtml(spPaneId)}">-</span>）
+            </span>
+          </dd>
 
         </dl>
 
@@ -3450,11 +3468,16 @@ function oneCard(item, opts = {}){
                 ? `<dt>パック構成</dt><dd><div class="post-detail-chips">${packChipsPane}</div></dd>`
                 : ''
               }
-              <dt>マナ効率<button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button></dt>
-              <dd><span id="mana-efficiency-${escapeHtml(paneId)}" class="mana-eff">-</span></dd>
-
-              <dt>平均チャージ量</dt>
-              <dd><span id="avg-charge-${escapeHtml(paneId)}">-</span></dd>
+              <dt>
+                マナ効率
+                <button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
+              </dt>
+              <dd class="mana-eff-row">
+                <span id="mana-efficiency-${escapeHtml(paneId)}" class="mana-eff">-</span>
+                <span class="avg-charge-inline">
+                  （平均チャージ量：<span id="avg-charge-${escapeHtml(paneId)}">-</span>）
+                </span>
+              </dd>
             </div>
 
           <!-- チャート表示エリア -->
@@ -3682,35 +3705,54 @@ const DECKNOTE_PRESETS = {
   "deck-overview":
 `【デッキ概要】
 どんなコンセプトで作ったか、狙いの動きなど。
+例
+このデッキは〇〇を軸に△△を狙う構築です。□□とのシナジーが強力で、序盤から中盤にかけて盤面を制圧し、終盤は☆☆でフィニッシュを狙います。
 
 【キーカード】
 主軸となるカード・シナジー解説。
+※詳しい解説はカード解説欄でも可
+例
+- 〇〇：このデッキのエースカード。□□とのコンボで大ダメージを狙えます。
 
-【入れ替え候補】
-なぜこの構成にしたのか、他構築との差別化など。`,
+【リーサルプラン】
+ライフ30点をどのように削るか、代表的な勝ち筋など。
+例
+8-8-8-6,10-10-10,8-10-10(+2) など。
+`,
 
   "play-guide":
 `【マリガン基準】
 初手で意識するカード、キープ基準など。
+例
+序盤使う→キープ
+終盤、メタカード→マリガン
 
 【試合の立ち回り】
+試合の全体的な流れや意識するポイントなど。
 〈序盤〉
+
 〈中盤〉
+
 〈終盤〉
 
 【プレイのコツ】
-状況判断やよくあるミスなど。`,
+状況判断やよくあるミスなど。
+例
+- △△を使うタイミングは重要。□□がある場合は早めに展開すること。
+`,
 
   "matchup":
-`【環境での立ち位置】
-どんな相手に強いか・苦手かなど。
-
+`
 【相性一覧】
 〈有利対面〉
 〈不利対面〉
 
-【対策カード】
-環境・メタに合わせた調整案など。`,
+【採用候補、対策カード】
+今回採用しなかったカードについて。
+環境・メタに合わせた検討予知など。
+例
+- △△：強力だが、□□とのシナジーが薄いため見送り。環境に○○が増えたら再検討。
+`,
 
   "results":
 `【使用環境】
