@@ -1025,7 +1025,7 @@ body {
     margin-top: 10px;
     background: #f9fafb;
     border-radius: 14px;
-    padding: 4px;
+    padding: 4px 4px 8px;
 }
 
 .post-detail-chartbox {
@@ -1074,7 +1074,6 @@ body {
 }
 
 .chart-note {
-    margin-top: 4px;
     font-size: 11px;
     line-height: 1.2;
     color: #6b7280;
@@ -1108,7 +1107,7 @@ body {
 
     /* 箱とヘッダーを少し詰める */
     .post-detail-chartbox {
-        padding: 8px 8px 6px;
+        padding: 8px 8px 20px;
     }
 
     /* グラフ高さを圧縮（横長感を減らす） */
@@ -1601,7 +1600,7 @@ body {
     border-radius: 12px;
 
     /* 内：白縁で視認性アップ */
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.9);
 
     pointer-events: none;
     animation: packPulse 1.6s ease-in-out infinite;
@@ -1611,11 +1610,11 @@ body {
 
     0%,
     100% {
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9);
+        box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .9);
     }
 
     50% {
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9),
+        box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .9),
             0 0 10px rgba(var(--pack-rgb), .35);
     }
 }
