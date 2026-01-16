@@ -1190,7 +1190,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     background: #fff;
-    padding: 10px 10px 8px;
+    padding: 10px 10px 20px;
 }
 
 .charthead {
@@ -1236,6 +1236,12 @@
 .chartcanvas canvas {
     width: 100% !important;
     height: 100% !important;
+}
+.chart-note {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.2;
+    opacity: .75;
 }
 
 /* ===============

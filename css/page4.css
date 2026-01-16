@@ -934,11 +934,6 @@ body {
         border-left: 1px solid #e5e7eb;
         padding-left: 12px;
     }
-
-    .post-detail-deckcol .post-decklist {
-        margin-top: 4px;
-    }
-
 }
 
 /* ===== PC： 右カラム内の左右独立スクロール挙動 ===== */
@@ -962,7 +957,8 @@ body {
     .post-detail-deckcol .post-decklist {
         flex: 1 1 auto;
         overflow: auto;
-        padding-right: 6px;
+        padding: 6px;
+        margin-top: 4px;
     }
 
     /* カード詳細：下に固定しつつ、長文は中でスクロール */
@@ -1036,7 +1032,7 @@ body {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     background: #fff;
-    padding: 10px 10px 8px;
+    padding: 10px 10px 20px;
 }
 
 .post-detail-charthead {
@@ -1075,6 +1071,13 @@ body {
     .post-detail-chartcanvas {
         height: 160px;
     }
+}
+
+.chart-note {
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #6b7280;
 }
 
 /* チップ */
@@ -1217,6 +1220,7 @@ body {
     background: rgba(var(--pack-bg), .18);
     border: 1.5px solid var(--pack-stroke);
     overflow: hidden;
+    cursor: pointer;
 }
 
 /* 左右の角欠け */
@@ -1278,6 +1282,26 @@ body {
     --pack-bg: var(--pack-collab-rgb);
     --pack-stroke: rgba(var(--pack-collab-accent-rgb), .75);
 }
+
+/* パックチップ：右下に小アイコン */
+.stat-chip.pack-chip::marker {
+    display: none;
+}
+
+/* 念のため */
+
+.stat-chip.pack-chip .pack-icon {
+    font-size: .7rem;
+    opacity: .65;
+}
+
+/* 押せる感をほんのり */
+.stat-chip.pack-chip:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    transform: translateY(-1px);
+}
+
+
 
 /* 代表カード＋サマリー2カラム（PC） */
 @media (min-width: 1024px) {
@@ -1529,7 +1553,7 @@ body {
 /* =========================
    デッキリスト：エントリー
 ========================= */
-.post-decklist .deck-entry {
+.deck-entry {
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -1538,7 +1562,7 @@ body {
     /* タップできる感（ここに統合） */
 }
 
-.post-decklist .deck-entry img {
+.deck-entry img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1557,6 +1581,72 @@ body {
     background: rgba(0, 0, 0, .65);
     color: #fff;
     text-align: center;
+}
+
+/* =========================
+   パック強調枠線（デッキ内カード）
+========================= */
+.deck-entry.pack-hl {
+    position: relative;
+}
+
+
+.deck-entry.pack-hl::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+
+    /* 外：パック色 */
+    border: 4px solid rgba(var(--pack-rgb), 0.95);
+    border-radius: 12px;
+
+    /* 内：白縁で視認性アップ */
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+
+    pointer-events: none;
+    animation: packPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes packPulse {
+
+    0%,
+    100% {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9);
+    }
+
+    50% {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9),
+            0 0 10px rgba(var(--pack-rgb), .35);
+    }
+}
+
+/* パック別カラー割当 */
+.deck-entry[data-pack="A"] {
+    --pack-rgb: var(--pack-a-rgb);
+}
+
+.deck-entry[data-pack="B"] {
+    --pack-rgb: var(--pack-b-rgb);
+}
+
+.deck-entry[data-pack="C"] {
+    --pack-rgb: var(--pack-c-rgb);
+}
+
+.deck-entry[data-pack="D"] {
+    --pack-rgb: var(--pack-d-rgb);
+}
+
+.deck-entry[data-pack="E"] {
+    --pack-rgb: var(--pack-e-rgb);
+}
+
+.deck-entry[data-pack="SPECIAL"] {
+    --pack-rgb: var(--pack-special-rgb);
+}
+
+.deck-entry[data-pack="COLLAB"] {
+    --pack-rgb: var(--pack-collab-rgb);
 }
 
 /* =========================
@@ -1663,8 +1753,38 @@ body {
 }
 
 .carddetail-cat {
-    border: 1px solid #e5e7eb;
+    border: 1.5px solid rgba(0, 0, 0, .10);
 }
+
+/* 種族ごとの背景色（薄め） */
+.carddetail-cat.cat-ドラゴン {
+    background: color-mix(in srgb, var(--race-dragon) 18%, #fff);
+}
+
+.carddetail-cat.cat-アンドロイド {
+    background: color-mix(in srgb, var(--race-android) 18%, #fff);
+}
+
+.carddetail-cat.cat-エレメンタル {
+    background: color-mix(in srgb, var(--race-elemental) 18%, #fff);
+}
+
+.carddetail-cat.cat-ルミナス {
+    background: color-mix(in srgb, var(--race-luminous) 20%, #fff);
+}
+
+.carddetail-cat.cat-シェイド {
+    background: color-mix(in srgb, var(--race-shade) 18%, #fff);
+}
+
+.carddetail-cat.cat-イノセント {
+    background: color-mix(in srgb, var(--race-innocent) 22%, #fff);
+}
+
+.carddetail-cat.cat-旧神 {
+    background: var(--old-god);
+}
+
 .carddetail-cat-rarity{
     flex-basis: 100%;
 }

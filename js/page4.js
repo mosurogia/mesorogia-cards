@@ -1532,24 +1532,48 @@ function renderPostDistCharts_(item, paneId){
 
   // deckCards（最大40枚なので展開でOK）
   const deckCards = [];
+
+  // ロスリスcost66アタッカーは「支払わない想定」でコスト計算から除外
+  const isCostFreeLosslis66 = (cardLike) => {
+    return cardLike?.type === 'アタッカー'
+      && String(cardLike?.category || '') === 'ロスリス'
+      && Number(cardLike?.cost) === 66;
+  };
+
+  let excludedLosslis66Atk = 0;
+
   for (const [cd, n] of Object.entries(deck)){
-    const c = cardMap[String(cd).padStart(5,'0')] || {};
-    const cost  = Number(c.cost);
-    const power = Number(c.power);
-    const type  = String(c.type || '');
-    const cnt   = Number(n || 0) || 0;
+    const cd5 = String(cd).padStart(5,'0');
+    const c = cardMap[cd5] || {};
+
+    const type = String(c.type || '');
+    const category = String(c.category || '');
+    const rawCost  = Number(c.cost);
+    const power    = Number(c.power);
+    const cnt      = Number(n || 0) || 0;
+
+    const costFree = isCostFreeLosslis66({ type, category, cost: rawCost });
+
+    if (costFree) excludedLosslis66Atk += cnt;
+
+    // ✅ costFree のとき cost を NaN にして「総コスト/コスト分布/マナ効率分母」から自然に除外
+    const effCost = costFree ? NaN : (Number.isFinite(rawCost) ? rawCost : NaN);
+
     for (let i=0; i<cnt; i++){
       deckCards.push({
-        cost:  Number.isFinite(cost)  ? cost  : NaN,
-        power: Number.isFinite(power) ? power : NaN,
+        cd: cd5,                 // 任意：デバッグ用
         type,
+        category,                // 任意：将来の判定拡張用
+        cost: effCost,           // ✅ ここが肝
+        power: Number.isFinite(power) ? power : NaN,
       });
     }
   }
 
+
   // 目盛り（固定表示）
-  const alwaysShowCosts  = [2, 4, 6, 8, 10, 12];
-  const alwaysShowPowers = [0, 4, 5, 6, 7, 8, 12, 16];
+  const alwaysShowCosts  = [0, 2, 4, 6, 8, 10, 12];
+  const alwaysShowPowers = [4, 5, 6, 7, 8, 10, 14, 16];
 
   const costCount = {};
   const powerCount = {};
@@ -1692,6 +1716,23 @@ if (manaEffEl) {
   if (prev?.power) try{ prev.power.destroy(); } catch(_){}
 
   const costCanvas  = document.getElementById(`costChart-${paneId}`);
+  // ✅ 注記（66ロスリスアタッカー除外）
+  // 軸ラベルの下に見せたいので、canvas直後に小さいdivを差し込む
+  if (costCanvas)
+    {
+    const parent = costCanvas.parentElement; // .post-detail-chartcanvas の想定
+    let noteEl = parent?.querySelector?.('.chart-note');
+
+    if (!noteEl) {
+      noteEl = document.createElement('div');
+      noteEl.className = 'chart-note';
+      parent?.appendChild(noteEl); // canvasの下に入る
+    }
+
+    noteEl.textContent = (excludedLosslis66Atk > 0)
+      ? `※66ロスリスアタッカー（${excludedLosslis66Atk}枚）は除く`
+      : '';
+    }
   const powerCanvas = document.getElementById(`powerChart-${paneId}`);
   if (!costCanvas || !powerCanvas) return;
 
@@ -1702,7 +1743,7 @@ if (manaEffEl) {
 }
 
 
-// ===== 詳細用：デッキリスト（5列固定） =====
+// ===== デッキリスト（5列固定） =====
 function buildDeckListHtml(item){
   console.log('buildDeckListHtml:', item.postId, item.cardsJSON);
 
@@ -1741,13 +1782,23 @@ const tiles = entries.map(([cd, n]) => {
   const card = cardMap[cd5] || {};
   const name = card.name || cd5;
   const src  = `img/${cd5}.webp`;
+
+  // ★ 追加：このカードのパックキー（A/B/C...）を作る
+  const packName = card.pack_name || card.packName || '';
+  const en = packNameEn_(packName);        // "BASIC SET「基本セット」" -> "BASIC SET"
+  const abbr = packAbbr_(en);              // -> "Aパック" 等
+  const packKey = packKeyFromAbbr_(abbr);  // -> "A" 等（特殊/コラボも返る）:contentReference[oaicite:1]{index=1}
+
+  const packAttr = packKey ? ` data-pack="${packKey}"` : '';
+
   return `
-    <div class="deck-entry" data-cd="${cd5}" role="button" tabindex="0">
+    <div class="deck-entry" data-cd="${cd5}"${packAttr} role="button" tabindex="0">
       <img src="${src}" alt="${escapeHtml(name)}" loading="lazy">
       <div class="count-badge">x${n}</div>
     </div>
   `;
 }).join('');
+
 
 
   return `<div class="post-decklist">${tiles}</div>`;
@@ -1816,6 +1867,7 @@ function rarityLabelForPage4_(rarity){
 function buildCardDetailHtml_(cd5){
   const cardMap = window.cardMap || {};
   const c = cardMap[String(cd5 || '').padStart(5,'0')] || {};
+  const mainRace = getMainRace(c.races ?? (c.race ? [c.race] : []));
 
   const name = c.name || cd5;
 
@@ -1880,7 +1932,7 @@ function buildCardDetailHtml_(cd5){
           ` : ''}
 
           <div class="carddetail-cat-rarity">
-          ${cat ? `<span class="carddetail-cat">${escHtml_(cat)}</span>` : ''}
+          ${cat ? `<span class="carddetail-cat cat-${escHtml_(mainRace)}">${escHtml_(cat)}</span>` : ''}
 
           ${rarityLabel ? `
             <span class="stat-chip carddetail-rarity ${rarityCls}">
@@ -2247,6 +2299,7 @@ function buildPackMixCounts_(item){
   return { keys, counts, unknown };
 }
 
+// パック構成チップHTML
 function buildPackChipsHtml_(item){
   const d = buildPackMixCounts_(item);
   if (!d) return '';
@@ -2260,13 +2313,51 @@ function buildPackChipsHtml_(item){
     const packKey = packKeyFromAbbr_(abbr); // A〜Eなら入る
 
     const attr = packKey ? ` data-pack="${packKey}"` : '';
-    out.push(`<span class="stat-chip pack-chip"${attr}>${escapeHtml(abbr)} ${n}枚</span>`);
+    out.push(
+      `<span class="stat-chip pack-chip"${attr}>
+      ${escapeHtml(abbr)} ${n}枚 <span class="pack-icon">🔍</span>
+      </span>`);
   }
   if (d.unknown){
-    out.push(`<span class="stat-chip pack-chip">不明 ${Number(d.unknown)}枚</span>`);
+    out.push(`<span class="stat-chip pack-chip">
+      不明 ${Number(d.unknown)}枚 <span class="pack-icon">🔍</span>
+      </span>`);
   }
   return out.join('');
 }
+
+// ============================
+// パック構成チップ → デッキ内カードをパック枠線で強調（再タップで解除）
+// ============================
+document.addEventListener('click', (e) => {
+  const chip = e.target.closest('.pack-chip');
+  if (!chip) return;
+
+  const pack = chip.dataset.pack || null;
+
+  // すでに同じチップがONなら：全部解除して終了
+  if (chip.classList.contains('is-active')) {
+    document.querySelectorAll('.pack-chip.is-active')
+      .forEach(el => el.classList.remove('is-active'));
+    document.querySelectorAll('.deck-entry.pack-hl')
+      .forEach(el => el.classList.remove('pack-hl'));
+    return;
+  }
+
+  // それ以外：一旦全部OFF → 押したパックだけON
+  document.querySelectorAll('.pack-chip.is-active')
+    .forEach(el => el.classList.remove('is-active'));
+  document.querySelectorAll('.deck-entry.pack-hl')
+    .forEach(el => el.classList.remove('pack-hl'));
+
+  // 不明（data-pack無し）はONにしない（必要ならここは変えてOK）
+  if (!pack) return;
+
+  chip.classList.add('is-active');
+  document.querySelectorAll(`.deck-entry[data-pack="${pack}"]`)
+    .forEach(el => el.classList.add('pack-hl'));
+});
+
 
 
 // =============================

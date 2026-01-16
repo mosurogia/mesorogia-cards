@@ -2447,6 +2447,7 @@ function updateDeckAnalysis() {
         cd,
         race: card.race,
         type: card.type,
+        category: card.category,
         cost: parseInt(card.cost) || 0,
         power: parseInt(card.power) || 0,
         rarity: card.rarity || ''
@@ -2476,20 +2477,37 @@ if (raritySummary) {
   `;
 }
 
-  // コスト・パワーの棒グラフを生成
-  // ===== コスト／パワー分布グラフ =====
+function isCostFreeBySpecialSummon(c){
+  return c?.type === 'アタッカー'
+    && c?.category === 'ロスリス'
+    && Number(c?.cost) === 66;
+}
+
+// ===== コスト／パワー分布グラフ =====
+
+  // ✅ コスト分布だけ：66ロスリスアタッカーを除外
+  const excludedLosslis66Atk = deckCards.filter(isCostFreeBySpecialSummon).length;
+  const deckCardsForCostChart = deckCards.filter(c => !isCostFreeBySpecialSummon(c));
 
   // 1) 分布を集計
   const costCount = {};
   const powerCount = {};
+
+  // コストは「66除外後」で集計
+  deckCardsForCostChart.forEach(c => {
+    const v = Number(c.cost);
+    if (!Number.isNaN(v)) costCount[v] = (costCount[v] || 0) + 1;
+  });
+
+  // パワーは従来通り（除外しない）
   deckCards.forEach(c => {
-    if (!Number.isNaN(c.cost))  costCount[c.cost]  = (costCount[c.cost]  || 0) + 1;
-    if (!Number.isNaN(c.power)) powerCount[c.power] = (powerCount[c.power] || 0) + 1;
+    const v = Number(c.power);
+    if (!Number.isNaN(v)) powerCount[v] = (powerCount[v] || 0) + 1;
   });
 
   // 2) ラベルを用意（常に見せたい目盛りを混ぜて空バーも0で出す）
-  const alwaysShowCosts  = [2, 4, 6, 8, 10, 12];
-  const alwaysShowPowers = [0, 4, 5, 6, 7, 8, 12, 16];
+  const alwaysShowCosts  = [0, 2, 4, 6, 8, 10, 12];
+  const alwaysShowPowers = [4, 5, 6, 7, 8, 10, 14, 16];
 
   const costLabels = [...new Set([...alwaysShowCosts, ...Object.keys(costCount).map(Number)])]
     .sort((a,b)=>a-b);
@@ -2502,7 +2520,10 @@ if (raritySummary) {
 // 3) 総コスト/パワー表示（※先に計算→後で描画）
 
 // 総コスト
-const sumCost = deckCards.reduce((s, c) => s + (c.cost || 0), 0);
+const sumCost = deckCards.reduce((sum, c) => {
+  if (isCostFreeBySpecialSummon(c)) return sum;
+  return sum + (Number(c.cost) || 0);
+}, 0);
 
 // 既存（総コストの数字表示）が残ってるならそのまま
 const sumCostEl = document.getElementById('total-cost');
@@ -2531,7 +2552,7 @@ deckCards.forEach(c => {
     chargerPower += p;
 
     // ✅ 実質チャージ量
-    const charge = p - cost;過剰
+    const charge = p - cost;
 
     // パワー0・差分0以下は除外
     if (charge > 0) {
@@ -2632,8 +2653,8 @@ function buildStackCounts(cards, key, labels) {
 }
 
 // costLabels / powerLabels はこれまで通り作成済みとする
-const costDatasets  = buildStackCounts(deckCards, 'cost',  costLabels);
-const powerDatasets = buildStackCounts(deckCards, 'power', powerLabels);
+const costDatasets  = buildStackCounts(deckCardsForCostChart, 'cost',  costLabels);
+const powerDatasets = buildStackCounts(deckCards,            'power', powerLabels);
 
 const commonOptions = {
   responsive: true,
@@ -2658,6 +2679,22 @@ const powerCtx = document.getElementById('powerChart-deckmaker')?.getContext('2d
 
 if (costCtx) {
   costChart = new Chart(costCtx, { type: 'bar', data: { labels: costLabels,  datasets: costDatasets  }, options: commonOptions });
+}
+// ✅ 66ロスリスアタッカー注記（page4と同じ：canvas直後に差し込む）
+const costCanvas = document.getElementById('costChart-deckmaker');
+if (costCanvas) {
+  const parent = costCanvas.parentElement; // .post-detail-chartcanvas 想定
+  let noteEl = parent?.querySelector?.('.chart-note');
+
+  if (!noteEl) {
+    noteEl = document.createElement('div');
+    noteEl.className = 'chart-note';
+    parent?.appendChild(noteEl);
+  }
+
+  noteEl.textContent = (excludedLosslis66Atk > 0)
+    ? `※66ロスリスアタッカー（${excludedLosslis66Atk}枚）は除く`
+    : '';
 }
 if (powerCtx) {
   powerChart = new Chart(powerCtx,{ type: 'bar', data: { labels: powerLabels, datasets: powerDatasets }, options: commonOptions });
