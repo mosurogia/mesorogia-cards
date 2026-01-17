@@ -1270,6 +1270,29 @@ body {
     transform: translateY(0);
     /* hoverとの差別化 */
 }
+.stat-chip.pack-chip.is-active:hover {
+    box-shadow:
+        0 0 0 2px rgba(var(--pack-bg), .4),
+        0 4px 10px rgba(0, 0, 0, .2);
+    transform: translateY(1px);
+}
+.stat-chip.pack-chip.is-active::after {
+    content: "✓";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(var(--pack-bg), .9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+}
 
 /* A〜E（背景色＋枠色） */
 .stat-chip.pack-chip[data-pack="A"] {
