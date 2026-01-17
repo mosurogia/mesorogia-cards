@@ -167,7 +167,7 @@
 }
 @media (max-width: 768px) {
     .deck-bar-top {
-        min-height: auto;
+        min-height: 90px;
         padding: 4px 0px 0px 0px;
     }
 }
