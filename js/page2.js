@@ -3508,7 +3508,7 @@ function renderMulliganOutcomeProbs(){
   els.outcomeBox.innerHTML = `
     <div class="mull-remaining-title">マリガン後の手札</div>
     <div class="mull-outcome-grid">
-      ${rows.map((r, idx) => `
+      ${shown.map((r, idx) => `
         <div class="mull-outcome-row2">
           <div style="display:flex; align-items:center; gap:6px;">
             <span class="mull-outcome-rank">#${idx+1}</span>
@@ -3611,7 +3611,7 @@ window.addEventListener('resize', () => {
       // 初期手札（4枚引き）の確率分布
       if (els.outcomeBox) {
         els.outcomeBox.innerHTML = `
-          <div class="mull-remaining-title">初期手札</div>
+          <div class="mull-remaining-title">初期手札の手札構成確率</div>
           <div class="mull-outcome-note"></div>
           <div class="mull-outcome-grid"></div>
         `;
