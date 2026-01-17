@@ -1579,9 +1579,26 @@
     font-size: clamp(.75rem, 2.4vw, 1rem);
     letter-spacing: .01em;
 }
+/* mull-outcome-note が空なら表示しない（スペース削減） */
+.mull-outcome-note:empty {
+    display: none;
+}
 
+.mull-outcome-more {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #dbeafe;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-weight: 800;
+    cursor: pointer;
+}
 
-
+.mull-outcome-more:active {
+    transform: scale(.99);
+}
 
 /* ===== 所持データ（コンパクト版） ===== */
 .owned-info {

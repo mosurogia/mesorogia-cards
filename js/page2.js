@@ -3082,6 +3082,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
    const RARITY_ICON = { LEGEND:'🌈', GOLD:'🟡', SILVER:'⚪️', BRONZE:'🟤' };
 (() => {
   const HAND_SIZE = 4;
+  const OUTCOME_LIMIT = 5;
 
   // 手札タイプスロットの初期値取得（現在の手札並びをテンプレにする）
   function getInitialHandTypeSlots(){
@@ -3121,7 +3122,16 @@ if (!els.outcomeBox) {
   const state = {
     pool: [],  // 山札（手札４枚以外のデッキリスト）
     hand: [],  // { cd, selected }
+    outcomeExpanded: false, // 確率表示の展開状態
   };
+
+   // 「もっと見る」/「閉じる」
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.mull-outcome-more');
+    if (!btn) return;
+    state.outcomeExpanded = !state.outcomeExpanded;
+    refreshUI(); // 再描画（rowsは軽いので再計算でOK）
+  });
 
   // cd→枚数 のMapを作る
   function buildDeckCountMap(){
@@ -3241,9 +3251,22 @@ function renderHand(){
   });
 }
 
+// タイプ別：デッキ内枚数
+function tallyDeckByType(){
+  const counts = { 'チャージャー': 0, 'アタッカー': 0, 'ブロッカー': 0 };
+  const deckObj = getDeckObject();
+  const map = window.cardMap || window.allCardsMap || {};
 
-
-
+  for (const cd in deckObj){
+    const n = deckObj[cd] | 0;
+    if (!n) continue;
+    const t = map[String(cd)]?.type;
+    if (t === 'チャージャー' || t === 'アタッカー' || t === 'ブロッカー') {
+      counts[t] += n;
+    }
+  }
+  return counts;
+}
   // タイプ別：残り山枚数
 function tallyPoolByType() {
   // 手札を除いた最新の山で集計
@@ -3282,18 +3305,137 @@ function tallyKeptByType(){
   return counts;
 }
 
+//初期手札タイプ構成表示
+function renderInitialHandOutcome() {
+  const grid = document.querySelector('.mull-outcome-grid');
+  const note = document.querySelector('.mull-outcome-note');
+  if (!grid || !note) return;
+
+  // 初期手札のタイプ配列（すでにある state.hand を使用）
+  const map = window.cardMap || window.allCardsMap || {};
+  const types = state.hand.map(h => map[String(h.cd)]?.type || '');
+
+  // grid 初期化
+  grid.innerHTML = '';
+
+  // 1行だけ作る（確率100%）
+  const row = document.createElement('div');
+  row.className = 'mull-outcome-row2';
+
+  const hand = document.createElement('div');
+  hand.className = 'mull-outcome-hand';
+
+  types.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'mull-outcome-card';
+    card.dataset.type = t;
+    hand.appendChild(card);
+  });
+
+  const pct = document.createElement('div');
+  pct.className = 'mull-outcome-pct';
+  pct.textContent = '100%';
+
+  row.appendChild(hand);
+  row.appendChild(pct);
+  grid.appendChild(row);
+
+  // 文言
+  note.textContent = '初期手札のタイプ構成です';
+}
+
+// 初期手札タイプ構成確率計算＆表示
+function renderInitialHandOutcomeProbs(){
+  if (!els.outcomeBox) return;
+
+  const grid = els.outcomeBox.querySelector('.mull-outcome-grid');
+  if (!grid) return;
+
+  const pool = tallyDeckByType();
+  const C = pool['チャージャー']|0;
+  const A = pool['アタッカー']|0;
+  const B = pool['ブロッカー']|0;
+  const N = C + A + B;
+
+  const k = HAND_SIZE; // 4枚固定
+  const denom = comb(N, k);
+  if (!denom){
+    grid.innerHTML = `<div class="mull-outcome-note">※ デッキのタイプ情報が不足しています</div>`;
+    return;
+  }
+
+  const rows = [];
+  for (let c=0; c<=k; c++){
+    for (let a=0; a<=k-c; a++){
+      const b = k - c - a;
+      if (c > C || a > A || b > B) continue;
+
+      const p = (comb(C,c) * comb(A,a) * comb(B,b)) / denom;
+
+      // 表示用：色カード4枚（順序は固定でOK：C→A→B）
+      const typeArr = [];
+      for (let i=0;i<c;i++) typeArr.push('チャージャー');
+      for (let i=0;i<a;i++) typeArr.push('アタッカー');
+      for (let i=0;i<b;i++) typeArr.push('ブロッカー');
+
+      rows.push({ typeArr, p });
+    }
+  }
+
+  rows.sort((x,y)=> y.p - x.p);
+
+  const limit = state.outcomeExpanded ? rows.length : OUTCOME_LIMIT;
+  const shown = rows.slice(0, limit);
+
+  grid.innerHTML = shown.map((r, idx) => `
+    <div class="mull-outcome-row2">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="mull-outcome-rank">#${idx+1}</span>
+        <div class="mull-outcome-hand">
+          ${(r.typeArr||[]).map(t => `
+            <div class="mull-outcome-card" data-type="${t}"></div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="mull-outcome-pct">${(r.p*100).toFixed(2)}%</div>
+    </div>
+  `).join('');
+
+  // 「もっと見る」ボタン
+  const moreHost = els.outcomeBox;
+  const needMore = rows.length > OUTCOME_LIMIT;
+  if (moreHost) {
+    let btn = moreHost.querySelector('.mull-outcome-more');
+    if (!needMore) {
+      if (btn) btn.remove();
+    } else {
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'mull-outcome-more';
+        moreHost.appendChild(btn);
+      }
+      btn.textContent = state.outcomeExpanded
+        ? '閉じる'
+        : `もっと見る（残り${rows.length - OUTCOME_LIMIT}件）`;
+    }
+  }
+}
+
 // マリガン後の手札タイプ構成確率計算＆表示
 function renderMulliganOutcomeProbs(){
   if (!els.outcomeBox) return;
 
   const k = state.hand.filter(h => h.selected).length;
 
-  // ✅ 未選択でも“枠は表示”してプレースホルダを出す
+  // 引き直し枚数0なら初期手札表示
   if (k <= 0){
     els.outcomeBox.innerHTML = `
       <div class="mull-remaining-title">マリガン後の手札</div>
-      <div class="mull-outcome-note">ここにマリガン後の手札構成予測が表示されます</div>
+      <div class="mull-outcome-note">初期手札のタイプ構成です</div>
+      <div class="mull-outcome-grid"></div>
     `;
+    renderInitialHandOutcome(); // ★ここで初期手札を描画
     return;
   }
 
@@ -3356,6 +3498,9 @@ function renderMulliganOutcomeProbs(){
 
   // 確率高い順
   rows.sort((x,y)=> y.p - x.p);
+
+  const limit = state.outcomeExpanded ? rows.length : OUTCOME_LIMIT;
+  const shown = rows.slice(0, limit);
   // 上位10件まで
   //rows.length = Math.min(rows.length, 10);
 
@@ -3461,7 +3606,21 @@ window.addEventListener('resize', () => {
     }
 
     renderRemainingByType();
-    renderMulliganOutcomeProbs();
+
+    if (selN === 0) {
+      // 初期手札（4枚引き）の確率分布
+      if (els.outcomeBox) {
+        els.outcomeBox.innerHTML = `
+          <div class="mull-remaining-title">初期手札</div>
+          <div class="mull-outcome-note"></div>
+          <div class="mull-outcome-grid"></div>
+        `;
+      }
+      renderInitialHandOutcomeProbs();
+    } else {
+      // マリガン後の確率分布（既存）
+      renderMulliganOutcomeProbs();
+    }
   }
 
 
