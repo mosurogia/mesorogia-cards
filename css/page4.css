@@ -1261,6 +1261,16 @@ body {
     right: -4px;
 }
 
+/* アクティブ状態 */
+.stat-chip.pack-chip.is-active {
+    border-width: 2.5px;
+    box-shadow:
+        0 0 0 2px rgba(var(--pack-bg), .35),
+        0 4px 10px rgba(0, 0, 0, .18);
+    transform: translateY(0);
+    /* hoverとの差別化 */
+}
+
 /* A〜E（背景色＋枠色） */
 .stat-chip.pack-chip[data-pack="A"] {
     --pack-bg: var(--pack-a-rgb);
@@ -1304,7 +1314,6 @@ body {
 }
 
 /* 念のため */
-
 .stat-chip.pack-chip .pack-icon {
     font-size: .7rem;
     opacity: .65;
