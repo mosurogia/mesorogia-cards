@@ -3123,6 +3123,7 @@ if (!els.outcomeBox) {
     pool: [],  // 山札（手札４枚以外のデッキリスト）
     hand: [],  // { cd, selected }
     outcomeExpanded: false, // 確率表示の展開状態
+    outcomeMode: '',
   };
 
    // 「もっと見る」/「閉じる」
@@ -3304,6 +3305,31 @@ function tallyKeptByType(){
   }
   return counts;
 }
+//「もっと見る」ボタン生成
+function renderOutcomeMoreButton_(rowsLen){
+  const moreHost = els.outcomeBox;
+  const needMore = rowsLen > OUTCOME_LIMIT;
+  if (!moreHost) return;
+
+  let btn = moreHost.querySelector('.mull-outcome-more');
+
+  if (!needMore) {
+    if (btn) btn.remove();
+    return;
+  }
+
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mull-outcome-more';
+    moreHost.appendChild(btn);
+  }
+
+  btn.textContent = state.outcomeExpanded
+    ? '閉じる'
+    : `もっと見る（残り${rowsLen - OUTCOME_LIMIT}件）`;
+}
+
 
 //初期手札タイプ構成表示
 function renderInitialHandOutcome() {
@@ -3401,25 +3427,8 @@ function renderInitialHandOutcomeProbs(){
     </div>
   `).join('');
 
-  // 「もっと見る」ボタン
-  const moreHost = els.outcomeBox;
-  const needMore = rows.length > OUTCOME_LIMIT;
-  if (moreHost) {
-    let btn = moreHost.querySelector('.mull-outcome-more');
-    if (!needMore) {
-      if (btn) btn.remove();
-    } else {
-      if (!btn) {
-        btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'mull-outcome-more';
-        moreHost.appendChild(btn);
-      }
-      btn.textContent = state.outcomeExpanded
-        ? '閉じる'
-        : `もっと見る（残り${rows.length - OUTCOME_LIMIT}件）`;
-    }
-  }
+  // 共通の「もっと見る」ボタン（初期手札でも表示制御）
+  renderOutcomeMoreButton_(rows.length);
 }
 
 // マリガン後の手札タイプ構成確率計算＆表示
@@ -3538,6 +3547,7 @@ function renderMulliganOutcomeProbs(){
       `).join('')}
     </div>
   `;
+  renderOutcomeMoreButton_(rows.length);
 }
 
 
@@ -3585,6 +3595,7 @@ window.addEventListener('resize', () => {
     const selN = state.hand.filter(h => h.selected).length;
     const livePoolLen = buildPoolExcludingCurrentHand().length;
     const canMull = hasDeck && selN > 0 && livePoolLen >= selN;
+    const mode = (selN === 0) ? 'initial' : 'mull';
 
     // 警告
       if (!hasDeck) {
@@ -3607,8 +3618,13 @@ window.addEventListener('resize', () => {
 
     renderRemainingByType();
 
+    // ✅ モードが変わった時だけ「閉じる」に戻す
+    if (state.outcomeMode !== mode) {
+      state.outcomeExpanded = false;
+      state.outcomeMode = mode;
+    }
+
     if (selN === 0) {
-      // 初期手札（4枚引き）の確率分布
       if (els.outcomeBox) {
         els.outcomeBox.innerHTML = `
           <div class="mull-remaining-title">初期手札の手札構成確率</div>
@@ -3618,7 +3634,6 @@ window.addEventListener('resize', () => {
       }
       renderInitialHandOutcomeProbs();
     } else {
-      // マリガン後の確率分布（既存）
       renderMulliganOutcomeProbs();
     }
   }
