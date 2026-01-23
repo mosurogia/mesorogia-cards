@@ -101,6 +101,29 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+// ✅ デッキメーカー専用：確実に出るトースト（DOMが無くても生成）
+window.dmToast ??= (() => {
+  let el = null;
+  let t = null;
+
+  function ensure(){
+    if (el && document.body.contains(el)) return el;
+    el = document.createElement('div');
+    el.className = 'dm-toast';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+    return el;
+  }
+
+  return (msg, ms = 1800) => {
+    const e = ensure();
+    e.textContent = String(msg ?? '');
+    e.classList.add('show');
+    clearTimeout(t);
+    t = setTimeout(() => e.classList.remove('show'), ms);
+  };
+})();
 
 //#endregion
 
@@ -338,6 +361,389 @@ function buildCardOpEffects(info) {
     wrap.appendChild(d);
   }
 }
+
+
+/*======================================================
+  スクショ画像：最小パネル（スマホのみ）
+  ✅ 画像選択 → 別モーダルでトリミング調整（ドラッグ）→ 決定後にパネルへ反映
+  - object-fit: contain の表示領域を考慮して、ドラッグ位置と実際の切り抜きがズレないように補正
+======================================================*/
+document.addEventListener('DOMContentLoaded', () => {
+  const LS_CROP = 'deckmaker_screenshot_crop'; // {"top":12,"bottom":12}
+  const LS_OUT  = 'deckmaker_screenshot';      // dataURL
+
+  // ---- panel ----
+  const openBtn  = document.getElementById('screenshot-save-btn');
+  const backdrop = document.getElementById('shot-panel-backdrop');
+  const panel    = document.getElementById('shot-panel');
+  const imgEl    = document.getElementById('shot-img');
+  const pickBtn  = document.getElementById('shot-pick');
+  const hintEl   = document.getElementById('shot-hint');
+  const closeBtn = document.getElementById('shot-close');
+  const delBtn   = document.getElementById('shot-remove');
+
+  // ---- crop modal ----
+  const cropModal = document.getElementById('shot-crop-modal');
+  const cropClose = document.getElementById('shot-crop-close');
+  const cropCancel= document.getElementById('shot-crop-cancel');
+  const cropApply = document.getElementById('shot-crop-apply');
+
+  const stage     = document.getElementById('shot-crop-stage');
+  const cropImg   = document.getElementById('shot-crop-img');
+  const maskTop   = document.getElementById('shot-crop-mask-top');
+  const maskBot   = document.getElementById('shot-crop-mask-bot');
+  const barTop    = document.getElementById('shot-crop-bar-top');
+  const barBot    = document.getElementById('shot-crop-bar-bot');
+  const readout   = document.getElementById('shot-crop-readout');
+
+  if (!openBtn || !panel || !imgEl || !pickBtn || !closeBtn || !delBtn) return;
+  if (!backdrop) return;
+  if (!cropModal || !cropClose || !cropCancel || !cropApply) return;
+  if (!stage || !cropImg || !maskTop || !maskBot || !barTop || !barBot || !readout) return;
+
+  const clamp = (n,a,b)=>Math.max(a, Math.min(b,n));
+  const CROP_MAX = 90; // 最大トリミング率（%）
+
+  const openPanel = ()=>{
+    panel.hidden = false;
+    backdrop.hidden = false;
+  };
+  const closePanel = ()=>{
+    panel.hidden = true;
+    backdrop.hidden = true;
+  };
+
+  const openCrop = ()=>{
+    cropModal.hidden = false;
+    cropModal.style.display = 'flex';
+  };
+  const closeCrop = ()=>{
+    cropModal.hidden = true;
+    cropModal.style.display = 'none';
+  };
+
+  function getSavedCrop(){
+    try{
+      const o = JSON.parse(localStorage.getItem(LS_CROP) || '{}');
+      return {
+        top:    clamp(parseInt(o.top ?? 12,10)||0, 0, CROP_MAX),
+        bottom: clamp(parseInt(o.bottom ?? 12,10)||0, 0, CROP_MAX),
+      };
+    }catch(_){
+      return { top: 12, bottom: 12 };
+    }
+  }
+
+  function setSavedCrop(top,bottom){
+    top = clamp(parseInt(top,10)||0, 0, CROP_MAX);
+    bottom = clamp(parseInt(bottom,10)||0, 0, CROP_MAX);
+    localStorage.setItem(LS_CROP, JSON.stringify({top, bottom}));
+  }
+
+    // ---- toast（showRestoreToast未定義でも落ちない）----
+  function toast(msg){
+    try{
+      if (typeof window.dmToast === 'function')          return window.dmToast(msg);  // ✅最強
+      if (typeof window.simpleToast === 'function')      return window.simpleToast(msg);
+      if (typeof window.showRestoreToast === 'function') return window.showRestoreToast(msg);
+      if (typeof window.showToast === 'function')        return window.showToast(msg);
+    }catch(_){}
+  }
+
+
+
+
+  function renderPanel(){
+    const saved = localStorage.getItem(LS_OUT);
+    if (saved){
+      imgEl.src = saved;
+      imgEl.hidden = false;
+      pickBtn.hidden = true;
+      if (hintEl) hintEl.hidden = true;
+      delBtn.hidden = false;
+    }else{
+      imgEl.src = '';
+      imgEl.hidden = true;
+      pickBtn.hidden = false;
+      if (hintEl) hintEl.hidden = false;
+      delBtn.hidden = true;
+    }
+  }
+
+  // ===== crop preview state =====
+  let __editingRaw = null; // dataURL
+  let __top = 12;          // percent
+  let __bottom = 12;       // percent
+  let __active = null;     // 'top' | 'bottom'
+  let __previewOut = null; // dataURL (cropped)
+
+  // object-fit: contain の「実際に画像が描画されている矩形」を計算
+  function getContainRect(stageEl, naturalW, naturalH){
+    const r = stageEl.getBoundingClientRect();
+    const sw = r.width, sh = r.height;
+    if (!naturalW || !naturalH || !sw || !sh) return { x:0, y:0, w:sw, h:sh };
+
+    const imgAR = naturalW / naturalH;
+    const stageAR = sw / sh;
+    let w, h, x, y;
+
+    if (imgAR > stageAR){
+      w = sw;
+      h = sw / imgAR;
+      x = 0;
+      y = (sh - h) / 2;
+    }else{
+      h = sh;
+      w = sh * imgAR;
+      y = 0;
+      x = (sw - w) / 2;
+    }
+    return { x, y, w, h };
+  }
+
+  function updateOverlay(){
+    const rectStage = stage.getBoundingClientRect();
+    const Hs = rectStage.height;
+
+    const naturalW = cropImg.naturalWidth || 0;
+    const naturalH = cropImg.naturalHeight || 0;
+    const box = getContainRect(stage, naturalW, naturalH);
+
+    // バー位置は「画像が表示されている範囲」基準
+    const topY = box.y + (box.h * (__top/100));
+    const botY = box.y + (box.h * (1 - __bottom/100));
+
+    maskTop.style.height = `${topY}px`;
+    maskBot.style.height = `${Math.max(0, Hs - botY)}px`;
+    barTop.style.top = `${topY}px`;
+    barBot.style.top = `${botY}px`;
+
+    readout.textContent = `上 ${__top}% / 下 ${__bottom}%`;
+  }
+
+  async function buildPreviewLow_(rawDataUrl, topP, bottomP){
+    const img = new Image();
+    img.src = rawDataUrl;
+
+    await new Promise((res, rej)=>{
+      img.onload = ()=>res();
+      img.onerror = ()=>rej(new Error('image load failed'));
+    });
+
+    const sw = img.naturalWidth || img.width;
+    const sh = img.naturalHeight|| img.height;
+
+    const topPx    = Math.floor(sh * (topP/100));
+    const bottomPx = Math.floor(sh * (bottomP/100));
+
+    let sy = topPx;
+    let ch = sh - topPx - bottomPx;
+    if (ch < 10){ sy = 0; ch = sh; }
+
+    // さらに小さく（例：横720まで）
+    const maxW  = 720;
+    const scale = (sw > maxW) ? (maxW/sw) : 1;
+    const cw  = Math.round(sw*scale);
+    const ch2 = Math.round(ch*scale);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = cw;
+    canvas.height = ch2;
+
+    const ctx = canvas.getContext('2d', {alpha:false});
+    ctx.drawImage(img, 0, sy, sw, ch, 0, 0, cw, ch2);
+
+    // 画質も落とす（例：0.75）
+    return canvas.toDataURL('image/jpeg', 0.75);
+  }
+
+  let __t = null;
+  function schedulePreview(){
+    clearTimeout(__t);
+    __t = setTimeout(async ()=>{
+      if (!__editingRaw) return;
+      __previewOut = await buildPreviewLow_(__editingRaw, __top, __bottom).catch(()=>null);
+    }, 80);
+  }
+
+  function beginCrop(rawDataUrl){
+    __editingRaw = rawDataUrl;
+    const saved = getSavedCrop();
+    __top = saved.top;
+    __bottom = saved.bottom;
+    __previewOut = null;
+
+  cropImg.src = rawDataUrl;
+  openCrop();
+  requestAnimationFrame(updateOverlay);
+  schedulePreview();
+  }
+
+  function setFromPointer(e){
+    const rectStage = stage.getBoundingClientRect();
+    const yStage = clamp(e.clientY - rectStage.top, 0, rectStage.height);
+
+    const naturalW = cropImg.naturalWidth || 0;
+    const naturalH = cropImg.naturalHeight || 0;
+    const box = getContainRect(stage, naturalW, naturalH);
+
+    // 画像外（余白）を触ったら画像端に吸着
+    const yInImg = clamp(yStage - box.y, 0, box.h);
+    const p = Math.round((yInImg / box.h) * 100); // 0..100
+
+    if (__active === 'top'){
+      __top = clamp(p, 0, CROP_MAX);
+      if (__top + __bottom > CROP_MAX) __top = CROP_MAX - __bottom;
+    }else if (__active === 'bottom'){
+      const bottomP = 100 - p;
+      __bottom = clamp(bottomP, 0, CROP_MAX);
+      if (__top + __bottom > CROP_MAX) __bottom = CROP_MAX - __top;
+    }
+
+    updateOverlay();
+    schedulePreview();
+  }
+
+  function onBarDown(which, e){
+    e.preventDefault();
+    e.stopPropagation();
+    __active = which;
+    stage.setPointerCapture?.(e.pointerId);
+    setFromPointer(e);
+  }
+
+  barTop.addEventListener('pointerdown', (e)=>onBarDown('top', e));
+  barBot.addEventListener('pointerdown', (e)=>onBarDown('bottom', e));
+
+  stage.addEventListener('pointermove', (e)=>{
+    if (!__active) return;
+    setFromPointer(e);
+  });
+  stage.addEventListener('pointerup', ()=>{ __active = null; });
+  stage.addEventListener('pointercancel', ()=>{ __active = null; });
+
+  cropImg.addEventListener('load', ()=>{
+    // 画像ロード直後/向き変更でズレないように
+    updateOverlay();
+  });
+  window.addEventListener('resize', ()=>{
+    if (cropModal.hidden) return;
+    updateOverlay();
+  }, { passive: true });
+
+  // ===== pick image =====
+  function pickImage(){
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = ()=>{
+      const f = input.files?.[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = ()=> beginCrop(r.result);
+      r.readAsDataURL(f);
+    };
+    input.click();
+  }
+
+  // ===== modal buttons =====
+  cropClose.addEventListener('click', ()=>{ closeCrop(); __editingRaw=null; });
+  cropCancel.addEventListener('click', ()=>{ closeCrop(); __editingRaw=null; });
+
+  cropApply.addEventListener('click', async ()=>{
+    if (!__editingRaw) return;
+
+    setSavedCrop(__top, __bottom);
+
+    if (!__previewOut) __previewOut = await buildPreviewLow_(__editingRaw, __top, __bottom).catch(()=>null);
+
+  localStorage.removeItem(LS_OUT);
+
+    // 保存（成功→閉じ方指南、失敗→エラーだけ）
+    try {
+      if (__previewOut) localStorage.setItem(LS_OUT, __previewOut);
+    } catch (e) {
+      // 失敗したら軽量版を黙って試す（ここではトースト出さない）
+      try {
+        __previewOut = await buildPreviewLow_(__editingRaw, __top, __bottom);
+        localStorage.setItem(LS_OUT, __previewOut);
+      } catch (_) {
+        toast('保存できませんでした（容量オーバー）。別の小さめ画像で試してください');
+        return;
+      }
+    }
+
+    __editingRaw = null;
+    closeCrop();
+    renderPanel();
+    openPanel();
+    toast('📸ボタンやリスト外タップで閉じられます');//最後に出す
+  });
+
+  // ===== panel buttons =====
+  let __suppressOpenClick = false;
+
+  // 📸は pointerdown でトグル（スマホの再クリック問題を潰す）
+  openBtn.addEventListener('pointerdown', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+
+    renderPanel();
+
+    if (!panel.hidden){
+      closePanel();
+      __suppressOpenClick = true;
+      setTimeout(()=>{ __suppressOpenClick = false; }, 350);
+      return;
+    }
+    openPanel();
+  }, { passive:false });
+
+  // clickは握りつぶす（pointerdown後に発火するのを防ぐ）
+  openBtn.addEventListener('click', (e)=>{
+    if (__suppressOpenClick){
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    // 基本ここは常に止めてOK（実処理は pointerdown 側）
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  pickBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    pickImage();
+  });
+
+  closeBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    closePanel();
+  });
+
+  // パネル外（backdrop）タップで閉じる
+  backdrop.addEventListener('pointerdown', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    closePanel();
+  }, { passive:false });
+
+  delBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    localStorage.removeItem(LS_CROP);
+    localStorage.removeItem(LS_OUT);
+    renderPanel();
+  });
+
+  // init
+  renderPanel();
+  closePanel();
+  closeCrop();
+});
+
 //#endregion
 
 
@@ -1777,8 +2183,6 @@ function removeCardSoft(cd){
     }
   });
 })();
-
-
 
 //#endregion
 

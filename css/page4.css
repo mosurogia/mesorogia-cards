@@ -306,13 +306,23 @@ body {
     opacity: .75;
 }
 
+/* 上側ページャ */
+.list-footer--top {
+    margin: 5px 0 2px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.list-footer--bottom {
+    margin: 10px 0 24px;
+}
+
 /* 件数＋ページング行（投稿一覧用フッター） */
 .list-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin: 10px 0 24px;
 }
 
 /* フッター内の件数表示は上下マージンを打ち消す */

@@ -93,65 +93,40 @@ function showListStatusMessage(type, text){
   listEl.innerHTML = `<div class="${baseClass}${errorClass}">${text}</div>`;
 }
 
+// ===== マイ投稿読み込み（全件表示版）=====
+async function loadMinePage(_page = 1) {
+  const listEl    = document.getElementById('myPostList');
+  const emptyEl   = document.getElementById('mine-empty');
+  const errorEl   = document.getElementById('mine-error');
+  const loadingEl = document.getElementById('mine-loading');
+  if (!listEl) return;
 
-// マイ投稿: ページャ表示更新
-function updateMinePager(page, totalPages, totalCount){
-  const info  = document.getElementById('minePageInfo');
-  const prev  = document.getElementById('minePagePrev');
-  const next  = document.getElementById('minePageNext');
-  const count = document.getElementById('resultCountMine');
+  const limit = PAGE_LIMIT; // そのまま使ってOK（ループで全件取る）
+  let offset = 0;
+  let allItems = [];
+  let total = 0;
 
-  if (info)  info.textContent = `${page} / ${Math.max(totalPages, 1)}`;
-  if (count) count.textContent = totalCount
-    ? `マイ投稿 ${totalCount}件`
-    : 'マイ投稿 0件';
+  // ローディング表示
+  state.mine.loading     = true;
+  postState.mine.loading = true;
+  if (loadingEl) loadingEl.style.display = '';
+  if (errorEl)   errorEl.style.display   = 'none';
+  if (emptyEl)   emptyEl.style.display   = 'none';
 
-  if (prev){
-    prev.disabled = (page <= 1);
-  }
-  if (next){
-    next.disabled = (page >= totalPages);
-  }
-}
-
-  // ===== マイ投稿読み込み（新API版） =====
-  async function loadMinePage(page = 1) {
-    const listEl    = document.getElementById('myPostList');
-    const emptyEl   = document.getElementById('mine-empty');
-    const errorEl   = document.getElementById('mine-error');
-    const loadingEl = document.getElementById('mine-loading');
-
-    if (!listEl) return;
-
-    const limit  = PAGE_LIMIT;
-    const offset = (page - 1) * limit;
-
-    // ローディング表示
-    state.mine.loading      = true;
-    postState.mine.loading  = true;
-    if (loadingEl) loadingEl.style.display = '';
-    if (errorEl)   errorEl.style.display   = 'none';
-    if (emptyEl)   emptyEl.style.display   = 'none';
-
-    try {
+  try {
+    while (true) {
       const res = await apiList({ limit, offset, mine: true });
-      console.log('[mine] apiList result:', res);
 
-      // 認証エラーだけは「ログインしてね」表示にする
+      // 認証エラーだけは「ログインしてね」表示にする（元の挙動維持）
       if (res && res.error === 'auth required') {
-        console.log('[mine] auth required');
-
-        // ★ ステートをクリア
         state.mine.items      = [];
         postState.mine.items  = [];
         state.mine.page       = 1;
         state.mine.totalPages = 1;
         state.mine.total      = 0;
 
-        // ★ 画面上のリストもクリア
-        if (listEl) listEl.replaceChildren();
+        listEl.replaceChildren();
 
-        // ★ 右ペインもクリア
         const paneMine = document.getElementById('postDetailPaneMine');
         if (paneMine) {
           paneMine.innerHTML = `
@@ -161,86 +136,89 @@ function updateMinePager(page, totalPages, totalCount){
           `;
         }
 
-        // メッセージ表示
         if (emptyEl) emptyEl.style.display = 'none';
         if (errorEl) errorEl.style.display = '';
 
         const msgEl = document.getElementById('mine-error-msg');
         if (msgEl) msgEl.textContent = 'マイ投稿を表示するにはログインが必要です。';
 
-        updateMinePager(0, 1, 0);
-        updateMinePagerUI();
+        updateMineCountUI_();
         return;
       }
 
-
-      // （以下は元のまま）
       if (!res || !res.ok) {
         throw new Error((res && res.error) || 'list mine failed');
       }
 
-      const items      = res.items || [];
-      const total      = Number(res.total || items.length || 0);
-      const totalPages = Math.max(1, Math.ceil(total / limit));
-      console.log('[mine] items length:', items.length, 'total:', total);
+      const items = res.items || [];
+      if (!total) total = Number(res.total || 0);
 
-      state.mine.items      = items;
-      state.mine.page       = page;
-      state.mine.totalPages = totalPages;
-      state.mine.total      = total;
+      allItems.push(...items);
+      offset += items.length;
 
-      postState.mine.page       = page;
-      postState.mine.totalCount = total;
-      postState.mine.items      = items;
-      postState.mine.loading    = false;
-
-      renderPostListInto('myPostList', items, { mode: 'mine' });
-
-      updateMinePager(page, totalPages, total);
-      updateMinePagerUI();
-
-      if (emptyEl) {
-        emptyEl.style.display = items.length ? 'none' : '';
-      }
-
-      // ★ 右ペイン：件数に応じて初期状態に戻す
-      const paneMine = document.getElementById('postDetailPaneMine');
-      if (paneMine) {
-        if (!items.length) {
-          paneMine.innerHTML = `
-            <div class="post-detail-empty">
-              <div class="post-detail-empty-icon">👈</div>
-              <div class="post-detail-empty-text">
-                <div class="post-detail-empty-title">デッキ詳細パネル</div>
-                <p class="post-detail-empty-main">
-                  左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
-                  ここにそのデッキの詳細が表示されます。
-                </p>
-              </div>
-            </div>
-          `;
-        } else if (window.matchMedia('(min-width: 1024px)').matches) {
-          const firstCard = document.querySelector('#myPostList .post-card');
-          if (firstCard) {
-            showDetailPaneForArticle(firstCard);
-          }
-        }
-      }
-
-
-    } catch (e) {
-      console.error('loadMinePage error:', e);
-      if (errorEl) {
-        errorEl.style.display = '';
-      }
-    } finally {
-      state.mine.loading     = false;
-      postState.mine.loading = false;
-      if (loadingEl) loadingEl.style.display = 'none';
+      // 取り切り判定（どっちか満たせば終了）
+      if (items.length < limit) break;
+      if (total && allItems.length >= total) break;
     }
 
+    // state更新（ページャ廃止なので page/totalPages は固定でOK）
+    state.mine.items      = allItems;
+    state.mine.page       = 1;
+    state.mine.totalPages = 1;
+    state.mine.total      = total || allItems.length;
 
+    postState.mine.page       = 1;
+    postState.mine.totalCount = state.mine.total;
+    postState.mine.items      = allItems;
+    postState.mine.loading    = false;
+
+    renderPostListInto('myPostList', allItems, { mode: 'mine' });
+
+    updateMineCountUI_();
+
+    if (emptyEl) emptyEl.style.display = allItems.length ? 'none' : '';
+
+    // 右ペイン初期表示（元の挙動維持：PCなら先頭を開く）
+    const paneMine = document.getElementById('postDetailPaneMine');
+    if (paneMine) {
+      if (!allItems.length) {
+        paneMine.innerHTML = `
+          <div class="post-detail-empty">
+            <div class="post-detail-empty-icon">👈</div>
+            <div class="post-detail-empty-text">
+              <div class="post-detail-empty-title">デッキ詳細パネル</div>
+              <p class="post-detail-empty-main">
+                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
+                ここにそのデッキの詳細が表示されます。
+              </p>
+            </div>
+          </div>
+        `;
+      } else if (window.matchMedia('(min-width: 1024px)').matches) {
+        const firstCard = document.querySelector('#myPostList .post-card');
+        if (firstCard) showDetailPaneForArticle(firstCard);
+      }
+    }
+
+  } catch (e) {
+    console.error('loadMinePage error:', e);
+    if (errorEl) errorEl.style.display = '';
+  } finally {
+    state.mine.loading     = false;
+    postState.mine.loading = false;
+    if (loadingEl) loadingEl.style.display = 'none';
   }
+}
+
+// ===== マイ投稿：件数だけUI更新（ページャ廃止版）=====
+function updateMineCountUI_() {
+  const total = Number(state.mine.total || 0);
+
+  // 上側（今回残す）
+  const countTop = document.getElementById('resultCountMineTop');
+  if (countTop) countTop.textContent = total ? `マイ投稿 ${total}件` : 'マイ投稿 0件';
+}
+
 
 // =========================
 // マイ投稿：説明モーダル
@@ -1519,6 +1497,7 @@ function getOldGodNameFromItem(item){
 // paneId -> { cost: Chart, power: Chart }
 window.__postDistCharts ??= {};
 
+
 function renderPostDistCharts_(item, paneId){
   // Chart.js が無いなら何もしない
   if (!window.Chart) return;
@@ -1712,8 +1691,11 @@ if (manaEffEl) {
 
   // 既存インスタンス破棄（paneごと）
   const prev = window.__postDistCharts[paneId];
-  if (prev?.cost)  try{ prev.cost.destroy(); } catch(_){}
-  if (prev?.power) try{ prev.power.destroy(); } catch(_){}
+  if (prev) {
+    try { prev.cost?.destroy();  } catch(_) {}
+    try { prev.power?.destroy(); } catch(_) {}
+    delete window.__postDistCharts[paneId]; // 参照を完全に消す
+  }
 
   const costCanvas  = document.getElementById(`costChart-${paneId}`);
   // ✅ 注記（66ロスリスアタッカー除外）
@@ -2584,7 +2566,7 @@ function readCardNotesFromEditor_(root){
 }
 
 function syncCardNotesHidden_(root){
-  const hidden = root.querySelector('#post-card-notes-hidden');
+  const hidden = root.querySelector('.post-card-notes-hidden');
   if (!hidden) return;
   hidden.value = JSON.stringify(readCardNotesFromEditor_(root));
 }
@@ -2628,8 +2610,8 @@ function renumberCardNoteRows_(root){
   });
 }
 
-function renderCardNotesRows_(root, list){
-  const box = root.querySelector('#post-card-notes');
+function renderCardNotesRows_(root, list) {
+  const box = root.querySelector('.post-card-notes');
   if (!box) return;
   box.replaceChildren();
   (list || []).forEach(r=> box.appendChild(makeCardNoteRow_(r)));
@@ -2698,7 +2680,7 @@ const uniq = Array.from(new Set(
 }
 
 function validateCardNotes_(root){
-  const validator = root.querySelector('#post-cardnote-validator');
+  const validator = root.querySelector('.post-cardnote-validator');
   if (!validator) return true;
   validator.setCustomValidity('');
 
@@ -2727,12 +2709,12 @@ function initCardNotesEditor_(editorRoot, item){
 
   renderCardNotesRows_(editorRoot, initial);
 
-  editorRoot.addEventListener('click', (e)=>{
+  editorRoot.addEventListener('click', (e) => {
+
     const t = e.target;
 
-    // 追加
-    if (t && t.id === 'add-card-note'){
-      const box = editorRoot.querySelector('#post-card-notes');
+    if (t && t.classList.contains('add-note-btn')) {
+      const box = editorRoot.querySelector('.post-card-notes');
       if (!box) return;
       const row = makeCardNoteRow_({ cd:'', text:'' });
       box.appendChild(row);
@@ -2963,6 +2945,12 @@ function buildCardSp(item, opts = {}){
   const favSymbol = liked ? '★' : '☆';
   const favText   = `${favSymbol}${likeCount}`;
 
+
+  const notesRootId   = `post-card-notes-${spPaneId}`;
+  const notesHiddenId = `post-card-notes-hidden-${spPaneId}`;
+  const notesValidId  = `post-cardnote-validator-${spPaneId}`;
+  const addNoteBtnId  = `add-card-note-${spPaneId}`;
+
   const headRightBtnHtml = isMine
     ? `<button class="delete-btn" type="button" data-postid="${escapeHtml(item.postId || '')}" aria-label="投稿を削除">🗑</button>`
     : `<button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>`;
@@ -3016,14 +3004,14 @@ const codeBtnHtml = `${codeManageHtml}${codeCopyBtnHtml}`;
             <div class="cardnotes-editor" hidden
                  data-original='${escapeHtml(JSON.stringify(item.cardNotes || []))}'>
               <div class="info-value" style="width:100%">
-                <div id="post-card-notes"></div>
-                <input type="hidden" id="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
+                <div class="post-card-notes"></div>
+                <input type="hidden" id="${notesHiddenId}" class="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
 
-                <input type="text" id="post-cardnote-validator" aria-hidden="true" tabindex="-1"
+                <input type="text" id="${notesValidId}" class="post-cardnote-validator" aria-hidden="true" tabindex="-1"
                   style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;border:none;padding:0;margin:0;">
 
                 <div class="add-note-box">
-                  <button type="button" id="add-card-note" class="add-note-btn">カード解説を追加</button>
+                  <button type="button" id="${addNoteBtnId}" class="add-note-btn">カード解説を追加</button>
                   <div class="post-hint" style="opacity:.8">※カードを選んで簡単な解説や採用理由を書けます</div>
                 </div>
 
@@ -3300,7 +3288,9 @@ function oneCard(item, opts = {}){
   }
 
   // ===== 右ペイン：詳細パネル描画（タブ構造＋右側に常時デッキリスト） =====
-  function renderDetailPaneForItem(item, paneId){
+  function renderDetailPaneForItem(item, basePaneId) {
+    // 固定 paneId に postId を付加してユニーク化
+    const paneId = `${basePaneId}-${item.postId}`;
     const pane = document.getElementById(paneId || 'postDetailPane');
     if (!pane || !item) return;
 
@@ -3317,6 +3307,12 @@ function oneCard(item, opts = {}){
     // タグ
     const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
     const tagsUser = tagChipsUser(item.tagsUser);
+
+    const notesRootId   = `post-card-notes-${paneId}`;
+    const notesHiddenId = `post-card-notes-hidden-${paneId}`;
+    const notesValidId  = `post-cardnote-validator-${paneId}`;
+    const addNoteBtnId  = `add-card-note-${paneId}`;
+
 
     // 投稿者Xリンク生成
     const posterXRaw  = (item.posterX || '').trim();
@@ -3473,7 +3469,7 @@ function oneCard(item, opts = {}){
                 <button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
               </dt>
               <dd class="mana-eff-row">
-                <span id="mana-efficiency-${escapeHtml(paneId)}" class="mana-eff">-</span>
+                <span id="mana-efficiency-${paneId}" class="mana-eff">-</span>
                 <span class="avg-charge-inline">
                   （平均チャージ量：<span id="avg-charge-${escapeHtml(paneId)}">-</span>）
                 </span>
@@ -3488,7 +3484,7 @@ function oneCard(item, opts = {}){
                   <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(paneId)}"></div>
                 </div>
                 <div class="post-detail-chartcanvas">
-                  <canvas id="costChart-${escapeHtml(paneId)}"></canvas>
+                  <span id="mana-efficiency-${paneId}" class="mana-eff">-</span>
                 </div>
               </div>
 
@@ -3595,13 +3591,13 @@ function oneCard(item, opts = {}){
               <div class="cardnotes-editor" hidden
                    data-original='${escapeHtml(JSON.stringify(item.cardNotes || []))}'>
                 <div class="info-value" style="width:100%">
-                  <div id="post-card-notes"></div>
+                  <div class="post-card-notes"></div>
 
                   <!-- ▼ 復元データミラー用（JSON文字列） -->
-                  <input type="hidden" id="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
+                  <input type="hidden" class="post-card-notes-hidden" value="${escapeHtml(JSON.stringify(item.cardNotes || []))}">
 
                   <!-- カード解説バリデーション用 -->
-                  <input type="text" id="post-cardnote-validator" aria-hidden="true" tabindex="-1"
+                  <input type="text" class="post-cardnote-validator" aria-hidden="true" tabindex="-1"
                     style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;border:none;padding:0;margin:0;">
 
                   <div class="add-note-box">
@@ -5145,55 +5141,29 @@ function rebuildFilteredItems(){
   );
 }
 
-
-
-
-    // ===== 一覧用：ページャUI更新 =====
+  // ===== 一覧用：ページャUI更新 =====
   function updatePagerUI(){
     const page  = state.list.currentPage || 1;
     const total = state.list.totalPages  || 1;
 
+    // 下側
     const prev = document.getElementById('pagePrev');
     const next = document.getElementById('pageNext');
     const info = document.getElementById('pageInfo');
 
-    if (info){
-      info.textContent = `${page} / ${total}`;
-    }
-    if (prev){
-      prev.disabled = (page <= 1);
-    }
-    if (next){
-      next.disabled = (page >= total);
-    }
+    if (info) info.textContent = `${page} / ${total}`;
+    if (prev) prev.disabled = (page <= 1);
+    if (next) next.disabled = (page >= total);
+
+    // 上側 ★追加
+    const prevT = document.getElementById('pagePrevTop');
+    const nextT = document.getElementById('pageNextTop');
+    const infoT = document.getElementById('pageInfoTop');
+
+    if (infoT) infoT.textContent = `${page} / ${total}`;
+    if (prevT) prevT.disabled = (page <= 1);
+    if (nextT) nextT.disabled = (page >= total);
   }
-
-  // ===== マイ投稿：件数＆ページャUI更新 =====
-  function updateMinePagerUI() {
-    const countLabel = document.getElementById('resultCountMine');
-    const info       = document.getElementById('minePageInfo');
-    const prevBtn    = document.getElementById('minePagePrev');
-    const nextBtn    = document.getElementById('minePageNext');
-
-    const page       = state.mine.page       || 1;
-    const total      = state.mine.total      || 0;
-    const totalPages = state.mine.totalPages || 1;
-    const isLoading  = !!state.mine.loading;
-
-    if (countLabel) {
-      countLabel.textContent = `マイ投稿 ${total}件`;
-    }
-    if (info) {
-      info.textContent = `${page} / ${totalPages}`;
-    }
-    if (prevBtn) {
-      prevBtn.disabled = isLoading || page <= 1;
-    }
-    if (nextBtn) {
-      nextBtn.disabled = isLoading || page >= totalPages;
-    }
-  }
-
 
   // モーダルから呼ぶ用：現在のチェック状態でフィルタを反映
 async function applyFilters() {
@@ -5220,6 +5190,12 @@ async function applySortAndRerenderList(resetToFirstPage = false){
   loadListPage(page);
 }
 
+  // 一覧の先頭へスクロール
+  function scrollToPostListTop_(){
+    // 一覧の“上”として一番自然なのは listControls（並び替え/フィルタの行）
+    const top = document.getElementById('listControls') || document.getElementById('postMainLayout');
+    top?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }
 
   // ===== 一覧用：指定ページを描画（クライアント側ページング） =====
   function loadListPage(page){
@@ -5229,7 +5205,6 @@ async function applySortAndRerenderList(resetToFirstPage = false){
     const filtered = state.list.filteredItems || [];
     const total    = state.list.total || filtered.length || 0;
 
-    // ページ数を再確認（外から直接呼んだ場合の保険）
     const totalPages = total > 0 ? Math.max(1, Math.ceil(total / PAGE_LIMIT)) : 1;
     state.list.totalPages = totalPages;
 
@@ -5245,16 +5220,20 @@ async function applySortAndRerenderList(resetToFirstPage = false){
     listEl.replaceChildren();
     renderList(pageItems, 'postList');
 
-    // 件数表示
+    // 件数表示（下）
     const infoEl = document.getElementById('resultCount');
-    if (infoEl){
-      infoEl.textContent = `投稿：${total}件`;
-    }
+    if (infoEl) infoEl.textContent = `投稿：${total}件`;
 
-    // ページャUI更新
+    // 件数表示（上）★追加
+    const infoTop = document.getElementById('resultCountTop');
+    if (infoTop) infoTop.textContent = `投稿：${total}件`;
+
+    // ページャUI更新（上・下）
     updatePagerUI();
-  }
 
+    // ★ページ切り替え後にリスト上へ
+    scrollToPostListTop_();
+  }
 
   // ===== 一覧ロード（互換用: 「次のページ」扱い） =====
   function loadMoreList(){
@@ -5372,27 +5351,27 @@ async function renderCampaignBanner(){
     }
 
 
-    // ⑤ 一覧側：ページャボタン
-    document.getElementById('pagePrev')?.addEventListener('click', () => {
-      const page = state.list.currentPage || 1;
-      if (page > 1){
-        loadListPage(page - 1);
-      }
-    });
-    document.getElementById('pageNext')?.addEventListener('click', () => {
-      const page  = state.list.currentPage || 1;
-      const total = state.list.totalPages  || 1;
-      if (page < total){
-        loadListPage(page + 1);
-      }
-    });
-
-    // ⑥ フィルターボタンはまだプレースホルダ
-
-    /*document.getElementById('filterBtn')?.addEventListener('click', () => {
-      alert('フィルタ機能はベータ版では準備中です。');
-    });*/
-
+// ⑤ 一覧側：ページャボタン
+// 上側：ページャボタン
+document.getElementById('pagePrevTop')?.addEventListener('click', () => {
+  const page = state.list.currentPage || 1;
+  if (page > 1) loadListPage(page - 1);
+});
+document.getElementById('pageNextTop')?.addEventListener('click', () => {
+  const page  = state.list.currentPage || 1;
+  const total = state.list.totalPages  || 1;
+  if (page < total) loadListPage(page + 1);
+});
+// 下側：ページャボタン
+document.getElementById('pagePrev')?.addEventListener('click', () => {
+  const page = state.list.currentPage || 1;
+  if (page > 1) loadListPage(page - 1);
+});
+document.getElementById('pageNext')?.addEventListener('click', () => {
+  const page  = state.list.currentPage || 1;
+  const total = state.list.totalPages  || 1;
+  if (page < total) loadListPage(page + 1);
+});
 
     // ⑤ マイ投稿へ（ツールバーのボタン）
     document.getElementById('toMineBtn')?.addEventListener('click', async () => {
@@ -5403,22 +5382,6 @@ async function renderCampaignBanner(){
 
     // ⑥ マイ投稿：戻る
     document.getElementById('backToListBtn')?.addEventListener('click', showList);
-
-    // ⑦ マイ投稿：ページャ（前へ / 次へ）
-    document.getElementById('minePagePrev')?.addEventListener('click', () => {
-      const p = state.mine.page || 1;
-      if (p > 1){
-        loadMinePage(p - 1);
-      }
-    });
-
-    document.getElementById('minePageNext')?.addEventListener('click', () => {
-      const p     = state.mine.page       || 1;
-      const total = state.mine.totalPages || 1;
-      if (p < total){
-        loadMinePage(p + 1);
-      }
-    });
 
     // ⑦ デリゲートイベント
     wireCardEvents(document);

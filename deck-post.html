@@ -15,7 +15,7 @@
 
     <!-- 検索キーワード -->
     <meta name="keywords" content="
-    神託のメソロギア,神託,メソロギア,モスロギア,カードゲーム,DCG,デッキ投稿,デッキ共有,投稿デッキ,デッキ一覧,デッキ解説">
+    神託のメソロギア,神託,メソロギア,モスロギア,攻略,カードゲーム,DCG,デッキ投稿,デッキ共有,投稿デッキ,デッキ一覧,デッキ解説">
 
     <!-- ページの説明（検索結果の下に表示） -->
     <meta name="description" content="このサイトは、アプリ「神託のメソロギア」のカード一覧、デッキ構築、デッキ分析ができる非公式サイトです。カード検索やデッキ管理をスマホでも快適に！">
@@ -43,6 +43,11 @@
 
     <!--画像生成-->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
     <!-- ===== ページ差分head ここまで ===== -->
 </head>
 <body>
@@ -140,11 +145,22 @@
             <!-- ▼ 左カラム：投稿一覧＋ページネーション -->
             <div class="post-master-column">
 
+                <!-- ▲ 件数＋ページネーション（上側） -->
+                <div id="listHeader" class="list-footer list-footer--top">
+                    <div id="resultCountTop" class="list-status"></div>
+
+                    <div class="pager">
+                        <button id="pagePrevTop" class="pager-btn" type="button">◀ 前へ</button>
+                        <span id="pageInfoTop" class="pager-info">1 / 1</span>
+                        <button id="pageNextTop" class="pager-btn" type="button">次へ ▶</button>
+                    </div>
+                </div>
+
                 <!-- 一覧リスト（JSが流し込み） -->
                 <section id="postList" class="post-list" aria-live="polite"></section>
 
                 <!-- 件数＋ページネーション（投稿一覧専用） -->
-                <div id="listFooter" class="list-footer">
+                <div id="listFooter" class="list-footer list-footer--bottom">
                     <div id="resultCount" class="list-status"></div>
 
                     <div class="pager">
@@ -290,12 +306,17 @@
                 <!-- ▼ 左カラム：マイ投稿一覧＋ページネーション -->
                 <div class="post-master-column">
 
-                    <!-- マイ投稿リスト（自分の投稿だけ / 10件単位表示） -->
+                    <!-- 件数だけ（マイ投稿専用） -->
+                    <div id="mineFooterTop" class="list-footer list-footer--top">
+                        <div id="resultCountMineTop" class="list-status"></div>
+                    </div>
+
                     <!-- ★ 未ログイン時に表示する案内 -->
                     <div id="mine-error" class="mine-nologin" style="display:none;">
                         <p>ここにあなたの投稿が表示されます。</p>
                         <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
                     </div>
+
                     <!-- マイ投稿が0件のときの案内 -->
                     <div id="mine-empty" class="mine-empty" style="display:none;">
                         <p>まだ投稿がありません。</p>
@@ -306,25 +327,9 @@
                         </p>
                     </div>
 
-                    <!-- マイ投稿が1件以上のときのリスト -->
+                    <!-- マイ投稿が1件以上のときのリスト（※これ1回だけ！） -->
                     <section id="myPostList" class="post-list" aria-live="polite"></section>
 
-                    <!-- 件数＋ページネーション（マイ投稿専用） -->
-                    <div id="mineFooter" class="list-footer">
-                        <div id="resultCountMine" class="list-status"></div>
-
-                        <div class="pager">
-                            <button id="minePagePrev" class="pager-btn" type="button">
-                                ◀ 前へ
-                            </button>
-                            <span id="minePageInfo" class="pager-info">
-                                1 / 1
-                            </span>
-                            <button id="minePageNext" class="pager-btn" type="button">
-                                次へ ▶
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 <!-- ▲ 左カラム -->
 
@@ -687,11 +692,6 @@
     <script src="js/common-page24.js"></script>
     <script src="js/common-page234.js"></script>
     <script src="js/page4.js"></script>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
 </body>
 
