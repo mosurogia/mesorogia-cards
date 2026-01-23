@@ -409,7 +409,7 @@
         bottom: 75px;
         z-index: 3400;
 
-        width: clamp(250px, 60vw, 500px);
+        width: clamp(200px, 60vw, 500px);
 
         /* ★高さ固定をやめて、比率で決める */
         height: auto;
