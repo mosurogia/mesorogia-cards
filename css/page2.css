@@ -406,10 +406,10 @@
     #shot-panel.shot-panel {
         position: fixed;
         left: 10px;
-        bottom: 60px;
+        bottom: 75px;
         z-index: 3400;
 
-        width: clamp(250px, 60vw, 520px);
+        width: clamp(250px, 60vw, 500px);
 
         /* ★高さ固定をやめて、比率で決める */
         height: auto;

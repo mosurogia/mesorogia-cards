@@ -739,12 +739,48 @@ imgEl.addEventListener('load', applyShotAspect_);
     closePanel();
   });
 
-  // パネル外（backdrop）タップで閉じる
+  // パネル外（backdrop）
+  // ✅ スクロール/スワイプでは閉じない
+  // ✅ 軽いタップだけで閉じる（移動量しきい値）
+  let __bdDown = false;
+  let __bdMoved = false;
+  let __bdX = 0, __bdY = 0;
+  const TAP_MOVE_PX = 10; // これ以上動いたら「タップじゃない」
+
   backdrop.addEventListener('pointerdown', (e)=>{
-    e.preventDefault();
+    // “押した瞬間に閉じない” のがポイント
+    __bdDown = true;
+    __bdMoved = false;
+    __bdX = e.clientX;
+    __bdY = e.clientY;
+
+    // ここで preventDefault しない方がスクロール阻害しにくい
     e.stopPropagation();
-    closePanel();
-  }, { passive:false });
+
+    backdrop.setPointerCapture?.(e.pointerId);
+  }, { passive:true });
+
+  backdrop.addEventListener('pointermove', (e)=>{
+    if (!__bdDown) return;
+    const dx = e.clientX - __bdX;
+    const dy = e.clientY - __bdY;
+    if (Math.hypot(dx, dy) > TAP_MOVE_PX) __bdMoved = true;
+  }, { passive:true });
+
+  backdrop.addEventListener('pointerup', (e)=>{
+    if (!__bdDown) return;
+    __bdDown = false;
+    e.stopPropagation();
+
+    // ✅ 動いてない＝タップ扱い → 閉じる
+    if (!__bdMoved) closePanel();
+  }, { passive:true });
+
+  backdrop.addEventListener('pointercancel', ()=>{
+    __bdDown = false;
+    __bdMoved = false;
+  }, { passive:true });
+
 
   delBtn.addEventListener('click', (e)=>{
     e.preventDefault();
