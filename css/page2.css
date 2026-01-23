@@ -408,7 +408,18 @@
         left: 10px;
         bottom: 60px;
         z-index: 3400;
-        width: min(92vw, 520px);
+
+        width: clamp(250px, 60vw, 520px);
+
+        /* ★高さ固定をやめて、比率で決める */
+        height: auto;
+        aspect-ratio: var(--shot-ar, 16 / 9);
+        /* 画像が無い時の仮比率 */
+
+        /* ただし小さすぎ・大きすぎは防ぐ */
+        min-height: 160px;
+        max-height: calc(100dvh - 60px - 20px - env(safe-area-inset-bottom));
+
         border-radius: 12px;
         overflow: hidden;
         background: rgba(0, 0, 0, .88);
@@ -420,6 +431,7 @@
         position: relative;
         width: 100%;
         height: 100%;
+        background: rgba(0, 0, 0, .88);
     }
 
     #shot-panel .shot-img {

@@ -470,6 +470,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function applyShotAspect_(){
+  // 画像が無い/読めてないなら触らない（デフォルト比率のまま）
+  const w = imgEl.naturalWidth  || 0;
+  const h = imgEl.naturalHeight || 0;
+  if (!w || !h) return;
+
+  // CSS aspect-ratio に入れられる形にする
+  panel.style.setProperty('--shot-ar', `${w} / ${h}`);
+}
+
+// srcセット後に onload で反映
+imgEl.addEventListener('load', applyShotAspect_);
+
+// renderPanel() の saved 時は src が変わるので、それでもOK（loadが走る）
+
+
   // ===== crop preview state =====
   let __editingRaw = null; // dataURL
   let __top = 12;          // percent
