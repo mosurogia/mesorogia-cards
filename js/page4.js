@@ -1258,6 +1258,7 @@ async function deletePost_(postId){
     return RACE_BG_MAP[main] || '';
   }
 
+  /*
   // 自動タグ＋選択タグ（上段・ピンク系）
   function tagChipsMain(tagsAuto, tagsPick){
     const s = [tagsAuto, tagsPick].filter(Boolean).join(',');
@@ -1281,7 +1282,7 @@ async function deletePost_(postId){
       .map(x => `<span class="chip">${escapeHtml(x)}</span>`)
       .join('');
   }
-
+*/
 
   // ===== キャンペーンタグ表示制御 =====
 function shouldShowTag_(tag){
@@ -2737,7 +2738,7 @@ function initCardNotesEditor_(editorRoot, item){
     if (t && t.classList.contains('note-move')){
       const dir = Number(t.dataset.dir || 0);
       const row = t.closest('.post-card-note');
-      const box = editorRoot.querySelector('#post-card-notes');
+      const box = editorRoot.querySelector('.post-card-notes');
       if (!row || !box || !dir) return;
 
       if (dir < 0){
@@ -2923,6 +2924,7 @@ function buildCardSp(item, opts = {}){
   const typeChipsHtml   = buildTypeChipsHtml_(simpleStats);
   const rarityChipsHtml = buildRarityChipsHtml_(item);
   const packChipsHtml   = buildPackChipsHtml_(item);
+  const spPaneId = `sp-${String(item.postId || '').replace(/[^a-zA-Z0-9_-]/g,'_')}`;
 
 
   const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
@@ -2934,17 +2936,12 @@ function buildCardSp(item, opts = {}){
   const posterXLabel = posterXRaw;
   const posterXUser  = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
 
-  // SP用：ChartのID衝突防止（id属性に使うので軽くサニタイズ）
-  const spPaneIdRaw = `sp-${String(item.postId || '')}`;
-  const spPaneId = spPaneIdRaw.replace(/[^a-zA-Z0-9_-]/g, '_');
-
 // ===== いいね関連（今のまま残してOK：一覧側で使う） =====
   const likeCount = Number(item.likeCount || 0);
   const liked     = !!item.liked;
   const favClass  = liked ? ' active' : '';
   const favSymbol = liked ? '★' : '☆';
   const favText   = `${favSymbol}${likeCount}`;
-
 
   const notesRootId   = `post-card-notes-${spPaneId}`;
   const notesHiddenId = `post-card-notes-hidden-${spPaneId}`;
@@ -3289,12 +3286,14 @@ function oneCard(item, opts = {}){
 
   // ===== 右ペイン：詳細パネル描画（タブ構造＋右側に常時デッキリスト） =====
   function renderDetailPaneForItem(item, basePaneId) {
-    // 固定 paneId に postId を付加してユニーク化
-    const paneId = `${basePaneId}-${item.postId}`;
-    const pane = document.getElementById(paneId || 'postDetailPane');
+    // ✅ 描画先は固定（HTMLに存在するやつ）
+    const pane = document.getElementById(basePaneId || 'postDetailPane');
     if (!pane || !item) return;
 
-    const isMinePane = (paneId === 'postDetailPaneMine');
+    // ✅ 内部のcanvas等のIDに使うユニークsuffix
+    const paneUid = `${basePaneId}-${String(item.postId || '').replace(/[^a-zA-Z0-9_-]/g,'_')}`;
+
+    const isMinePane = (basePaneId === 'postDetailPaneMine');
 
     const time       = item.updatedAt || item.createdAt || '';
     const mainRace   = getMainRace(item.races);
@@ -3308,10 +3307,10 @@ function oneCard(item, opts = {}){
     const tagsMain = tagChipsMain(item.tagsAuto, item.tagsPick);
     const tagsUser = tagChipsUser(item.tagsUser);
 
-    const notesRootId   = `post-card-notes-${paneId}`;
-    const notesHiddenId = `post-card-notes-hidden-${paneId}`;
-    const notesValidId  = `post-cardnote-validator-${paneId}`;
-    const addNoteBtnId  = `add-card-note-${paneId}`;
+    const notesRootId   = `post-card-notes-${paneUid}`;
+    const notesHiddenId = `post-card-notes-hidden-${paneUid}`;
+    const notesValidId  = `post-cardnote-validator-${paneUid}`;
+    const addNoteBtnId  = `add-card-note-${paneUid}`;
 
 
     // 投稿者Xリンク生成
@@ -3469,9 +3468,9 @@ function oneCard(item, opts = {}){
                 <button type="button" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
               </dt>
               <dd class="mana-eff-row">
-                <span id="mana-efficiency-${paneId}" class="mana-eff">-</span>
+                <span id="mana-efficiency-${paneUid}" class="mana-eff">-</span>
                 <span class="avg-charge-inline">
-                  （平均チャージ量：<span id="avg-charge-${escapeHtml(paneId)}">-</span>）
+                  （平均チャージ量：<span id="avg-charge-${escapeHtml(paneUid)}">-</span>）
                 </span>
               </dd>
             </div>
@@ -3481,20 +3480,20 @@ function oneCard(item, opts = {}){
               <div class="post-detail-chartbox">
                 <div class="post-detail-charthead">
                   <div class="post-detail-charttitle">コスト分布</div>
-                  <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(paneId)}"></div>
+                  <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(paneUid)}"></div>
                 </div>
-                <div class="post-detail-chartcanvas">
-                  <span id="mana-efficiency-${paneId}" class="mana-eff">-</span>
-                </div>
+                  <div class="post-detail-chartcanvas">
+                    <canvas id="costChart-${escapeHtml(paneUid)}"></canvas>
+                  </div>
               </div>
 
               <div class="post-detail-chartbox">
                 <div class="post-detail-charthead">
                   <div class="post-detail-charttitle">パワー分布</div>
-                  <div class="post-detail-chartchips" id="power-summary-${escapeHtml(paneId)}"></div>
+                  <div class="post-detail-chartchips" id="power-summary-${escapeHtml(paneUid)}"></div>
                 </div>
                 <div class="post-detail-chartcanvas">
-                  <canvas id="powerChart-${escapeHtml(paneId)}"></canvas>
+                  <canvas id="powerChart-${escapeHtml(paneUid)}"></canvas>
                 </div>
               </div>
             </div>
@@ -3687,7 +3686,7 @@ const root = pane.querySelector('.post-detail-inner');
 
     // ✅ 分布グラフ描画（deckmaker と同じ）
     try {
-      renderPostDistCharts_(item, paneId);
+      renderPostDistCharts_(item, paneUid);
     } catch (e) {
       console.warn('renderPostDistCharts_ failed:', e);
     }
@@ -4647,9 +4646,6 @@ async function withCardMapForPostDate_(item, fn){
   }
 }
 
-
-
-
   // ===== 投稿日・更新日のフォーマット =====
   function fmtDate(v){
     if (!v) return '';
@@ -4816,9 +4812,9 @@ function wireCardEvents(root){
           const item = (items || []).find(it => String(it?.postId || '') === String(postId || ''));
 
           const charts = art.querySelector('.post-detail-charts');
-          const paneId = charts?.dataset?.paneid;
+          const paneUid = charts?.dataset?.paneid;
 
-          if (item && paneId) renderPostDistCharts_(item, paneId);
+          if (item && paneUid) renderPostDistCharts_(item, paneUid);
           d.dataset.chartsRendered = '1';
         } catch (err) {
           console.warn('SP renderPostDistCharts_ failed:', err);
@@ -4868,8 +4864,6 @@ function wireCardEvents(root){
     showDetailPaneForArticle(art);
   });
 }
-
-
 
 
 // 指定 postId の投稿オブジェクトを state から探す（反映漏れ防止で探索範囲を拡大）
@@ -5008,7 +5002,6 @@ function findPostItemById(postId){
     });
   }
 
-
     // ===== 並び替え（投稿日ベース） =====
   function getPostTime(item){
     const v = item.updatedAt || item.createdAt || '';
@@ -5016,8 +5009,6 @@ function findPostItemById(postId){
     const t = Date.parse(v);
     return isNaN(t) ? 0 : t;
   }
-
-
 
   // ===== 並び替え実装 =====
   function sortItems(items, sortKey){
@@ -5050,7 +5041,6 @@ function findPostItemById(postId){
 
     return arr;
   }
-
 
 // ===== 一覧：フィルタ＆ソート結果を作り直す =====
 function rebuildFilteredItems(){
