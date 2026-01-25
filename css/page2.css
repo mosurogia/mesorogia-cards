@@ -1884,50 +1884,65 @@
     --mull-mini-w: clamp(28px, 7vw, 46px);
 }
 
-/* 行を2列で並べる */
+/* ✅ 入る時だけ2列、狭ければ自動で1列 */
 .mull-outcome-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 8px 10px;
 }
-
-/* スマホは1列に落とす */
-@media (max-width: 520px) {
+@media (max-width: 768px) {
     .mull-outcome-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+        gap: 2px;
     }
 }
 
-/* 1行（カード）を“箱”として少し整える */
+
+/* 1行：左(手札) / 右(確率) */
 .mull-outcome-row2 {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    margin-top: 0;
-    /* gridに任せる */
     padding: 6px 8px;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
     background: rgba(255, 255, 255, .65);
 }
 
+/* ★左カラムが縮めるように */
+.mull-outcome-row2>* {
+    min-width: 0;
+}
 /* ランク番号 */
 .mull-outcome-rank {
     font-weight: 800;
     font-size: .75rem;
     opacity: .75;
-    margin-right: 6px;
+    display: inline-block;
+    min-width: 1.8rem;
+    text-align: left;
+}
+@media (max-width: 768px) {
+    .mull-outcome-rank {
+        font-size: .55rem;
+        min-width: 1.3rem;
+    }
 }
 
-/* 4枚の“色カード” → 1枚の幅を固定して小さくする */
+/* 手札4枚：行の幅に収まるように自動縮小 */
 .mull-outcome-hand {
+    /* ★この行の幅からカード幅を逆算（最大値も制限） */
+    --gap: 3px;
+    --w: min(var(--mull-mini-w, 34px), calc((100% - (var(--gap) * 3)) / 4));
+
     display: grid;
-    grid-template-columns: repeat(4, var(--mull-mini-w));
-    gap: 5px;
-    width: fit-content;
-    /* 横に伸びない */
-    justify-content: start;
+    grid-template-columns: repeat(4, var(--w));
+    gap: var(--gap);
+
+    width: 100%;
+    /* ★fit-content をやめる */
+    max-width: 100%;
+    justify-content:center;
 }
 
 /* 画像なしのカード（比率424/532） */
@@ -1968,6 +1983,11 @@
     border-color: rgba(214, 212, 204, .8);
 }
 
+/* 右側の数値は折り返さない（保険） */
+.mull-outcome-prob {
+    white-space: nowrap;
+}
+
 /* % */
 .mull-outcome-pct {
     font-variant-numeric: tabular-nums;
@@ -1977,8 +1997,14 @@
     font-size: .85rem;
     min-width: 5.5ch;
     text-align: right;
+    width: 100%;
 }
-
+@media (max-width: 768px) {
+    .mull-outcome-pct {
+        font-size:.65rem;
+        min-width: 7ch;
+    }
+}
 /* ちょい説明 */
 .mull-outcome-note {
     margin-top: 6px;
