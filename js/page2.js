@@ -3540,6 +3540,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const HAND_SIZE = 4;
   const OUTCOME_LIMIT = 5;
 
+  // 例①〜例⑳（それ以上は例21みたいに数字で）
+  function formatExampleLabel_(n){
+    const circled = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩',
+                    '⑪','⑫','⑬','⑭','⑮','⑯','⑰','⑱','⑲','⑳'];
+    return '例' + (circled[n-1] || String(n));
+  }
+
   // 手札タイプスロットの初期値取得（現在の手札並びをテンプレにする）
   function getInitialHandTypeSlots(){
   const map = window.cardMap || window.allCardsMap || {};
@@ -3871,8 +3878,8 @@ function renderInitialHandOutcomeProbs(){
 
   grid.innerHTML = shown.map((r, idx) => `
     <div class="mull-outcome-row2">
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span class="mull-outcome-rank">#${idx+1}</span>
+      <div style="display:flex; align-items:center;">
+        <span class="mull-outcome-rank">${formatExampleLabel_(idx+1)}</span>
         <div class="mull-outcome-hand">
           ${(r.typeArr||[]).map(t => `
             <div class="mull-outcome-card" data-type="${t}"></div>
@@ -3975,8 +3982,8 @@ function renderMulliganOutcomeProbs(){
     <div class="mull-outcome-grid">
       ${shown.map((r, idx) => `
         <div class="mull-outcome-row2">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span class="mull-outcome-rank">#${idx+1}</span>
+          <div style="display:flex; align-items:center;">
+            <span class="mull-outcome-rank">${formatExampleLabel_(idx+1)}</span>
               <div class="mull-outcome-hand">
                 ${(r.typeArr || []).map((t, i) => {
                   const h = state.hand[i];
@@ -4083,8 +4090,7 @@ window.addEventListener('resize', () => {
     if (selN === 0) {
       if (els.outcomeBox) {
         els.outcomeBox.innerHTML = `
-          <div class="mull-remaining-title">初期手札の手札構成確率</div>
-          <div class="mull-outcome-note"></div>
+          <div class="mull-remaining-title">初期手札パターンの目安</div>
           <div class="mull-outcome-grid"></div>
         `;
       }
