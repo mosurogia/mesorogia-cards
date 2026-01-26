@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mosurogia.github.io/mesorogia-cards/sitemap.xml

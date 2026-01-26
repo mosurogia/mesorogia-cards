@@ -2975,7 +2975,7 @@ function isCostFreeBySpecialSummon(c){
 
 // 3) 総コスト/パワー表示（※先に計算→後で描画）
 
-// 総コスト
+// 総コスト（表示用：全部含める）
 const sumCost = deckCards.reduce((sum, c) => {
   if (isCostFreeBySpecialSummon(c)) return sum;
   return sum + (Number(c.cost) || 0);
@@ -3032,15 +3032,28 @@ if (avgChargeEl) {
   avgChargeEl.textContent = avg !== null ? avg.toFixed(2) : '-';
 }
 
+// ✅ マナ効率計算用：30109 を除外した総コスト
+const EXCLUDE_MANA_COST_CDS = new Set(['30109']);
 
-// ✅ マナ効率（供給率） = (総チャージャー量 + 初期マナ4) / 総コスト
+const sumCostForMana = deckCards.reduce((sum, c) => {
+  if (isCostFreeBySpecialSummon(c)) return sum;
+
+  const cd = String(c.cd ?? c.code ?? c.cardId ?? '').padStart(5, '0');
+  if (EXCLUDE_MANA_COST_CDS.has(cd)) return sum; // ← ここだけ除外
+
+  return sum + (Number(c.cost) || 0);
+}, 0);
+
+//  マナ効率（供給率） = (総チャージャー量 + 初期マナ4) / 総コスト
 const manaEffEl = document.getElementById('mana-efficiency');
 if (manaEffEl) {
   const BASE_MANA = 4;
   const totalMana = chargerPower + BASE_MANA;
 
-  // 供給率（逆数）
-  const manaEff = (sumCost > 0) ? (totalMana / sumCost) : null;
+  // マナ効率（供給率） = (総チャージャー量 + 初期マナ4) / 総コスト（専用）
+  const manaEff = (sumCostForMana > 0)
+    ? (totalMana / sumCostForMana)
+    : null;
 
   // 表示ラベル（高いほど良い）
   let label = '';

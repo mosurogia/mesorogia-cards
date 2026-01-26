@@ -42,7 +42,7 @@ const BASE_PATH = '';
 // 今後 URL を変更したいときは、基本的にここの値だけ変えればOK。
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbyOdtj9u9ZW1hXgQIXDPmXc_kOY5B9lcVHpSDAa4-4uonmR12DxVdQqtSI3R8t7quRK/exec';
+  'https://script.google.com/macros/s/AKfycbx1nnxivL1ewE46W7q4C0orXd8XRxFPapLN-34pgh2jXS5zg8Zg7RhZGsfOVSZrNHY/exec';
 
 // 用途別のエイリアス（必要なら今後増やしてOK）
 window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE; // デッキ投稿・一覧など
@@ -216,38 +216,10 @@ window.RACE_ORDER_all ??= ['ドラゴン','アンドロイド','エレメンタ�
 window.RACE_ORDER ??= ['ドラゴン','アンドロイド','エレメンタル','ルミナス','シェイド'];
 
 
-
-// カテゴリ順を定義（番号は飛び飛びでもOK）
-const getCategoryOrder = (category) => {
-const order = {
-"聖焔龍（フォルティア）": 11,
-"ドラゴライダー": 12,
-"電竜": 13,
-"メロウディア": 14,
-"メイドロボ": 21,
-"アドミラルシップ": 22,
-"テックノイズ": 23,
-"ナチュリア": 31,
-"鬼刹（きせつ）": 32,
-"風花森（ふかしん）":33,
-"秘饗（バンケット）": 34,
-"ロスリス": 41,
-"白騎士": 42,
-"愚者愚者（クラウンクラウド）":43,
-"蒼ノ刀": 44,
-"昏き霊園（スレイヴヤード）": 51,
-"マディスキア": 52,
-"炎閻魔（えんえんま）": 53,
-"ノーカテゴリ": 999
-};
-return order[category] ?? 9999;
-};
-
-// 外から使えるように公開（page4 のカテゴリ折りたたみ等で利用）
-window.getCategoryOrder ??= getCategoryOrder;
-
-// 一覧（定義済みカテゴリだけ）
-window.CATEGORY_LIST ??= Object.keys({
+// ========================
+// カテゴリ順（唯一の定義）
+// ========================
+window.CATEGORY_ORDER_MAP ??= {
   "聖焔龍（フォルティア）": 11,
   "ドラゴライダー": 12,
   "電竜": 13,
@@ -257,17 +229,48 @@ window.CATEGORY_LIST ??= Object.keys({
   "テックノイズ": 23,
   "ナチュリア": 31,
   "鬼刹（きせつ）": 32,
-  "風花森（ふかしん）":33,
+  "風花森（ふかしん）": 33,
   "秘饗（バンケット）": 34,
   "ロスリス": 41,
   "白騎士": 42,
-  "愚者愚者（クラウンクラウド）":43,
+  "愚者愚者（クラウンクラウド）": 43,
   "蒼ノ刀": 44,
   "昏き霊園（スレイヴヤード）": 51,
   "マディスキア": 52,
   "炎閻魔（えんえんま）": 53,
-  "ノーカテゴリ": 999
-}).sort((a,b)=>getCategoryOrder(a)-getCategoryOrder(b));
+  "ノーカテゴリ": 999,
+};
+
+// ========================
+// カテゴリ→種族（枠線色用）
+//  11..19 => ドラゴン
+//  21..29 => アンドロイド
+//  31..39 => エレメンタル
+//  41..49 => ルミナス
+//  51..59 => シェイド
+//  999 / 不明 => null（ノーカテゴリ扱い）
+// ========================
+window.getCategoryRace ??= (category) => {
+  const code = (window.CATEGORY_ORDER_MAP || {})[String(category || '').trim()];
+  if (!code || code === 999) return null;
+
+  const tens = Math.floor(Number(code) / 10); // 1..5
+  const idx  = tens - 1;                      // 0..4
+  const order = Array.isArray(window.RACE_ORDER) ? window.RACE_ORDER : [];
+  return order[idx] || null;
+};
+
+
+// order取得（未定義は最後へ）
+window.getCategoryOrder ??= (category) => {
+  const m = window.CATEGORY_ORDER_MAP || {};
+  return m[String(category || '').trim()] ?? 9999;
+};
+
+// 一覧（定義済みカテゴリだけ・順序保証）
+window.CATEGORY_LIST ??= Object.keys(window.CATEGORY_ORDER_MAP)
+  .sort((a,b) => window.getCategoryOrder(a) - window.getCategoryOrder(b));
+
 
 // タイプ順を定義
 const getTypeOrder = (type) => {
@@ -277,16 +280,10 @@ if (type === "ブロッカー") return 2;
 return 3;
 };
 
-
-
 //ページトップ移動ボタン
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-
-
-
 
 // 一覧のカードをソート
 function sortCards() {
@@ -329,8 +326,6 @@ function sortCards() {
 
   cards.forEach(card => grid.appendChild(card));
 }
-
-
 
 /* === 所持データ共通ストア ===*/
 (function (global) {
@@ -444,6 +439,90 @@ function sortCards() {
 })(window);
 
 
+// =========================
+// カード検索（共通）
+//  - インデックス生成（タイプ→コスト→パワー→cd）
+//  - 空欄検索は全件返す
+// =========================
+(function(){
+  if (window.ensureCardNameIndexLoaded && window.searchCardsByName) return;
+
+  function normalizeJaLite_(s){
+    s = String(s ?? '').trim().toLowerCase();
+    s = s.replace(/\s+/g, '');
+    s = s.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+    s = s.replace(/[\u30A1-\u30F6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+    return s;
+  }
+
+  // タイプ順（必要ならここだけ差し替え）
+  function typeOrder_(type){
+    const t = String(type || '');
+    if (t === 'チャージャー') return 0;
+    if (t === 'アタッカー')   return 1;
+    if (t === 'ブロッカー')   return 2;
+    return 9;
+  }
+
+  let __CardNameIndex = null;
+
+  async function ensureCardNameIndexLoaded(){
+    if (__CardNameIndex) return __CardNameIndex;
+
+    await (window.ensureCardMapLoaded?.() ?? Promise.resolve());
+
+    const map = window.cardMap || window.allCardsMap || {};
+    const list = Object.keys(map).map(cd => {
+      const c = map[cd] || {};
+      const name  = String(c.name || '');
+      const type  = String(c.type || '');
+      const cost  = Number(c.cost);
+      const power = Number(c.power);
+      const cd5   = String(cd).trim().padStart(5,'0');
+
+      return {
+        cd: String(cd),
+        cd5,
+        name,
+        type,
+        cost: Number.isFinite(cost) ? cost : 9999,
+        power: Number.isFinite(power) ? power : 9999,
+        norm: normalizeJaLite_(name),
+      };
+    });
+
+    list.sort((a,b)=>{
+      const ta = typeOrder_(a.type), tb = typeOrder_(b.type);
+      if (ta !== tb) return ta - tb;
+      if (a.cost !== b.cost) return a.cost - b.cost;
+      if (a.power !== b.power) return a.power - b.power;
+      return a.cd5.localeCompare(b.cd5);
+    });
+
+    __CardNameIndex = list;
+    return __CardNameIndex;
+  }
+
+  function searchCardsByName(queryRaw, limit = 120){
+    const q = normalizeJaLite_(queryRaw || '');
+    const idx = __CardNameIndex || [];
+
+    if (!q) return idx; // ★空欄は全件
+
+    const out = [];
+    for (const row of idx){
+      // norm で部分一致（ゆる検索）
+      if (row.norm.includes(q)) out.push(row);
+      if (out.length >= limit) break;
+    }
+    return out;
+  }
+
+  window.ensureCardNameIndexLoaded = ensureCardNameIndexLoaded;
+  window.searchCardsByName = searchCardsByName;
+})();
+
+
 /*====================
     キャンペーン（フロント共通）
 =====================*/
@@ -477,4 +556,44 @@ function sortCards() {
     }
   };
 })();
+
+
+// =========================
+// Footer: フィードバックURLにページ情報を自動付与（最終版）
+// =========================
+(function(){
+  const FORM_ID = '1FAIpQLSdB-MkMc0AxNWdlZ1PX-62nj-wINtn0C34-Pj4ykXwceAWtEg';
+  const FORM_BASE = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform?usp=pp_url`;
+
+  // ✅ 確定済み
+  const ENTRY_KIND    = 'entry.880127903';   // フィードバックの種類
+  const ENTRY_DETAIL  = 'entry.190846648';   // 内容の詳細
+  const ENTRY_ENV     = 'entry.299565051';   // 使用環境
+  const ENTRY_CONTACT = 'entry.44026256';    // 連絡先
+  const ENTRY_URL = 'entry.1634483845';      // 該当ページのURL
+
+  // （任意）title をフォームに入れたいなら、フォーム側に「ページタイトル」質問を追加して entry を取ってください
+  // const ENTRY_TITLE = 'entry.YYYYYYYYY';
+
+  function pageKey_(){
+    return (location.pathname.split('/').pop() || 'index.html');
+  }
+
+  function buildFeedbackUrl_(){
+    const u = new URL(FORM_BASE);
+
+    // ✅ 自動注入：該当ページのURL
+    u.searchParams.set(ENTRY_URL, location.href);
+
+    return u.toString();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const a = document.querySelector('a.footer-feedback');
+    if (!a) return;
+    a.href = buildFeedbackUrl_();
+  });
+})();
+
+
 

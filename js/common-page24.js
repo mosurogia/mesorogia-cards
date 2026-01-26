@@ -924,6 +924,8 @@ if (typeof window.setAuthChecking !== 'function') {
   const API = window.AUTH_API_BASE || window.GAS_API_BASE;
   window.API = API;
 
+  const LS_TOKEN = 'mos_auth_token_v1';
+
   const Auth = {
     user: null,
     token: null,
@@ -959,14 +961,16 @@ if (typeof window.setAuthChecking !== 'function') {
       }
     },
 
-    // === Auth.init 内の whoami 実行をやめて、毎回「未ログイン表示」から始める ===
-    async init(){
-      // ローカル復元もしない（= 再読込時は必ず未ログイン）
-      this.user = null;
-      this.token = null;
-      this.verified = false;
-      window.reflectLoginUI?.();
-    },
+      async init(){
+        this.user = null;
+        this.token = localStorage.getItem(LS_TOKEN) || null;
+        this.verified = false;
+        window.reflectLoginUI?.();
+
+        if (this.token) {
+          await this.whoami(); // ここで verified=true になる
+        }
+      },
 
     async signup(username, password, displayName='', x=''){
       const res = await postJSON(`${API}?mode=signup`, {username, password, displayName, x});
@@ -996,12 +1000,16 @@ if (typeof window.setAuthChecking !== 'function') {
       this.user = user || null;
       this.token = token || null;
       this.verified = !!(user && token);
+
+      if (this.token) localStorage.setItem(LS_TOKEN, this.token);
+      else localStorage.removeItem(LS_TOKEN);
     },
 
     _clear(){
       this.user = null;
       this.token = null;
-      this.verified = false; // ★ 未検証へ戻す
+      this.verified = false;
+      localStorage.removeItem(LS_TOKEN);
     },
   };
   window.Auth = Auth;
@@ -1113,12 +1121,20 @@ function showAuthError(msg){
 function startSlowTimer(ms = 5000) {
   const st = document.getElementById('auth-inline-status');
   let fired = false;
-  const id = setTimeout(() => {
+
+  const id1 = setTimeout(() => {
     if (st && !fired && st.textContent && /中…$/.test(st.textContent)) {
-      st.textContent = st.textContent + '（通信が混み合っています…）';
+      st.textContent += '（少し時間がかかっています…）';
     }
   }, ms);
-  return () => { fired = true; clearTimeout(id); };
+
+  const id2 = setTimeout(() => {
+    if (st && !fired && st.textContent && /時間がかかっています/.test(st.textContent)) {
+      st.textContent = st.textContent.replace(/（.*?）$/, '') + '（このままお待ちください…）';
+    }
+  }, 15000);
+
+  return () => { fired = true; clearTimeout(id1); clearTimeout(id2); };
 }
 
   // パスワード保存トリガー

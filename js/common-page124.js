@@ -234,15 +234,11 @@ function openCardZoom(cd){
       }
     });
 
-//フィルターボタン名命名
-// 🔁 ボタン表示用のラベル変換マップ
+// 🔁 ボタン表示用のラベル変換マップ（※これを使う）
 const DISPLAY_LABELS = {
-  // BP
   true: 'BPあり',
   false: 'BPなし',
 
-
-  // その他条件
   draw: 'ドロー',
   graveyard_recovery: '墓地回収',
   cardsearch: 'サーチ',
@@ -252,34 +248,189 @@ const DISPLAY_LABELS = {
   power_up: 'バフ',
   power_down: 'デバフ',
 };
+window.DISPLAY_LABELS = DISPLAY_LABELS; // どこからでも参照できるように
 
-// フィルター生成
+
+// ==============================
+// 0) UI生成ヘルパ（フィルターモーダル専用）
+// ==============================
+
+// ---- 共通：ブロック外枠 ----
+function createFilterBlock_(titleText){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'filter-block';
+
+  const strong = document.createElement('strong');
+  strong.className = 'filter-title';
+  strong.textContent = titleText;
+
+  wrapper.appendChild(strong);
+  return { wrapper, titleEl: strong };
+}
+
+// ---- 共通：ボタングループ（is-ring付与ルール込み） ----
+function createButtonGroup_(title, list, filterKey, opts = {}){
+  const { wrapper } = createFilterBlock_(title);
+
+  const groupDiv = document.createElement('div');
+  groupDiv.className = 'filter-group';
+  groupDiv.dataset.key = title;
+
+  list.forEach(item => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn';
+    btn.dataset[filterKey] = item;
+
+    // ===== is-ring を付ける場所（ここが答え）=====
+    // パック：個別生成側で付けるのでここでは不要（付けてもOK）
+    // 種族：旧神以外
+    if (filterKey === 'race' && item !== '旧神') btn.classList.add('is-ring');
+    // カテゴリ：全部
+    if (filterKey === 'category') btn.classList.add('is-ring');
+
+    // ===== カテゴリ枠線色用（data-cat-race）=====
+    if (filterKey === 'category' && typeof window.getCategoryRace === 'function') {
+      const r = window.getCategoryRace(item); // 'ドラゴン' など / null
+      btn.dataset.catRace = r || 'none';
+    }
+
+    // 表示（カテゴリだけ改行）
+    if (filterKey === 'category' && String(item).includes('（')) {
+      btn.innerHTML = String(item).replace('（', '<br>（');
+    } else {
+      btn.textContent = (window.DISPLAY_LABELS && window.DISPLAY_LABELS[item] != null)
+        ? window.DISPLAY_LABELS[item]
+        : item;
+    }
+
+    groupDiv.appendChild(btn);
+  });
+
+  wrapper.appendChild(groupDiv);
+  return wrapper;
+}
+
+// ---- 共通：横並びの2択/複数（タイプ・レア・BP・特殊効果など）----
+// ※ ここが無いと createRangeStyleWrapper is not defined で落ちる
+function createRangeStyleWrapper_(title, list, filterKey){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'filter-block filter-range-wrapper';
+
+  const strong = document.createElement('strong');
+  strong.className = 'filter-title';
+  strong.textContent = title;
+  wrapper.appendChild(strong);
+
+  const groupDiv = document.createElement('div');
+  groupDiv.className = 'filter-group';
+  groupDiv.dataset.key = title;
+
+  list.forEach(item => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn';
+    btn.dataset[filterKey] = item;
+
+    // 表示ラベル（BP true/false など）
+    btn.textContent = (window.DISPLAY_LABELS && window.DISPLAY_LABELS[item] != null)
+      ? window.DISPLAY_LABELS[item]
+      : item;
+
+    groupDiv.appendChild(btn);
+  });
+
+  wrapper.appendChild(groupDiv);
+  return wrapper;
+}
+
+// ---- 共通：範囲セレクタ（コスト・パワー）----
+function createRangeSelector_(title, filterKey, list, onChange){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'filter-block filter-range-wrapper';
+
+  const strong = document.createElement('strong');
+  strong.className = 'filter-title';
+  strong.textContent = title;
+  wrapper.appendChild(strong);
+
+  const groupDiv = document.createElement('div');
+  groupDiv.className = 'filter-group';
+  groupDiv.dataset.key = title;
+
+  const selectMin = document.createElement('select');
+  const selectMax = document.createElement('select');
+  selectMin.id = `${filterKey}-min`;
+  selectMax.id = `${filterKey}-max`;
+
+  const minOptions = [...list];
+  const maxOptions = [...list, '上限なし'];
+
+  minOptions.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = v;
+    if (v === 0) o.selected = true;
+    selectMin.appendChild(o);
+  });
+
+  maxOptions.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = v;
+    if (v === '上限なし') o.selected = true;
+    selectMax.appendChild(o);
+  });
+
+  groupDiv.appendChild(selectMin);
+
+  const wave = document.createElement('span');
+  wave.className = 'tilde';
+  wave.textContent = '～';
+  groupDiv.appendChild(wave);
+
+  groupDiv.appendChild(selectMax);
+  wrapper.appendChild(groupDiv);
+
+  // 変更で即反映
+  selectMin.addEventListener('change', onChange);
+  selectMax.addEventListener('change', onChange);
+
+  return wrapper;
+}
+
+
+// ==============================
+// 1) generateFilterUI（本体）
+// ==============================
 async function generateFilterUI() {
   const cards = await fetchLatestCards();
-  const mainFilters = document.getElementById('main-filters');
+  const mainFilters   = document.getElementById('main-filters');
   const detailFilters = document.getElementById('detail-filters');
+  if (!mainFilters || !detailFilters) return;
 
-  const getUniqueValues = (key) => [...new Set(cards.map(card => card[key]).filter(Boolean))];
+  mainFilters.innerHTML = '';
+  detailFilters.innerHTML = '';
 
-  // カテゴリは順付きで取得（順序定義は common.js の getCategoryOrder を使う）
-  const categories = getUniqueValues("category").sort((a, b) => getCategoryOrder(a) - getCategoryOrder(b));
+  const getUniqueValues = (key) =>
+    [...new Set(cards.map(card => card[key]).filter(Boolean))];
 
-  // その他データ
-  const races = getUniqueValues("race");
+  // ---- カテゴリ順（Excel「リスト集」順を使う想定の getCategoryOrder があれば優先）----
+  const catOrder = (typeof window.getCategoryOrder === 'function')
+    ? window.getCategoryOrder
+    : ((_) => 9999);
 
-  const costs = [...new Set(cards.map(card => parseInt(card.cost)).filter(Number.isFinite))].sort((a, b) => a - b);
-  const powers = [...new Set(cards.map(card => parseInt(card.power)).filter(Number.isFinite))].sort((a, b) => a - b);
-  const types = ['チャージャー', 'アタッカー', 'ブロッカー'];
+  const categories = getUniqueValues("category").sort((a,b)=>catOrder(a)-catOrder(b));
+  const races      = getUniqueValues("race");
+  const costs      = [...new Set(cards.map(c => parseInt(c.cost)).filter(Number.isFinite))].sort((a,b)=>a-b);
+  const powers     = [...new Set(cards.map(c => parseInt(c.power)).filter(Number.isFinite))].sort((a,b)=>a-b);
+
+  const types    = ['チャージャー', 'アタッカー', 'ブロッカー'];
   const rarities = ['レジェンド', 'ゴールド', 'シルバー', 'ブロンズ'];
 
-  // ===== パック名（英名＋仮名の2行表示、英名でフィルター） =====
-  // 共通カタログが読めたらそれを優先。だめなら従来の packs からフォールバック。
+  // ---- パック（英名＋仮名）----
   let packCatalog = null;
-  try {
-    packCatalog = await window.loadPackCatalog(); // common.js のやつ
-  } catch {}
-
-  // 英名→仮名の対応をグローバルに持っておく（チップ表示にも使う）
+  try { packCatalog = await window.loadPackCatalog(); } catch {}
   window.__PACK_EN_TO_JP = {};
 
   const packWrapper = document.createElement('div');
@@ -294,26 +445,21 @@ async function generateFilterUI() {
   packGroup.className = 'filter-group';
   packGroup.dataset.key = 'パック名';
 
-  // ① カタログがある場合：その順でボタン化
-    if (packCatalog && Array.isArray(packCatalog.list)) {
-    // packs.json の順序でボタン生成
-    packCatalog.list.forEach(p => {
-      const en = p.en || '';
-      const jp = p.jp || '';
-      if (!en) return;
-      window.__PACK_EN_TO_JP[en] = jp;
+  const addPackBtn = (en, jp) => {
+    if (!en) return;
+    window.__PACK_EN_TO_JP[en] = jp || '';
 
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.type = 'button';
-      // ★ 絞り込みキーは英名（cards_latest.json の pack_name を split した en と一致）
-      btn.dataset.pack = en;
-      // 表示は 2 行
-      btn.innerHTML = `<span class="pack-en">${en}</span><br><small class="pack-kana">${jp}</small>`;
-      packGroup.appendChild(btn);
-    });
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn is-ring';  // ✅ パックは全て is-ring
+    btn.dataset.pack = en;
+    btn.innerHTML = `<span class="pack-en">${en}</span><br><small class="pack-kana">${jp||''}</small>`;
+    packGroup.appendChild(btn);
+  };
+
+  if (packCatalog && Array.isArray(packCatalog.list)) {
+    packCatalog.list.forEach(p => addPackBtn(p.en || '', p.jp || ''));
   } else {
-    // ② フォールバック：JSON上の pack_name を英名/仮名に割ってアルファベット順
     const packsRaw = getUniqueValues('pack_name');
     const splitPackLabel = (s) => {
       const m = String(s||'').match(/^([^「]+)(?:「([^」]*)」)?/);
@@ -321,325 +467,87 @@ async function generateFilterUI() {
     };
     const uniq = [...new Map(packsRaw.map(n => {
       const sp = splitPackLabel(n);
-      return [sp.en, sp]; // 英名でユニーク化
-    })).values()].sort((a,b) => a.en.localeCompare(b.en,'en'));
-
-    uniq.forEach(sp => {
-      window.__PACK_EN_TO_JP[sp.en] = sp.jp;
-
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.type = 'button';
-      btn.dataset.pack = sp.en; // ★ 英名
-      btn.innerHTML = `<span class="pack-en">${sp.en}</span><br><small class="pack-kana">${sp.jp}</small>`;
-      packGroup.appendChild(btn);
-    });
+      return [sp.en, sp];
+    })).values()].sort((a,b)=>a.en.localeCompare(b.en,'en'));
+    uniq.forEach(sp => addPackBtn(sp.en, sp.jp));
   }
 
   packWrapper.appendChild(packGroup);
 
+  // ---- 詳細系 ----
+  const effect_name = [...new Set(
+    cards.flatMap(card => [card.effect_name1, card.effect_name2]).filter(Boolean)
+  )].sort();
 
+  const FIELD_DISPLAY = {
+    'フィールド関係なし': 'フィールド関係なし',
+    'ドラゴンフィールド': 'ドラゴン',
+    'アンドロイドフィールド': 'アンドロイド',
+    'エレメンタルフィールド': 'エレメンタル',
+    'ルミナスフィールド': 'ルミナス',
+    'シェイドフィールド': 'シェイド',
+    'ノーマルフィールド': 'ノーマル',
+  };
 
+  const SPECIAL_ABILITIES = ['特殊効果未所持', '燃焼', '拘束', '沈黙'];
+  const OTHER_BOOLEAN_KEYS = [
+    'draw','cardsearch','graveyard_recovery','destroy_opponent','destroy_self','heal','power_up','power_down'
+  ];
 
-// 効果名（textEffect1 + textEffect2 を統合）
-const effect_name = [...new Set(
-  cards.flatMap(card => [card.effect_name1, card.effect_name2]).filter(Boolean)
-)].sort();
-const bpValues = [...new Set(cards.map(card => card.BP_flag).filter(Boolean))].sort();
-const FIELD_DISPLAY = {
-  'フィールド関係なし': 'フィールド関係なし',
-  'ドラゴンフィールド': 'ドラゴン',
-  'アンドロイドフィールド': 'アンドロイド',
-  'エレメンタルフィールド': 'エレメンタル',
-  'ルミナスフィールド': 'ルミナス',
-  'シェイドフィールド': 'シェイド',
-  'ノーマルフィールド': 'ノーマル',
-};
+  // ==========================
+  // 2) メインフィルター（上段）
+  // ==========================
+  mainFilters.appendChild(createRangeStyleWrapper_('タイプ', types, 'type'));
+  mainFilters.appendChild(createRangeStyleWrapper_('レアリティ', rarities, 'rarity'));
+  mainFilters.appendChild(packWrapper);
+  mainFilters.appendChild(createButtonGroup_('種族', races, 'race'));          // ✅ 旧神以外 is-ring
+  mainFilters.appendChild(createButtonGroup_('カテゴリ', categories, 'category')); // ✅ 全て is-ring
+  mainFilters.appendChild(createRangeSelector_('コスト', 'cost', costs, () => applyFilters()));
+  mainFilters.appendChild(createRangeSelector_('パワー', 'power', powers, () => applyFilters()));
 
-const SPECIAL_ABILITIES = ['特殊効果未所持', '燃焼', '拘束', '沈黙'];
-// その他条件
-const OTHER_BOOLEAN_KEYS = [
-  'draw',
-  'cardsearch',
-  'graveyard_recovery',
-  'destroy_opponent',
-  'destroy_self',
-  'heal',
-  'power_up',
-  'power_down'
+  // ==========================
+  // 3) 詳細フィルター（下段）
+  // ==========================
+  detailFilters.appendChild(createButtonGroup_('効果名', effect_name, 'effect'));
 
-];
+  // フィールド：表示名短縮（data値はフル）
+  const fieldKeys = Object.keys(FIELD_DISPLAY);
+  const fieldWrapper = createButtonGroup_('フィールド', fieldKeys, 'field');
+  fieldWrapper.querySelectorAll('.filter-btn').forEach(btn => {
+    const val = btn.dataset.field;
+    btn.textContent = FIELD_DISPLAY[val] ?? val;
+  });
+  detailFilters.appendChild(fieldWrapper);
 
-// --- 所持フィルター（切り替え式 1 ボタン） ---
-if (location.pathname.includes('deckmaker')) {
-  const ownedData = readOwnedDataSafe();
-  const hasOwned = ownedData && Object.keys(ownedData).length > 0;
+  detailFilters.appendChild(createRangeStyleWrapper_('BP（ブレッシングポイント）要素', ['true','false'], 'bp'));
+  detailFilters.appendChild(createRangeStyleWrapper_('特殊効果', SPECIAL_ABILITIES, 'ability'));
 
-  if (hasOwned) {
-    const ownWrap = document.createElement('div');
-    ownWrap.className = 'filter-block';
+  // その他（boolean群）
+  const otherWrap = document.createElement('div');
+  otherWrap.className = 'filter-block filter-range-wrapper';
 
-    // === タイトル＋？ボタン行 ===
-    const header = document.createElement('div');
-    header.className = 'filter-title-row';
+  const otherTitle = document.createElement('strong');
+  otherTitle.className = 'filter-title';
+  otherTitle.textContent = 'その他';
+  otherWrap.appendChild(otherTitle);
 
-    const strong = document.createElement('strong');
-    strong.className = 'filter-title';
-    strong.textContent = '所持フィルター';
-    header.appendChild(strong);
+  const otherGroup = document.createElement('div');
+  otherGroup.className = 'filter-group';
+  otherGroup.dataset.key = 'その他';
 
-    const helpBtn = document.createElement('button');
-    helpBtn.type = 'button';
-    helpBtn.className = 'filter-help-btn';
-    helpBtn.textContent = '？';
-    helpBtn.setAttribute('aria-label', '所持フィルターの説明');
-    header.appendChild(helpBtn);
+  OTHER_BOOLEAN_KEYS.forEach(key => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn';
+    btn.dataset[key] = 'true';
+    btn.textContent = (window.DISPLAY_LABELS && window.DISPLAY_LABELS[key]) ? window.DISPLAY_LABELS[key] : key;
+    otherGroup.appendChild(btn);
+  });
 
-    ownWrap.appendChild(header);
-
-    // ▼ 説明テキスト（デフォルト非表示）
-    const help = document.createElement('p');
-    help.className = 'filter-help owned-filter-help';
-    help.innerHTML =
-      'OFF：全カード表示<br>' +
-      '所持：1枚以上所持<br>' +
-      '未コンプ：0～2枚（旧神は0枚）<br>' +
-      'コンプ：3枚（旧神は1枚）<br>' +
-      '※所持状況は所持率チェッカーのデータを使用';
-    ownWrap.appendChild(help);
-
-    // ？ボタンで説明の開閉
-    helpBtn.addEventListener('click', () => {
-      const opened = help.classList.toggle('is-open');
-      helpBtn.classList.toggle('active', opened);
-    });
-
-    // ボタングループ
-    const g = document.createElement('div');
-    g.className = 'filter-group';
-    g.dataset.key = '所持フィルター';
-
-    const cycleBtn = document.createElement('button');
-    cycleBtn.className = 'filter-btn';
-    cycleBtn.type = 'button';
-    cycleBtn.dataset.mode = 'owned-cycle';
-    cycleBtn.dataset.state = 'off'; // off → owned → incomplete → complete → off...
-
-    // 初期表示
-    updateOwnedCycleBtn(cycleBtn);
-
-    g.appendChild(cycleBtn);
-    ownWrap.appendChild(g);
-
-    const mainFilters = document.getElementById('main-filters');
-    if (mainFilters) mainFilters.prepend(ownWrap);
-  }
+  otherWrap.appendChild(otherGroup);
+  detailFilters.appendChild(otherWrap);
 }
 
-
-
-// 所持フィルター切り替えボタンの表示更新
-function updateOwnedCycleBtn(btn) {
-  const state = btn.dataset.state || 'off';
-  let label = '';
-  switch (state) {
-    case 'owned':
-      label = '所持カードのみ';       // 1枚以上所持
-      break;
-    case 'incomplete':
-      label = '未コンプカードのみ';   // 通常0～1枚 / 旧神0枚
-      break;
-    case 'complete':
-      label = 'コンプカードのみ';     // 通常3枚 / 旧神1枚
-      break;
-    default:
-      label = '所持フィルターOFF';
-  }
-  btn.textContent = label;
-  // OFF 以外のときだけ色を付ける
-  btn.classList.toggle('selected', state !== 'off');
-}
-
-// クリック時に状態をぐるぐる切り替える
-function cycleOwnedFilter(btn) {
-  const order = ['off', 'owned', 'incomplete', 'complete'];
-  const cur = btn.dataset.state || 'off';
-  const idx = order.indexOf(cur);
-  const next = order[(idx + 1) % order.length];
-  btn.dataset.state = next;
-  updateOwnedCycleBtn(btn);
-  applyFilters();
-}
-
-
-  // 🧩 共通ボタン生成（修正版）
-  function createButtonGroup(title, list, filterKey) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'filter-block';
-
-    // タイトル
-    const strong = document.createElement('strong');
-    strong.className = 'filter-title';
-    strong.textContent = title;
-    wrapper.appendChild(strong);
-
-    // ボタングループ
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'filter-group';
-    groupDiv.dataset.key = title;
-
-    list.forEach(item => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.type = 'button';
-      btn.dataset[filterKey] = item;
-      // カテゴリだけ「（」の前で改行
-      if (filterKey === 'category' && item.includes('（')) {
-        btn.innerHTML = item.replace('（', '<br>（');
-      } else {
-        btn.textContent = item;
-      }
-      groupDiv.appendChild(btn);
-    });
-
-    wrapper.appendChild(groupDiv);
-    return wrapper;
-  }
-
-  // 🧩 範囲選択（コスト・パワー）
-  function createRangeSelector(title, filterKey, list) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'filter-block filter-range-wrapper';
-
-    // タイトル
-    const strong = document.createElement('strong');
-    strong.className = 'filter-title';
-    strong.textContent = title;
-    wrapper.appendChild(strong);
-
-    // セレクトボックスグループ
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'filter-group';
-    groupDiv.dataset.key = title;
-
-    const selectMin = document.createElement('select');
-    const selectMax = document.createElement('select');
-    selectMin.id = `${filterKey}-min`;
-    selectMax.id = `${filterKey}-max`;
-
-    const minOptions = [...list];
-    const maxOptions = [...list, '上限なし'];
-    minOptions.forEach(v => {
-      const o = document.createElement('option');
-      o.value = v;
-      o.textContent = v;
-      if (v === 0) o.selected = true;
-      selectMin.appendChild(o);
-    });
-
-    maxOptions.forEach(v => {
-      const o = document.createElement('option');
-      o.value = v;
-      o.textContent = v;
-      if (v === '上限なし') o.selected = true;
-      selectMax.appendChild(o);
-    });
-
-    groupDiv.appendChild(selectMin);
-    const wave = document.createElement('span');
-    wave.className = 'tilde'; wave.textContent = '～';
-    groupDiv.appendChild(wave);
-    groupDiv.appendChild(selectMax);
-    wrapper.appendChild(groupDiv);
-    // 変更されたら即反映（デバウンス不要の即時）
-    selectMin.addEventListener('change', () => applyFilters());
-    selectMax.addEventListener('change', () => applyFilters());
-    return wrapper;
-  }
-
-  // 🧩 範囲選択（タイプ、レアリティ、BP要素、特殊効果）
-    function createRangeStyleWrapper(title, list, filterKey) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'filter-block filter-range-wrapper';
-
-    const strong = document.createElement('strong');
-    strong.className = 'filter-title';
-    strong.textContent = title;
-    wrapper.appendChild(strong);
-
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'filter-group';
-    groupDiv.dataset.key = title;
-
-    list.forEach(item => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.type = 'button';
-      btn.dataset[filterKey] = item;
-      btn.textContent = DISPLAY_LABELS[item] ?? item;
-      groupDiv.appendChild(btn);
-    });
-
-    wrapper.appendChild(groupDiv);
-    return wrapper;
-  }
-
-
-  // 📌 メインフィルター構築
-  mainFilters.appendChild(createRangeStyleWrapper('タイプ', types, 'type'));
-  mainFilters.appendChild(createRangeStyleWrapper('レアリティ', rarities, 'rarity'));
-  mainFilters.appendChild(packWrapper);//パック
-  mainFilters.appendChild(createButtonGroup('種族', races, 'race'));
-  mainFilters.appendChild(createButtonGroup('カテゴリ', categories, 'category'));
-  mainFilters.appendChild(createRangeSelector('コスト', 'cost', costs));
-  mainFilters.appendChild(createRangeSelector('パワー', 'power', powers));
-
-
-  // 📌 詳細フィルター
-
-detailFilters.appendChild(createButtonGroup('効果名', effect_name, 'effect'));
-// 📌 フィールドフィルター（表示名は短縮、data値はフルで一致させる）
-const fieldKeys = Object.keys(FIELD_DISPLAY);
-const fieldWrapper = createButtonGroup('フィールド', fieldKeys, 'field');
-
-// ボタン表示名を短縮ラベルに変更
-fieldWrapper.querySelectorAll('.filter-btn').forEach(btn => {
-  const val = btn.dataset.field;
-  btn.textContent = FIELD_DISPLAY[val] ?? val;
-});
-
-detailFilters.appendChild(fieldWrapper);
-
-detailFilters.appendChild(createRangeStyleWrapper('BP（ブレッシングポイント）要素', ['true', 'false'], 'bp'));
-detailFilters.appendChild(createRangeStyleWrapper('特殊効果', SPECIAL_ABILITIES, 'ability'));
-
-// ✅ boolean 条件 → まとめて「その他」タイトルの下に表示
-const otherWrapper = document.createElement('div');
-otherWrapper.className = 'filter-range-wrapper';
-
-const strong = document.createElement('strong');
-strong.className = 'filter-title';
-strong.textContent = 'その他';
-otherWrapper.appendChild(strong);
-
-const groupDiv = document.createElement('div');
-groupDiv.className = 'filter-group';
-groupDiv.dataset.key = 'その他';
-
-OTHER_BOOLEAN_KEYS.forEach(key => {
-  const btn = document.createElement('button');
-  btn.className = 'filter-btn';
-  btn.type = 'button';
-  btn.dataset[key] = 'true';
-  btn.textContent = DISPLAY_LABELS[key] ?? key;
-  groupDiv.appendChild(btn);
-});
-
-otherWrapper.appendChild(groupDiv);
-
-detailFilters.appendChild(otherWrapper);
-
-}
 
 // ===== 0.3秒デバウンス =====
 function debounce(fn, ms = 300) {
@@ -788,14 +696,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   generateFilterUI();
   updateChipsOffset();
-
-  // 🟡 コスト・パワーセレクト変更時に即絞り込み反映
-  ["cost-min", "cost-max", "power-min", "power-max"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener("change", applyFilters);
-    }
-  });
 
   // キーワード入力：0.3秒デバウンスで即時絞り込み
   const kw = document.getElementById('keyword');
@@ -1565,7 +1465,7 @@ function renderActivePostFilterChips(){
         .forEach(btn => btn.classList.remove('selected'));
 
       // ユーザータグUIも同期（あれば）
-      const userTagInput = document.getElementById('userTagInput'); // idが違うなら消してOK
+      const userTagInput = document.getElementById('userTagQuery');
       if (userTagInput) userTagInput.value = '';
       if (typeof renderUserTagSuggest === 'function') renderUserTagSuggest([]);
       if (typeof renderSelectedUserTagChips === 'function') renderSelectedUserTagChips();
@@ -1584,17 +1484,18 @@ function renderActivePostFilterChips(){
     // ---- リセット ----
     btnReset?.addEventListener('click', () => {
       filterState.selectedTags.clear();
-      if (tagArea) {
-        tagArea
-          .querySelectorAll('.post-filter-tag-btn.selected')
-          .forEach((btn) => btn.classList.remove('selected'));
-      }
 
-      if (window.DeckPostApp?.applySortAndRerenderList) {
-        DeckPostApp.applySortAndRerenderList();
-      }
+      document
+        .querySelectorAll('.post-filter-tag-btn.selected')
+        .forEach(btn => btn.classList.remove('selected'));
 
-      renderActivePostFilterChips();// チップ表示も更新
+      filterState.selectedUserTags?.clear?.();
+      if (userTagInput) userTagInput.value = '';
+      renderUserTagSuggest([]);
+      renderSelectedUserTagChips();
+
+      window.DeckPostApp?.applySortAndRerenderList?.();
+      renderActivePostFilterChips();
     });
 
     // ---- 適用 ----

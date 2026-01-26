@@ -1,5 +1,24 @@
 
 :root {
+    /* =========================
+           タイプカラー（mrt-chip / マリガン結果と共通）
+           ========================= */
+
+        /* チャージャー（ブルー） */
+        --type-charger-rgb: 119, 170, 212;
+        --type-charger-bg: rgba(119, 170, 212, .2);
+        --type-charger-border: rgba(119, 170, 212, .4);
+
+        /* アタッカー（パープル） */
+        --type-attacker-rgb: 125, 91, 155;
+        --type-attacker-bg: rgba(125, 91, 155, .2);
+        --type-attacker-border: rgba(125, 91, 155, .4);
+
+        /* ブロッカー（グレー） */
+        --type-blocker-rgb: 214, 212, 204;
+        --type-blocker-bg: rgba(214, 212, 204, .5);
+        --type-blocker-border: rgba(214, 212, 204, .8);
+
     /* ===== 種族カラー（所持率チェッカー由来） ===== */
     --race-dragon: #e24545;
     --race-android: #2dbec0;
@@ -256,10 +275,8 @@ button,
 
 /* ======== フッター ======== */
 footer {
-    text-align: center;
     font-size: clamp(10px, 1vw, 1rem);
     color: #666;
-    padding: 3vw 0;
     background-color: #f9f9f9;
     line-height: 1.6;
 }
@@ -273,5 +290,103 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* =========================
+   Compact Footer (site-footer)
+========================= */
+.site-footer {
+    margin-top: 18px;
+    padding: 10px 12px;
+    border-top: 1px solid rgba(0, 0, 0, .08);
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(6px);
+    text-align: left;
+    padding: 10px 12px;
+}
 
+.footer-mini {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.footer-mini-left {
+    order: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    opacity: .92;
+}
+
+.footer-brand {
+    font-weight: 700;
+}
+
+.footer-sep {
+    opacity: .5;
+}
+
+.footer-link {
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(0, 0, 0, .25);
+}
+
+.footer-link:hover {
+    opacity: .8;
+}
+
+.footer-feedback {
+    font-weight: 700;
+}
+
+.footer-details {
+    order: 2;
+    font-size: 13px;
+}
+/* ✅ open時は 100%幅で “次の段” に落とす */
+.footer-details[open] {
+    flex-basis: 100%;
+    width: 100%;
+}
+
+.footer-more {
+    cursor: pointer;
+    user-select: none;
+    opacity: .85;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-detail-body {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(0, 0, 0, .18);
+    max-width: 720px;
+    text-align: left;
+}
+
+.footer-detail-body p {
+    margin: 6px 0;
+}
+
+.footer-copy {
+    margin-top: 8px;
+    font-size: 12px;
+    opacity: .7;
+}
+
+/* SP: さらに詰める */
+@media (max-width: 480px) {
+    .site-footer {
+        padding: 8px 10px;
+    }
+
+    .footer-mini-left {
+        font-size: 12px;
+    }
+}
 

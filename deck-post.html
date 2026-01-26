@@ -357,6 +357,29 @@
             <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
 
             <div id="main-filters">
+                <!-- ▼ カードで絞り込み -->
+                <div class="filter-block filter-section post-card-filter">
+                    <div class="post-card-filter-head">
+                        <strong class="filter-title">カードで絞り込み</strong>
+
+                        <div class="post-card-match-toggle" role="group" aria-label="カード条件">
+                            <button type="button" id="postFilterCardModeOr" class="post-card-mode-btn is-active">OR</button>
+                            <button type="button" id="postFilterCardModeAnd" class="post-card-mode-btn">AND</button>
+                        </div>
+                    </div>
+
+                    <!-- 選択中カード（チップ） -->
+                    <div id="postFilterCardSelectedArea" class="post-card-selected">
+                        <div class="post-card-empty" id="postFilterCardEmpty">未選択</div>
+                        <div class="post-card-chips" id="postFilterCardChips"></div>
+                    </div>
+
+                    <button type="button" class="modal-buttun post-card-pick-btn" id="postFilterCardPickBtn">
+                        カードを選ぶ
+                    </button>
+                </div>
+                <!-- ▲ カードで絞り込み -->
+
                 <!-- タグで絞り込み -->
                 <div class="filter-block">
                     <strong class="filter-title">タグで絞り込み</strong>
@@ -387,7 +410,7 @@
                     </details>
                 </div>
                 <!-- ユーザータグで絞り込み -->
-                <div class="filter-block">
+                <div class="filter-block filter-section">
                     <strong class="filter-title">ユーザータグで絞り込み</strong>
                     <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
 
@@ -416,19 +439,6 @@
                 </div>
             </div>
 
-            <!-- ▼ カード検索機能 ベータ版お知らせ -->
-            <section class="beta-note " style="margin-top: 12px;">
-                <div class="beta-note-icon">🧪</div>
-                <div class="beta-note-body">
-                    <p class="beta-note-title">カード検索機能は準備中です</p>
-                    <p class="beta-note-text">
-                        投稿フィルター内でのカード名・条件検索機能は、<br>
-                        今後のアップデートで実装予定です。
-                    </p>
-                </div>
-            </section>
-            <!-- ▲ カード検索機能 ベータ版お知らせ -->
-
             <div class="modal-footer">
                 <button class="modal-buttun" type="button" id="postFilterApplyBtn">
                     この条件で絞り込む
@@ -443,6 +453,24 @@
         </div>
     </div>
     <!-- ▲ 投稿フィルター モーダル -->
+
+<!-- カード名検索：選択モーダル -->
+<div id="cardPickModal" class="modal" style="display:none;">
+    <div class="modal-content card-pick-modal" role="dialog" aria-modal="true" aria-labelledby="cardPickTitle">
+        <div class="card-pick-head">
+            <h3 id="cardPickTitle" class="filter-maintitle">カードを選択</h3>
+            <button type="button" id="cardPickCloseBtn" class="btn-ghost">閉じる</button>
+        </div>
+
+        <input id="cardPickQuery" class="ctrl-input" style="width: 100%;" type="text" placeholder="カード名で検索（入力で即絞り込み）"
+            autocomplete="off" />
+
+        <!-- ✅ これが必須：検索結果の描画先 -->
+        <div id="cardPickResult" class="card-pick-result"></div>
+    </div>
+</div>
+
+
 
 
         <!-- ▼ ログイン / 新規登録 モーダル -->
@@ -551,7 +579,7 @@
                 <div class="account-modal-footer">
                     <button type="button" class="btn ghost" data-close="accountDataModal">キャンセル</button>
                     <!-- クリックで JS が送信するので type="button" のままでOK -->
-                    <button type="button" class="btn danger" id="acct-save-btn" disabled>保存</button>
+                    <button type="submit" class="btn danger" id="acct-save-btn" disabled>保存</button>
                 </div>
 
             </form>
@@ -584,7 +612,6 @@
         </div>
     </section>
 </div>
-
 
 
 <!-- ▼ カード解説：候補選択モーダル（マイ投稿編集でも使用） -->
@@ -632,6 +659,50 @@
         </div>
     </div>
 </div>
+<!--▲デッキコード：編集モーダル（マイ投稿編集用） -->
+
+<!-- ▼ ユーザータグ編集（追加のみ）モーダル -->
+<div class="modal" id="userTagEditModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="userTagEditTitle">
+        <div class="modal-header">
+            <h3 id="userTagEditTitle" class="filter-maintitle">ユーザータグを追加</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="user-tag-note">
+                <p>
+                    既存のユーザータグを追加できます（合計３つまで）<br>
+                    候補をタップして投稿に追加しましょう（一度追加すると戻せません）
+                </p>
+            </div>
+
+            <div class="user-tag-subtitle">選択中（この投稿に追加されます）</div>
+            <div id="userTagEditSelectedArea" class="user-tag-selected-area">
+                <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
+                <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+            </div>
+
+            <input id="userTagEditQuery" class="ctrl-input" type="text" placeholder="ここでユーザータグの検索ができます"
+                autocomplete="off">
+
+            <div class="user-tag-panel">
+                <div class="user-tag-subtitle">候補（クリックで追加）</div>
+                <div id="userTagEditSuggest" class="user-tag-suggest">
+                    <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
+                    <div class="user-tag-suggest-items" data-user-tag-items></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="modal-buttun" type="button" id="userTagEditSaveBtn">保存</button>
+            <button class="modal-buttun modal-close-btn" type="button" id="userTagEditCancelBtn">キャンセル</button>
+        </div>
+    </div>
+</div>
+<!-- ▲ ユーザータグ編集（追加のみ）モーダル -->
+
 
 <!-- ===== マナ効率 ヘルプモーダル ===== -->
 <div id="manaEfficiencyHelpModal" class="modal" style="display:none;">
@@ -658,29 +729,44 @@
 </div>
 
 <!--フッター-->
-<footer>
-    <div>
-        <p>
-            <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
-            カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
-        </p>
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-mini">
+        <div class="footer-mini-left">
+            <span class="footer-brand">モスロギア</span>
+            <span class="footer-sep">・</span>
+            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                公式サイト
+            </a>
+            <span class="footer-sep">・</span>
+
+            <!-- ✅ ここがフィードバック導線（Googleフォーム） -->
+            <a class="footer-link footer-feedback"
+                href="https://docs.google.com/forms/d/e/【フォームID】/viewform?usp=pp_url&entry.123456789=【ページ名】"
+                target="_blank" rel="noopener noreferrer">
+                💬 フィードバック
+            </a>
+        </div>
+
+        <details class="footer-details">
+            <summary class="footer-more">このサイトについて</summary>
+            <div class="footer-detail-body">
+                <p>
+                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                    画像・データ等の著作権は各権利者に帰属します。
+                </p>
+                <p>
+                    一部画像素材は「ジュエルセイバーFREE」
+                    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）
+                    を使用しています。
+                </p>
+                <p class="footer-contact">
+                    連絡先：<a href="https://x.com/192837465aruneo" target="_blank"
+                        rel="noopener noreferrer">@192837465aruneo</a>
+                </p>
+                <div class="footer-copy">© 2025 Mesorogia Cards</div>
+            </div>
+        </details>
     </div>
-
-    <p>
-        🔗 公式サイトはこちら 👉
-        <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
-            神託のメソロギア公式サイト
-        </a>
-    </p>
-
-    © 2025 Mesorogia Cards. All rights reserved.<br />
-    当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
-    一部画像素材は「ジュエルセイバーFREE」<br />
-    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
-    💬 ご要望・不具合報告 👉
-    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
-        @192837465aruneo
-    </a>
 </footer>
 
 <!--上部に戻るボタン-->

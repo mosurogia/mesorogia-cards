@@ -126,6 +126,7 @@
                 <div class="modal-footer">
                     <button class="modal-buttun" id="applyFilterBtn">この条件で絞り込む</button>
                     <button class="modal-buttun" onclick="resetFilters()">リセット</button>
+                    <button class="modal-buttun" onclick="closeFilterModal()" type="button">閉じる</button>
                 </div>
             </div>
         </div>
@@ -1138,30 +1139,46 @@
 <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
 <!--フッター-->
-<footer>
-    <div>
-        <p>
-            <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
-            カード一覧検索やデッキメーカー、デッキ分析などを通じて、プレイヤー向けに便利なデータベース機能を提供しています。
-        </p>
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-mini">
+        <div class="footer-mini-left">
+            <span class="footer-brand">モスロギア</span>
+            <span class="footer-sep">・</span>
+            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                公式サイト
+            </a>
+            <span class="footer-sep">・</span>
+
+            <!-- ✅ ここがフィードバック導線（Googleフォーム） -->
+            <a class="footer-link footer-feedback"
+                href="https://docs.google.com/forms/d/e/【フォームID】/viewform?usp=pp_url&entry.123456789=【ページ名】"
+                target="_blank" rel="noopener noreferrer">
+                💬 フィードバック
+            </a>
+        </div>
+
+        <details class="footer-details">
+            <summary class="footer-more">このサイトについて</summary>
+            <div class="footer-detail-body">
+                <p>
+                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                    画像・データ等の著作権は各権利者に帰属します。
+                </p>
+                <p>
+                    一部画像素材は「ジュエルセイバーFREE」
+                    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）
+                    を使用しています。
+                </p>
+                <p class="footer-contact">
+                    連絡先：<a href="https://x.com/192837465aruneo" target="_blank"
+                        rel="noopener noreferrer">@192837465aruneo</a>
+                </p>
+                <div class="footer-copy">© 2025 Mesorogia Cards</div>
+            </div>
+        </details>
     </div>
-
-    <p>
-        🔗 公式サイトはこちら 👉
-        <a href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
-            神託のメソロギア公式サイト
-        </a>
-    </p>
-
-    © 2025 Mesorogia Cards. All rights reserved.<br />
-    当サイトは「神託のメソロギア」の非公式ファンサイトです。画像・データ等の著作権は各権利者に帰属します。<br />
-    一部画像素材は「ジュエルセイバーFREE」<br />
-    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）を使用しています。<br />
-    💬 ご要望・不具合報告 👉
-    <a href="https://x.com/192837465aruneo" target="_blank" rel="noopener noreferrer">
-        @192837465aruneo
-    </a>
 </footer>
+
 
 <!-- デッキ投稿の流れ ヘルプモーダル -->
 <div id="postFlowHelpModal" class="modal" style="display:none;">
