@@ -419,7 +419,7 @@
     --ring-accent: rgb(var(--pack-d-accent-rgb));
 }
 
-.filter-group[data-key="パック名"] .filter-btn[data-pack="Ensemble of Silence"] {
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Ensemble of Slience"] {
     --ring: rgb(var(--pack-e-rgb));
     --ring-accent: rgb(var(--pack-e-accent-rgb));
 }
