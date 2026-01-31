@@ -65,6 +65,66 @@ const postState = {
   }
 };
 
+// ===== マイ投稿 先読みキャッシュ =====
+let __minePrefetchPromise = null;
+let __mineFetchedAt = 0;
+const MINE_TTL_MS = 60 * 1000; // 1分以内は「新しい」とみなす（好みで調整）
+
+function hasValidMineCache_(){
+  return Array.isArray(state?.mine?.items)
+    && (__mineFetchedAt > 0)
+    && (Date.now() - __mineFetchedAt < MINE_TTL_MS);
+}
+
+// DOMを触らずに、マイ投稿データだけ取って state に入れる
+async function prefetchMineItems_({ force = false } = {}){
+  const tk = (window.Auth && window.Auth.token) || state.token || resolveToken();
+  if (!tk) return null;
+
+  if (!force && hasValidMineCache_()) return state.mine.items;
+  if (__minePrefetchPromise) return __minePrefetchPromise;
+
+  __minePrefetchPromise = (async () => {
+    const limit = PAGE_LIMIT;
+    let offset = 0;
+    let allItems = [];
+    let total = 0;
+
+    while (true){
+      const res = await apiList({ limit, offset, mine: true });
+
+      // ✅ auth required：キャッシュを「無効化」して終了（再帰しない）
+      if (res && res.error === 'auth required'){
+        state.mine.items = [];
+        state.mine.total = 0;
+        __mineFetchedAt = 0;   // ←ここ重要（Date.now()にしない）
+        return state.mine.items;
+      }
+
+      if (!res || !res.ok) throw new Error((res && res.error) || 'prefetch mine failed');
+
+      const items = res.items || [];
+      if (!total) total = Number(res.total || 0);
+
+      allItems.push(...items);
+      offset += items.length;
+
+      if (items.length < limit) break;
+      if (total && allItems.length >= total) break;
+    }
+
+    state.mine.items = allItems;
+    state.mine.total = total || allItems.length;
+    __mineFetchedAt = Date.now();
+    return allItems;
+  })().finally(() => {
+    __minePrefetchPromise = null;
+  });
+
+  return __minePrefetchPromise;
+}
+
+
 // 共通：カードリスト描画（postList と同じ oneCard を流用）
 function renderPostListInto(targetId, items, opts = {}){
   const box = document.getElementById(targetId);
@@ -106,6 +166,28 @@ async function loadMinePage(_page = 1) {
   const errorEl   = document.getElementById('mine-error');
   const loadingEl = document.getElementById('mine-loading');
   if (!listEl) return;
+
+  // ✅ 先読み済み（TTL内）なら、通信せず即描画
+  if (hasValidMineCache_() && !state.mine.loading) {
+    const allItems = state.mine.items || [];
+    postState.mine.items = allItems;
+    postState.mine.totalCount = Number(state.mine.total || allItems.length);
+    postState.mine.loading = false;
+
+    renderPostListInto('myPostList', allItems, { mode: 'mine' });
+    updateMineCountUI_();
+    if (emptyEl) emptyEl.style.display = allItems.length ? 'none' : '';
+    if (errorEl) errorEl.style.display = 'none';
+    if (loadingEl) loadingEl.style.display = 'none';
+
+    // PCなら先頭を開く（元の挙動）
+    const paneMine = document.getElementById('postDetailPaneMine');
+    if (paneMine && allItems.length && window.matchMedia('(min-width: 1024px)').matches) {
+      const firstCard = document.querySelector('#myPostList .post-card');
+      if (firstCard) showDetailPaneForArticle(firstCard);
+    }
+    return;
+  }
 
   const limit = PAGE_LIMIT; // そのまま使ってOK（ループで全件取る）
   let offset = 0;
@@ -1220,36 +1302,47 @@ window.posterKeyFromItem_ ??= function posterKeyFromItem_(item){
 
   // ===== ログイン状態が変わったときに呼ばれるフック（Auth側から呼ぶ） =====
   function handleAuthChangedForDeckPost(){
-    // まずログインID表示だけ更新
     updateMineLoginStatus();
 
-    // ★ トークンを取り直す（Auth.token が変わっている可能性がある）
+    // ★ トークンを取り直す
     state.token = resolveToken();
 
-    // ★ init 完了後なら：
-    //    一覧タブ(postList)も「自分のいいね」情報付きで取り直す
+    // ✅ 追加：トークンが変わったらマイ投稿キャッシュを無効化
+    __mineFetchedAt = 0;
+    __minePrefetchPromise = null; // 念のため（なくても動くけど安全）
+
+    // init完了後なら一覧を取り直す（既存のまま）
     if (initialized) {
       (async () => {
         try {
-          await fetchAllList();       // token 付きでもう一度全件取得
-          rebuildFilteredItems();     // 並び替えなど再計算
+          await fetchAllList();
+          rebuildFilteredItems();
           const cur = state.list.currentPage || 1;
-          loadListPage(cur);          // 現在ページを維持したまま再描画
+          loadListPage(cur);
         } catch (e) {
           console.error('handleAuthChangedForDeckPost: reload list failed', e);
         }
       })();
     }
 
-    // 「マイ投稿」ページが表示中なら 1ページ目を読み直す（既存処理）
     const minePage    = document.getElementById('pageMine');
     const mineVisible = minePage && !minePage.hidden;
 
+    // ✅ 変更：ログイン状態が変わったら force で先読み（DOMは触らない）
+    if (state.token && !state.mine.loading) {
+      prefetchMineItems_({ force: true })
+        .catch(e => console.warn('prefetchMineItems_ failed:', e));
+    }
+
+    // ✅ 変更：マイ投稿が表示中なら「先読み→描画」にする（体感が良い）
     if (mineVisible && !state.mine.loading){
-      // ★ 未ログインなら auth required → 「ログインが必要です」表示になる
-      loadMinePage(1);
+      (async () => {
+        try { await prefetchMineItems_(); } catch {}
+        loadMinePage(1);
+      })();
     }
   }
+
 
   // グローバルに公開（common-page24.js から呼ぶ）
   window.onDeckPostAuthChanged = handleAuthChangedForDeckPost;
@@ -6227,6 +6320,7 @@ async function renderCampaignBanner(){
       // ★ 改善版：一度のリクエストで全件取得してフィルタ・ソートを行う
       // これにより投稿一覧を2回呼び出す必要がなくなり、最新投稿表示までの時間が短縮される
       await fetchAllList();         // state.list.allItems に全件を入れる（FETCH_LIMIT=100）
+      prefetchMineItems_().catch(()=>{});
       applySharedPostFromUrl_();
       rebuildFilteredItems();       // フィルタ適用＆並び替え
       state.list.currentPage = 1;   // 初期ページを 1 に設定
@@ -6239,33 +6333,38 @@ async function renderCampaignBanner(){
     }
 
 
-// ⑤ 一覧側：ページャボタン
-// 上側：ページャボタン
-document.getElementById('pagePrevTop')?.addEventListener('click', () => {
-  const page = state.list.currentPage || 1;
-  if (page > 1) loadListPage(page - 1);
-});
-document.getElementById('pageNextTop')?.addEventListener('click', () => {
-  const page  = state.list.currentPage || 1;
-  const total = state.list.totalPages  || 1;
-  if (page < total) loadListPage(page + 1);
-});
-// 下側：ページャボタン
-document.getElementById('pagePrev')?.addEventListener('click', () => {
-  const page = state.list.currentPage || 1;
-  if (page > 1) loadListPage(page - 1);
-});
-document.getElementById('pageNext')?.addEventListener('click', () => {
-  const page  = state.list.currentPage || 1;
-  const total = state.list.totalPages  || 1;
-  if (page < total) loadListPage(page + 1);
-});
+    // ⑤ 一覧側：ページャボタン
+
+    // 上側：ページャボタン
+    document.getElementById('pagePrevTop')?.addEventListener('click', () => {
+      const page = state.list.currentPage || 1;
+      if (page > 1) loadListPage(page - 1);
+    });
+    document.getElementById('pageNextTop')?.addEventListener('click', () => {
+      const page  = state.list.currentPage || 1;
+      const total = state.list.totalPages  || 1;
+      if (page < total) loadListPage(page + 1);
+    });
+    // 下側：ページャボタン
+    document.getElementById('pagePrev')?.addEventListener('click', () => {
+      const page = state.list.currentPage || 1;
+      if (page > 1) loadListPage(page - 1);
+    });
+    document.getElementById('pageNext')?.addEventListener('click', () => {
+      const page  = state.list.currentPage || 1;
+      const total = state.list.totalPages  || 1;
+      if (page < total) loadListPage(page + 1);
+    });
 
     // ⑤ マイ投稿へ（ツールバーのボタン）
     document.getElementById('toMineBtn')?.addEventListener('click', async () => {
+      updateMineLoginStatus(); // 先にID表示だけ更新
+
+      // ✅ 可能なら先読みを待ってから表示（瞬間表示になる）
+      try { await prefetchMineItems_(); } catch {}
+
       showMine();
-      updateMineLoginStatus();     // ログインID表示更新
-      await loadMinePage(1);       // 1ページ目を取得
+      await loadMinePage(1); // cache があれば通信せず即描画になる
     });
 
     // ⑥ マイ投稿：戻る
