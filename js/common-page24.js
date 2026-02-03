@@ -924,6 +924,7 @@ if (typeof window.setAuthChecking !== 'function') {
   const API = window.AUTH_API_BASE || window.GAS_API_BASE;
   window.API = API;
 
+
   const LS_TOKEN = 'mos_auth_token_v1';
 
   const Auth = {
@@ -981,10 +982,26 @@ if (typeof window.setAuthChecking !== 'function') {
     },
 
     async login(username, password){
-      const res = await postJSON(`${API}?mode=login`, {username, password});
+      const res = await postJSON(`${API}?mode=login`, {
+        username,
+        password,
+        debug: true,   // ← ★これを足す
+      });
+
       if (!res.ok) throw new Error(res.error||'login failed');
-      this._save(res.user, res.token);
+
+      // ★ デバッグ結果を確認
+      if (res.__debug) {
+        console.log('[login debug]', res.__debug);
+      }
+
+      this.user = res.user;
+      this.token = res.token;
+      this.verified = true;
+
+      localStorage.setItem(LS_TOKEN, this.token);
       window.reflectLoginUI?.();
+
       return res.user;
     },
 
@@ -1017,11 +1034,18 @@ if (typeof window.setAuthChecking !== 'function') {
   async function postJSON(url, payload){
     const r = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain; charset=UTF-8' }, // プリフライト回避
+      // redirect: 'manual', // ❌消す（または 'follow'）
+      headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
       body: JSON.stringify(payload || {})
     });
-    return r.json();
+
+    const text = await r.text();
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${text.slice(0, 200)}`);
+
+    try { return JSON.parse(text); }
+    catch { throw new Error(`Non-JSON response: ${text.slice(0, 200)}`); }
   }
+
 window.postJSON = postJSON;
 
   // ---- UI（グローバル公開版）----
