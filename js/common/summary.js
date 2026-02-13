@@ -354,27 +354,46 @@ function ensureRaceContainers_(){
           }
         });
       }
-
-      // ✅ 毎回描画後に「初期は折りたたみ」を適用（DOM差し替えに対応）
-      const header = root.querySelector('[data-break-toggle="header"]');
-      const body   = root.querySelector('[data-break-toggle="body"]');
-      const icon   = root.querySelector('[data-break-toggle="icon"]');
-      if (header && body && icon) {
-        body.hidden = true;
-        header.setAttribute('aria-expanded', 'false');
-        icon.textContent = '＋';
-      }
     }
 
     const html = renderRaceSummaryHTML_(rows);
 
+    //再描画前の open 状態を覚える
+    const wasOpenPc = (() => {
+      const body = pc?.querySelector?.('[data-break-toggle="body"]');
+      return body ? !body.hidden : false;
+    })();
+    const wasOpenMo = (() => {
+      const body = mo?.querySelector?.('[data-break-toggle="body"]');
+      return body ? !body.hidden : false;
+    })();
+
     if (pc) {
       pc.innerHTML = html;
       wireToggle_(pc);
+
+      const header = pc.querySelector('[data-break-toggle="header"]');
+      const body   = pc.querySelector('[data-break-toggle="body"]');
+      const icon   = pc.querySelector('[data-break-toggle="icon"]');
+      if (header && body && icon) {
+        body.hidden = !wasOpenPc;
+        header.setAttribute('aria-expanded', String(wasOpenPc));
+        icon.textContent = wasOpenPc ? '－' : '＋';
+      }
     }
+
     if (mo) {
       mo.innerHTML = html;
       wireToggle_(mo);
+
+      const header = mo.querySelector('[data-break-toggle="header"]');
+      const body   = mo.querySelector('[data-break-toggle="body"]');
+      const icon   = mo.querySelector('[data-break-toggle="icon"]');
+      if (header && body && icon) {
+        body.hidden = !wasOpenMo;
+        header.setAttribute('aria-expanded', String(wasOpenMo));
+        icon.textContent = wasOpenMo ? '－' : '＋';
+      }
     }
   }
 
@@ -577,8 +596,45 @@ function ensureRaceContainers_(){
 
     const html = renderRaritySummaryHTML_(rows);
 
-    if (pc) { pc.innerHTML = html; wireToggle_(pc); }
-    if (mo) { mo.innerHTML = html; wireToggle_(mo); }
+    // ▼ 追加：再描画前の open 状態を覚える
+    const wasOpenPc = (() => {
+      const body = pc?.querySelector?.('[data-break-toggle="body"]');
+      return body ? !body.hidden : false;
+    })();
+    const wasOpenMo = (() => {
+      const body = mo?.querySelector?.('[data-break-toggle="body"]');
+      return body ? !body.hidden : false;
+    })();
+
+    if (pc) {
+      pc.innerHTML = html;
+      wireToggle_(pc);
+
+      // ▼ 追加：状態を復元
+      const header = pc.querySelector('[data-break-toggle="header"]');
+      const body   = pc.querySelector('[data-break-toggle="body"]');
+      const icon   = pc.querySelector('[data-break-toggle="icon"]');
+      if (header && body && icon) {
+        body.hidden = !wasOpenPc;
+        header.setAttribute('aria-expanded', String(wasOpenPc));
+        icon.textContent = wasOpenPc ? '－' : '＋';
+      }
+    }
+
+    if (mo) {
+      mo.innerHTML = html;
+      wireToggle_(mo);
+
+      // ▼ 追加：状態を復元
+      const header = mo.querySelector('[data-break-toggle="header"]');
+      const body   = mo.querySelector('[data-break-toggle="body"]');
+      const icon   = mo.querySelector('[data-break-toggle="icon"]');
+      if (header && body && icon) {
+        body.hidden = !wasOpenMo;
+        header.setAttribute('aria-expanded', String(wasOpenMo));
+        icon.textContent = wasOpenMo ? '－' : '＋';
+      }
+    }
   }
 
 
