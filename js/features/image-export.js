@@ -790,7 +790,7 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
         });
 
         const hint = document.createElement('div');
-        const ua = navigator.userAgent.toLowerCase();
+        const ua = String(navigator.userAgent || '').toLowerCase();
         if (/iphone|ipad|ipod/.test(ua))
         hint.textContent = '長押しで「写真に追加」や「共有（画像保存）」ができます';
         else if (/android/.test(ua))
@@ -838,32 +838,29 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
         const shareBtn = mkBtn('共有（画像保存）');
         shareBtn.href = 'javascript:void(0)';
 
+        // ✅ PCでは絶対に出さない（Windows Share Sheet “開くだけ” 問題を根絶）
+        // iPadOSはUAがMacintoshになる事があるので maxTouchPoints も見る
+        const isIOS = /iphone|ipad|ipod/.test(ua) || (ua.includes('macintosh') && (navigator.maxTouchPoints || 0) >= 2);
+        const isAndroid = /android/.test(ua);
+        const allowShare = isIOS || isAndroid;
+
+        if (!allowShare) {
+        shareBtn.style.display = 'none';
+        } else {
         shareBtn.onclick = async () => {
-        try {
+            try {
             const b = await (await fetch(dataUrl)).blob();
             const f = new File([b], fileName, { type: 'image/png' });
 
             // ✅ files share が出来る環境だけ実行
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
-            await navigator.share({ files: [f] }); // ✅ title/textは入れない（iPadで混ざる原因）
+                await navigator.share({ files: [f] }); // title/textは入れない（iPadで混ざる対策）
             } else {
-            alert('この端末では共有に対応していません。ダウンロードをご利用ください。');
+                alert('この端末では共有に対応していません。ダウンロードをご利用ください。');
             }
-        } catch (_) {}
+            } catch (_) {}
         };
-
-        // ✅ 表示自体を “files share可能” な環境に限定
-        (async () => {
-        try {
-            const b = await (await fetch(dataUrl)).blob();
-            const f = new File([b], fileName, { type: 'image/png' });
-            if (!(navigator.share && navigator.canShare && navigator.canShare({ files: [f] }))) {
-            shareBtn.style.display = 'none';
-            }
-        } catch (_) {
-            shareBtn.style.display = 'none';
         }
-        })();
 
             btnBar.appendChild(saveBtn);
             btnBar.appendChild(shareBtn);
