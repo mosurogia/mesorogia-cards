@@ -304,7 +304,13 @@
     btn.className = 'detail-zoom-btn';
     btn.setAttribute('aria-label', '画像を拡大');
     btn.title = '画像を拡大';
-    btn.textContent = '🖼️';
+    // 絵文字→SVG（フルスクリーン/拡大系）
+    btn.innerHTML = `
+    <svg class="zoom-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M7 3H3v4h2V5h2V3zm14 0h-4v2h2v2h2V3zM5 19v-2H3v4h4v-2H5zm16-2h-2v2h-2v2h4v-4z"/>
+        <path d="M8 8h8v8H8z" opacity=".25"/>
+    </svg>
+    `;
 
     btn.addEventListener('click', (e)=>{
         e.preventDefault();
