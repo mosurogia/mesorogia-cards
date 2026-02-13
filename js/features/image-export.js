@@ -836,18 +836,34 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
 
         // 共有（対応端末のみ表示）
         const shareBtn = mkBtn('共有（画像保存）');
-        if (navigator.share) {
-            shareBtn.href = 'javascript:void(0)';
-            shareBtn.onclick = async () => {
-            try {
-                const b = await (await fetch(dataUrl)).blob();
-                const f = new File([b], fileName, { type: 'image/png' });
-                await navigator.share({ files: [f], title: fileName, text: 'デッキ画像' });
-            } catch (_) { /* キャンセルは無視 */ }
-            };
-        } else {
-            shareBtn.style.display = 'none'; // 未対応環境では非表示（ダウンロードボタンが全幅に）
+        shareBtn.href = 'javascript:void(0)';
+
+        shareBtn.onclick = async () => {
+        try {
+            const b = await (await fetch(dataUrl)).blob();
+            const f = new File([b], fileName, { type: 'image/png' });
+
+            // ✅ files share が出来る環境だけ実行
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [f] })) {
+            await navigator.share({ files: [f] }); // ✅ title/textは入れない（iPadで混ざる原因）
+            } else {
+            alert('この端末では共有に対応していません。ダウンロードをご利用ください。');
+            }
+        } catch (_) {}
+        };
+
+        // ✅ 表示自体を “files share可能” な環境に限定
+        (async () => {
+        try {
+            const b = await (await fetch(dataUrl)).blob();
+            const f = new File([b], fileName, { type: 'image/png' });
+            if (!(navigator.share && navigator.canShare && navigator.canShare({ files: [f] }))) {
+            shareBtn.style.display = 'none';
+            }
+        } catch (_) {
+            shareBtn.style.display = 'none';
         }
+        })();
 
             btnBar.appendChild(saveBtn);
             btnBar.appendChild(shareBtn);
