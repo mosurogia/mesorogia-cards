@@ -2,51 +2,44 @@
 <html lang="ja">
 
 <head>
-    <!-- ===== 共通head ここから ===== -->
+    <!-- ===== 基本設定 ===== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
     <link rel="icon" href="favicon.ico">
-    <!-- ===== 共通head ここまで ===== -->
 
-    <!-- ===== ページ差分head ここから ===== -->
-    <title>モスロギア 神託のメソロギア デッキメーカー</title>
+    <!-- ===== タイトル ===== -->
+    <title>モスロギア｜神託のメソロギア デッキメーカー</title>
 
-    <!-- 検索キーワード -->
-    <meta name="keywords" content="神託のメソロギア,神託,メソロギア,モスロギア,攻略,カードゲーム,DCG,デッキ,構築,デッキメーカー,デッキ構築,デッキ作成,デッキ分析,構築支援">
+    <!-- ===== SEO ===== -->
+    <meta name="description" content="『神託のメソロギア』のデッキメーカー（非公式）。カード検索しながらデッキ構築・枚数調整・分析ができます。スマホ対応。">
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/deckmaker.html">
 
-
-    <!-- ページの説明（検索結果の下に表示） -->
-    <meta name="description" content="このサイトは、アプリ「神託のメソロギア」のカード一覧、デッキ構築、デッキ分析ができる非公式サイトです。カード検索やデッキ管理をスマホでも快適に！">
-
-    <!-- OGP基本 -->
-    <meta property="og:title" content="モスロギア | 神託のメソロギア デッキメーカー">
-    <meta property="og:description" content="このサイトはアプリ「神託のメソロギア」のカード検索・デッキ構築ができる非公式サイトです。">
+    <!-- ===== OGP ===== -->
+    <meta property="og:title" content="モスロギア｜神託のメソロギア デッキメーカー">
+    <meta property="og:description" content="神託のメソロギアのデッキ構築・分析ができる非公式デッキメーカーです。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deckmaker.html">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="モスロギア | 神託のメソロギア デッキメーカー">
+    <meta property="og:site_name" content="モスロギア">
 
-    <!-- Twitterカード向け -->
+    <!-- ===== Twitter Card ===== -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="モスロギア | 神託のメソロギア デッキメーカー">
-    <meta name="twitter:description" content="カード検索とデッキ構築で神託のメソロギアをもっと楽しもう！">
+    <meta name="twitter:title" content="モスロギア｜神託のメソロギア デッキメーカー">
+    <meta name="twitter:description" content="カード検索しながらデッキ構築・分析ができる非公式デッキメーカー。">
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
 
-    <!-- CSS -->
+    <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/common-page124.css">
     <link rel="stylesheet" href="css/common-page234.css">
     <link rel="stylesheet" href="css/common-page24.css">
     <link rel="stylesheet" href="css/page2.css">
 
-    <!--棒グラフ外部リソース-->
+    <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
-    <!--画像生成-->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <!-- ===== ページ差分head ここまで ===== -->
 </head>
 
 <body>
@@ -56,10 +49,8 @@
         <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
     </div>
     <nav class="header-nav">
-        <a href="index.html">📖 一覧</a>
+        <a href="cards.html">📖 図鑑</a>
         <a class="active-page" href="deckmaker.html">🃏 デッキメーカー</a>
-        <a href="cardcheker.html">📊 所持率チェッカー</a>
-        <!--<a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>-->
         <a href="deck-post.html">📤 デッキ投稿</a>
     </nav>
 </header>
@@ -94,21 +85,44 @@
 <div class="tab-content active" id="build">
 
     <!--メニューバー＆デッキバー上部固定用-->
-    <div class="fixed-top-bar">
+    <div class="top-bar">
         <!--メニューバー-->
         <div class="search-bar">
-            <input id="keyword" oninput="applyFilters()" placeholder="カード検索" type="text">
-            <button id="toggleOwnedBtn" onclick="toggleOwned()">所持カード未反映</button>
-            <select id="sort-select" onchange="sortCards()">
-                <option value="default">通常順</option>
-                <option value="cost-asc">コスト昇順</option>
-                <option value="cost-desc">コスト降順</option>
-                <option value="power-asc">パワー昇順</option>
-                <option value="power-desc">パワー降順</option>
-                <option value="category-order">カテゴリ順</option>
-                <option value="rarity-order">レアリティ順</option>
-            </select>
-            <button onclick="openFilterModal()">📊 フィルター</button>
+            <div class="search-bar-left">
+                <!-- キーワード検索 -->
+                <input id="keyword" oninput="applyFilters()" placeholder="カード検索" type="text">
+                <!-- タイプ即時フィルター -->
+                <div class="type-quick-filter">
+                    <button type="button" class="type-icon-btn is-active" data-type="">
+                        <img src="img/type-all.webp" alt="All">
+                    </button>
+                    <button type="button" class="type-icon-btn" data-type="チャージャー">
+                        <img src="img/type-charger.webp" alt="Charger">
+                    </button>
+                    <button type="button" class="type-icon-btn" data-type="アタッカー">
+                        <img src="img/type-attacker.webp" alt="Attacker">
+                    </button>
+                    <button type="button" class="type-icon-btn" data-type="ブロッカー">
+                        <img src="img/type-blocker.webp" alt="Blocker">
+                    </button>
+                </div>
+            </div>
+            <div class="search-bar-right">
+                <select id="sort-select" onchange="sortCards()">
+                    <option value="default">通常順</option>
+                    <option value="cost-asc">コスト昇順</option>
+                    <option value="cost-desc">コスト降順</option>
+                    <option value="power-asc">パワー昇順</option>
+                    <option value="power-desc">パワー降順</option>
+                    <option value="category-order">カテゴリ順</option>
+                    <option value="rarity-order">レアリティ順</option>
+                </select>
+                <button class="search-icon-btn" onclick="openFilterModal()">📊 フィルター</button>
+            </div>
+        </div>
+        <!-- 選択中チップバー -->
+        <div id="active-chips-bar" style="display:none;">
+            <div class="chips-scroll"></div>
         </div>
 
         <!--フィルターモーダル-->
@@ -172,7 +186,7 @@
                 </button>
 
                 <!-- 投稿の流れヘルプ（？アイコン） -->
-                <button type="button" class="analyze-button analyze-help-button" id="post-flow-help-btn-top" aria-label="デッキ投稿までの流れを確認">
+                <button type="button" class=" analyze-help-button help-button" id="post-flow-help-btn-top" aria-label="デッキ投稿までの流れを確認">
                     ？
                 </button>
             </div>
@@ -192,6 +206,7 @@
 <div class="deck-filter-bar">
     <button id="toggle-invalid-race" class="filter-toggle-button">✅使用不可種族を表示(モノクロ)</button>
 </div>
+
 </div>
 
     <!--カード一覧-->
@@ -211,7 +226,7 @@
 </div>
 
 <!-- スクショ保持ボタン -->
-<button id="screenshot-save-btn" class="floating-shot-btn" aria-label="リスト画像を表示">
+<button id="screenshot-save-btn" class="floating-btn" aria-label="リスト画像を表示">
     <span class="shot-btn-ico" aria-hidden="true">📸</span>
     <span class="shot-btn-txt">リスト画像</span>
 </button>
@@ -299,7 +314,7 @@
                 <div class="post-tab-bar tab" onclick="switchTab('post-tab', this)">
                     <span>📤 デッキ投稿</span>
                     <!-- デッキ投稿の流れヘルプ（サブタブ右側） -->
-                    <button type="button" id="post-flow-help-btn-form" class="subtab-help-button" aria-label="デッキ投稿までの流れを確認">
+                    <button type="button" id="post-flow-help-btn-form" class="help-button" aria-label="デッキ投稿までの流れを確認">
                         ？
                     </button>
                 </div>
@@ -370,7 +385,7 @@
                 <div class="info-row">
                     <div class="info-label">
                         マナ効率
-                        <button type="button" id="mana-help-btn" class="subtab-help-button" aria-label="マナ効率の説明を確認">？</button>
+                        <button type="button" id="mana-help-btn" class="help-button" aria-label="マナ効率の説明を確認">？</button>
                     </div>
                     <div class="info-value">
                         <span id="mana-efficiency">-</span>
@@ -1229,12 +1244,35 @@
 
 
 
-<!-- JS -->
-<script src="js/common.js"></script>
-<script src="js/common-page124.js"></script>
+<!-- スクリプト群 -->
+<!-- 共通処理 -->
+<script src="js/common/defs.js"></script>
+<script src="js/common/card-core.js"></script>
+<script src="js/common/app-common.js"></script>
+<script src="js/common/owned.js"></script>
+<script src="js/common/card-groups.js"></script>
+<!-- アカウント関係 -->
+<script src="js/auth/auth-core.js"></script>
+<script src="js/auth/auth-ui.js"></script>
+<script src="js/auth/account.js"></script>
+
+<!--カード生成-->
+<script src="js/features/cardGrid.js"></script>
+
+<!--フィルター-->
+<script src="js/features/cardFilter.js"></script>
+
+<!-- 画像生成（feature） -->
+<script src="js/features/image-export.js"></script>
+<script src="js/ui/card-detail.js"></script>
+
+<!--デッキメーカーページ専用-->
+<script src="js/pages/deckmaker/deckmaker.js"></script>
+
+<!--変更予定js-->
+<!-- 共通ヘルパー -->
 <script src="js/common-page234.js"></script>
-<script src="js/common-page24.js"></script>
-<script src="js/page2.js"></script>
+<script src="js/pages/deckmaker/page2.js"></script>
 </body>
 
 </html>

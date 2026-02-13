@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- ===== 基本設定 ===== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
+    <link rel="icon" href="favicon.ico">
+
+    <!-- ===== タイトル ===== -->
+    <title>モスロギア図鑑｜神託のメソロギア カード一覧・所持率チェッカー</title>
+
+    <!-- ===== SEO ===== -->
+    <meta name="description" content="『神託のメソロギア』のカード一覧・検索・ソート・所持率チェックが一つになった非公式図鑑サイト。スマホ対応で快適にカード管理ができます。">
+
+    <!-- canonical（評価をcards.htmlへ統一） -->
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/cards.html">
+
+    <!-- ===== OGP ===== -->
+    <meta property="og:title" content="モスロギア図鑑｜神託のメソロギア カード一覧・所持率チェッカー">
+    <meta property="og:description" content="神託のメソロギアのカード検索・デッキ構築・所持率チェックができる非公式図鑑サイトです。">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/indexogp.jpg">
+    <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/cards.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="モスロギア図鑑">
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="モスロギア図鑑｜神託のメソロギア">
+    <meta name="twitter:description" content="カード一覧と所持率チェックが一つになった便利な非公式図鑑。">
+    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/indexogp.jpg">
+
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/common-page124.css">
+    <link rel="stylesheet" href="css/common-page234.css">
+
+    <!-- 図鑑専用 -->
+    <link rel="stylesheet" href="css/page1.css">
+    <link rel="stylesheet" href="css/page3.css">
+
+    <!-- ===== 外部リソース（必要なら） ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+
+<body>
+<!-- ヘッダー -->
+<header class="main-header">
+    <div class="header-logo">
+        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+    </div>
+    <nav class="header-nav">
+        <a class="active-page" href="cards.html">📖 図鑑</a>
+        <a href="deckmaker.html">🃏 デッキメーカー</a>
+        <a href="deck-post.html">📤 デッキ投稿</a>
+    </nav>
+</header>
+
+<!-- タブバー -->
+<div class="tab-bar">
+    <div id="tab1" class="tab active" onclick="switchTab('cards', this)">
+        <span>🗂️ カード一覧</span>
+    </div>
+    <div id="tab2" class="tab" onclick="switchTab('checker', this)">
+        <span>📊 所持率チェッカー</span>
+    </div>
+</div>
+
+<!-- ✅ tab1: カード一覧 -->
+<div id="cards" class="tab-content active">
+    <!-- ✅ PC：サマリーパネル + メイン -->
+    <div class="page-wrapper">
+
+        <!-- ===== サマリーパネル（カード一覧用）===== -->
+        <aside class="summary-panel" id="cards-summary-panel">
+            <!-- カードグループ -->
+            <div class="summary-block" id="cards-groups-block">
+                <!-- ループ一覧をここに描画 -->
+                <div id="cards-groups-list"></div>
+            </div>
+
+        </aside>
+
+        <!-- ===== メイン（既存のカード一覧UIをここに丸ごと入れる）===== -->
+        <div class="card-content">
+            <!-- ====== カード一覧部分 ====== -->
+            <!--バートップ-->
+            <div class="top-bar">
+                <!-- 表示切替-->
+                <div class="view-toggle" id="viewToggle">
+                    <button type="button" class="view-btn is-active" data-view="grid">カード表示</button>
+                    <button type="button" class="view-btn" data-view="list">一覧表示</button>
+                </div>
+                <!--メニューバー-->
+                <div class="search-bar">
+                    <div class="search-bar-left">
+                        <!-- キーワード検索 -->
+                        <input id="keyword" oninput="applyFilters()" placeholder="キーワード検索" type="text">
+
+                        <!-- タイプ即時フィルター -->
+                        <div class="type-quick-filter">
+                            <button type="button" class="type-icon-btn is-active" data-type="">
+                                <img src="img/type-all.webp" alt="All">
+                            </button>
+                            <button type="button" class="type-icon-btn" data-type="チャージャー">
+                                <img src="img/type-charger.webp" alt="Charger">
+                            </button>
+                            <button type="button" class="type-icon-btn" data-type="アタッカー">
+                                <img src="img/type-attacker.webp" alt="Attacker">
+                            </button>
+                            <button type="button" class="type-icon-btn" data-type="ブロッカー">
+                                <img src="img/type-blocker.webp" alt="Blocker">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="search-bar-right">
+                        <select id="sort-select" onchange="sortCards()">
+                            <option value="default">通常順</option>
+                            <option value="cost-asc">コスト昇順</option>
+                            <option value="cost-desc">コスト降順</option>
+                            <option value="power-asc">パワー昇順</option>
+                            <option value="power-desc">パワー降順</option>
+                            <option value="category-order">カテゴリ順</option>
+                            <option value="rarity-order">レアリティ順</option>
+                        </select>
+
+                        <button class="search-icon-btn" type="button" onclick="openFilterModal('filters')">
+                            <span class="icon">📊</span><span class="label">フィルター</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- 選択中チップバー -->
+                <div id="active-chips-bar" style="display:none;">
+                    <div class="chips-scroll"></div>
+                </div>
+            </div>
+
+            <!-- フィルターモーダル（カード一覧用） -->
+            <div class="modal" id="filterModal">
+                <div class="modal-content">
+                    <h3 class="filter-maintitle">絞り込み</h3>
+
+
+                    <!-- ✅ Pane: フィルター -->
+                    <section class="filter-modal-pane is-active" data-pane="filters" role="tabpanel">
+                        <div id="main-filters">
+                            <!-- フィルターボタン内容（JS生成） -->
+                        </div>
+
+                        <!-- 詳細フィルター -->
+                        <h4 class="filter-subtitle">さらに詳しい条件フィルター</h4>
+                        <div id="detail-filters"></div>
+                    </section>
+
+                    <!-- 下部ボタン（共通） -->
+                    <div class="modal-footer">
+                        <button class="modal-buttun" id="applyFilterBtn">この条件で絞り込む</button>
+                        <button class="modal-buttun" onclick="resetFilters()">リセット</button>
+                        <button class="modal-buttun" onclick="closeFilterModal()" type="button">閉じる</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- カード一覧グリッド -->
+            <div class="grid" id="grid">
+                <!--カード内容をJSで自動生成-->
+            </div>
+
+            <!-- カード拡大モーダル（画像のみ） -->
+            <div id="cardZoomModal" class="modal" style="display:none;">
+                <div class="modal-content card-zoom" style="position:relative">
+                    <button id="cardZoomClose" aria-label="閉じる"
+                        style="position:absolute;right:.5rem;top:.5rem;font-size:1.25rem;">×</button>
+                    <img id="zoomImage" alt=""
+                        style="max-width:90vw;max-height:85vh;object-fit:contain;display:block;margin:auto;" />
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ SP：カードグループ ドロワー（重ね表示） -->
+        <button id="sp-group-open" class="floating-btn" type="button">
+            <span class="shot-btn-ico" aria-hidden="true">📂</span>
+            <span class="shot-btn-txt">カードグループ</span>
+        </button>
+
+        <div id="sp-group-backdrop" class="sp-group-backdrop" hidden></div>
+
+        <aside id="sp-group-drawer" class="sp-group-drawer" hidden aria-label="カードグループ">
+            <div class="sp-group-drawer-head">
+                <div class="sp-group-drawer-title">カードグループ</div>
+                <button id="sp-group-close" class="sp-group-drawer-close" type="button">×</button>
+            </div>
+            <div id="sp-group-drawer-body" class="sp-group-drawer-body"></div>
+        </aside>
+    </div>
+
+
+</div>
+
+<!-- ✅ tab2: 所持率チェッカー -->
+<div id="checker" class="tab-content">
+
+    <div class="page-wrapper">
+        <!-- PC・タブレット用 所持率サマリーサイドバー -->
+        <aside class="summary-panel">
+            <!-- 各パック所持率 -->
+            <div id="pack-summary-list">
+                <!-- 所持率サマリー一覧はJSから生成されます -->
+            </div>
+        </aside>
+
+        <!-- メニューボタン＋カード一覧 -->
+        <main class="card-content">
+            <!--所持率サマリー上部バー -->
+            <div class="top-summary">
+                <div class="summary-bar">
+                    <!-- 「全カード」ボタン -->
+                    <button id="show-all-btn" class="show-all-btn" type="button" onclick="showAllCardsTop()">
+                        全カード
+                    </button>
+
+                    <a id="mobile-tweet-link" href="#" target="_blank" rel="noopener" class="custom-tweet-button">
+                        <img src="img/x-logo.svg" alt="Post" class="tweet-icon">
+                        <span>ポスト</span>
+                    </a>
+                </div>
+
+                <!-- トップのゲージ(全カードのみ) -->
+                <div id="mobile-pack-summary"></div>
+
+                <!-- 1段目 -->
+                <div class="menu-mobile menu-mobile-row1">
+                    <!-- 全体（全カード/不足）切替 -->
+                    <div id="top-pack-view-toggle" class="view-toggle top-pack-view-toggle" role="tablist" aria-label="表示切替">
+                        <button type="button" class="toggle-pack-view-btn is-active" data-view="all">全カード表示</button>
+                        <button type="button" class="toggle-pack-view-btn" data-view="incomplete">不足カード表示</button>
+                    </div>
+                    <!--不足カード-->
+                    <button id="show-missing-all-mobile" class="menu-btn">不足カードリスト</button>
+                </div>
+
+                <!-- 2段目 -->
+                <div class="menu-mobile menu-mobile-row2">
+                    <div id="mobile-pack-tabs" class="mobile-pack-tabs" aria-label="パックタブ"></div>
+                </div>
+            </div>
+            <!-- カード一覧（パックごと） -->
+            <div id="packs-root"></div>
+
+            <!-- 不足カードモーダル -->
+            <dialog id="missing-dialog">
+                <header style="display:flex;justify-content:space-between;align-items:center;">
+                    <h3 id="missing-title" style="margin:.4rem 0; font-size: 20px;">不足カード</h3>
+                    <form method="dialog"><button class="icon-btn">閉じる</button></form>
+                </header>
+                <div id="missing-body" style="max-height:50vh;overflow:auto;"></div>
+                <div style="display:flex;gap:.4rem;justify-content:flex-end;margin-top:.5rem;">
+                    <button id="missing-copy">一覧をコピー</button>
+                </div>
+            </dialog>
+            <!-- 不足カードポップアップ画像 -->
+            <div id="card-preview-pop">
+                <img alt="preview" src="img/00000.webp"
+                    onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='img/00000.webp';}">
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 上部に戻るボタン（カード一覧用） -->
+<button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
+
+<!-- ====== フッター ====== -->
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-mini">
+        <div class="footer-mini-left">
+            <span class="footer-brand">モスロギア</span>
+            <span class="footer-sep">・</span>
+            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                公式サイト
+            </a>
+            <span class="footer-sep">・</span>
+            <!-- フィードバックリンク -->
+            <a class="footer-link footer-feedback"
+                href="https://docs.google.com/forms/d/e/【フォームID】/viewform?usp=pp_url&entry.123456789=【ページ名】"
+                target="_blank" rel="noopener noreferrer">
+                💬 フィードバック
+            </a>
+        </div>
+        <details class="footer-details">
+            <summary class="footer-more">このサイトについて</summary>
+            <div class="footer-detail-body">
+                <p>
+                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                    画像・データ等の著作権は各権利者に帰属します。
+                </p>
+                <p>
+                    一部画像素材は「ジュエルセイバーFREE」
+                    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）
+                    を使用しています。
+                </p>
+                <p class="footer-contact">
+                    連絡先：<a href="https://x.com/192837465aruneo" target="_blank"
+                        rel="noopener noreferrer">@192837465aruneo</a>
+                </p>
+                <div class="footer-copy">© 2025 Mesorogia Cards</div>
+            </div>
+        </details>
+    </div>
+</footer>
+
+<!-- ====== JavaScript ====== -->
+<!-- 共通処理 -->
+<script src="js/common/defs.js"></script>
+<script src="js/common/card-core.js"></script>
+<script src="js/common/app-common.js"></script>
+<script src="js/common/owned.js"></script>
+<script src="js/common/card-groups.js"></script>
+<!--カード生成-->
+<script src="js/features/cardGrid.js"></script>
+<script src="js/ui/card-detail-template.js"></script>
+<script src="js/ui/card-detail.js"></script>
+
+<!--画像生成-->
+<script src="js/features/image-export.js"></script>
+<script src="js/features/group-image-export.js"></script>
+
+<!--フィルター-->
+<script src="js/features/cardFilter.js"></script>
+
+<!--図鑑ページ専用-->
+<script src="js/pages/card/card-page-loader.js"></script>
+
+<!--サマリー共通処理-->
+<script src="js/common/summary.js"></script>
+
+
+
+<!--変更予定js-->
+<!-- 共通ヘルパー -->
+<script src="js/common-page234.js"></script>
+
+
+</body>
+</html>

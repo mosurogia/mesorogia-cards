@@ -44,19 +44,6 @@
 
 /*スマホ版*/
 @media (max-width: 768px) {
-    .search-bar {
-        display: grid !important;
-        grid-template-columns: 2fr 1fr;
-        grid-template-areas:
-            "kw owned"
-            "sort filter";
-        gap: 3px;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0;
-        flex-wrap: wrap;
-    }
 
     .search-bar input {
         flex: 2;
@@ -91,13 +78,6 @@
 /*=========================
         3.メニューバー
 ==========================*/
-.fixed-top-bar {
-    position: sticky;
-    top: 0px;
-    background: #fff;
-    z-index: 2000;
-    border-bottom: 1px solid #ccc;
-}
 
 /*使用不可種族非表示ボタン*/
 .deck-filter-bar {
@@ -355,43 +335,16 @@
   - パネル：最小UI
   - トリミング：別モーダル（ドラッグバー）
 ========================*/
-.floating-shot-btn,
 .shot-panel-backdrop {
     display: none;
 }
 
-.shot-crop-modal[hidden],
-.shot-panel-backdrop[hidden] {
+.shot-panel-backdrop[hidden],
+.shot-crop-modal[hidden] {
     display: none !important;
 }
 
 @media (max-width: 768px) {
-    /* ===== 📸ボタン（小さめ＆分かりやすく） ===== */
-    .floating-shot-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        position: fixed;
-        left: 10px;
-        bottom: 20px;
-        z-index: 2500;
-        padding: 15px 20px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .95);
-        border: 1px solid #ddd;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
-    }
-
-    .floating-shot-btn .shot-btn-ico {
-        font-size: 14px;
-        line-height: 1;
-    }
-
-    .floating-shot-btn .shot-btn-txt {
-        font-size: 18px;
-        font-weight: 900;
-        line-height: 1;
-    }
 
     /* ===== パネル外タップ受け ===== */
     .shot-panel-backdrop {
@@ -407,7 +360,7 @@
         position: fixed;
         left: 10px;
         /* ✅ iOSの下側UI/安全領域ぶん持ち上げる */
-        bottom: calc(75px + env(safe-area-inset-bottom));
+        bottom: calc(60px + env(safe-area-inset-bottom));
         z-index: 3400;
 
         width: clamp(200px, 60vw, 500px);
@@ -3501,21 +3454,6 @@ font-size: .8rem;
 }
 
 /* ===== デッキ投稿ヘルプ（？ボタン＋モーダル） ===== */
-
-/* デッキバー右側の「？」ボタン */
-.analyze-help-button {
-    background: #eef2ff;
-    color: #4b5563;
-    font-weight: 600;
-    align-items: center;
-    line-height: 1;
-    flex:0;
-}
-.analyze-help-button:hover {
-    background: #e0e7ff;
-    transform: translateY(-1px);
-}
-
 /* 投稿フォーム上部の「❓ デッキ投稿の流れを確認」 */
 .post-flow-hint {
     margin: 0.5rem 0 0.75rem;

@@ -1,161 +1,26 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="ja">
 
 <head>
-    <!-- ===== 共通head ここから ===== -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
-    <link rel="icon" href="favicon.ico">
-    <!-- ===== 共通head ここまで ===== -->
 
-    <!-- ===== ページ差分head ここから ===== -->
-    <title>モスロギア メソロギア カード一覧</title>
+    <!-- 正規URLを図鑑へ -->
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/cards.html">
 
-    <!-- 検索キーワード -->
-    <meta name="keywords" content="神託のメソロギア,神託,メソロギア,モスロギア,攻略,カードゲーム,DCG,カード一覧,カード,一覧,カード検索,カードデータベース,カード情報,カード効果">
+    <!-- 即時遷移（JS無効でも動く） -->
+    <meta http-equiv="refresh" content="0; url=https://mosurogia.github.io/mesorogia-cards/cards.html">
 
-
-    <!-- ページの説明（検索結果の下に表示） -->
-    <meta name="description" content="このサイトはアプリ「神託のメソロギア」のカード一覧・デッキ構築・デッキ分析・所持率チェックができる非公式サイトです。カード検索やデッキ管理をスマホでも快適に！">
-
-    <!-- OGP基本 -->
-    <meta property="og:title" content="モスロギア | 神託のメソロギア カード一覧">
-    <meta property="og:description" content="神託のメソロギアのカード検索・デッキ構築ができる非公式サイトです。">
-    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/indexogp.jpg">
-    <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/index.html">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="モスロギア | 神託のメソロギア カード一覧">
-
-    <!-- Twitterカード向け -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="モスロギア | 神託のメソロギア カード一覧">
-    <meta name="twitter:description" content="カード検索とデッキ構築で神託のメソロギアをもっと楽しもう！">
-    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/indexogp.jpg">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/common-page124.css">
-    <link rel="stylesheet" href="css/page1.css">
-    <!-- ===== ページ差分head ここまで ===== -->
+    <title>図鑑ページへ移動します</title>
+    <meta name="robots" content="noindex">
 </head>
 
 <body>
-<!-- ヘッダー -->
-<header class="main-header">
-    <div class="header-logo">
-        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
-    </div>
-    <nav class="header-nav">
-        <a class="active-page" href="index.html">📖 一覧</a>
-        <a href="deckmaker.html">🃏 デッキメーカー</a>
-        <a href="cardcheker.html">📊 所持率チェッカー</a>
-        <!--<a href="#" style="text-decoration: line-through; pointer-events: none; color: #aaa;">📤 デッキ投稿</a>-->
-        <a href="deck-post.html">📤 デッキ投稿</a>
-    </nav>
-</header>
-
-
-<!--メニューバー-->
-<div class="search-bar">
-    <input id="keyword" oninput="applyFilters()" placeholder="カード検索（カード名・カード効果等）" type="text">
-    <select id="sort-select" onchange="sortCards()">
-        <option value="default">通常順</option>
-        <option value="cost-asc">コスト昇順</option>
-        <option value="cost-desc">コスト降順</option>
-        <option value="power-asc">パワー昇順</option>
-        <option value="power-desc">パワー降順</option>
-        <option value="category-order">カテゴリ順</option>
-        <option value="rarity-order">レアリティ順</option>
-    </select>
-    <button onclick="openFilterModal()">📊 フィルター</button>
-</div>
-
-
-<!--フィルターモーダル-->
-<div class="modal" id="filterModal">
-    <div class="modal-content">
-        <h3 class="filter-maintitle">フィルター内容</h3>
-        <div id="main-filters">
-            <!--フィルターボタン内容-->
-        </div>
-        <!-- 詳細フィルター -->
-        <h4 class="filter-subtitle">さらに詳しい条件フィルター</h4>
-        <div id="detail-filters"></div>
-
-        <!--下部ボタン-->
-        <div class="modal-footer">
-            <button class="modal-buttun" id="applyFilterBtn">この条件で絞り込む</button>
-            <button class="modal-buttun" onclick="resetFilters()">リセット</button>
-            <button class="modal-buttun" onclick="closeFilterModal()" type="button">閉じる</button>
-        </div>
-    </div>
-</div>
-
-<!--カード一覧-->
-<div class="grid" id="grid">
-    <!--カード内容-->
-</div>
-
-
-<!-- カード拡大モーダル（画像のみ） -->
-<div id="cardZoomModal" class="modal" style="display:none;">
-    <div class="modal-content card-zoom" style="position:relative">
-        <button id="cardZoomClose" aria-label="閉じる"
-            style="position:absolute;right:.5rem;top:.5rem;font-size:1.25rem;">×</button>
-        <img id="zoomImage" alt=""
-            style="max-width:90vw;max-height:85vh;object-fit:contain;display:block;margin:auto;" />
-    </div>
-</div>
-
-<!--フッター-->
-<footer class="site-footer" role="contentinfo">
-    <div class="footer-mini">
-        <div class="footer-mini-left">
-            <span class="footer-brand">モスロギア</span>
-            <span class="footer-sep">・</span>
-            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
-                公式サイト
-            </a>
-            <span class="footer-sep">・</span>
-
-            <!-- ✅ ここがフィードバック導線（Googleフォーム） -->
-            <a class="footer-link footer-feedback"
-                href="https://docs.google.com/forms/d/e/【フォームID】/viewform?usp=pp_url&entry.123456789=【ページ名】"
-                target="_blank" rel="noopener noreferrer">
-                💬 フィードバック
-            </a>
-        </div>
-
-        <details class="footer-details">
-            <summary class="footer-more">このサイトについて</summary>
-            <div class="footer-detail-body">
-                <p>
-                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
-                    画像・データ等の著作権は各権利者に帰属します。
-                </p>
-                <p>
-                    一部画像素材は「ジュエルセイバーFREE」
-                    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）
-                    を使用しています。
-                </p>
-                <p class="footer-contact">
-                    連絡先：<a href="https://x.com/192837465aruneo" target="_blank"
-                        rel="noopener noreferrer">@192837465aruneo</a>
-                </p>
-                <div class="footer-copy">© 2025 Mesorogia Cards</div>
-            </div>
-        </details>
-    </div>
-</footer>
-
-<!--上部に戻るボタン-->
-<button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
-
-<!-- JS -->
-<script src="js/common.js"></script>
-<script src="js/page1.js"></script>
-<script src="js/common-page124.js"></script>
-
+    <p>図鑑ページへ移動します。</p>
+    <p><a href="https://mosurogia.github.io/mesorogia-cards/cards.html">移動する</a></p>
+    <script>
+        location.replace("https://mosurogia.github.io/mesorogia-cards/cards.html");
+    </script>
 </body>
+
+</html>

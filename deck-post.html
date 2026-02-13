@@ -3,66 +3,61 @@
 
 
 <head>
-    <!-- ===== 共通head ここから ===== -->
+    <!-- ===== 基本設定 ===== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
     <link rel="icon" href="favicon.ico">
-    <!-- ===== 共通head ここまで ===== -->
 
-    <!-- ===== ページ差分head ここから ===== -->
-    <title>モスロギア 神託のメソロギア デッキ投稿</title>
+    <!-- ===== タイトル ===== -->
+    <title>モスロギア｜神託のメソロギア デッキ投稿</title>
 
-    <!-- 検索キーワード -->
-    <meta name="keywords" content="
-    神託のメソロギア,神託,メソロギア,モスロギア,攻略,カードゲーム,DCG,デッキ投稿,デッキ共有,投稿デッキ,デッキ一覧,デッキ解説">
+    <!-- ===== SEO ===== -->
+    <meta name="description" content="『神託のメソロギア』のデッキ投稿・共有ページ（非公式）。投稿されたデッキ一覧の閲覧や、マイデッキの管理ができます。">
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
 
-    <!-- ページの説明（検索結果の下に表示） -->
-    <meta name="description" content="このサイトは、アプリ「神託のメソロギア」のカード一覧、デッキ構築、デッキ分析ができる非公式サイトです。カード検索やデッキ管理をスマホでも快適に！">
-
-    <!-- OGP基本 -->
-    <meta property="og:title" content="モスロギア | 神託のメソロギア デッキ投稿">
-    <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿されたデッキ一覧やマイ投稿をチェックできます。">
+    <!-- ===== OGP ===== -->
+    <meta property="og:title" content="モスロギア｜神託のメソロギア デッキ投稿">
+    <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿デッキ一覧やマイ投稿をチェックできます。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="モスロギア | 神託のメソロギア デッキ投稿">
+    <meta property="og:site_name" content="モスロギア">
 
-    <!-- Twitterカード向け -->
+    <!-- ===== Twitter Card ===== -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="モスロギア | 神託のメソロギア デッキ投稿">
-    <meta name="twitter:description" content="神託のメソロギアのデッキ投稿・共有ページです。">
+    <meta name="twitter:title" content="モスロギア｜神託のメソロギア デッキ投稿">
+    <meta name="twitter:description" content="デッキ投稿・共有ができる非公式ページ。投稿デッキ一覧やマイ投稿を確認できます。">
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
 
-    <!-- CSS -->
+    <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/common-page24.css">
     <link rel="stylesheet" href="css/common-page124.css">
     <link rel="stylesheet" href="css/common-page234.css">
+    <link rel="stylesheet" href="css/common-page24.css">
     <link rel="stylesheet" href="css/page4.css">
 
-    <!--画像生成-->
+    <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-
-    <!-- ===== ページ差分head ここまで ===== -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
-<body>
 
-    <header class="main-header">
-        <div class="header-logo">
-            <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
-        </div>
-        <nav class="header-nav">
-            <a href="index.html">📖 一覧</a>
-            <a href="deckmaker.html">🃏 デッキメーカー</a>
-            <a href="cardcheker.html">📊 所持率チェッカー</a>
-            <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
-        </nav>
-    </header>
+
+<body>
+<!-- ヘッダー -->
+<header class="main-header">
+    <div class="header-logo">
+        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
+    </div>
+    <nav class="header-nav">
+        <a href="index.html">📖 一覧</a>
+        <a href="deckmaker.html">🃏 デッキメーカー</a>
+        <a href="cardcheker.html">📊 所持率チェッカー</a>
+        <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
+    </nav>
+</header>
 
 <!-- タブバー -->
 <div class="tab-bar" style="display: none;">
@@ -772,12 +767,27 @@
 <!--上部に戻るボタン-->
 <button id="scrollTopFixed" onclick="scrollToTop()">▲</button>
 
-    <!-- スクリプト群 -->
-    <script src="js/common.js"></script>
-    <script src="js/common-page124.js"></script>
-    <script src="js/common-page24.js"></script>
+<!-- スクリプト群 -->
+<!-- 共通処理 -->
+<script src="js/common/defs.js"></script>
+<script src="js/common/card-core.js"></script>
+<script src="js/common/app-common.js"></script>
+<script src="js/common/owned.js"></script>
+<!-- アカウント関係 -->
+<script src="js/auth/auth-core.js"></script>
+<script src="js/auth/auth-ui.js"></script>
+<script src="js/auth/account.js"></script>
+<!-- 画像生成（feature） -->
+<script src="js/features/image-export.js"></script>
+<!--フィルター-->
+<script src="js/features/postFilter.js"></script>
+
+
+
+    <!-- 共通ヘルパー -->
+
     <script src="js/common-page234.js"></script>
-    <script src="js/page4.js"></script>
+    <script src="js/pages/deck-post/page4.js"></script>
 
 </body>
 

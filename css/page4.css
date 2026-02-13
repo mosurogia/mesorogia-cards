@@ -1343,7 +1343,7 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
 }
 
-/* A〜E（背景色＋枠色） */
+/* パック別カラー設定 */
 .stat-chip.pack-chip[data-pack="A"] {
     --pack-bg: var(--pack-a-rgb);
     --pack-stroke: rgba(var(--pack-a-accent-rgb), .70);
@@ -1367,6 +1367,11 @@ body {
 .stat-chip.pack-chip[data-pack="E"] {
     --pack-bg: var(--pack-e-rgb);
     --pack-stroke: rgba(var(--pack-e-accent-rgb), .70);
+}
+
+.stat-chip.pack-chip[data-pack="F"] {
+    --pack-bg: var(--pack-f-rgb);
+    --pack-stroke: rgba(var(--pack-f-accent-rgb), .70);
 }
 
 /* 特殊 / コラボ */
@@ -1764,6 +1769,10 @@ body {
     --pack-rgb: var(--pack-e-rgb);
 }
 
+.deck-entry[data-pack="F"] {
+    --pack-rgb: var(--pack-f-rgb);
+}
+
 .deck-entry[data-pack="SPECIAL"] {
     --pack-rgb: var(--pack-special-rgb);
 }
@@ -1953,6 +1962,11 @@ body {
 .carddetail-pack[data-pack="E"] {
     --pack-bg: var(--pack-e-rgb);
     --pack-stroke: rgba(var(--pack-e-accent-rgb), .6);
+}
+
+.carddetail-pack[data-pack="F"] {
+    --pack-bg: var(--pack-f-rgb);
+    --pack-stroke: rgba(var(--pack-f-accent-rgb), .7);
 }
 
 .carddetail-pack[data-pack="SPECIAL"] {

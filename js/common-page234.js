@@ -51,6 +51,14 @@ window.switchTab = function switchTab(targetId, el) {
 };
 
 window.afterTabSwitched = function afterTabSwitched(targetId) {
+
+  // --- cards/checker タブ用（今回追加）---
+  if (targetId === 'cards' || targetId === 'checker') {
+    // 切り替えたら上に戻す（好みで消してOK）
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
   // 上段の「デッキ分析」タブに入ったら再描画
 if (targetId === 'edit') {
   if (typeof updateDeckAnalysis === 'function') updateDeckAnalysis();

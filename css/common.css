@@ -57,6 +57,9 @@
     /*Eパック*/
     --pack-e-rgb: 230, 140, 60;
     --pack-e-accent-rgb: 255, 180, 110;
+    /*Fパック*/
+    --pack-f-rgb: 103, 41, 40;
+    --pack-f-accent-rgb: 172, 62, 60;
     /* 特殊：ダークパープル（異質・限定感） */
     --pack-special-rgb: 200, 170, 70;
     --pack-special-accent-rgb: 255, 220, 120;
@@ -112,6 +115,7 @@ body {
     display: block;
     border-radius: 6px;
     cursor:pointer;
+    aspect-ratio: 424/532;
 }
 /*カードでのダブルタップ防止（スマホ）*/
 button,
@@ -125,46 +129,163 @@ button,
     filter: grayscale(100%);
     opacity: 0.5;
 }
-/*所持マーク*/
+
+/* =========================
+   所持マーク（角バッジ・札なし・横幅抑え）
+   - デフォルトで「ribbon風（札なし）」の見た目
+   - 横幅を抑える：min-width/ padding を小さめに
+   - SPでデカくならない：固定寄り
+========================= */
+
+/* ===== ベース（デフォルト：角バッジ） ===== */
 .owned-mark {
+    /* ベース（自分の所持=グリーン） */
+    --om-bg: rgba(70, 180, 120, 0.92);
+    --om-bd: rgba(255, 255, 255, 0.22);
+    --om-ol: rgba(0, 0, 0, 0.55);
+    --om-tx: rgba(255, 255, 255, 0.98);
+
     position: absolute;
-    top: 1%;
-    right: 1%;
-    background: #4caf50;
-    color: #fff;
-    border-radius: 50%;
-    min-width: 25px;
-    max-width: 35px;
-    width: 23%;
-    /* 画像の幅の20% */
-    aspect-ratio: 1/1;
-    /* 正円にする新しい方法 */
-    display: none;
-    font-size: 0.8em;
-    /* 親要素に相対的 */
-    line-height: 100%;
-    /* 必要に応じて */
-    text-align: center;
-    justify-content: center;
+    top: 4px;
+    right: 4px;
+    z-index: 5;
+
+    display: inline-flex;
     align-items: center;
-    z-index: 2;
+    justify-content: center;
+
+    /* 横幅抑えめ（数字1桁が前提ならこれが最小） */
+    height: 20px;
+    min-width: 20px;
+    padding: 0 6px;
+
+    border-radius: 7px;
+    /* 角バッジ */
+    background: linear-gradient(to bottom,
+            color-mix(in srgb, var(--om-bg), rgba(255, 255, 255, 0.18)),
+            var(--om-bg));
+
+    border: 1px solid var(--om-bd);
+    outline: 1px solid var(--om-ol);
+    outline-offset: -1px;
+
+    color: var(--om-tx);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+
+    /* 視認性：数字の縁 */
+    text-shadow:
+        0 1px 0 rgba(0, 0, 0, .55),
+        0 0 6px rgba(0, 0, 0, .35);
+
+    /* “浮き” */
+    box-shadow:
+        0 6px 14px rgba(0, 0, 0, .26),
+        inset 0 1px 0 rgba(255, 255, 255, .16);
+
+    /* 半透明をやめる（読みやすさ優先） */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    /* 数字が詰まるの防止 */
+    font-variant-numeric: tabular-nums;
+
+    /* タップ誤爆防止（必要なら） */
+    pointer-events: none;
 }
 
-.card.owned .owned-mark {
-    display: flex;
+/* 0枚（未所持） */
+.card.owned-0 .owned-mark {
+    --om-bg: rgba(110, 120, 135, 0.92);
+    --om-bd: rgba(255, 255, 255, 0.18);
 }
+
+/* 枚数ごと（濃さ差だけ軽く） */
+.card.owned-1 .owned-mark {
+    --om-bg: rgba(70, 180, 120, 0.86);
+}
+
+.card.owned-2 .owned-mark {
+    --om-bg: rgba(70, 180, 120, 0.92);
+}
+
+.card.owned-3 .owned-mark {
+    --om-bg: rgba(70, 180, 120, 0.98);
+}
+
+/* 共有URL（ゲストモード=ブルー） */
+.owned-mark.guest-mode {
+    --om-bg: rgba(80, 150, 235, 0.92);
+    --om-bd: rgba(255, 255, 255, 0.20);
+}
+
+/* ===== SP：小さめ固定（デカくならない） ===== */
 @media (max-width: 768px) {
     .owned-mark {
-        min-width: 18px;
-        width: 23%;
-        font-size: 1.5em;
+        top: 4px;
+        right: 4px;
+        height: 15px;
+        min-width: 10px;
+        padding: 0 5px;
+        font-size: 11px;
+        border-radius: 6px;
+        box-shadow:
+            0 4px 10px rgba(0, 0, 0, .22),
+            inset 0 1px 0 rgba(255, 255, 255, .14);
     }
 }
+
 @media (max-width: 560px) {
     .owned-mark {
-        font-size: 1.25em;
+        padding: 0 5px;
+        font-size: 10.5px;
     }
 }
+
+/* =========================
+    SP用：フローティング📸ボタン＆モーダル背景
+   ======================== */
+
+.floating-btn{
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    /* ===== 📸ボタン（小さめ＆分かりやすく） ===== */
+    .floating-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        position: fixed;
+        left: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        z-index: 1500;
+        padding: 12px 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .95);
+        border: 1px solid rgba(0, 0, 0, .14);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, .16);
+    }
+
+    .floating-btn .shot-btn-ico {
+        font-size: 14px;
+        line-height: 1;
+    }
+
+    .floating-btn .shot-btn-txt {
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1;
+    }
+}
+
+/* =========================
+       ヘッダー・フッター
+   ======================== */
+
 /*ヘッダー関連*/
 .main-header {
     height: 3.5rem;
@@ -229,7 +350,7 @@ button,
 
 
 /* 「？」ボタン */
-.subtab-help-button {
+.help-button {
     margin: 0 4px;
     padding: 4px 8px;
     border-radius: 999px;
@@ -237,6 +358,7 @@ button,
     background: #f5f5ff;
     color: #555;
     font-size: .7rem;
+    font-weight: 600;
     cursor: pointer;
     line-height: 1;
     display: inline-flex;
@@ -244,12 +366,12 @@ button,
     justify-content: center;
 }
 
-.subtab-help-button:hover {
+.help-button:hover {
     background: #e3e3ff;
 }
 
 @media (max-width: 768px) {
-    .subtab-help-button {
+    .help-button {
         padding: 3px 6px;
         font-size: .6rem;
     }
