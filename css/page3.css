@@ -189,7 +189,8 @@
 
 /* --- カード一覧側 --- */
 .card-content {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 /* カード一覧全体の左右余白 */
