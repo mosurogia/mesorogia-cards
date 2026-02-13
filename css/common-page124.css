@@ -1208,6 +1208,7 @@
     border-radius: 999px;
     border: 1px solid rgba(0, 0, 0, .18);
     background: #fff;
+    color: #1f3f5f;
     cursor: pointer;
     flex: 0 0 auto;
 }
