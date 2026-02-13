@@ -1158,7 +1158,16 @@
 
 /* ズーム画像 */
 .card-zoom {
-    width: 100%;
+    width: auto;
+    padding: 0;
+}
+
+.card-zoom .modal-close-x{
+    width: 36px;
+    aspect-ratio: 1 / 1;
+    background-color: #ccc;
+    border-radius: 999px;
+    padding: 0;
 }
 
 
@@ -1173,9 +1182,45 @@
     box-sizing: border-box;
 }
 
+/* タイトル左：🔍 + カード名 を必ず横並びにする */
+.card-title-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.card-title-left .card-name {
+    min-width: 0;
+}
+
+/* 🔍ボタンは縮まない */
+.card-title-left .detail-zoom-btn {
+    flex: 0 0 auto;
+}
+
+.detail-zoom-btn {
+    padding: 0;
+    margin-right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    background: #fff;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.detail-zoom-btn:active {
+    transform: scale(0.97);
+}
+
 .card-name {
     font-weight: bold;
     font-size: 1.2rem;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -1191,7 +1236,7 @@
 .card-title-row {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 3px;
     flex-wrap: wrap;
