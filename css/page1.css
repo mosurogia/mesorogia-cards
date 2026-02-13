@@ -87,7 +87,7 @@
 }
 
 /* ✅ 横長PCは2列リスト */
-@media (min-width: 1100px) {
+@media (min-width: 1200px) {
     .grid.is-list {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -467,11 +467,6 @@
     background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(129, 199, 132, 0.18));
 }
 
-/* 右にハンドルが出る時の余白（編集時だけ） */
-body.is-group-editing .cg-row {
-    padding-right: 52px;
-}
-
 /* ---- top row：名前＋rename（✏️） ---- */
 .cg-row-top {
     display: flex;
@@ -484,7 +479,7 @@ body.is-group-editing .cg-row {
     /* ✅ ボタンが横いっぱいに伸びないように（空白タップで編集にならない） */
     flex: 0 1 auto;
     width: auto;
-    max-width: calc(100% - 4.5em);
+    max-width: calc(100% - 1.5em);
     text-align: left;
     font-weight: 900;
     line-height: 1.15;
@@ -738,17 +733,16 @@ body.is-group-editing .cg-handle:active {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80px;
 
     border: 1px dashed rgba(0, 0, 0, .18);
     border-radius: 10px;
     background: rgba(0, 0, 0, .02);
 
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 800;
     opacity: .75;
     text-align: center;
-    padding: 0 8px;
+    padding: 8px 0;
 }
 
 /* containerが使える場合 */
