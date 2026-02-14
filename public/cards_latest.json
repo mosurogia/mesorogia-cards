@@ -7422,7 +7422,7 @@
     "type":"アタッカー",
     "name":"ドラゴンハンター ヴェナ",
     "cost":4,
-    "power":16,
+    "power":6,
     "effect_name1":"■召喚時■",
     "effect_text1":"自分のBPが1以上であれば、自分の手札のランダムな2枚のパワーを2増やす。",
     "effect_name2":null,
