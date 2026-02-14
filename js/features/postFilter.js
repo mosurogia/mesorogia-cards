@@ -241,6 +241,16 @@
         raceArea.innerHTML = '';
         categoryArea.innerHTML = '';
 
+        // ✅ グローバル依存をローカルに束ねる（ReferenceError回避）
+        const ordered       = window.ordered || [];
+        const groupBase     = window.groupBase || [];
+        const groupAuto     = window.groupAuto || [];
+        const groupRace     = window.groupRace || [];
+        const groupCategory = window.groupCategory || [];
+        const isCategoryTag = (typeof window.isCategoryTag === 'function')
+        ? window.isCategoryTag
+        : (() => false);
+
         // ordered / groupBase / groupAuto / groupRace / groupCategory / isCategoryTag
         // は元の deck-post 側（またはグローバル）で定義されている前提
         if (!window.ordered || !window.groupBase || !window.groupAuto || !window.groupRace || !window.groupCategory) {
@@ -248,12 +258,12 @@
             // （開くタイミングで deck-post 側が用意しているはず）
         }
 
-        if (!ordered?.length) {
-            const p = document.createElement('p');
-            p.className = 'filter-wip-text';
-            p.textContent = 'まだ絞り込みに使えるタグがありません。';
-            deckInfoArea.appendChild(p);
-            return;
+        if (!ordered.length) {
+        const p = document.createElement('p');
+        p.className = 'filter-wip-text';
+        p.textContent = 'タグ情報（ordered）が未準備です。読み込み順か定義元を確認してください。';
+        deckInfoArea.appendChild(p);
+        return;
         }
 
         function makeSection(titleText){
