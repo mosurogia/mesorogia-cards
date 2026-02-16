@@ -49,7 +49,7 @@
 
     for (const url of (urls || [])) {
       try {
-        const res = await fetch(url, { cache: 'force-cache' }); // ✅ no-cache をやめる
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) continue;
 
         // content-type がJSONっぽいなら json() 優先（速い）
