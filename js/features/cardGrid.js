@@ -28,6 +28,7 @@
         return [
         card.name, card.race, card.category, card.type,
         card.field, card.special_ability,
+        card.destroy_target, card.life_effect, card.power_effect, card.mana_effect,
         card.effect_name1, card.effect_text1,
         card.effect_name2, card.effect_text2
         ].filter(Boolean).join(' ').toLowerCase();
@@ -71,6 +72,27 @@
 
         setData_(cardDiv, 'data-field', card.field ?? '');
         setData_(cardDiv, 'data-ability', card.special_ability ?? '');
+
+        // --- 新列（enum） ---
+        setData_(cardDiv, 'data-destroy_target', card.destroy_target ?? '');
+        setData_(cardDiv, 'data-life_effect', card.life_effect ?? '');
+        setData_(cardDiv, 'data-power_effect', card.power_effect ?? '');
+        setData_(cardDiv, 'data-mana_effect', card.mana_effect ?? '');
+
+        // --- 新列（ability_*）---（個別でも持たせる：後で絞り込みに使える）
+        setData_(cardDiv, 'data-ability_burn', flagToStr_(card.ability_burn));
+        setData_(cardDiv, 'data-ability_bind', flagToStr_(card.ability_bind));
+        setData_(cardDiv, 'data-ability_silence', flagToStr_(card.ability_silence));
+        //特殊効果を1つでも持つか（フィルター高速化用）
+        const hasAbility =
+        (flagToStr_(card.ability_burn) === 'true') ||
+        (flagToStr_(card.ability_bind) === 'true') ||
+        (flagToStr_(card.ability_silence) === 'true');
+
+        setData_(cardDiv, 'data-has_ability', hasAbility ? 'true' : 'false');
+
+        // heal2（bool）
+        setData_(cardDiv, 'data-heal2', flagToStr_(card.heal2));
 
         // フラグ系
         setData_(cardDiv, 'data-bp', flagToStr_(card.BP_flag));

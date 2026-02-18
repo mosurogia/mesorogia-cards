@@ -372,7 +372,7 @@
 @media (max-width: 480px) {
     .filter-group {
         grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-        gap: 6px;
+        gap: 4px;
     }
 }
 
@@ -719,6 +719,13 @@
 /* =====================================================
    9) PACK（is-ring + pack色注入）
 ===================================================== */
+@media (max-width: 480px) {
+    .filter-group[data-key="パック名"] {
+        grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+        gap: 4px;
+    }
+}
+
 .filter-group[data-key="パック名"] .filter-btn {
     display: block;
     white-space: normal;
@@ -816,6 +823,10 @@
 /* =====================================================
    11) CATEGORY（is-ring + data-cat-race で種族色注入）
 ===================================================== */
+.filter-group[data-key="カテゴリ"] .filter-btn {
+    font-size: clamp(.6rem, 2vw, 1rem);
+}
+
 .filter-group[data-key="カテゴリ"] .filter-btn[data-cat-race="ドラゴン"] {
     --ring: var(--race-dragon);
 }
@@ -989,9 +1000,6 @@
    16) ACTIVE CHIPS BAR（選択中フィルタ表示バー）
 ===================================================== */
 #active-chips-bar {
-    position: sticky;
-    top: var(--chips-offset, 0px);
-    z-index: 2000;
     border-bottom: 1px solid #e7e7e7;
     backdrop-filter: saturate(120%) blur(2px);
     padding: 2px 0;

@@ -12,19 +12,65 @@
     // 表示用ラベル
     // -----------------------
     const DISPLAY_LABELS = {
-        true: 'BPあり',
-        false: 'BPなし',
+    true: 'BPあり',
+    false: 'BPなし',
 
-        draw: 'ドロー',
-        graveyard_recovery: '墓地回収',
-        cardsearch: 'サーチ',
-        destroy_opponent: '相手破壊',
-        destroy_self: '自己破壊',
-        heal: '回復',
-        power_up: 'バフ',
-        power_down: 'デバフ',
+    // 特殊効果（cards_latest.json の列名に合わせる）
+    no_ability: '特殊効果未所持',
+    ability_burn: '燃焼',
+    ability_bind: '拘束',
+    ability_silence: '沈黙',
     };
     window.DISPLAY_LABELS = DISPLAY_LABELS;
+
+    // ==============================
+    // その他（複合条件）定義
+    // ==============================
+    const MISC_FILTERS = [
+    { key: 'draw', label: 'ドロー', test: c => isTrue_(c.draw) },
+    { key: 'search', label: 'サーチ', test: c => isTrue_(c.cardsearch) },
+    { key: 'grave', label: '墓地回収', test: c => isTrue_(c.graveyard_recovery) },
+
+    { key: 'destroy_opponent', label: '相手破壊', test: c => inSet_(normEnum_(c.destroy_target), ['OPPONENT','ALL']) },
+    { key: 'destroy_self',     label: '自己破壊', test: c => inSet_(normEnum_(c.destroy_target), ['SELF','ALL']) },
+
+    { key: 'heal',   label: '回復', test: c => inSet_(normEnum_(c.life_effect), ['HEAL','BOTH']) },
+    { key: 'burn',   label: 'バーン', test: c => inSet_(normEnum_(c.life_effect), ['OPPO_DAMAGE','BOTH_DAMAGE','BOTH']) },
+    { key: 'selfdmg',label: '自傷', test: c => inSet_(normEnum_(c.life_effect), ['SELF_DAMAGE','BOTH_DAMAGE']) },
+
+    { key: 'buff',   label: 'バフ',   test: c => inSet_(normEnum_(c.power_effect), ['UP','BOTH']) },
+    { key: 'debuff', label: 'デバフ', test: c => inSet_(normEnum_(c.power_effect), ['DOWN','BOTH']) },
+
+    { key: 'mana_up',   label: 'マナ獲得', test: c => inSet_(normEnum_(c.mana_effect), ['UP','BOTH']) },
+    { key: 'mana_down', label: 'マナ削減', test: c => inSet_(normEnum_(c.mana_effect), ['DOWN','BOTH']) },
+
+    // ⑬ 奪う：life/power/mana のいずれかが STEAL
+    { key: 'steal', label: '奪う', test: c => {
+        const le = normEnum_(c.life_effect);
+        const pe = normEnum_(c.power_effect);
+        const me = normEnum_(c.mana_effect);
+        return (le === 'STEAL' || pe === 'STEAL' || me === 'STEAL');
+        }
+    },
+    ];
+
+    // 値ゆれ対策（TRUE/true/1など）
+    function isTrue_(v){
+    const s = String(v ?? '').trim().toLowerCase();
+    return (s === 'true' || s === '1' || s === 'yes');
+    }
+
+    // 全角アンダーバー対策＋大文字化
+    function normEnum_(v){
+    return String(v ?? '')
+        .trim()
+        .replace(/＿/g, '_')
+        .toUpperCase();
+    }
+
+    function inSet_(v, arr){
+    return arr.includes(String(v ?? ''));
+    }
 
     // -----------------------
     // debounce
@@ -766,11 +812,23 @@
         'ノーマルフィールド': 'ノーマル',
         };
 
-        const SPECIAL_ABILITIES = ['特殊効果未所持', '燃焼', '拘束', '沈黙'];
-        const OTHER_BOOLEAN_KEYS = [
-        'draw', 'cardsearch', 'graveyard_recovery', 'destroy_opponent', 'destroy_self',
-        'heal', 'power_up', 'power_down'
-        ];
+        // ✅ 特殊効果（ability_* のフラグ列から自動抽出）
+        const abilities = (() => {
+        const keys = new Set();
+        cards.forEach(c => {
+            Object.keys(c).forEach(k => {
+            if (k.startsWith('ability_')) keys.add(k);
+            });
+        });
+
+        const list = Array.from(keys)
+            // 実際に true が1枚でもある列だけ残す（任意：無駄ボタン削減）
+            .filter(k => cards.some(c => isTrue_(c[k])))
+            .sort((a,b)=>a.localeCompare(b,'en'));
+
+        // 先頭に “未所持” を固定
+        return ['no_ability', ...list];
+        })();
 
         // ✅ 所持データが “1枚でも” 入ってるか（チェッカー未使用判定）
         function hasAnyOwned_() {
@@ -817,9 +875,10 @@
         detailFilters.appendChild(fieldWrapper);
 
         detailFilters.appendChild(createRangeStyleWrapper_('BP（ブレッシングポイント）要素', ['true', 'false'], 'bp'));
-        detailFilters.appendChild(createRangeStyleWrapper_('特殊効果', SPECIAL_ABILITIES, 'ability'));
+            detailFilters.appendChild(createRangeStyleWrapper_('特殊効果', abilities, 'ability'));
 
-        // その他（boolean）
+
+        // その他（複合条件）を1ブロックに統合
         const { wrapper: otherWrap } = createFilterBlock_('その他');
         otherWrap.classList.add('filter-range-wrapper');
 
@@ -827,12 +886,13 @@
         otherGroup.className = 'filter-group';
         otherGroup.dataset.key = 'その他';
 
-        OTHER_BOOLEAN_KEYS.forEach(key => {
+        // 上で定義した MISC_FILTERS の順でボタン生成
+        MISC_FILTERS.forEach(def => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'filter-btn';
-        btn.dataset[key] = 'true';
-        btn.textContent = DISPLAY_LABELS[key] ?? key;
+        btn.dataset.misc = def.key;           // ★ここがポイント（複合条件キー）
+        btn.textContent = def.label;
         otherGroup.appendChild(btn);
         });
 
@@ -852,16 +912,6 @@
     // ==============================
     // チップバー
     // ==============================
-    function updateChipsOffset() {
-        const parts = [
-        // document.querySelector('.search-bar'),
-        // document.querySelector('.main-header'),
-        // document.querySelector('.subtab-bar'),
-        ].filter(Boolean);
-
-        const sum = parts.reduce((h, el) => h + el.offsetHeight, 0);
-        document.documentElement.style.setProperty('--chips-offset', `${sum}px`);
-    }
 
     // アクティブチップ表示
     function renderActiveFilterChips() {
@@ -980,14 +1030,7 @@
         ['特効', 'ability'],
 
         // その他（boolean）
-        ['その他', 'draw'],
-        ['その他', 'cardsearch'],
-        ['その他', 'graveyard_recovery'],
-        ['その他', 'destroy_opponent'],
-        ['その他', 'destroy_self'],
-        ['その他', 'heal'],
-        ['その他', 'power_up'],
-        ['その他', 'power_down'],
+        ['その他', 'misc'],
         ];
 
         GROUPS.forEach(([title, key]) => {
@@ -1006,9 +1049,9 @@
                 const jp = (window.__PACK_EN_TO_JP && window.__PACK_EN_TO_JP[val]) || '';
                 labelText = jp ? `${val} / ${jp}` : val;
 
-                } else if (['draw', 'cardsearch', 'graveyard_recovery', 'destroy_opponent', 'destroy_self', 'heal', 'power_up', 'power_down'].includes(key)) {
-                labelText = DISPLAY_LABELS[key] ?? key;
-
+                } else if (key === 'misc') {
+                const def = MISC_FILTERS.find(d => d.key === val);
+                labelText = def?.label || val;
                 } else {
                 labelText = (DISPLAY_LABELS && DISPLAY_LABELS[val] != null) ? DISPLAY_LABELS[val] : val;
                 }
@@ -1195,12 +1238,6 @@
         .map(btn => btn.dataset[key]);
     }
 
-    // Booleanフィルター取得
-    function getBooleanFilter(key) {
-        const btn = document.querySelector(`.filter-group [data-${key}].selected`);
-        return btn ? ['true'] : [];
-    }
-
     function applyFilters() {
         const opened = document.querySelector('.card-detail.active');
         if (opened) opened.remove();
@@ -1218,14 +1255,9 @@
         field: getSelectedFilterValues('field'),
         bp: getSelectedFilterValues('bp'),
         ability: getSelectedFilterValues('ability'),
-        draw: getBooleanFilter('draw'),
-        cardsearch: getBooleanFilter('cardsearch'),
-        graveyard_recovery: getBooleanFilter('graveyard_recovery'),
-        destroy_opponent: getBooleanFilter('destroy_opponent'),
-        destroy_self: getBooleanFilter('destroy_self'),
-        heal: getBooleanFilter('heal'),
-        power_up: getBooleanFilter('power_up'),
-        power_down: getBooleanFilter('power_down'),
+
+        // その他
+        misc: getSelectedFilterValues('misc'),
         };
 
         const toIntOr = (v, fallback) => {
@@ -1306,25 +1338,25 @@
             ].filter(Boolean).join(' ').toLowerCase();
 
         const cardData = {
-            race: card.dataset.race,
-            category: card.dataset.category,
-            type: card.dataset.type,
-            rarity: card.dataset.rarity,
-            pack: card.dataset.pack,
-            effect: card.dataset.effect,
-            field: card.dataset.field,
-            bp: card.dataset.bp,
-            ability: card.dataset.ability,
-            draw: card.dataset.draw,
-            cardsearch: card.dataset.cardsearch,
-            graveyard_recovery: card.dataset.graveyard_recovery,
-            destroy_opponent: card.dataset.destroy_opponent,
-            destroy_self: card.dataset.destroy_self,
-            heal: card.dataset.heal,
-            power_up: card.dataset.power_up,
-            power_down: card.dataset.power_down,
-            cost: parseInt(card.dataset.cost),
-            power: parseInt(card.dataset.power),
+        race: card.dataset.race,
+        category: card.dataset.category,
+        type: card.dataset.type,
+        rarity: card.dataset.rarity,
+        pack: card.dataset.pack,
+        effect: card.dataset.effect,
+        field: card.dataset.field,
+        bp: card.dataset.bp,
+
+        draw: card.dataset.draw,
+        cardsearch: card.dataset.cardsearch,
+        graveyard_recovery: card.dataset.graveyard_recovery,
+        destroy_target: card.dataset.destroy_target,
+        life_effect:    card.dataset.life_effect,
+        power_effect:   card.dataset.power_effect,
+        mana_effect:    card.dataset.mana_effect,
+
+        cost: parseInt(card.dataset.cost),
+        power: parseInt(card.dataset.power),
         };
 
         const matchesKeyword = tokens.length === 0
@@ -1332,21 +1364,43 @@
             : tokens.every(t => haystack.includes(t));
 
         const matchesFilters = Object.entries(selectedFilters).every(([key, selectedValues]) => {
-            if (!selectedValues || selectedValues.length === 0) return true;
+        if (!selectedValues || selectedValues.length === 0) return true;
 
-            // pack：英名一致（カード側は "EN「仮名」" の可能性）
-            if (key === 'pack') {
+        // pack：英名一致（カード側は "EN「仮名」" の可能性）
+        if (key === 'pack') {
             const cardEn = (cardData.pack || '').split('「')[0].trim();
             return selectedValues.includes(cardEn);
-            }
+        }
 
-            // effect：含む
-            if (key === 'effect') {
+        // effect：含む（効果名は effect_name1/2 の合成が入ってる想定）
+        if (key === 'effect') {
             const eff = cardData.effect || '';
             return selectedValues.some(v => eff.includes(v));
-            }
+        }
 
-            return selectedValues.includes(cardData[key]);
+        // ✅ ability：3列（ability1/2/3）のどれかに一致でOK
+        //   「特殊効果未所持」は “3列すべて空” のカードだけ通す
+        if (key === 'ability') {
+        const hasAny = isTrue_(card.dataset.has_ability);
+
+        // “未所持” は has_ability が false のカードだけ通す
+        if (selectedValues.includes('no_ability')) return !hasAny;
+
+        // それ以外：選ばれた ability_* のどれかが true ならOK
+        return selectedValues.some(v => isTrue_(card.dataset[v]));
+        }
+
+        // ✅ misc（その他）：複合条件は OR（どれか当たればOK）
+        if (key === 'misc') {
+        return selectedValues.some(k => {
+            const def = MISC_FILTERS.find(d => d.key === k);
+            return def ? !!def.test(cardData) : false;
+        });
+        }
+
+
+        // デフォルト：完全一致
+        return selectedValues.includes(cardData[key]);
         });
 
         const matchesCost = cardData.cost >= costMin && cardData.cost <= costMax;

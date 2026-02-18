@@ -220,7 +220,7 @@ function rebuildCardMap() {
 
 /**
  * カード操作モーダルの効果リストを構築
- * - info は effects / effectNames+effectTexts / effect+text のいずれにも対応
+ * - info はカード情報オブジェクト（cardMap[cd] の形式を想定）
  */
 function buildCardOpEffects(info) {
   const wrap = document.getElementById('cardOpEffects');
@@ -228,16 +228,34 @@ function buildCardOpEffects(info) {
   wrap.innerHTML = '';
 
   let items = [];
+
+  // 1) 統一形式（{name,text}[]）
   if (Array.isArray(info.effects)) {
     items = info.effects.map(e =>
-      (typeof e === 'string') ? { name: '効果', text: e } : { name: e.name || '効果', text: e.text || '' }
+      (typeof e === 'string')
+        ? { name: '効果', text: e }
+        : { name: e.name || '効果', text: e.text || '' }
     );
+
+  // 2) 旧形式（effectNames/effectTexts）
   } else if (Array.isArray(info.effectNames) || Array.isArray(info.effectTexts)) {
     const names = info.effectNames || [];
     const texts = info.effectTexts || [];
     const len = Math.max(names.length, texts.length);
     for (let i = 0; i < len; i++) items.push({ name: names[i] || '効果', text: texts[i] || '' });
-  } else if (info.effect || info.text) {
+
+  // 3) cards_latest 系（effect_name1/effect_text1...）←★追加
+  } else {
+    const n1 = info.effect_name1 ?? info.effectName1 ?? '';
+    const t1 = info.effect_text1 ?? info.effectText1 ?? '';
+    const n2 = info.effect_name2 ?? info.effectName2 ?? '';
+    const t2 = info.effect_text2 ?? info.effectText2 ?? '';
+    if (n1 || t1) items.push({ name: n1 || '効果', text: t1 || '' });
+    if (n2 || t2) items.push({ name: n2 || '効果', text: t2 || '' });
+  }
+
+  // 4) 最終フォールバック（effect/text）
+  if (items.length === 0 && (info.effect || info.text)) {
     items = [{ name: info.effect || '効果', text: info.text || '' }];
   }
 
@@ -252,17 +270,13 @@ function buildCardOpEffects(info) {
   for (const it of items) {
     const d = document.createElement('div');
     d.className = 'eff';
-    const name = document.createElement('div');
-    name.className = 'eff-name';
-    name.textContent = it.name || '効果';
-    const text = document.createElement('div');
-    text.className = 'eff-text';
-    text.textContent = it.text || '';
-    d.appendChild(name);
-    d.appendChild(text);
+    d.innerHTML =
+      `<div class="eff-name">${escapeHtml_(it.name || '効果')}</div>` +
+      `<div class="eff-text">${escapeHtml_(it.text || '')}</div>`;
     wrap.appendChild(d);
   }
 }
+
 
 
 /*======================================================

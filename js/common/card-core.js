@@ -121,18 +121,51 @@ function buildCardMapFromCards(cards){
       effect_name2: card.effect_name2 || '',
       effect_text2: card.effect_text2 || '',
       field: card.field ?? '',
-      special_ability: card.special_ability ?? '',
-      BP_flag: card.BP_flag,
-      draw: card.draw,
-      graveyard_recovery: card.graveyard_recovery,
-      cardsearch: card.cardsearch,
-      destroy_opponent: card.destroy_opponent,
-      destroy_self: card.destroy_self,
-      heal: card.heal,
-      power_up: card.power_up,
-      power_down: card.power_down,
-      link: card.link,
-      link_cd: card.link_cd,
+      //ability: card.ability ?? '', --- IGNORE ---
+      special_ability: (() => {
+        const raw = (card.special_ability ?? '').trim();
+        if (raw) return raw;
+
+        const ab = [];
+        if (card.ability_burn) ab.push('燃焼');
+        if (card.ability_bind) ab.push('拘束');
+        if (card.ability_silence) ab.push('沈黙');
+
+        return ab.length ? ab.join(' ') : '';
+      })(),
+      // --- flags（bool想定。JSONが0/1でもJS側は truthy/falseyで吸える） ---
+      BP_flag: !!card.BP_flag,
+      draw: !!card.draw,
+      graveyard_recovery: !!card.graveyard_recovery,
+      cardsearch: !!card.cardsearch,
+      power_up: !!card.power_up,
+      power_down: !!card.power_down,
+      link: !!card.link,
+      link_cd: card.link_cd ?? '',
+
+      // --- 新列（enum/ability） ---
+      destroy_target: (card.destroy_target ?? '').trim(),
+      life_effect: (card.life_effect ?? '').trim(),
+      power_effect: (card.power_effect ?? '').trim(),
+      mana_effect: (card.mana_effect ?? '').trim(),
+
+      ability_burn: !!card.ability_burn,
+      ability_bind: !!card.ability_bind,
+      ability_silence: !!card.ability_silence,
+
+      heal2: !!card.heal2,
+
+      // --- 旧互換（既存フィルターや表示が壊れないように推定） ---
+      // destroy_target: OPPONENT / SELF / ALL / ''（想定）
+      destroy_opponent:
+        !!card.destroy_opponent || ['OPPONENT', 'ALL'].includes(String(card.destroy_target || '').trim()),
+      destroy_self:
+        !!card.destroy_self || ['SELF', 'ALL'].includes(String(card.destroy_target || '').trim()),
+
+      // life_effect: HEAL / OPPO_DAMAGE / SELF_DAMAGE / BOTH_DAMAGE / ''（想定）
+      heal:
+        !!card.heal || !!card.heal2 || String(card.life_effect || '').trim() === 'HEAL',
+
     };
   }
 }
