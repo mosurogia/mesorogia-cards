@@ -1599,7 +1599,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":10307,
@@ -4591,7 +4591,7 @@
   },
   {
     "version":8,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2026-02-17",
     "pack_name":"Fallen Fate 「堕ちた宿命」",
     "cd":20503,
@@ -7753,7 +7753,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awaking The Oracle「神託者の覚醒」",
     "cd":40010,
@@ -8671,7 +8671,7 @@
   },
   {
     "version":2,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-07-16",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
     "cd":40107,
@@ -8773,7 +8773,7 @@
   },
   {
     "version":2,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-07-16",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
     "cd":40110,
@@ -12139,7 +12139,7 @@
   },
   {
     "version":8,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2026-02-17",
     "pack_name":"Fallen Fate 「堕ちた宿命」",
     "cd":50504,
