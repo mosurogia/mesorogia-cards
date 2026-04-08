@@ -98,11 +98,21 @@
     if (typeof orig !== 'function') return;
 
     window.switchTab = function(tabId, el){
+      // ✅ checkerタブに入る時：遅延ロード
       if (tabId === 'checker') {
-        ensureChartJs_().catch(console.error); // ← Chart遅延ロード
-        window.__ensureCheckerLoaded(); // ← checker系JSロード
+        ensureChartJs_().catch(console.error);
+        window.__ensureCheckerLoaded();
       }
-      return orig(tabId, el);
+
+      // まず本来のタブ切替を実行
+      const ret = orig(tabId, el);
+
+      // ✅ cards/checker タブ切替後：上に戻す（あなたの afterTabSwitched の該当部分をここへ移管）
+      if (tabId === 'cards' || tabId === 'checker') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      return ret;
     };
   };
 
@@ -111,6 +121,7 @@
   } else {
     hook();
   }
+
 })();
 
 

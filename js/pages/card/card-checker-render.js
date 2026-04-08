@@ -203,7 +203,7 @@ function buildPackSectionHTML(packEn, packJp, cardsGroupedByRace, packKey, packG
 
 // JSON → パックごとのセクションHTMLを生成して mount に描画
 async function renderAllPacks({
-  jsonUrl = './cards_latest.json',
+  jsonUrl = './public/cards_latest.json',
   mountSelector = '#packs-root',
   isLatestOnly = true,
   where = (c)=>true,
@@ -418,7 +418,7 @@ function closeMissingDialog_(){
   if (back) back.style.display = 'none';
 
   // プレビューも閉じる
-  try { hideCardPreview(); } catch {}
+  try { window.CardPreview?.hide?.(); } catch {}
 }
 
 
@@ -587,52 +587,6 @@ if (!window.__wiredMissingPreview){
 
 }
 
-function ensurePreviewEl(){
-  const el = document.getElementById('card-preview-pop');
-  if (!el) return null;
-
-  // ✅ 常に body 直下へ（これが一番安全）
-  if (el.parentElement !== document.body) {
-    document.body.appendChild(el);
-  }
-
-  el.style.position = 'fixed';
-  el.style.zIndex = '9999';
-  return el;
-}
-
-
-function showCardPreviewAt(x, y, cd){
-  const box = ensurePreviewEl();
-  if (!box) return;
-  const img = box.querySelector('img');
-  if (!img) return;
-
-  img.removeAttribute('data-fallback');
-  img.src = `img/${cd}.webp`;
-
-  const w  = img.clientWidth || 180;
-  const h  = img.clientHeight || 256;
-  const pad = 40;
-
-  let left = Math.max(pad, Math.min(window.innerWidth - w - pad, x + pad));
-  let top  = Math.max(pad, Math.min(window.innerHeight - h - pad, y - pad*3));
-
-  box.style.left = `${Math.round(left)}px`;
-  box.style.top  = `${Math.round(top)}px`;
-  box.style.display = 'block';
-}
-
-function showCardPreviewNextTo(el, cd){
-  const rect = el.getBoundingClientRect();
-  showCardPreviewAt(rect.right, rect.top, cd);
-}
-
-function hideCardPreview(){
-  const box = document.getElementById('card-preview-pop');
-  if (box) box.style.display = 'none';
-}
-
 // =====================================================
 // 5) 一括操作（高速版：まとめて更新）
 // =====================================================
@@ -794,7 +748,7 @@ schedulePostBulkUIUpdate_(packSection);
     if (btn.classList.contains('toggle-pack-view-btn') && packSection) {
       const mode = btn.dataset.view; // 'all' | 'incomplete'
       applyPackView_(packSection, mode, true);
-      updateTopToggleByPacks_();
+      //updateTopToggleByPacks_();
       setTimeout(() => { try { window.updateSummary?.(); } catch {} }, 0);
       return;
     }
@@ -807,7 +761,7 @@ schedulePostBulkUIUpdate_(packSection);
       const topToggle = btn.closest('#top-pack-view-toggle');
       if (topToggle) {
         const mode = btn.dataset.view; // 'all' | 'incomplete'
-        applyGlobalPackView_(mode);
+        applyTopPackView_(mode, true);
         setTimeout(() => { try { window.updateSummary?.(); } catch {} }, 0);
         return;
       }
