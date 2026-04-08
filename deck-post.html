@@ -58,395 +58,381 @@
     </nav>
 </header>
 
-<!-- タブバー -->
-<div class="tab-bar" style="display: none;">
-    <div class="tab active" id="title-list" onclick="switchTab('tab-post-list', this)">
-        <span>📤 投稿一覧</span>
+<!--全体投稿一覧ページ -->
+<main id="post-app" aria-labelledby="title-list">
+
+    <!-- ツールバー -->
+    <div class="toolbar" id="toolbar">
+        <div class="spacer"></div>
+
+        <button class="btn-ghost" type="button" onclick="location.href='deckmaker.html'">
+            ➕ デッキを投稿する
+        </button>
+
+        <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">
+            👤 マイ投稿
+        </button>
     </div>
-    <div class="tab" onclick="switchTab('tab-compare', this)">
-        <span>⚖️ デッキ比較</span>
-    </div>
-</div>
 
+    <!-- キャンペーン情報バー（開催中のみ表示） -->
+    <div id="campaign-banner" class="campaign-banner" style="display:none;">
+        <!-- ① 上段：🎉 + キャンペーン名 + 期間 -->
+        <div class="campaign-banner-title-row">
+            <span class="campaign-banner-emoji" aria-hidden="true">🎉</span>
 
-<!--投稿一覧タブ -->
-<div class="tab-content active" id="tab-post-list">
-    <main id="post-app" aria-labelledby="title-list">
-
-        <!-- ツールバー -->
-        <div class="toolbar" id="toolbar">
-            <div class="spacer"></div>
-
-            <button class="btn-ghost" type="button" onclick="location.href='deckmaker.html'">
-                ➕ デッキを投稿する
-            </button>
-
-            <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">
-                👤 マイ投稿
-            </button>
+            <span class="campaign-banner-title" id="campaign-banner-title">キャンペーン</span>
+            <span class="campaign-banner-range" id="campaign-banner-range"></span>
         </div>
 
-        <!-- キャンペーン情報バー（開催中のみ表示） -->
-        <div id="campaign-banner" class="campaign-banner" style="display:none;">
-            <!-- ① 上段：🎉 + キャンペーン名 + 期間 -->
-            <div class="campaign-banner-title-row">
-                <span class="campaign-banner-emoji" aria-hidden="true">🎉</span>
-
-                <span class="campaign-banner-title" id="campaign-banner-title">キャンペーン</span>
-                <span class="campaign-banner-range" id="campaign-banner-range"></span>
+        <!-- ② 下段：宣伝文 + 詳細ボタン（スマホでも横並び固定） -->
+        <div class="campaign-banner-cta-row">
+            <div class="campaign-banner-desc" id="campaign-banner-text">
+                デッキを投稿して、キャンペーンに参加しよう！<br>
+                <strong>詳しい参加条件や報酬は、詳細をチェック！</strong>
             </div>
 
-            <!-- ② 下段：宣伝文 + 詳細ボタン（スマホでも横並び固定） -->
-            <div class="campaign-banner-cta-row">
-                <div class="campaign-banner-desc" id="campaign-banner-text">
-                    デッキを投稿して、キャンペーンに参加しよう！<br>
-                    <strong>詳しい参加条件や報酬は、詳細をチェック！</strong>
+            <button type="button" class="campaign-btn campaign-banner-btn" data-open="campaignDetailModal">
+                詳細 ▶
+            </button>
+        </div>
+    </div>
+
+    <!-- 並び替え・フィルターバー -->
+    <div class="list-controls" id="listControls">
+        <div class="list-controls-filter">
+            <label class="sort-label">
+                並び替え：
+                <select id="sortSelect" class="ctrl-select">
+                    <option value="new" selected>新しい順</option>
+                    <option value="old">古い順</option>
+                    <option value="like">いいね順</option>
+                </select>
+            </label>
+            <button type="button" id="filterBtn" class="ctrl-btn">
+                フィルター
+            </button>
+        </div>
+        <!-- 選択中チップ（投稿フィルター用） -->
+        <div id="active-chips-bar" style="display:none;">
+            <div class="chips-scroll"></div>
+        </div>
+    </div>
+
+
+    <!-- =========================
+                    一覧＋詳細：マスタ詳細レイアウト
+            ========================== -->
+    <div id="postMainLayout" class="post-main-layout">
+
+        <!-- ▼ 左カラム：投稿一覧＋ページネーション -->
+        <div class="post-master-column">
+
+            <!-- ▲ 件数＋ページネーション（上側） -->
+            <div id="listHeader" class="list-footer list-footer--top">
+                <div id="resultCountTop" class="list-status"></div>
+
+                <div class="pager">
+                    <button id="pagePrevTop" class="pager-btn" type="button">◀ 前へ</button>
+                    <span id="pageInfoTop" class="pager-info">1 / 1</span>
+                    <button id="pageNextTop" class="pager-btn" type="button">次へ ▶</button>
+                </div>
+            </div>
+
+            <!-- 一覧リスト（JSが流し込み） -->
+            <section id="postList" class="post-list" aria-live="polite"></section>
+
+            <!-- 件数＋ページネーション（投稿一覧専用） -->
+            <div id="listFooter" class="list-footer list-footer--bottom">
+                <div id="resultCount" class="list-status"></div>
+
+                <div class="pager">
+                    <button id="pagePrev" class="pager-btn" type="button">
+                        ◀ 前へ
+                    </button>
+                    <span id="pageInfo" class="pager-info">
+                        1 / 1
+                    </span>
+                    <button id="pageNext" class="pager-btn" type="button">
+                        次へ ▶
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- ▲ 左カラム -->
+
+        <!-- ▼ 右カラム：詳細ペイン（PC専用想定） -->
+        <section id="postDetailPane" class="post-detail-pane" aria-live="polite">
+            <div class="post-detail-empty">
+                <div class="post-detail-empty-icon">👈</div>
+                <div class="post-detail-empty-text">
+                    <div class="post-detail-empty-title">デッキ詳細パネル</div>
+                    <p class="post-detail-empty-main">
+                        左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
+                        ここにデッキの詳細が表示されます。
+                    </p>
+                    <p style="margin-top:10px;">
+                        <a href="deckmaker.html" class="post-cta-link">
+                            🃏 自分のデッキを投稿する(デッキメーカーページ)
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- ▲ 右カラム -->
+
+
+    </div>
+</main>
+
+<!--マイ投稿一覧ページ-->
+<main id="pageMine" class="page" hidden aria-labelledby="title-mine">
+    <!-- 上段：ヘッダー（戻る＋タイトル） -->
+    <div class="mine-header">
+        <button id="backToListBtn" class="btn-ghost" type="button">← 戻る</button>
+
+        <div class="mine-header-title">
+            <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
+            <button id="mineHelpBtn" class="mine-help-btn" type="button" aria-label="マイ投稿の説明">
+                ?
+            </button>
+        </div>
+    </div>
+
+    <!-- ▼ マイ投稿：説明モーダル -->
+    <div id="mineHelpModal" class="modal" style="display:none;">
+        <div class="modal-content mine-help-modal" role="dialog" aria-modal="true" aria-labelledby="mineHelpTitle">
+            <h3 id="mineHelpTitle" class="filter-maintitle">マイ投稿について</h3>
+
+            <div class="mine-header-note" style="margin:0;">
+                <p class="mine-header-lead">
+                    マイページでは、ログインすることで<strong>自分が投稿したデッキ</strong>を確認できます。
+                </p>
+
+                <ul class="mine-header-list">
+                    <li>🗂 自分のデッキ投稿を一覧で確認できます</li>
+                    <li>✏️ 投稿したデッキの<strong>デッキ解説編集</strong>ができます</li>
+                    <li>🗑 不要になったデッキ投稿の<strong>削除</strong>ができます</li>
+                </ul>
+
+                <div class="mine-header-beta">
+                    🧪 <strong>ベータ版のお知らせ</strong><br>
+                    今後のアップデートで、以下の機能を追加予定です。
+                    <ul>
+                        <li>❤️ いいねしたデッキ一覧の表示</li>
+                        <li>🏷 タグの編集機能</li>
+                        <li>🃏 デッキコード・デッキ内容の編集機能</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
+                <button type="button" class="btn-ghost" id="mineHelpCloseBtn">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 上段：ログイン状況枠 -->
+    <section class="mine-login-section">
+        <div class="mine-login-box">
+
+            <!-- 上段：ID＋ボタンを横並び -->
+            <div class="mine-login-top">
+                <!-- 左：ログインID -->
+                <div class="mine-login-row">
+                    <span class="mine-login-label">ログイン状況(ID):</span>
+                    <span id="mine-login-username" class="mine-login-username">未ログイン</span>
                 </div>
 
-                <button type="button" class="campaign-btn campaign-banner-btn" data-open="campaignDetailModal">
-                    詳細 ▶
-                </button>
-            </div>
-        </div>
+                <!-- 右：ボタン群 -->
+                <div class="mine-login-auth">
 
-        <!-- 並び替え・フィルターバー -->
-        <div class="list-controls" id="listControls">
-            <div class="list-controls-filter">
-                <label class="sort-label">
-                    並び替え：
-                    <select id="sortSelect" class="ctrl-select">
-                        <option value="new" selected>新しい順</option>
-                        <option value="old">古い順</option>
-                        <option value="like">いいね順</option>
-                    </select>
-                </label>
-                <button type="button" id="filterBtn" class="ctrl-btn">
-                    フィルター
-                </button>
+                    <!-- 未ログイン時：新規登録 / ログイン -->
+                    <div id="auth-mini-loggedout" style="display:none;">
+                        <button type="button" id="open-login-modal" class="auth-mini-btn" data-open="authLoginModal">
+                            新規登録 / ログイン
+                        </button>
+                    </div>
+
+                    <!-- ログイン時：アカウントデータ ＋ ログアウト -->
+                    <div id="auth-mini-loggedin" style="display:none;">
+                        <div class="auth-logged-in-row">
+                            <button class="btn ghost" type="button" id="account-data-btn" data-open="accountDataModal">
+                                アカウントデータ
+                            </button>
+                            <button class="btn danger" type="button" id="auth-logout-btn">
+                                ログアウト
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <!-- 選択中チップ（投稿フィルター用） -->
-            <div id="active-chips-bar" style="display:none;">
-                <div class="chips-scroll"></div>
-            </div>
+
+            <!-- 下段：説明文 -->
+            <p class="mine-login-note">
+                アカウント登録・ログインすることで自分の投稿を表示・編集できます。
+            </p>
+
         </div>
+    </section>
 
 
         <!-- =========================
-                     一覧＋詳細：マスタ詳細レイアウト
+                    マイ投稿：一覧＋詳細レイアウト（PC用）
                 ========================== -->
-        <div id="postMainLayout" class="post-main-layout">
+        <div id="mineMainLayout" class="post-main-layout">
 
-            <!-- ▼ 左カラム：投稿一覧＋ページネーション -->
+            <!-- ▼ 左カラム：マイ投稿一覧＋ページネーション -->
             <div class="post-master-column">
 
-                <!-- ▲ 件数＋ページネーション（上側） -->
-                <div id="listHeader" class="list-footer list-footer--top">
-                    <div id="resultCountTop" class="list-status"></div>
-
-                    <div class="pager">
-                        <button id="pagePrevTop" class="pager-btn" type="button">◀ 前へ</button>
-                        <span id="pageInfoTop" class="pager-info">1 / 1</span>
-                        <button id="pageNextTop" class="pager-btn" type="button">次へ ▶</button>
-                    </div>
+                <!-- 件数だけ（マイ投稿専用） -->
+                <div id="mineFooterTop" class="list-footer list-footer--top">
+                    <div id="resultCountMineTop" class="list-status"></div>
                 </div>
 
-                <!-- 一覧リスト（JSが流し込み） -->
-                <section id="postList" class="post-list" aria-live="polite"></section>
-
-                <!-- 件数＋ページネーション（投稿一覧専用） -->
-                <div id="listFooter" class="list-footer list-footer--bottom">
-                    <div id="resultCount" class="list-status"></div>
-
-                    <div class="pager">
-                        <button id="pagePrev" class="pager-btn" type="button">
-                            ◀ 前へ
-                        </button>
-                        <span id="pageInfo" class="pager-info">
-                            1 / 1
-                        </span>
-                        <button id="pageNext" class="pager-btn" type="button">
-                            次へ ▶
-                        </button>
-                    </div>
+                <!-- ★ 未ログイン時に表示する案内 -->
+                <div id="mine-error" class="mine-nologin" style="display:none;">
+                    <p>ここにあなたの投稿が表示されます。</p>
+                    <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
                 </div>
+
+                <!-- マイ投稿が0件のときの案内 -->
+                <div id="mine-empty" class="mine-empty" style="display:none;">
+                    <p>まだ投稿がありません。</p>
+                    <p>
+                        <a href="deckmaker.html" class="mine-empty-link">
+                            🃏 デッキメーカーでデッキを作りましょう！
+                        </a>
+                    </p>
+                </div>
+
+                <!-- マイ投稿が1件以上のときのリスト（※これ1回だけ！） -->
+                <section id="myPostList" class="post-list" aria-live="polite"></section>
+
             </div>
             <!-- ▲ 左カラム -->
 
-            <!-- ▼ 右カラム：詳細ペイン（PC専用想定） -->
-            <section id="postDetailPane" class="post-detail-pane" aria-live="polite">
+            <!-- ▼ 右カラム：マイ投稿用 詳細ペイン（PC専用） -->
+            <section id="postDetailPaneMine" class="post-detail-pane" aria-live="polite">
                 <div class="post-detail-empty">
                     <div class="post-detail-empty-icon">👈</div>
                     <div class="post-detail-empty-text">
                         <div class="post-detail-empty-title">デッキ詳細パネル</div>
                         <p class="post-detail-empty-main">
-                            左の<span class="post-detail-empty-accent">投稿カード</span>をクリックすると、<br>
-                            ここにデッキの詳細が表示されます。
-                        </p>
-                        <p style="margin-top:10px;">
-                            <a href="deckmaker.html" class="post-cta-link">
-                                🃏 自分のデッキを投稿する(デッキメーカーページ)
-                            </a>
+                            左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
+                            ここにそのデッキの詳細が表示されます。
                         </p>
                     </div>
                 </div>
             </section>
             <!-- ▲ 右カラム -->
 
-
         </div>
-    </main>
+</main>
 
-    <!-- =========================
-            Page: マイ投稿 (#pageMine)
-        ========================== -->
-    <main id="pageMine" class="page" hidden aria-labelledby="title-mine">
-        <!-- 上段：ヘッダー（戻る＋タイトル） -->
-        <div class="mine-header">
-            <button id="backToListBtn" class="btn-ghost" type="button">← 戻る</button>
+<!-- ▼ 投稿フィルター モーダル -->
+<div id="postFilterModal" class="modal" style="display:none;">
+    <div class="modal-content post-filter-modal" role="dialog" aria-modal="true" aria-labelledby="postFilterTitle">
+        <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
 
-            <div class="mine-header-title">
-                <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
-                <button id="mineHelpBtn" class="mine-help-btn" type="button" aria-label="マイ投稿の説明">
-                    ?
+        <div id="main-filters">
+            <!-- ▼ カードで絞り込み -->
+            <div class="filter-block filter-section post-card-filter">
+                <div class="post-card-filter-head">
+                    <strong class="filter-title">カードで絞り込み</strong>
+
+                    <div class="post-card-match-toggle" role="group" aria-label="カード条件">
+                        <button type="button" id="postFilterCardModeOr" class="post-card-mode-btn is-active">OR</button>
+                        <button type="button" id="postFilterCardModeAnd" class="post-card-mode-btn">AND</button>
+                    </div>
+                </div>
+
+                <!-- 選択中カード（チップ） -->
+                <div id="postFilterCardSelectedArea" class="post-card-selected">
+                    <div class="post-card-empty" id="postFilterCardEmpty">未選択</div>
+                    <div class="post-card-chips" id="postFilterCardChips"></div>
+                </div>
+
+                <button type="button" class="modal-buttun post-card-pick-btn" id="postFilterCardPickBtn">
+                    カードを選ぶ
                 </button>
+            </div>
+            <!-- ▲ カードで絞り込み -->
+
+            <!-- タグで絞り込み -->
+            <div class="filter-block">
+                <strong class="filter-title">タグで絞り込み</strong>
+                <p class="filter-help">デッキ情報 / 種族 / カテゴリ（テーマ）で整理して表示します。</p>
+
+                <!-- ▼ デッキ情報（常時表示） -->
+                <div class="filter-section">
+                    <div class="filter-section-title">▼ デッキ情報</div>
+                    <div id="postFilterDeckInfoArea" class="filter-group" data-key="デッキ情報">
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </div>
+
+                <!-- ▼ 種族（常時表示） -->
+                <div class="filter-section">
+                    <div class="filter-section-title">▼ 種族</div>
+                    <div id="postFilterRaceArea" class="filter-group" data-key="種族">
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </div>
+
+                <!-- ▶ カテゴリ（テーマ）（折りたたみ） -->
+                <details class="filter-details" id="postFilterCategoryDetails">
+                    <summary class="filter-section-title">▶ カテゴリ（テーマ）</summary>
+                    <div id="postFilterCategoryArea" class="filter-group" data-key="カテゴリ">
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </details>
+            </div>
+            <!-- ユーザータグで絞り込み -->
+            <div class="filter-block filter-section">
+                <strong class="filter-title">ユーザータグで絞り込み</strong>
+                <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
+
+                <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
+
+                <div class="user-tag-panel">
+                    <!-- サジェスト＋選択中エリア -->
+                    <div class="user-tag-subtitle">候補（クリックで追加）</div>
+                    <div id="userTagSuggest" class="user-tag-suggest">
+                        <!-- ★ 初期から置いておく：空表示（ここに候補が出ます / 候補がありません） -->
+                        <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
+
+                        <!-- ★ 候補チップはここにだけ描画する -->
+                        <div class="user-tag-suggest-items" data-user-tag-items></div>
+                    </div>
+
+                <div class="user-tag-subtitle">選択中(複数選択可)</div>
+                <div id="userTagSelectedArea" class="user-tag-selected-area">
+                    <!-- ★ 初期から置いておく：未選択表示 -->
+                    <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
+
+                    <!-- ★ 選択チップはここにだけ描画する -->
+                    <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+                </div>
+                </div>
             </div>
         </div>
 
-        <!-- ▼ マイ投稿：説明モーダル -->
-        <div id="mineHelpModal" class="modal" style="display:none;">
-            <div class="modal-content mine-help-modal" role="dialog" aria-modal="true" aria-labelledby="mineHelpTitle">
-                <h3 id="mineHelpTitle" class="filter-maintitle">マイ投稿について</h3>
-
-                <div class="mine-header-note" style="margin:0;">
-                    <p class="mine-header-lead">
-                        マイページでは、ログインすることで<strong>自分が投稿したデッキ</strong>を確認できます。
-                    </p>
-
-                    <ul class="mine-header-list">
-                        <li>🗂 自分のデッキ投稿を一覧で確認できます</li>
-                        <li>✏️ 投稿したデッキの<strong>デッキ解説編集</strong>ができます</li>
-                        <li>🗑 不要になったデッキ投稿の<strong>削除</strong>ができます</li>
-                    </ul>
-
-                    <div class="mine-header-beta">
-                        🧪 <strong>ベータ版のお知らせ</strong><br>
-                        今後のアップデートで、以下の機能を追加予定です。
-                        <ul>
-                            <li>❤️ いいねしたデッキ一覧の表示</li>
-                            <li>🏷 タグの編集機能</li>
-                            <li>🃏 デッキコード・デッキ内容の編集機能</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
-                    <button type="button" class="btn-ghost" id="mineHelpCloseBtn">閉じる</button>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- 上段：ログイン状況枠 -->
-        <section class="mine-login-section">
-            <div class="mine-login-box">
-
-                <!-- 上段：ID＋ボタンを横並び -->
-                <div class="mine-login-top">
-                    <!-- 左：ログインID -->
-                    <div class="mine-login-row">
-                        <span class="mine-login-label">ログイン状況(ID):</span>
-                        <span id="mine-login-username" class="mine-login-username">未ログイン</span>
-                    </div>
-
-                    <!-- 右：ボタン群 -->
-                    <div class="mine-login-auth">
-
-                        <!-- 未ログイン時：新規登録 / ログイン -->
-                        <div id="auth-mini-loggedout" style="display:none;">
-                            <button type="button" id="open-login-modal" class="auth-mini-btn" data-open="authLoginModal">
-                                新規登録 / ログイン
-                            </button>
-                        </div>
-
-                        <!-- ログイン時：アカウントデータ ＋ ログアウト -->
-                        <div id="auth-mini-loggedin" style="display:none;">
-                            <div class="auth-logged-in-row">
-                                <button class="btn ghost" type="button" id="account-data-btn" data-open="accountDataModal">
-                                    アカウントデータ
-                                </button>
-                                <button class="btn danger" type="button" id="auth-logout-btn">
-                                    ログアウト
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- 下段：説明文 -->
-                <p class="mine-login-note">
-                    アカウント登録・ログインすることで自分の投稿を表示・編集できます。
-                </p>
-
-            </div>
-        </section>
-
-
-            <!-- =========================
-                        マイ投稿：一覧＋詳細レイアウト（PC用）
-                    ========================== -->
-            <div id="mineMainLayout" class="post-main-layout">
-
-                <!-- ▼ 左カラム：マイ投稿一覧＋ページネーション -->
-                <div class="post-master-column">
-
-                    <!-- 件数だけ（マイ投稿専用） -->
-                    <div id="mineFooterTop" class="list-footer list-footer--top">
-                        <div id="resultCountMineTop" class="list-status"></div>
-                    </div>
-
-                    <!-- ★ 未ログイン時に表示する案内 -->
-                    <div id="mine-error" class="mine-nologin" style="display:none;">
-                        <p>ここにあなたの投稿が表示されます。</p>
-                        <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
-                    </div>
-
-                    <!-- マイ投稿が0件のときの案内 -->
-                    <div id="mine-empty" class="mine-empty" style="display:none;">
-                        <p>まだ投稿がありません。</p>
-                        <p>
-                            <a href="deckmaker.html" class="mine-empty-link">
-                                🃏 デッキメーカーでデッキを作りましょう！
-                            </a>
-                        </p>
-                    </div>
-
-                    <!-- マイ投稿が1件以上のときのリスト（※これ1回だけ！） -->
-                    <section id="myPostList" class="post-list" aria-live="polite"></section>
-
-                </div>
-                <!-- ▲ 左カラム -->
-
-                <!-- ▼ 右カラム：マイ投稿用 詳細ペイン（PC専用） -->
-                <section id="postDetailPaneMine" class="post-detail-pane" aria-live="polite">
-                    <div class="post-detail-empty">
-                        <div class="post-detail-empty-icon">👈</div>
-                        <div class="post-detail-empty-text">
-                            <div class="post-detail-empty-title">デッキ詳細パネル</div>
-                            <p class="post-detail-empty-main">
-                                左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
-                                ここにそのデッキの詳細が表示されます。
-                            </p>
-                        </div>
-                    </div>
-                </section>
-                <!-- ▲ 右カラム -->
-
-            </div>
-    </main>
-
-    <!-- ▼ 投稿フィルター モーダル -->
-    <div id="postFilterModal" class="modal" style="display:none;">
-        <div class="modal-content post-filter-modal" role="dialog" aria-modal="true" aria-labelledby="postFilterTitle">
-            <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
-
-            <div id="main-filters">
-                <!-- ▼ カードで絞り込み -->
-                <div class="filter-block filter-section post-card-filter">
-                    <div class="post-card-filter-head">
-                        <strong class="filter-title">カードで絞り込み</strong>
-
-                        <div class="post-card-match-toggle" role="group" aria-label="カード条件">
-                            <button type="button" id="postFilterCardModeOr" class="post-card-mode-btn is-active">OR</button>
-                            <button type="button" id="postFilterCardModeAnd" class="post-card-mode-btn">AND</button>
-                        </div>
-                    </div>
-
-                    <!-- 選択中カード（チップ） -->
-                    <div id="postFilterCardSelectedArea" class="post-card-selected">
-                        <div class="post-card-empty" id="postFilterCardEmpty">未選択</div>
-                        <div class="post-card-chips" id="postFilterCardChips"></div>
-                    </div>
-
-                    <button type="button" class="modal-buttun post-card-pick-btn" id="postFilterCardPickBtn">
-                        カードを選ぶ
-                    </button>
-                </div>
-                <!-- ▲ カードで絞り込み -->
-
-                <!-- タグで絞り込み -->
-                <div class="filter-block">
-                    <strong class="filter-title">タグで絞り込み</strong>
-                    <p class="filter-help">デッキ情報 / 種族 / カテゴリ（テーマ）で整理して表示します。</p>
-
-                    <!-- ▼ デッキ情報（常時表示） -->
-                    <div class="filter-section">
-                        <div class="filter-section-title">▼ デッキ情報</div>
-                        <div id="postFilterDeckInfoArea" class="filter-group" data-key="デッキ情報">
-                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
-                        </div>
-                    </div>
-
-                    <!-- ▼ 種族（常時表示） -->
-                    <div class="filter-section">
-                        <div class="filter-section-title">▼ 種族</div>
-                        <div id="postFilterRaceArea" class="filter-group" data-key="種族">
-                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
-                        </div>
-                    </div>
-
-                    <!-- ▶ カテゴリ（テーマ）（折りたたみ） -->
-                    <details class="filter-details" id="postFilterCategoryDetails">
-                        <summary class="filter-section-title">▶ カテゴリ（テーマ）</summary>
-                        <div id="postFilterCategoryArea" class="filter-group" data-key="カテゴリ">
-                            <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
-                        </div>
-                    </details>
-                </div>
-                <!-- ユーザータグで絞り込み -->
-                <div class="filter-block filter-section">
-                    <strong class="filter-title">ユーザータグで絞り込み</strong>
-                    <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
-
-                    <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
-
-                    <div class="user-tag-panel">
-                        <!-- サジェスト＋選択中エリア -->
-                        <div class="user-tag-subtitle">候補（クリックで追加）</div>
-                        <div id="userTagSuggest" class="user-tag-suggest">
-                            <!-- ★ 初期から置いておく：空表示（ここに候補が出ます / 候補がありません） -->
-                            <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
-
-                            <!-- ★ 候補チップはここにだけ描画する -->
-                            <div class="user-tag-suggest-items" data-user-tag-items></div>
-                        </div>
-
-                    <div class="user-tag-subtitle">選択中(複数選択可)</div>
-                    <div id="userTagSelectedArea" class="user-tag-selected-area">
-                        <!-- ★ 初期から置いておく：未選択表示 -->
-                        <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
-
-                        <!-- ★ 選択チップはここにだけ描画する -->
-                        <div class="user-tag-selected-items" data-user-tag-selected-items></div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="modal-buttun" type="button" id="postFilterApplyBtn">
-                    この条件で絞り込む
-                </button>
-                <button class="modal-buttun" type="button" id="postFilterResetBtn">
-                    リセット
-                </button>
-                <button class="modal-buttun modal-close-btn" type="button" id="postFilterCloseBtn">
-                    閉じる
-                </button>
-            </div>
+        <div class="modal-footer">
+            <button class="modal-buttun" type="button" id="postFilterApplyBtn">
+                この条件で絞り込む
+            </button>
+            <button class="modal-buttun" type="button" id="postFilterResetBtn">
+                リセット
+            </button>
+            <button class="modal-buttun modal-close-btn" type="button" id="postFilterCloseBtn">
+                閉じる
+            </button>
         </div>
     </div>
-    <!-- ▲ 投稿フィルター モーダル -->
+</div>
+<!-- ▲ 投稿フィルター モーダル -->
 
 <!-- カード名検索：選択モーダル -->
 <div id="cardPickModal" class="modal" style="display:none;">
@@ -588,25 +574,7 @@
             <input type="password" name="password" autocomplete="current-password">
         </form>
         <iframe name="auth-login-save-frame" style="display:none;"></iframe>
-
-</div>
-
-
-<!--デッキ比較タブ -->
-<div class="tab-content" id="tab-compare">
-    <!-- ▼ デッキ比較機能 ベータ版お知らせ -->
-    <section class="beta-note beta-note--compare" id="betaCompareNote">
-        <div class="beta-note-icon">🧪</div>
-        <div class="beta-note-body">
-            <p class="beta-note-title">デッキ比較機能はベータ版では準備中です</p>
-            <p class="beta-note-text">
-                現在のベータ版ではデッキ比較タブの機能はまだ利用できません。<br>
-                今後のアップデートで、投稿デッキ同士を比較できる機能を追加予定です。
-            </p>
-        </div>
-    </section>
-</div>
-
+         <!-- ▲ パスワード保存用の隠しログインフォーム -->
 
 <!-- ▼ カード解説：候補選択モーダル（マイ投稿編集でも使用） -->
 <div class="modal" id="cardNoteSelectModal" style="display:none;">
@@ -778,15 +746,11 @@
 <script src="js/auth/account.js"></script>
 <!-- 画像生成（feature） -->
 <script src="js/features/image-export.js"></script>
-<!--フィルター-->
-<script src="js/features/postFilter.js"></script>
 
 
+<!-- ページ固有 -->
+<script src="js/pages/deck-post/deck-post-page-loader.js"></script>
 
-    <!-- 共通ヘルパー -->
-
-    <script src="js/common-page234.js"></script>
-    <script src="js/pages/deck-post/page4.js"></script>
 
 </body>
 

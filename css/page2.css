@@ -832,6 +832,27 @@
     }
 }
 
+/*種族別背景*/
+.race-bg-ドラゴン {
+    background: var(--race-dragon-bg);
+}
+
+.race-bg-アンドロイド {
+    background: var(--race-android-bg);
+}
+
+.race-bg-エレメンタル {
+    background: var(--race-elemental-bg);
+}
+
+.race-bg-ルミナス {
+    background: var(--race-luminous-bg);
+}
+
+.race-bg-シェイド {
+    background: var(--race-shade-bg);
+}
+
 /*「デッキがここに表示されます」*/
 #deckcard-empty-message {
     position: absolute;
@@ -1473,8 +1494,8 @@
     position: sticky;
     bottom: 0;
     width: auto;
-    padding: .5rem 0;
-    z-index: 1000;
+    padding: .6rem 0;
+    z-index: 3000;
     background: linear-gradient(180deg, rgba(248, 255, 248, .88), rgba(236, 255, 236, .88));
     /* ぼかしで“面”を作る */
     -webkit-backdrop-filter: blur(8px);
@@ -2302,11 +2323,11 @@
 /* カード解説 1行 */
 .post-card-note {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 100px minmax(0, 1fr);
     grid-template-rows: auto 1fr;
     grid-template-areas:
-        "left pick"
-        "left note";
+        "left right"
+        "left right";
     gap: .5rem .75rem;
     align-items: stretch;
     padding: .5rem;
@@ -2315,9 +2336,10 @@
     background: #fafafa;
     margin-bottom: .5rem;
 }
+
 @media (max-width: 1023px) {
     .post-card-note {
-        grid-template-columns: 90px 1fr;
+        grid-template-columns: 90px minmax(0, 1fr);
         gap: .25rem;
     }
 }
@@ -2509,9 +2531,26 @@
     width: 100%;
 }
 
+
+/* 右全体 */
+.post-card-note .right {
+    grid-area: right;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: .5rem;
+    align-self: stretch;
+}
+
+/* タイトル行 */
+.post-card-note .title-row {
+    width: 100%;
+    min-width: 0;
+}
+
+
 /* 右上のカード選択ボタン */
 .post-card-note .pick-btn {
-    grid-area: pick;
     width: 100%;
     padding: .45rem .6rem;
     border: 1px solid #d1d5db;
@@ -2526,8 +2565,11 @@
 
 /* 右下の解説欄 */
 .post-card-note textarea.note {
+    width: 100%;
+    min-width: 0;
     height: 100%;
     resize: vertical;
+    box-sizing: border-box;
 }
 /* カード解説追加ボタンボックス */
 .add-note-box{
@@ -2571,7 +2613,6 @@
     grid-template-columns: repeat(5, 1fr);
     gap: 6px;
     padding: 6px;
-    max-height: 65vh;
     overflow-y: auto;
 }
 
@@ -2754,7 +2795,7 @@
     cursor: pointer;
     line-height: 16px;
     font-size: 12px;
-    color: #333;
+    color: #fff;
     padding: 0;
 }
 

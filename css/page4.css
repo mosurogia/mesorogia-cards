@@ -1374,6 +1374,11 @@ body {
     --pack-stroke: rgba(var(--pack-f-accent-rgb), .70);
 }
 
+.stat-chip.pack-chip[data-pack="G"] {
+    --pack-bg: var(--pack-g-rgb);
+    --pack-stroke: rgba(var(--pack-g-accent-rgb), .70);
+}
+
 /* 特殊 / コラボ */
 .stat-chip.pack-chip[data-pack="SPECIAL"] {
     --pack-bg: var(--pack-special-rgb);
@@ -1773,6 +1778,10 @@ body {
     --pack-rgb: var(--pack-f-rgb);
 }
 
+.deck-entry[data-pack="G"] {
+    --pack-rgb: var(--pack-g-rgb);
+}
+
 .deck-entry[data-pack="SPECIAL"] {
     --pack-rgb: var(--pack-special-rgb);
 }
@@ -1967,6 +1976,11 @@ body {
 .carddetail-pack[data-pack="F"] {
     --pack-bg: var(--pack-f-rgb);
     --pack-stroke: rgba(var(--pack-f-accent-rgb), .7);
+}
+
+.carddetail-pack[data-pack="G"] {
+    --pack-bg: var(--pack-g-rgb);
+    --pack-stroke: rgba(var(--pack-g-accent-rgb), .7);
 }
 
 .carddetail-pack[data-pack="SPECIAL"] {
@@ -3189,7 +3203,12 @@ body {
     grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 4px;
     align-items: start;
-    margin-top: 3px;
+    margin: 3px 0;
+}
+
+.card-pick-modal {
+    margin: 48px auto 0;
+    min-height: min(420px, calc(100vh - 72px));
 }
 
 @media (max-width: 900px) {
@@ -3199,6 +3218,11 @@ body {
 }
 
 @media (max-width: 600px) {
+    .card-pick-modal {
+        margin-top: 20px;
+        min-height: min(360px, calc(100vh - 32px));
+    }
+
     #cardPickResult {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }

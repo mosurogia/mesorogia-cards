@@ -518,6 +518,7 @@
                 <button id="resetDeckButton">デッキリセット</button>
                 <button onclick="saveDeckToLocalStorage()">💾デッキ保存</button>
             </div>
+
             <!-- 👆ここまで“元の #deck-info 中身” -->
         </div>
 
@@ -1080,7 +1081,6 @@
 
         </div>
 
-
     <!-- ▼ カード操作モーダル -->
     <div id="cardOpModal" class="modal">
         <div class="modal-content cardop-modal" id="cardOpModalContent" role="dialog" aria-modal="true"
@@ -1130,6 +1130,15 @@
                 <button type="button" id="repSelectClose" class="modal-buttun">閉じる</button>
             </div>
         </div>
+    </div>
+
+    <!-- ▼ デッキ全体表示：オーバーレイ -->
+    <button id="deckpeek-button" type="button">
+        デッキ表示
+    </button>
+    <!-- デッキ全体表示オーバーレイ -->
+    <div id="deckpeek-overlay">
+        <div class="deckpeek-grid" id="deckpeek-grid"></div>
     </div>
 
     </div>
@@ -1240,9 +1249,6 @@
     </div>
 </div>
 
-
-
-
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
 <script src="js/common/defs.js"></script>
@@ -1255,23 +1261,33 @@
 <script src="js/auth/auth-ui.js"></script>
 <script src="js/auth/account.js"></script>
 
+<!--タブ-->
+<script src="js/features/tabs.js"></script>
+
+
 <!--カード生成-->
 <script src="js/features/cardGrid.js"></script>
+<script src="js/ui/card-detail-template.js"></script>
+<script src="js/ui/card-detail.js"></script>
+
+<!--デッキ保存-->
+<script src="js/logic/deck-saved-store.js"></script>
+<script src="js/dom/deck-saved-ui.js"></script>
+
+<!--プレビュー-->
+<script src="js/ui/card-preview.js"></script>
 
 <!--フィルター-->
 <script src="js/features/cardFilter.js"></script>
 
 <!-- 画像生成（feature） -->
 <script src="js/features/image-export.js"></script>
-<script src="js/ui/card-detail.js"></script>
+
+<!--スクショ画像生成パネル -->
+<script defer src="js/features/screenshot-panel.js"></script>
 
 <!--デッキメーカーページ専用-->
-<script src="js/pages/deckmaker/deckmaker.js"></script>
+<script src="js/pages/deckmaker/deckmaker-loader.js"></script>
 
-<!--変更予定js-->
-<!-- 共通ヘルパー -->
-<script src="js/common-page234.js"></script>
-<script src="js/pages/deckmaker/page2.js"></script>
 </body>
-
 </html>

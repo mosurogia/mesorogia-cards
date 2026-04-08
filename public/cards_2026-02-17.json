@@ -9956,10 +9956,10 @@
     "cardsearch":false,
     "graveyard_recovery":false,
     "destroy_target":"",
-    "life_effect":"",
+    "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":true
+    "CHECK":false
   },
   {
     "version":1,

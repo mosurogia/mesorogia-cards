@@ -43,6 +43,13 @@
       "selector": "#pack-fallen-fate"
     },
     {
+      "en": "Glory of the Gods",
+      "jp": "「神々の栄光」",
+      "slug": "glory-of-the-gods",
+      "key": "glory-of-the-gods",
+      "selector": "#pack-glory-of-the-gods"
+    },
+    {
       "en": "その他特殊カード",
       "jp": "",
       "slug": "その他特殊カード",
@@ -64,6 +71,7 @@
     "Drawn Sword",
     "Ensemble of Slience",
     "Fallen Fate",
+    "Glory of the Gods",
     "その他特殊カード",
     "コラボカード"
   ]

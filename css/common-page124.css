@@ -771,6 +771,12 @@
     --ring-accent: rgb(var(--pack-f-accent-rgb));
 }
 
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Glory of the Gods"] {
+    --ring: rgb(var(--pack-g-rgb));
+    --ring-accent: rgb(var(--pack-g-accent-rgb));
+}
+
+
 .filter-group[data-key="パック名"] .filter-btn[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
     --ring-accent: rgb(var(--pack-special-accent-rgb));

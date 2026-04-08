@@ -35,6 +35,13 @@
     /* ===== 種族アクセントカラー ===== */
     --race-accent: var(--race-dragon);
 
+    /* ===== 種族 淡い背景 ===== */
+        --race-dragon-bg: rgba(226, 69, 69, 0.16);
+        --race-android-bg: rgba(45, 190, 192, 0.16);
+        --race-elemental-bg: rgba(42, 183, 106, 0.16);
+        --race-luminous-bg: rgba(232, 200, 43, 0.16);
+        --race-shade-bg: rgba(139, 100, 184, 0.16);
+
     /* ===== レアリティ：グラデ枠線 ===== */
     --rarity-border-legend: linear-gradient(90deg, #91e4fb 0%, #ffffff 70%, #91e4fb 100%);
     --rarity-border-gold: linear-gradient(90deg, gold 0%, #fff5cc 70%, gold 100%);
@@ -60,6 +67,9 @@
     /*Fパック*/
     --pack-f-rgb: 103, 41, 40;
     --pack-f-accent-rgb: 172, 62, 60;
+    /*Gパック*/
+    --pack-g-rgb: 75, 150, 170;
+    --pack-g-accent-rgb: 255, 130, 70;
     /* 特殊：ダークパープル（異質・限定感） */
     --pack-special-rgb: 200, 170, 70;
     --pack-special-accent-rgb: 255, 220, 120;
