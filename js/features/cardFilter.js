@@ -84,6 +84,43 @@
     }
 
     // ==============================
+    // Keyword helper（deckmaker と共通思想）
+    // - "a b" => AND検索
+    // - haystack: keywords があればそれ優先、なければ複数dataset結合
+    // ==============================
+    function getKeywordTokensFromInput_() {
+    const keyword = (document.getElementById('keyword')?.value || '').trim().toLowerCase();
+    return keyword.split(/\s+/).filter(Boolean);
+    }
+
+    function buildHaystackFromCardEl_(cardEl) {
+    const ds = cardEl?.dataset || {};
+    const kw = (ds.keywords || '').toLowerCase().trim();
+    if (kw) return kw;
+
+    return [
+        ds.name,
+        ds.keywords,
+        ds.effect,
+        ds.field,
+        ds.ability,
+        ds.category,
+        ds.race,
+        ds.type,
+        ds.rarity,
+        ds.pack,
+    ].filter(Boolean).join(' ').toLowerCase();
+    }
+
+    function matchesTokens_(haystack, tokens) {
+    if (!tokens.length) return true;
+    const hs = String(haystack || '');
+    return tokens.every(t => hs.includes(t));
+    }
+
+
+
+    // ==============================
     // 所持フィルター（4ボタン） UI生成
     // - OFF / 所持 / 未コンプ / コンプ
     // - 排他（1つだけ選択）
@@ -404,11 +441,11 @@
     const FILTER_HELP = {
     '所持フィルター': `
         <ul>
-        <li>サイトに入力した所持情報から絞り込み</li>
-        <li><b>OFF</b>：所持条件で絞り込みしない</li>
-        <li><b>所持</b>：1枚以上持っているカードだけ表示</li>
-        <li><b>未コンプ</b>：最大枚数まで揃っていないカード（通常3/旧神1）</li>
-        <li><b>コンプ</b>：最大枚数まで揃っているカード（通常3/旧神1）</li>
+            <li>サイトに入力した所持情報から絞り込み</li>
+            <li><b>OFF</b>：所持条件で絞り込みしない</li>
+            <li><b>所持</b>：1枚以上持っているカードだけ表示</li>
+            <li><b>未コンプ</b>：最大枚数まで揃っていないカード（0~2枚所持）</li>
+            <li><b>コンプ</b>：最大枚数まで揃っているカード（通常3/旧神1枚所持）</li>
         </ul>
     `,
     'カードグループ': `
@@ -420,72 +457,72 @@
         `,
     'タイプ': `
         <ul>
-        <li>チャージャー / アタッカー / ブロッカー で絞り込み</li>
-        <li>複数選択も可能</li>
+            <li>チャージャー / アタッカー / ブロッカー で絞り込み</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'レアリティ': `
         <ul>
-        <li>レアリティ別で絞り込み</li>
-        <li>複数選択も可能</li>
+            <li>レアリティ別で絞り込み</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'パック名': `
         <ul>
-        <li>パック名で絞り込み</li>
-        <li>複数選択も可能</li>
+            <li>パック名で絞り込み</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     '種族': `
         <ul>
-        <li>種族で絞り込み</li>
-        <li>複数選択も可能</li>
+            <li>種族で絞り込み</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'カテゴリ': `
         <ul>
-        <li>カテゴリで絞り込み</li>
-        <li>枠線はカテゴリの種族に準拠</li>
-        <li>複数選択も可能</li>
+            <li>カテゴリで絞り込み</li>
+            <li>枠線はカテゴリの種族に準拠</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'コスト': `
         <ul>
-        <li>数値の範囲で絞り込み</li>
+            <li>数値の範囲で絞り込み</li>
         </ul>
     `,
     'パワー': `
         <ul>
-        <li>数値の範囲で絞り込み</li>
+            <li>数値の範囲で絞り込み</li>
         </ul>
     `,
     '効果名': `
         <ul>
-        <li>カードの効果別で絞り込み</li>
-        <li>複数選択も可能</li>
+            <li>カードの効果別で絞り込み</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'フィールド': `
         <ul>
-        <li>フィールド関係のカードで絞り込み（表示は短縮名）</li>
-        <li>複数選択も可能</li>
+            <li>フィールド関係のカードで絞り込み（表示は短縮名）</li>
+            <li>複数選択も可能</li>
         </ul>
     `,
     'BP（ブレッシングポイント）要素': `
         <ul>
-        <li><b>BPあり</b>：BP要素を持つカード</li>
-        <li><b>BPなし</b>：BP要素を持たないカード</li>
+            <li><b>BPあり</b>：BP要素を持つカード</li>
+            <li><b>BPなし</b>：BP要素を持たないカード</li>
         </ul>
     `,
     '特殊効果': `
         <ul>
-        <li>燃焼 / 拘束 / 沈黙 などで絞り込み</li>
-        <li><b>特殊効果未所持</b>：特殊効果を持たないカード</li>
+            <li>燃焼 / 拘束 / 沈黙 などで絞り込み</li>
+            <li><b>特殊効果未所持</b>：特殊効果を持たないカード</li>
         </ul>
     `,
     'その他': `
         <ul>
-        <li>ドロー / サーチ / 回復 など、効果系フラグで絞り込み</li>
+            <li>ドロー / サーチ / 回復 など、効果系フラグで絞り込み</li>
         </ul>
     `,
     };
@@ -1242,8 +1279,7 @@
         const opened = document.querySelector('.card-detail.active');
         if (opened) opened.remove();
 
-        const keyword = (document.getElementById('keyword')?.value || '').trim().toLowerCase();
-        const tokens = keyword.split(/\s+/).filter(Boolean);
+        const tokens = getKeywordTokensFromInput_();
 
         const selectedFilters = {
         race: getSelectedFilterValues('race'),
@@ -1326,16 +1362,7 @@
         } catch {}
 
         gridRoot.querySelectorAll('.card').forEach(card => {
-        const haystack =
-            (card.dataset.keywords?.toLowerCase()) ||
-            [
-            card.dataset.name,
-            card.dataset.effect,
-            card.dataset.field,
-            card.dataset.ability,
-            card.dataset.category,
-            card.dataset.race,
-            ].filter(Boolean).join(' ').toLowerCase();
+        const haystack = buildHaystackFromCardEl_(card);
 
         const cardData = {
         race: card.dataset.race,
@@ -1359,9 +1386,7 @@
         power: parseInt(card.dataset.power),
         };
 
-        const matchesKeyword = tokens.length === 0
-            ? true
-            : tokens.every(t => haystack.includes(t));
+        const matchesKeyword = matchesTokens_(haystack, tokens);
 
         const matchesFilters = Object.entries(selectedFilters).every(([key, selectedValues]) => {
         if (!selectedValues || selectedValues.length === 0) return true;
@@ -1803,9 +1828,6 @@
             });
         }
         } catch {}
-
-        updateChipsOffset();
-        window.addEventListener('resize', updateChipsOffset);
 
         // キーワード：デバウンス
         const kw = document.getElementById('keyword');

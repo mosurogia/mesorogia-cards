@@ -3,7 +3,7 @@
  * - cards_latest / packs / 検索index など「カードデータ基盤」
  *
  * 役割（このファイルに置くもの）
- * - JSON取得の共通ヘルパ（複数候補URL対応）
+ * - JSON取得の共通ヘルパ（固定URL想定）
  * - cards_latest の取得（latest抽出）＋ cardMap 構築
  * - packs カタログ読み込み（packs.json → フォールバック）
  * - pack 名分解 / slug 生成 / 略称キー判定
@@ -23,51 +23,85 @@
   window.deck = window.deck || {};
   window.cardMap = window.cardMap || {};
 
-  // ---- 参照URL（ページごとにズレても拾えるように候補を持つ）----
-  window.CARDS_JSON_CANDIDATES = window.CARDS_JSON_CANDIDATES || [
-    'public/cards_latest.json',
-    './public/cards_latest.json',
-    'cards_latest.json',
-    './cards_latest.json',
-  ];
-
-  window.PACKS_JSON_CANDIDATES = window.PACKS_JSON_CANDIDATES || [
-    'public/packs.json',
-    './public/packs.json',
-    'packs.json',
-    './packs.json',
-  ];
+  // ---- 参照URL（固定）
+  // ※ もう候補を出さない前提ならここで確定させる
+  window.CARDS_JSON_URL = window.CARDS_JSON_URL || './public/cards_latest.json';
+  window.PACKS_JSON_URL = window.PACKS_JSON_URL || './public/packs.json';
 
 
   // =====================================================
-  // 1) JSON取得：最初に成功したものを返す（404/HTML混入も弾く）
-  //  - 重要: Promiseキャッシュの前提として「ここはキャッシュ許可」で取る
+  // 0.5) pack_name 文字列の分解（EN/JP抽出）＆ slug
+  //  - 例: "Awaking The Oracle「目覚めし神託」" -> {en:"Awaking The Oracle", jp:"目覚めし神託"}
+  //  - 例: "Beyond the Sanctuary／聖域の先へ"   -> {en:"Beyond the Sanctuary", jp:"聖域の先へ"}
+  //  - 例: "Drawn Sword" -> {en:"Drawn Sword", jp:""}
   // =====================================================
 
-  async function fetchJsonFirstOk_(urls) {
-    let lastErr = null;
+  // 既にどこかで定義済みなら尊重（互換維持）
+  window.splitPackName = window.splitPackName || function splitPackName(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return { en: '', jp: '' };
 
-    for (const url of (urls || [])) {
-      try {
-        const res = await fetch(url, { cache: 'no-store' });
-        if (!res.ok) continue;
+    // 1) EN「JP」
+    {
+      const m = s.match(/^([^「]+)(?:「([^」]*)」)?/);
+      const en = (m?.[1] || '').trim();
+      const jp = (m?.[2] || '').trim();
+      if (en || jp) return { en, jp };
+    }
 
-        // content-type がJSONっぽいなら json() 優先（速い）
-        const ct = (res.headers.get('content-type') || '').toLowerCase();
-        if (ct.includes('application/json')) {
-          return await res.json();
-        }
-
-        // 怪しい場合だけ text → 判定 → parse
-        const text = await res.text();
-        if (/^\s*</.test(text)) continue; // HTML混入
-        return JSON.parse(text);
-      } catch (e) {
-        lastErr = e;
+    // 2) EN／JP
+    {
+      const slash = s.indexOf('／');
+      if (slash >= 0) {
+        return {
+          en: s.slice(0, slash).trim(),
+          jp: s.slice(slash + 1).trim(),
+        };
       }
     }
 
-    throw lastErr || new Error('JSON not found');
+    // 3) EN単体（または雑多な文字列）
+    return { en: s, jp: '' };
+  };
+
+  // page2互換：EN名だけ欲しい（空なら fallback を返す）
+  window.getPackEnName = window.getPackEnName || function getPackEnName(raw, fallback = 'その他カード') {
+    const { en } = window.splitPackName(raw);
+    return en || String(fallback ?? '');
+  };
+
+  // packs.json の slug 生成（未定義ならここで提供）
+  window.makePackSlug = window.makePackSlug || function makePackSlug(en) {
+    const s = String(en || '').trim().toLowerCase();
+    if (!s) return '';
+    // 英数とスペース中心を想定：スペース→-、それ以外は除去寄り
+    return s
+      .replace(/&/g, 'and')
+      .replace(/['"]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  };
+
+  // =====================================================
+  // 1) JSON取得：固定URLのJSONを取る（404/HTML混入も弾く）
+  //  - 重要: Promiseキャッシュの前提として「ここはキャッシュ許可」で取る
+  // =====================================================
+
+  async function fetchJsonStrict_(url) {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
+
+    // content-type がJSONっぽいなら json() 優先（速い）
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (ct.includes('application/json')) {
+      return await res.json();
+    }
+
+    // 怪しい場合だけ text → 判定 → parse
+    const text = await res.text();
+    if (/^\s*</.test(text)) throw new Error('HTML mixed in response');
+    return JSON.parse(text);
   }
 
   // =====================================================
@@ -80,7 +114,7 @@
     if (__latestCardsPromise) return __latestCardsPromise;
 
     __latestCardsPromise = (async () => {
-      const allCards = await fetchJsonFirstOk_(window.CARDS_JSON_CANDIDATES);
+      const allCards = await fetchJsonStrict_(window.CARDS_JSON_URL);
       if (!Array.isArray(allCards)) return [];
       // is_latest だけ抽出
       return allCards.filter(card => card && card.is_latest === true);
@@ -92,103 +126,107 @@
   // グローバル公開
   window.fetchLatestCards = window.fetchLatestCards || fetchLatestCards;
 
-// =====================================================
-// 3) cardMap 構築 & ensureCardMapLoaded（互換）
-// =====================================================
+  // =====================================================
+  // 3) cardMap 構築 & ensureCardMapLoaded（互換）
+  // =====================================================
 
-// cards -> window.cardMap を構築
-function buildCardMapFromCards(cards){
-  if (!Array.isArray(cards)) return;
+  // cards -> window.cardMap を構築
+  function buildCardMapFromCards(cards) {
+    if (!Array.isArray(cards)) return;
 
-  for (const card of cards){
-    const cdRaw = card.cd ?? card.id ?? '';
-    const cd5   = String(cdRaw || '').trim().padStart(5, '0');
-    if (!cd5) continue;
+    for (const card of cards) {
+      const cdRaw = card.cd ?? card.id ?? '';
+      const cd5 = String(cdRaw || '').trim().padStart(5, '0');
+      if (!cd5) continue;
 
-    window.cardMap[cd5] = {
-      cd     : cd5,
-      name   : card.name   || '',
-      race   : card.race   || '',
-      type   : card.type   || '',
-      cost   : Number(card.cost  ?? 0) || 0,
-      power  : Number(card.power ?? 0) || 0,
-      rarity : card.rarity || '',
-      packName : card.packName ?? card.pack_name ?? '',
-      pack_name: card.pack_name ?? '',          // 互換（古い側が見ることがある）
-      category : card.category  || '',
-      effect_name1: card.effect_name1 || '',
-      effect_text1: card.effect_text1 || '',
-      effect_name2: card.effect_name2 || '',
-      effect_text2: card.effect_text2 || '',
-      field: card.field ?? '',
-      //ability: card.ability ?? '', --- IGNORE ---
-      special_ability: (() => {
-        const raw = (card.special_ability ?? '').trim();
-        if (raw) return raw;
+      window.cardMap[cd5] = {
+        cd: cd5,
+        name: card.name || '',
+        race: card.race || '',
+        type: card.type || '',
+        cost: Number(card.cost ?? 0) || 0,
+        power: Number(card.power ?? 0) || 0,
+        rarity: card.rarity || '',
+        packName: card.packName ?? card.pack_name ?? '',
+        pack_name: card.pack_name ?? '', // 互換（古い側が見ることがある）
+        category: card.category || '',
+        effect_name1: card.effect_name1 || '',
+        effect_text1: card.effect_text1 || '',
+        effect_name2: card.effect_name2 || '',
+        effect_text2: card.effect_text2 || '',
+        field: card.field ?? '',
+        // ability: card.ability ?? '', --- IGNORE ---
+        special_ability: (() => {
+          const raw = (card.special_ability ?? '').trim();
+          if (raw) return raw;
 
-        const ab = [];
-        if (card.ability_burn) ab.push('燃焼');
-        if (card.ability_bind) ab.push('拘束');
-        if (card.ability_silence) ab.push('沈黙');
+          const ab = [];
+          if (card.ability_burn) ab.push('燃焼');
+          if (card.ability_bind) ab.push('拘束');
+          if (card.ability_silence) ab.push('沈黙');
 
-        return ab.length ? ab.join(' ') : '';
-      })(),
-      // --- flags（bool想定。JSONが0/1でもJS側は truthy/falseyで吸える） ---
-      BP_flag: !!card.BP_flag,
-      draw: !!card.draw,
-      graveyard_recovery: !!card.graveyard_recovery,
-      cardsearch: !!card.cardsearch,
-      power_up: !!card.power_up,
-      power_down: !!card.power_down,
-      link: !!card.link,
-      link_cd: card.link_cd ?? '',
+          return ab.length ? ab.join(' ') : '';
+        })(),
 
-      // --- 新列（enum/ability） ---
-      destroy_target: (card.destroy_target ?? '').trim(),
-      life_effect: (card.life_effect ?? '').trim(),
-      power_effect: (card.power_effect ?? '').trim(),
-      mana_effect: (card.mana_effect ?? '').trim(),
+        // --- flags（bool想定。JSONが0/1でもJS側は truthy/falseyで吸える） ---
+        BP_flag: !!card.BP_flag,
+        draw: !!card.draw,
+        graveyard_recovery: !!card.graveyard_recovery,
+        cardsearch: !!card.cardsearch,
+        power_up: !!card.power_up,
+        power_down: !!card.power_down,
+        link: !!card.link,
+        link_cd: card.link_cd ?? '',
 
-      ability_burn: !!card.ability_burn,
-      ability_bind: !!card.ability_bind,
-      ability_silence: !!card.ability_silence,
+        // --- 新列（enum/ability） ---
+        destroy_target: (card.destroy_target ?? '').trim(),
+        life_effect: (card.life_effect ?? '').trim(),
+        power_effect: (card.power_effect ?? '').trim(),
+        mana_effect: (card.mana_effect ?? '').trim(),
 
-      heal2: !!card.heal2,
+        ability_burn: !!card.ability_burn,
+        ability_bind: !!card.ability_bind,
+        ability_silence: !!card.ability_silence,
 
-      // --- 旧互換（既存フィルターや表示が壊れないように推定） ---
-      // destroy_target: OPPONENT / SELF / ALL / ''（想定）
-      destroy_opponent:
-        !!card.destroy_opponent || ['OPPONENT', 'ALL'].includes(String(card.destroy_target || '').trim()),
-      destroy_self:
-        !!card.destroy_self || ['SELF', 'ALL'].includes(String(card.destroy_target || '').trim()),
+        heal2: !!card.heal2,
 
-      // life_effect: HEAL / OPPO_DAMAGE / SELF_DAMAGE / BOTH_DAMAGE / ''（想定）
-      heal:
-        !!card.heal || !!card.heal2 || String(card.life_effect || '').trim() === 'HEAL',
+        // --- 旧互換（既存フィルターや表示が壊れないように推定） ---
+        // destroy_target: OPPONENT / SELF / ALL / ''（想定）
+        destroy_opponent:
+          !!card.destroy_opponent ||
+          ['OPPONENT', 'ALL'].includes(String(card.destroy_target || '').trim()),
+        destroy_self:
+          !!card.destroy_self ||
+          ['SELF', 'ALL'].includes(String(card.destroy_target || '').trim()),
 
-    };
+        // life_effect: HEAL / OPPO_DAMAGE / SELF_DAMAGE / BOTH_DAMAGE / ''（想定）
+        heal:
+          !!card.heal ||
+          !!card.heal2 ||
+          String(card.life_effect || '').trim() === 'HEAL',
+      };
+    }
   }
-}
 
-// 一度だけカードマスタを読み込んで cardMap を埋める（互換API）
-async function ensureCardMapLoaded(){
-  if (window.cardMap && Object.keys(window.cardMap).length > 0){
+  // 一度だけカードマスタを読み込んで cardMap を埋める（互換API）
+  async function ensureCardMapLoaded() {
+    if (window.cardMap && Object.keys(window.cardMap).length > 0) {
+      return window.cardMap;
+    }
+
+    try {
+      const cards = await window.fetchLatestCards(); // card-core の関数を使う
+      buildCardMapFromCards(cards);
+    } catch (e) {
+      console.error('[card-core] ensureCardMapLoaded: カードマスタ読み込み失敗', e);
+      throw e;
+    }
     return window.cardMap;
   }
 
-  try{
-    const cards = await window.fetchLatestCards(); // card-core の関数を使う
-    buildCardMapFromCards(cards);
-  }catch(e){
-    console.error('[card-core] ensureCardMapLoaded: カードマスタ読み込み失敗', e);
-    throw e;
-  }
-  return window.cardMap;
-}
-
-// グローバル公開（重要）
-window.ensureCardMapLoaded = window.ensureCardMapLoaded || ensureCardMapLoaded;
-window.buildCardMapFromCards = window.buildCardMapFromCards || buildCardMapFromCards;
+  // グローバル公開（重要）
+  window.ensureCardMapLoaded = window.ensureCardMapLoaded || ensureCardMapLoaded;
+  window.buildCardMapFromCards = window.buildCardMapFromCards || buildCardMapFromCards;
 
   // =====================================================
   // 4) packs.json：カタログ（Promiseキャッシュ）
@@ -202,11 +240,11 @@ window.buildCardMapFromCards = window.buildCardMapFromCards || buildCardMapFromC
 
     __packCatalogPromise = (async () => {
       try {
-        const raw = await fetchJsonFirstOk_(window.PACKS_JSON_CANDIDATES);
+        const raw = await fetchJsonStrict_(window.PACKS_JSON_URL);
 
         const arr = Array.isArray(raw?.packs) ? raw.packs
-                  : Array.isArray(raw?.list) ? raw.list
-                  : [];
+          : Array.isArray(raw?.list) ? raw.list
+            : [];
 
         const order = Array.isArray(raw?.order) ? raw.order : null;
 
@@ -266,7 +304,6 @@ window.buildCardMapFromCards = window.buildCardMapFromCards || buildCardMapFromC
 
   window.loadPackCatalog = window.loadPackCatalog || loadPackCatalog;
 
-
   // =====================================================
   // 5) パック略称キー（A〜Z / SPECIAL / COLLAB / ''）
   // =====================================================
@@ -286,35 +323,34 @@ window.buildCardMapFromCards = window.buildCardMapFromCards || buildCardMapFromC
   // ※将来は js/features/ に分離推奨（今は互換のためここに残す）
   // =====================================================
 
-// =====================================================
-// 6.x) 共通：カードの並びキー（type→cost→power→cd）
-// =====================================================
-window.getTypeOrder = window.getTypeOrder || function getTypeOrder(type) {
-  if (type === 'チャージャー') return 0;
-  if (type === 'アタッカー') return 1;
-  if (type === 'ブロッカー') return 2;
-  return 3;
-};
-
-window.getCardSortKeyFromCard = window.getCardSortKeyFromCard || function getCardSortKeyFromCard(card) {
-  const cd = String(card?.cd || card?.id || '').padStart(5, '0');
-  return {
-    type: window.getTypeOrder(card?.type),
-    cost: Number(card?.cost ?? 0) || 0,
-    power: Number(card?.power ?? 0) || 0,
-    cd,
+  // =====================================================
+  // 6.x) 共通：カードの並びキー（type→cost→power→cd）
+  // =====================================================
+  window.getTypeOrder = window.getTypeOrder || function getTypeOrder(type) {
+    if (type === 'チャージャー') return 0;
+    if (type === 'アタッカー') return 1;
+    if (type === 'ブロッカー') return 2;
+    return 3;
   };
-};
 
-window.compareCardKeys = window.compareCardKeys || function compareCardKeys(a, b) {
-  return (
-    (a.type - b.type) ||
-    (a.cost - b.cost) ||
-    (a.power - b.power) ||
-    a.cd.localeCompare(b.cd)
-  );
-};
+  window.getCardSortKeyFromCard = window.getCardSortKeyFromCard || function getCardSortKeyFromCard(card) {
+    const cd = String(card?.cd || card?.id || '').padStart(5, '0');
+    return {
+      type: window.getTypeOrder(card?.type),
+      cost: Number(card?.cost ?? 0) || 0,
+      power: Number(card?.power ?? 0) || 0,
+      cd,
+    };
+  };
 
+  window.compareCardKeys = window.compareCardKeys || function compareCardKeys(a, b) {
+    return (
+      (a.type - b.type) ||
+      (a.cost - b.cost) ||
+      (a.power - b.power) ||
+      a.cd.localeCompare(b.cd)
+    );
+  };
 
   (function installSortCards_() {
     if (window.sortCards) return;
@@ -409,7 +445,14 @@ window.compareCardKeys = window.compareCardKeys || function compareCardKeys(a, b
       // ③ DOM反映
       for (const el of items) grid.appendChild(el);
     };
-
   })();
 
+  // =====================================================
+  // 7) packs.json フォールバック用（ここで使う前提の関数）
+  // ※ splitPackName / makePackSlug が別ファイルなら、そのままでOK
+  // =====================================================
+  // このファイル内で未定義のままでも、既存コードと同様に
+  // グローバルに存在する前提で動かす設計（互換維持）
+  // - splitPackName(pack_name) -> {en,jp}
+  // - makePackSlug(en) -> slug
 })();

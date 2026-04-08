@@ -7,31 +7,55 @@
 // 共通：HTMLエスケープ（堅牢版）
 // ========================
 (function () {
-    'use strict';
+  'use strict';
 
-    function escapeHtml_(s) {
-        return String(s ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+  function escapeHtml_(s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-    window.escapeHtml_ = window.escapeHtml_ || escapeHtml_;
-    window.escapeHtml  = window.escapeHtml  || window.escapeHtml_;
+  window.escapeHtml_ = window.escapeHtml_ || escapeHtml_;
+  window.escapeHtml  = window.escapeHtml  || window.escapeHtml_;
 })();
 
+// ========================
+// 共通：日付フォーマット関数 (YYYY/MM/DD)
+// ========================
+(() => {
+  'use strict';
+  function formatYmd(d = new Date()) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}/${m}/${day}`;
+  }
+  window.formatYmd = window.formatYmd || formatYmd;
+})();
 
-// ローカル開発なら '', GitHub Pages なら '/mesorogia-cards/' などに調整
+// ========================
+// 共通：DOM取得ショートハンド
+// ========================
+// - 互換：既に window.$id が定義されているなら上書きしない
+window.$id ??= (id) => document.getElementById(id);
+
+// ローカル判定（共通）
+window.IS_LOCAL ??= (
+  location.hostname === '127.0.0.1' || location.hostname === 'localhost'
+);
+
+// ベースパス（共通）
 window.BASE_PATH = window.BASE_PATH ?? '';
 
 // =======================================
 // GAS API エンドポイント（共通定義）
 // =======================================
 window.GAS_API_BASE =
-    window.GAS_API_BASE ||
-    'https://script.google.com/macros/s/AKfycbyrP6JB6TUl-Nj0czIvXRJNZp91K50aGCVdkLhUieA1sftlyVYbhD1PJ-WUmqCLd6Nw/exec';
+  window.GAS_API_BASE ||
+  'https://script.google.com/macros/s/AKfycbyDaMWpx0QHQdtxBhVdcWi1KKV5P0Tu57Qg1KSBpR7Of_M5JAHUnUhL8wb_gD0MJWZq/exec';
 
 window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE;
 window.AUTH_API_BASE     = window.AUTH_API_BASE     || window.GAS_API_BASE;
@@ -60,46 +84,119 @@ window.RACE_ORDER ??= ['ドラゴン','アンドロイド','エレメンタル',
 // ========================
 // カテゴリ順（唯一の定義）
 // ========================
-window.CATEGORY_ORDER_MAP ??= {
-    "聖焔龍（フォルティア）": 11,
-    "ドラゴライダー": 12,
-    "電竜": 13,
-    "メロウディア": 14,
-    "メイドロボ": 21,
-    "アドミラルシップ": 22,
-    "テックノイズ": 23,
-    "ナチュリア": 31,
-    "鬼刹（きせつ）": 32,
-    "風花森（ふかしん）": 33,
-    "秘饗（バンケット）": 34,
-    "ロスリス": 41,
-    "白騎士": 42,
-    "愚者愚者（クラウンクラウド）": 43,
-    "蒼ノ刀": 44,
-    "昏き霊園（スレイヴヤード）": 51,
-    "マディスキア": 52,
-    "炎閻魔（えんえんま）": 53,
-    "ヴァントム": 54,
-    "ノーカテゴリ": 999,
+
+/**
+ * ✅ ここが「リスト集」順の本体（ソース・オブ・トゥルース）
+ * 並び順を変えたい時は、この配列の順番だけ変えればOK。
+ */
+window.CATEGORY_ORDER_LIST ??= [
+  // --- 1: ドラゴン枠 ---
+    "聖焔龍（フォルティア）",
+    "ドラゴライダー",
+    "電竜",
+    "メロウディア",
+
+    // --- 2: アンドロイド枠 ---
+    "メイドロボ",
+    "アドミラルシップ",
+    "テックノイズ",
+    "星装（アストロイ）",
+
+    // --- 3: エレメンタル枠 ---
+    "ナチュリア",
+    "鬼刹（きせつ）",
+    "風花森（ふかしん）",
+    "秘饗（バンケット）",
+    "アルケミクルス",
+
+    // --- 4: ルミナス枠 ---
+    "ロスリス",
+    "白騎士",
+    "愚者愚者（クラウンクラウド）",
+    "蒼ノ刀",
+    "歪祝（エヴァル）",
+
+
+    // --- 5: シェイド枠 ---
+    "昏き霊園（スレイヴヤード）",
+    "マディスキア",
+    "炎閻魔（えんえんま）",
+    "ヴァントム",
+
+    // --- その他 ---
+    "ノーカテゴリ",
+];
+
+/* ✅ カテゴリ→種族（枠線色用）
+ * - LISTだけでは race が分からないため “枠” 定義を持つ
+ */
+window.CATEGORY_GROUPS ??= [
+    { race: 'ドラゴン',   list: ["聖焔龍（フォルティア）","ドラゴライダー","電竜","メロウディア"] },
+    { race: 'アンドロイド', list: ["メイドロボ","アドミラルシップ","テックノイズ","星装（アストロイ）"
+    ] },
+    { race: 'エレメンタル', list: ["ナチュリア","鬼刹（きせつ）","風花森（ふかしん）","秘饗（バンケット）","アルケミクルス"] },
+    { race: 'ルミナス',   list: ["ロスリス","白騎士","愚者愚者（クラウンクラウド）","蒼ノ刀","歪祝（エヴァル）"] },
+    { race: 'シェイド',   list: ["昏き霊園（スレイヴヤード）","マディスキア","炎閻魔（えんえんま）","ヴァントム"] },
+    // ノーカテゴリは race なし
+];
+
+/**
+ * ✅ index再生成（LIST/GROUPSを差し替えた時に呼べる）
+ */
+window.rebuildCategoryDefs ??= function rebuildCategoryDefs(){
+    const list = Array.isArray(window.CATEGORY_ORDER_LIST) ? window.CATEGORY_ORDER_LIST : [];
+    const orderMap = {};
+    list.forEach((name, idx) => {
+        const key = String(name || '').trim();
+        if (!key) return;
+        orderMap[key] = idx; // 0.. の自然順
+    });
+
+    const raceMap = {};
+    const groups = Array.isArray(window.CATEGORY_GROUPS) ? window.CATEGORY_GROUPS : [];
+    groups.forEach(g => {
+        const race = String(g?.race || '').trim();
+        const arr  = Array.isArray(g?.list) ? g.list : [];
+        if (!race) return;
+        arr.forEach(name => {
+        const key = String(name || '').trim();
+        if (!key) return;
+        raceMap[key] = race;
+        });
+    });
+
+    // 不整合チェック（開発用：消してもOK）
+    for (const name of list) {
+        const key = String(name || '').trim();
+        if (!key || key === 'ノーカテゴリ') continue;
+        if (!raceMap[key]) {
+        console.warn('[defs] CATEGORY_GROUPS に race 定義がありません:', key);
+        }
+    }
+
+    window.__CATEGORY_ORDER_INDEX = orderMap;
+    window.__CATEGORY_RACE_INDEX  = raceMap;
 };
+
+// 初回ビルド
+window.rebuildCategoryDefs();
 
 // カテゴリ→種族（枠線色用）
 window.getCategoryRace ??= (category) => {
-    const code = (window.CATEGORY_ORDER_MAP || {})[String(category || '').trim()];
-    if (!code || code === 999) return null;
-
-    const tens = Math.floor(Number(code) / 10); // 1..5
-    const idx  = tens - 1;                      // 0..4
-    const order = Array.isArray(window.RACE_ORDER) ? window.RACE_ORDER : [];
-    return order[idx] || null;
+    const key = String(category || '').trim();
+    if (!key || key === 'ノーカテゴリ') return null;
+    return (window.__CATEGORY_RACE_INDEX || {})[key] || null;
 };
 
 // order取得（未定義は最後へ）
 window.getCategoryOrder ??= (category) => {
-    const m = window.CATEGORY_ORDER_MAP || {};
-    return m[String(category || '').trim()] ?? 9999;
+    const key = String(category || '').trim();
+    if (!key) return 9999;
+    const v = (window.__CATEGORY_ORDER_INDEX || {})[key];
+    return (v == null) ? 9999 : v;
 };
 
 // 一覧（定義済みカテゴリだけ・順序保証）
-window.CATEGORY_LIST ??= Object.keys(window.CATEGORY_ORDER_MAP)
-    .sort((a,b) => window.getCategoryOrder(a) - window.getCategoryOrder(b));
+window.CATEGORY_LIST ??= (Array.isArray(window.CATEGORY_ORDER_LIST) && window.CATEGORY_ORDER_LIST.length)
+    ? window.CATEGORY_ORDER_LIST.slice()
+    : [];
