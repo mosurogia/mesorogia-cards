@@ -7256,7 +7256,7 @@
     "name":"憂慮のナチュリア ランパス",
     "cost":8,
     "power":8,
-    "effect_name1":"■攻撃成功時■",
+    "effect_name1":"■召喚時■",
     "effect_text1":"相手のBPを1減らし、エレメンタルフィールドにする。",
     "effect_name2":null,
     "effect_text2":null,
