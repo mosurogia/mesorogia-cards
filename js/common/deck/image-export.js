@@ -157,16 +157,9 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
         const posterName = String(opts.posterName || '').trim();
         const posterX    = String(opts.posterX || '').trim().replace(/^@/, '');
 
-        // 並び替え（タイプ→コスト→パワー→cd）
-        const TYPE_ORDER = { 'チャージャー':0, 'アタッカー':1, 'ブロッカー':2 };
-        entries.sort((a,b)=>{
-        const A = cardMap[a[0]]||{}, B = cardMap[b[0]]||{};
-        const tA = TYPE_ORDER[A.type] ?? 99, tB = TYPE_ORDER[B.type] ?? 99;
-        if (tA !== tB) return tA - tB;
-        const cA = (parseInt(A.cost)||0), cB = (parseInt(B.cost)||0); if (cA !== cB) return cA - cB;
-        const pA = (parseInt(A.power)||0), pB = (parseInt(B.power)||0); if (pA !== pB) return pA - pB;
-        return String(a[0]).localeCompare(String(b[0]));
-        });
+        const sortedEntries =
+            window.sortCardEntries?.(entries, cardMap) ||
+            [...entries];
 
         // ★ mainRace：投稿側は opts.mainRace / デッキメーカーは computeMainRace()
         const mainRace =
@@ -177,7 +170,7 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
         // 合計・タイプ枚数
         const typeCounts = { 'チャージャー':0, 'アタッカー':0, 'ブロッカー':0 };
         let total = 0;
-        entries.forEach(([cd, n])=>{
+        sortedEntries.forEach(([cd, n])=>{
         total += (n|0);
         const t = cardMap[cd]?.type;
         if (t && typeCounts[t] != null) typeCounts[t] += (n|0);
@@ -185,20 +178,20 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
 
         // レアリティ
         const rarityMap  = { 'レジェンド':0,'ゴールド':0,'シルバー':0,'ブロンズ':0 };
-        entries.forEach(([cd, n])=>{
+        sortedEntries.forEach(([cd, n])=>{
         const r = cardMap[cd]?.rarity;
         if (r && rarityMap[r] != null) rarityMap[r] += (n|0);
         });
 
-        const uniqueList = entries.map(([cd]) => cd);
-        const countMap   = Object.fromEntries(entries.map(([cd, n]) => [String(cd), n|0]));
+        const uniqueList = sortedEntries.map(([cd]) => cd);
+        const countMap   = Object.fromEntries(sortedEntries.map(([cd, n]) => [String(cd), n|0]));
 
         // 代表カード: opts指定が最優先 → window指定 → 先頭
         const wantRep = normCd(opts.representativeCd || '');
         const repCd =
         (wantRep && deck[wantRep]) ? wantRep :
         (window.representativeCd && deck[normCd(window.representativeCd)]) ? normCd(window.representativeCd) :
-        (entries[0]?.[0] || null);
+        (sortedEntries[0]?.[0] || null);
 
         return {
         deckName, posterName, posterX,

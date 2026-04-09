@@ -208,33 +208,19 @@
     }
 
     // ============================
-    // グループ内カードの表示順（他と同じ）
-    // type → cost → power → cd
-    // - cardMap が未ロードなら cd 昇順にフォールバック
+    // グループ内カードの表示順
+    // - type → cost → power → cd
     // ============================
     function getSortedGroupCds_(cardsObj, limit = 60) {
-    const keys = Object.keys(cardsObj || {});
-    if (!keys.length) return [];
+        const keys = Object.keys(cardsObj || {});
+        if (!keys.length) return [];
 
-    const hasMap = (window.cardMap && Object.keys(window.cardMap).length > 0);
-    if (!hasMap || typeof window.getCardSortKeyFromCard !== 'function' || typeof window.compareCardKeys !== 'function') {
-        // フォールバック：cd昇順
-        return keys
-        .map(cd => String(cd).padStart(5, '0'))
-        .sort((a, b) => (Number(a) - Number(b)) || a.localeCompare(b))
-        .slice(0, limit);
-    }
+        const cardMap = window.cardMap || {};
+        const sorted = window.sortCardCodes?.(keys, cardMap) || keys
+            .map(cd => String(cd).padStart(5, '0'))
+            .sort((a, b) => a.localeCompare(b, 'ja'));
 
-    const arr = keys.map(cd => {
-        const cd5 = String(cd).padStart(5, '0');
-        const card = window.cardMap[cd5];
-        // cardMap に無い場合も壊れないように最低限の形にする
-        const key = window.getCardSortKeyFromCard(card || { cd: cd5, type: '', cost: 0, power: 0 });
-        return { cd5, key };
-    });
-
-    arr.sort((a, b) => window.compareCardKeys(a.key, b.key));
-    return arr.slice(0, limit).map(x => x.cd5);
+        return sorted.slice(0, limit);
     }
 
     function showCgPreviewRow_(groupId){

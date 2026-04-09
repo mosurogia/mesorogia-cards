@@ -7,7 +7,6 @@
  * - cards_latest の取得（latest抽出）＋ cardMap 構築
  * - packs カタログ読み込み（packs.json → フォールバック）
  * - pack 名分解 / slug 生成 / 略称キー判定
- * - （暫定）カードソート（将来は features に分離推奨）
  */
 (function () {
   'use strict';
@@ -155,7 +154,7 @@
         effect_name2: card.effect_name2 || '',
         effect_text2: card.effect_text2 || '',
         field: card.field ?? '',
-        // ability: card.ability ?? '', --- IGNORE --- 
+        // ability: card.ability ?? '', --- IGNORE ---
         special_ability: (() => {
           const raw = (card.special_ability ?? '').trim();
           if (raw) return raw;
@@ -319,133 +318,9 @@
   };
 
   // =====================================================
-  // 6) カードソート（grid/list 両対応）
-  // ※将来は js/features/ に分離推奨（今は互換のためここに残す）
+  // 6) カードソート
+  // - 並び替え本体は js/common/core/card-sort.js へ分離
   // =====================================================
-
-  // =====================================================
-  // 6.x) 共通：カードの並びキー（type→cost→power→cd）
-  // =====================================================
-  window.getTypeOrder = window.getTypeOrder || function getTypeOrder(type) {
-    if (type === 'チャージャー') return 0;
-    if (type === 'アタッカー') return 1;
-    if (type === 'ブロッカー') return 2;
-    return 3;
-  };
-
-  window.getCardSortKeyFromCard = window.getCardSortKeyFromCard || function getCardSortKeyFromCard(card) {
-    const cd = String(card?.cd || card?.id || '').padStart(5, '0');
-    return {
-      type: window.getTypeOrder(card?.type),
-      cost: Number(card?.cost ?? 0) || 0,
-      power: Number(card?.power ?? 0) || 0,
-      cd,
-    };
-  };
-
-  window.compareCardKeys = window.compareCardKeys || function compareCardKeys(a, b) {
-    return (
-      (a.type - b.type) ||
-      (a.cost - b.cost) ||
-      (a.power - b.power) ||
-      a.cd.localeCompare(b.cd)
-    );
-  };
-
-  (function installSortCards_() {
-    if (window.sortCards) return;
-
-    function getSortValue_() {
-      const sortEl = document.getElementById('sort-select');
-      return sortEl?.value || 'default';
-    }
-
-    function getKeyFromCardEl_(cardEl) {
-      const type = window.getTypeOrder(cardEl.dataset.type);
-      const cost = parseInt(cardEl.dataset.cost, 10) || 0;
-      const power = parseInt(cardEl.dataset.power, 10) || 0;
-      const cd = String(cardEl.dataset.cd || '').padStart(5, '0');
-
-      const cat = (typeof window.getCategoryOrder === 'function')
-        ? window.getCategoryOrder(cardEl.dataset.category)
-        : 9999;
-
-      const rarityOrder = { 'レジェンド': 0, 'ゴールド': 1, 'シルバー': 2, 'ブロンズ': 3 };
-      const rarity = rarityOrder[cardEl.dataset.rarity] ?? 99;
-
-      return { type, cost, power, cd, cat, rarity };
-    }
-
-    window.sortCards = function sortCards() {
-      const grid = document.getElementById('grid');
-      if (!grid) return;
-
-      const sortValue = getSortValue_();
-
-      // list表示かどうか（#grid 直下が .list-row になる）
-      const isList = grid.classList.contains('is-list') || !!grid.querySelector(':scope > .list-row');
-
-      // 並び替え対象：grid=.card / list=.list-row
-      const items = isList
-        ? Array.from(grid.querySelectorAll(':scope > .list-row'))
-        : Array.from(grid.querySelectorAll(':scope > .card'));
-
-      if (!items.length) return;
-
-      // ① 既存ソート（今の仕様そのまま）
-      items.sort((A, B) => {
-        const aCard = isList ? A.querySelector('.card') : A;
-        const bCard = isList ? B.querySelector('.card') : B;
-        if (!aCard || !bCard) return 0;
-
-        const a = getKeyFromCardEl_(aCard);
-        const b = getKeyFromCardEl_(bCard);
-
-        switch (sortValue) {
-          case 'cost-asc':
-            return a.cost - b.cost || a.type - b.type || a.power - b.power || a.cd.localeCompare(b.cd);
-          case 'cost-desc':
-            return b.cost - a.cost || a.type - b.type || a.power - b.power || a.cd.localeCompare(b.cd);
-          case 'power-asc':
-            return a.power - b.power || a.type - b.type || a.cost - b.cost || a.cd.localeCompare(b.cd);
-          case 'power-desc':
-            return b.power - a.power || a.type - b.type || a.cost - b.cost || a.cd.localeCompare(b.cd);
-          case 'category-order':
-            return a.cat - b.cat || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd);
-          case 'rarity-order':
-            return a.rarity - b.rarity || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd);
-          default:
-            return a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd);
-        }
-      });
-
-      // ② 編集開始時だけ「選択済みを先頭へ」（sort結果は壊さない＝安定分割）
-      try {
-        const editingId = window.CardGroups?.getState?.().editingId || '';
-        if (editingId && typeof window.CardGroups?.hasCard === 'function') {
-          const picked = [];
-          const rest = [];
-
-          for (const it of items) {
-            const cardEl = isList ? it.querySelector('.card') : it;
-            const cd = String(cardEl?.dataset?.cd || '').padStart(5, '0');
-            if (!cd) { rest.push(it); continue; }
-
-            if (window.CardGroups.hasCard(editingId, cd)) picked.push(it);
-            else rest.push(it);
-          }
-
-          items.length = 0;
-          items.push(...picked, ...rest);
-        }
-      } catch (e) {
-        console.warn('[sortCards] group-pick partition failed', e);
-      }
-
-      // ③ DOM反映
-      for (const el of items) grid.appendChild(el);
-    };
-  })();
 
   // =====================================================
   // 7) packs.json フォールバック用（ここで使う前提の関数）
