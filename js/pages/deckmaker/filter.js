@@ -82,7 +82,7 @@
   // ✅ 新：役割名（hidden-by-grayscale の付け外し）
   function applyHideInvalidRaceView() {
     document.querySelectorAll('.card').forEach(card => {
-      const isGrayscale = card.classList.contains('grayscale');
+      const isGrayscale = card.classList.contains('grayscale') || card.classList.contains('grayscale-race');
       if (hideInvalidRace && isGrayscale) card.classList.add('hidden-by-grayscale');
       else card.classList.remove('hidden-by-grayscale');
     });

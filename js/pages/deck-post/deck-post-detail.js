@@ -553,28 +553,8 @@
       return `<div class="post-decklist post-decklist-empty">デッキリスト未登録</div>`;
     }
 
-    const entries = Object.entries(deck);
     const cardMap = window.cardMap || {};
-    const TYPE_ORDER = { 'チャージャー': 0, 'アタッカー': 1, 'ブロッカー': 2 };
-
-    entries.sort((a, b) => {
-      const A = cardMap[a[0]] || {};
-      const B = cardMap[b[0]] || {};
-
-      const tA = TYPE_ORDER[A.type] ?? 99;
-      const tB = TYPE_ORDER[B.type] ?? 99;
-      if (tA !== tB) return tA - tB;
-
-      const cA = parseInt(A.cost, 10) || 0;
-      const cB = parseInt(B.cost, 10) || 0;
-      if (cA !== cB) return cA - cB;
-
-      const pA = parseInt(A.power, 10) || 0;
-      const pB = parseInt(B.power, 10) || 0;
-      if (pA !== pB) return pA - pB;
-
-      return String(a[0]).localeCompare(String(b[0]));
-    });
+    const entries = window.sortCardEntries?.(Object.entries(deck), cardMap) || Object.entries(deck);
 
     const tiles = entries.map(([cd, n]) => {
       const cd5 = String(cd).padStart(5, '0');

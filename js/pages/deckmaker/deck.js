@@ -37,8 +37,6 @@
   const IMG_DIR = 'img/';
   const FALLBACK_IMG = IMG_DIR + '00000.webp';
 
-  const TYPE_ORDER = { 'チャージャー': 0, 'アタッカー': 1, 'ブロッカー': 2 };
-
   // メイン種族（統一版）
   const MAIN_RACES = ['ドラゴン', 'アンドロイド', 'エレメンタル', 'ルミナス', 'シェイド'];
   const RACE_KEY_MAP = {
@@ -110,26 +108,9 @@
     return window.cardMap?.[normCd5(cd)] || window.cardMap?.[String(cd)] || null;
   }
 
+  // デッキのカードをソートして返す（表示用）
   function getDeckEntriesSorted() {
-    return Object.entries(deck).sort((a, b) => {
-      const cdA = a[0], cdB = b[0];
-      const A = getCard(cdA), B = getCard(cdB);
-      if (!A || !B) return String(cdA).localeCompare(String(cdB));
-
-      const tA = TYPE_ORDER[A.type] ?? 99;
-      const tB = TYPE_ORDER[B.type] ?? 99;
-      if (tA !== tB) return tA - tB;
-
-      const cA = (parseInt(A.cost, 10) || 0);
-      const cB = (parseInt(B.cost, 10) || 0);
-      if (cA !== cB) return cA - cB;
-
-      const pA = (parseInt(A.power, 10) || 0);
-      const pB = (parseInt(B.power, 10) || 0);
-      if (pA !== pB) return pA - pB;
-
-      return String(cdA).localeCompare(String(cdB));
-    });
+    return window.sortCardEntries?.(Object.entries(deck), window.cardMap || {}) || Object.entries(deck);
   }
 
   function exportDeckCode() {
@@ -259,6 +240,16 @@
       // 初期同期（空なら空＝“デッキリスト”）
       window.syncDeckNameFields?.();
     })();
+
+    // デッキリセットボタン
+    if (!document.__dmResetDeckBound) {
+      document.__dmResetDeckBound = true;
+      document.querySelectorAll('#resetDeckButton').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          window.resetDeckState?.();
+        });
+      });
+    }
   }
 
   // loader起点で初期化（DOMContentLoaded取り逃がし対策）
@@ -413,8 +404,11 @@
     const cards = Array.isArray(deckCards) ? deckCards : [];
 
     // 枚数
-    const deckCountEl = document.getElementById('deck-count');
-    if (deckCountEl) deckCountEl.textContent = String(cards.length);
+    const deckCount = String(cards.length);
+    const infoDeckCountEl = document.getElementById('info-deck-count');
+    const postDeckCountEl = document.getElementById('post-deck-count');
+    if (infoDeckCountEl) infoDeckCountEl.textContent = deckCount;
+    if (postDeckCountEl) postDeckCountEl.textContent = deckCount;
 
     // メイン種族（イノセント・旧神を除外）
     const races = [...new Set(cards.map(c => c?.種族))].filter(
@@ -764,6 +758,8 @@
         c.race !== '旧神' &&
         !deckRaces.has(c.race)
       );
+      // 使用不可種族の状態は所持UI再描画でも失われないよう別クラスでも保持する
+      cardEl.classList.toggle('grayscale-race', !!isUnselectedRace);
       cardEl.classList.toggle('grayscale', !!isUnselectedRace);
 
       // 使用中ラベル
@@ -915,6 +911,18 @@
     window.updateDeckSummaryDisplay?.();
     window.updateExchangeSummary?.();
     window.updateRepresentativeHighlight?.();
+  }
+
+  function resetDeckState() {
+    const hasCards = Object.keys(deck || {}).length > 0;
+    const hasRepresentative = !!representativeCd;
+    if (!hasCards && !hasRepresentative) return;
+
+    const ok = window.confirm?.('現在のデッキ内容をリセットしますか？');
+    if (!ok) return;
+
+    setDeckState({}, { representativeCd: null });
+    try { clearAutosave_(); } catch (_) {}
   }
 
     // =========================
@@ -1360,6 +1368,7 @@
   window.maybeRestoreFromStorage = maybeRestoreFromStorage;
 
   window.setDeckState = window.setDeckState || setDeckState;
+  window.resetDeckState = window.resetDeckState || resetDeckState;
 
   // UI toggles
   window.toggleDeckSummary = toggleDeckSummary;

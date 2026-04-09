@@ -25,9 +25,6 @@
     return String(cd ?? '').trim().padStart(5, '0').slice(0, 5);
   };
 
-  // 並び順（全機能で統一）
-  const TYPE_ORDER = { 'チャージャー': 0, 'アタッカー': 1, 'ブロッカー': 2 };
-
   // モバイル判定（768px以下）
   const isMobile_ = () => window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
@@ -118,23 +115,7 @@
     const deck = getDeck_();
     const cardMap = getCardMap_();
 
-    const entries = Object.entries(deck || {}).sort((a, b) => {
-      const [cdA] = a, [cdB] = b;
-      const A = cardMap[normCd5(cdA)] || cardMap[String(cdA)];
-      const B = cardMap[normCd5(cdB)] || cardMap[String(cdB)];
-      if (!A || !B) return String(cdA).localeCompare(String(cdB));
-
-      const tA = TYPE_ORDER[A.type] ?? 99, tB = TYPE_ORDER[B.type] ?? 99;
-      if (tA !== tB) return tA - tB;
-
-      const cA = (+A.cost || 0), cB = (+B.cost || 0);
-      if (cA !== cB) return cA - cB;
-
-      const pA = (+A.power || 0), pB = (+B.power || 0);
-      if (pA !== pB) return pA - pB;
-
-      return String(cdA).localeCompare(String(cdB));
-    });
+    const entries = window.sortCardEntries?.(Object.entries(deck || {}), cardMap) || Object.entries(deck || {});
 
     for (const [cdRaw] of entries) {
       const cd = normCd5(cdRaw);
@@ -703,32 +684,13 @@
     container.innerHTML = '';
     if (emptyMessage) container.appendChild(emptyMessage);
 
-    const entries = Object.entries(deck || {});
+    const entries = window.sortCardEntries?.(Object.entries(deck || {}), cardMap) || Object.entries(deck || {});
 
     // 代表カードがデッキから消えていたらリセット
     const repNow = window.representativeCd || null;
     if (repNow && !deck[repNow]) {
       window.representativeCd = null;
     }
-
-    // 並び替え（タイプ→コスト→パワー→cd）
-    entries.sort((a, b) => {
-      const [cdA] = a, [cdB] = b;
-      const A = cardMap[normCd5(cdA)] || cardMap[String(cdA)];
-      const B = cardMap[normCd5(cdB)] || cardMap[String(cdB)];
-      if (!A || !B) return String(cdA).localeCompare(String(cdB));
-
-      const tA = TYPE_ORDER[A.type] ?? 99, tB = TYPE_ORDER[B.type] ?? 99;
-      if (tA !== tB) return tA - tB;
-
-      const cA = (+A.cost || 0), cB = (+B.cost || 0);
-      if (cA !== cB) return cA - cB;
-
-      const pA = (+A.power || 0), pB = (+B.power || 0);
-      if (pA !== pB) return pA - pB;
-
-      return String(cdA).localeCompare(String(cdB));
-    });
 
     if (emptyMessage) emptyMessage.style.display = entries.length === 0 ? 'flex' : 'none';
     if (entries.length === 0) {

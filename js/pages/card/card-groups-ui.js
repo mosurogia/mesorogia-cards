@@ -134,6 +134,8 @@ function renderSidebar_() {
     // --- ヘッダ操作 enable/disable
     const hasSel = !!uiSelectedId;
     const isEditing = !!st.editingId;
+    const selectedGroup = hasSel ? st.groups[uiSelectedId] : null;
+    const selectedCardTotal = sumGroupCards_(selectedGroup?.cards || {});
 
     // 編集ボタン：通常は「選択が必要」／編集中は「終了ボタン」なので常に押せる
     {
@@ -157,7 +159,7 @@ function renderSidebar_() {
     {
     const b = qs('#cg-op-export', host);
     if (b) {
-        b.disabled = !hasSel;
+        b.disabled = !hasSel || selectedCardTotal <= 0;
         b.classList.toggle('is-disabled', b.disabled);
     }
     }
@@ -301,13 +303,9 @@ function rowHtml_(g, st) {
   // サムネ：先頭8枚
   const allCdsRaw = Object.keys(cardsObj);
 
-  const allCds = allCdsRaw
+  const allCds = window.sortCardCodes?.(allCdsRaw, window.cardMap || {}) || allCdsRaw
     .map(cd => String(cd).padStart(5, '0'))
-    .sort((a, b) => {
-      const A = window.getCardSortKeyFromCard(window.cardMap?.[a] || { cd: a });
-      const B = window.getCardSortKeyFromCard(window.cardMap?.[b] || { cd: b });
-      return window.compareCardKeys(A, B);
-    });
+    .sort((a, b) => a.localeCompare(b, 'ja'));
 
   const miniCds = allCds.slice(0, 8);
   const more = Math.max(0, allCds.length - miniCds.length);
