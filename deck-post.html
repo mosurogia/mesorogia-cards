@@ -10,14 +10,14 @@
     <link rel="icon" href="favicon.ico">
 
     <!-- ===== タイトル ===== -->
-    <title>モスロギア｜神託のメソロギア デッキ投稿</title>
+    <title>神託のメソロギア デッキ投稿｜共有・ランキング｜モスロギア</title>
 
     <!-- ===== SEO ===== -->
-    <meta name="description" content="『神託のメソロギア』のデッキ投稿・共有ページ（非公式）。投稿されたデッキ一覧の閲覧や、マイデッキの管理ができます。">
+    <meta name="description" content="神託のメソロギアのデッキ投稿一覧ページ。強いデッキ・人気デッキ・最新デッキを検索・閲覧できます。マイ投稿も確認可能。">
     <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
 
     <!-- ===== OGP ===== -->
-    <meta property="og:title" content="モスロギア｜神託のメソロギア デッキ投稿">
+    <meta property="og:title" content="神託のメソロギア デッキ投稿｜モスロギア">
     <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿デッキ一覧やマイ投稿をチェックできます。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
@@ -46,6 +46,8 @@
 
 
 <body>
+<!-- Googleでの検索結果にページタイトルと説明を表示させるための見出し -->
+<h1 style="display:none;">神託のメソロギア デッキ投稿一覧</h1>
 <!-- ヘッダー -->
 <header class="main-header">
     <div class="header-logo">
@@ -736,17 +738,18 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/defs.js"></script>
-<script src="js/common/card-core.js"></script>
-<script src="js/common/app-common.js"></script>
-<script src="js/common/owned.js"></script>
-<!-- アカウント関係 -->
-<script src="js/auth/auth-core.js"></script>
-<script src="js/auth/auth-ui.js"></script>
-<script src="js/auth/account.js"></script>
-<!-- 画像生成（feature） -->
-<script src="js/features/image-export.js"></script>
+<script src="js/common/core/defs.js"></script>
+<script src="js/common/core/card-core.js"></script>
+<script src="js/common/core/app-common.js"></script>
+<script src="js/common/storage/owned.js"></script>
 
+<!-- アカウント関係 -->
+<script src="js/common/account/auth-core.js"></script>
+<script src="js/common/account/auth-ui.js"></script>
+<script src="js/common/account/account.js"></script>
+
+<!-- 画像生成 -->
+<script src="js/common/deck/image-export.js"></script>
 
 <!-- ページ固有 -->
 <script src="js/pages/deck-post/deck-post-page-loader.js"></script>

@@ -9,10 +9,10 @@
     <link rel="icon" href="favicon.ico">
 
     <!-- ===== タイトル ===== -->
-    <title>モスロギア図鑑｜神託のメソロギア カード一覧・所持率チェッカー</title>
+    <title>神託のメソロギア カード一覧｜検索・所持率チェッカー｜モスロギア図鑑</title>
 
     <!-- ===== SEO ===== -->
-    <meta name="description" content="『神託のメソロギア』のカード一覧・検索・ソート・所持率チェックが一つになった非公式図鑑サイト。スマホ対応で快適にカード管理ができます。">
+    <meta name="description" content="神託のメソロギアのカード一覧・検索・ソート・所持率チェックができる非公式図鑑サイト。">
 
     <!-- canonical（評価をcards.htmlへ統一） -->
     <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/cards.html">
@@ -46,6 +46,8 @@
 
 
 <body>
+<!-- Googleでの検索結果にページタイトルと説明を表示させるための見出し -->
+<h1 style="display:none;">神託のメソロギア カード一覧</h1>
 <!-- ヘッダー -->
 <header class="main-header">
     <div class="header-logo">
@@ -313,34 +315,31 @@
 
 <!-- ====== JavaScript ====== -->
 <!-- 共通処理 -->
-<script src="js/common/defs.js"></script>
-<script src="js/common/card-core.js"></script>
-<script src="js/common/app-common.js"></script>
-<script src="js/common/owned.js"></script>
-<script src="js/common/card-groups.js"></script>
-<script src="js/common/summary.js"></script>
-<!--タブ-->
-<script src="js/features/tabs.js"></script>
+<script src="js/common/core/defs.js"></script>
+<script src="js/common/core/card-core.js"></script>
+<script src="js/common/core/app-common.js"></script>
+<script src="js/common/storage/owned.js"></script>
+<script src="js/common/card/summary.js"></script>
 
-<!--カード生成-->
-<script src="js/features/cardGrid.js"></script>
-<script src="js/ui/card-detail-template.js"></script>
-<script src="js/ui/card-detail.js"></script>
+<!-- UI -->
+<script src="js/common/ui/tabs.js"></script>
 
-<!--プレビュー-->
-<script src="js/ui/card-preview.js"></script>
+<!-- カード共通 -->
+<script src="js/common/card/cardGrid.js"></script>
+<script src="js/common/card/card-detail-template.js"></script>
+<script src="js/common/card/card-detail.js"></script>
+<script src="js/common/card/card-preview.js"></script>
+<script src="js/common/card/cardFilter.js"></script>
 
-<!--フィルター-->
-<script src="js/features/cardFilter.js"></script>
+<!--グループ-->
+<script src="js/common/storage/card-groups.js"></script>
 
-<!--画像生成-->
-<script src="js/features/image-export.js"></script>
-<script src="js/features/group-image-export.js"></script>
+<!-- 画像生成 -->
+<script src="js/common/deck/image-export.js"></script>
+<script src="js/common/card/group-image-export.js"></script>
 
-<!--図鑑ページ専用-->
+<!-- 図鑑ページ専用 -->
 <script src="js/pages/card/card-page-loader.js"></script>
-
-
 
 </body>
 </html>

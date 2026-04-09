@@ -9,14 +9,14 @@
     <link rel="icon" href="favicon.ico">
 
     <!-- ===== タイトル ===== -->
-    <title>モスロギア｜神託のメソロギア デッキメーカー</title>
+    <title>神託のメソロギア デッキメーカー｜カード検索・構築ツール｜モスロギア</title>
 
     <!-- ===== SEO ===== -->
-    <meta name="description" content="『神託のメソロギア』のデッキメーカー（非公式）。カード検索しながらデッキ構築・枚数調整・分析ができます。スマホ対応。">
+    <meta name="description" content="『神託のメソロギア』のデッキメーカー・カード検索ツール。カード一覧からデッキ構築・分析・投稿まで対応。スマホでも使える非公式サイト。">
     <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/deckmaker.html">
 
     <!-- ===== OGP ===== -->
-    <meta property="og:title" content="モスロギア｜神託のメソロギア デッキメーカー">
+    <meta property="og:title" content="神託のメソロギア デッキメーカー｜モスロギア">
     <meta property="og:description" content="神託のメソロギアのデッキ構築・分析ができる非公式デッキメーカーです。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deckmaker.html">
@@ -43,6 +43,8 @@
 </head>
 
 <body>
+<!-- Googleでの検索結果にページタイトルと説明を表示させるための見出し -->
+<h1 style="display:none;">神託のメソロギア デッキメーカー</h1>
 <!-- ヘッダー -->
 <header class="main-header">
     <div class="header-logo">
@@ -210,9 +212,9 @@
 </div>
 
     <!--カード一覧-->
-    <div class="grid" id="grid">
+    <main class="grid" id="grid">
 
-    </div>
+    </main>
 
 
 <!-- カード拡大モーダル（画像のみ） -->
@@ -339,7 +341,7 @@
                 <div class="info-row">
                     <div class="info-label">デッキ枚数</div>
                     <div class="info-value">
-                        <span id="deck-count">0</span>/30~40
+                        <span id="info-deck-count">0</span>/30~40
                     </div>
                 </div>
 
@@ -1251,42 +1253,36 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/defs.js"></script>
-<script src="js/common/card-core.js"></script>
-<script src="js/common/app-common.js"></script>
-<script src="js/common/owned.js"></script>
-<script src="js/common/card-groups.js"></script>
+<script src="js/common/core/defs.js"></script>
+<script src="js/common/core/card-core.js"></script>
+<script src="js/common/core/app-common.js"></script>
+<script src="js/common/storage/owned.js"></script>
+<script src="js/common/storage/card-groups.js"></script>
+
 <!-- アカウント関係 -->
-<script src="js/auth/auth-core.js"></script>
-<script src="js/auth/auth-ui.js"></script>
-<script src="js/auth/account.js"></script>
+<script src="js/common/account/auth-core.js"></script>
+<script src="js/common/account/auth-ui.js"></script>
+<script src="js/common/account/account.js"></script>
 
-<!--タブ-->
-<script src="js/features/tabs.js"></script>
+<!-- UI -->
+<script src="js/common/ui/tabs.js"></script>
 
+<!-- カード共通 -->
+<script src="js/common/card/cardGrid.js"></script>
+<script src="js/common/card/card-detail-template.js"></script>
+<script src="js/common/card/card-detail.js"></script>
+<script src="js/common/card/card-preview.js"></script>
+<script src="js/common/card/cardFilter.js"></script>
 
-<!--カード生成-->
-<script src="js/features/cardGrid.js"></script>
-<script src="js/ui/card-detail-template.js"></script>
-<script src="js/ui/card-detail.js"></script>
+<!-- デッキ保存 -->
+<script src="js/common/storage/deck-saved-store.js"></script>
+<script src="js/common/ui/deck-saved-ui.js"></script>
 
-<!--デッキ保存-->
-<script src="js/logic/deck-saved-store.js"></script>
-<script src="js/dom/deck-saved-ui.js"></script>
+<!-- 画像生成 -->
+<script src="js/common/render/image-export.js"></script>
+<script defer src="js/common/render/screenshot-panel.js"></script>
 
-<!--プレビュー-->
-<script src="js/ui/card-preview.js"></script>
-
-<!--フィルター-->
-<script src="js/features/cardFilter.js"></script>
-
-<!-- 画像生成（feature） -->
-<script src="js/features/image-export.js"></script>
-
-<!--スクショ画像生成パネル -->
-<script defer src="js/features/screenshot-panel.js"></script>
-
-<!--デッキメーカーページ専用-->
+<!-- デッキメーカーページ専用 -->
 <script src="js/pages/deckmaker/deckmaker-loader.js"></script>
 
 </body>
