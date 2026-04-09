@@ -1,5 +1,5 @@
 /* =========================================================
- * common/cardGrid.js
+ * js/common/card/cardGrid.js
  * 目的:
  *  - .card 要素の生成を共通化（図鑑 / デッキメーカー / 所持率）
  *
@@ -235,6 +235,5 @@
     window.CardUI.createCardElement = window.CardUI.createCardElement || createCardElement;
     window.generateCardListElement = window.generateCardListElement || generateCardListElement;
 })();
-
 
 

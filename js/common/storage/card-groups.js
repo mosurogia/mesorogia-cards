@@ -1,5 +1,5 @@
 /**
- * js/common/card-groups.js
+ * js/common/storage/card-groups.js
  * - カードグループのデータ/保存（localStorage）
  * - 最大10個
  * - 初期：お気に入り / メタカード（固定名）

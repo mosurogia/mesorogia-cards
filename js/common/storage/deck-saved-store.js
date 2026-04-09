@@ -1,5 +1,5 @@
 /* =========================
- * js/logic/deck-saved-store.js
+ * js/common/storage/deck-saved-store.js
  * - 保存デッキ（複数）: localStorage 永続化の中核（DOM非依存）
  *
  * 目的:

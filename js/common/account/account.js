@@ -1,5 +1,5 @@
 /* =========================
- * auth/account.js
+ * js/common/account/account.js
  * - アカウント情報モーダル（開閉/保存/反映）
  * - updateProfile をGASへ送る
  * 依存：

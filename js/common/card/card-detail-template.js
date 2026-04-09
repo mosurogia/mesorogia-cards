@@ -1,5 +1,5 @@
 /**
- * js/ui/card-detail-template.js
+ * js/common/card/card-detail-template.js
  * - 図鑑/所持率などで使う「詳細HTMLテンプレ」を提供
  * - card-detail.js の buildDetailElementFallback_ と同じDOM構造に寄せる
  * - card-list.js 互換のため window.generateDetailHtml を公開する

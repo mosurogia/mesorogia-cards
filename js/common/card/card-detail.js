@@ -1,5 +1,5 @@
 /* =========================
- * ui/card-detail.js
+ * js/common/card/card-detail.js
  * - 行間詳細（expandCard）
  * - 画像拡大モーダル（長押し）
  * - 詳細内の所持編集（+/- / 0リセット）

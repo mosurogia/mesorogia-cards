@@ -1,5 +1,5 @@
 /* =========================
- * features/group-image-export.js
+ * js/common/card/group-image-export.js
  * - カードグループ画像生成（html2canvas）
  * 依存：
  *   - window.cardMap

@@ -1,5 +1,5 @@
 /* =========================
- * js/dom/deck-saved-ui.js
+ * js/common/ui/deck-saved-ui.js
  * - 保存デッキUI（一覧描画・クリック委譲・保存/読込/削除）
  *
  * ✅ 重要（移植後の起動方式）

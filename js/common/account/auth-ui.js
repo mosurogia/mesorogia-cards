@@ -1,5 +1,5 @@
 /* =========================
- * auth/auth-ui.js
+ * js/common/account/auth-ui.js
  * - ログインUIの表示制御・イベント結線
  * - Auth（auth-core.js）を使ってログイン/登録/ログアウトを行う
  * 依存：

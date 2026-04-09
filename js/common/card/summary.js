@@ -1,5 +1,5 @@
 /* =========================
- * common/summary.js
+ * js/common/card/summary.js
  * - 所持率・コンプ率計算とUI更新
  * - updateSummary() を提供
  * - buildShareText() を提供
@@ -1011,6 +1011,5 @@ normalPacks.forEach((p, i) => {
         };
     }
 })();
-
 
 

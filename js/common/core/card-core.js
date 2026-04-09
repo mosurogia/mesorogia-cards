@@ -1,5 +1,5 @@
 /**
- * common/card-core.js
+ * js/common/core/card-core.js
  * - cards_latest / packs / 検索index など「カードデータ基盤」
  *
  * 役割（このファイルに置くもの）

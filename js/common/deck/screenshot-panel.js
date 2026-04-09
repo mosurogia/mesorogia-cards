@@ -1,5 +1,5 @@
 /* =========================
- * features/screenshot-panel.js
+ * js/common/deck/screenshot-panel.js
  * - スクショ画像：最小パネル + トリミング（ドラッグ）
  * - 初期化：window.initScreenshotPanel(opts)
  *   opts = {

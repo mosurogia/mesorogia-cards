@@ -1,5 +1,5 @@
 /* =========================
- * auth/auth-core.js
+ * js/common/account/auth-core.js
  * - 認証のコア（状態/トークン/通信）
  * - UIは触らない（auth-ui.js が担当）
  * - 依存：defs.js（AUTH_API_BASE / GAS_API_BASE）
@@ -187,4 +187,3 @@
     window.isValidXHandle   = window.isValidXHandle   || isValidXHandle;
     window.isEmailLikeName_ = window.isEmailLikeName_ || isEmailLikeName_;
     })();
-

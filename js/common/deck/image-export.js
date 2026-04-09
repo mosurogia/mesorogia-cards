@@ -1,5 +1,5 @@
 /* =========================
- * features/image-export.js
+ * js/common/deck/image-export.js
  * - デッキ画像生成（html2canvas）
  * - デッキメーカー / 投稿ページ どちらでも動く「統一版」
  * 依存：

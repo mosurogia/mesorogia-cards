@@ -1,5 +1,5 @@
 /* =========================
- * js/ui/card-preview.js
+ * js/common/card/card-preview.js
  * - カード画像プレビュー（共通）
  * - 公開：window.CardPreview / window.showCardPreviewAt / window.hideCardPreview（互換）
  * ========================= */
