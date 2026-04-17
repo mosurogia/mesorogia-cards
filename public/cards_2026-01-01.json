@@ -3,10 +3,12 @@
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10001,
     "link":false,
     "link_cd":10001,
+    "CV":"砂田 佑樹",
+    "cv_kana":"すなだ ゆうき",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -31,16 +33,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10002,
     "link":false,
     "link_cd":10002,
+    "CV":"一寺 美穂",
+    "cv_kana":"いちでら みほ",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -65,16 +70,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10003,
     "link":false,
     "link_cd":10003,
+    "CV":"北原 知奈",
+    "cv_kana":"きたはら ちな",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -99,16 +107,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-10-21",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10004,
     "link":false,
     "link_cd":10004,
+    "CV":"石川 栄一",
+    "cv_kana":"いしかわ えいいち",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -133,16 +144,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10005,
     "link":false,
     "link_cd":10005,
+    "CV":"乾 真由璃",
+    "cv_kana":"いぬい まゆり",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -167,16 +181,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10006,
     "link":false,
     "link_cd":10006,
+    "CV":"堀内 祐花",
+    "cv_kana":"ほりうち ゆうか",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -201,16 +218,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10007,
     "link":false,
     "link_cd":10007,
+    "CV":"一 潤",
+    "cv_kana":"いち じゅん",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -235,16 +255,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10008,
     "link":false,
     "link_cd":10008,
+    "CV":"生井沢 優太",
+    "cv_kana":"なまいざわ ゆうた",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -269,16 +292,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10009,
     "link":false,
     "link_cd":10009,
+    "CV":"紀ノ 貴紀",
+    "cv_kana":"きの たかのり",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -303,16 +329,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10010,
     "link":false,
     "link_cd":10010,
+    "CV":"梶原 信也",
+    "cv_kana":"かじわら しんや",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -337,16 +366,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10011,
     "link":false,
     "link_cd":10011,
+    "CV":"宮元 悠里",
+    "cv_kana":"みやもと ゆうり",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -371,16 +403,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10012,
     "link":false,
     "link_cd":10012,
+    "CV":"園枝 大輝",
+    "cv_kana":"そのえだ だいき",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -405,16 +440,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10013,
     "link":false,
     "link_cd":10013,
+    "CV":"堂坂 有希",
+    "cv_kana":"どうさか ゆうき",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -439,16 +477,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10014,
     "link":false,
     "link_cd":10014,
+    "CV":"漢那 仁史",
+    "cv_kana":"かんな ひとし",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -473,16 +514,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10015,
     "link":false,
     "link_cd":10015,
+    "CV":"池辺 久美子",
+    "cv_kana":"いけべ くみこ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -507,16 +551,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10016,
     "link":false,
     "link_cd":10016,
+    "CV":"伊藤 舞音",
+    "cv_kana":"いとう まおと",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -541,16 +588,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10017,
     "link":false,
     "link_cd":10017,
+    "CV":"園枝 大輝",
+    "cv_kana":"そのえだ だいき",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -575,16 +625,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10019,
     "link":false,
     "link_cd":10019,
+    "CV":"さかえ りょう",
+    "cv_kana":"さかえ りょう",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -609,16 +662,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10020,
     "link":false,
     "link_cd":10020,
+    "CV":"乾 真由璃",
+    "cv_kana":"いぬい まゆり",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -643,16 +699,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10021,
     "link":false,
     "link_cd":10021,
+    "CV":"嶺本 翔馬",
+    "cv_kana":"みねもと しょうま",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -677,16 +736,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10022,
     "link":false,
     "link_cd":10022,
+    "CV":"新田 純輝",
+    "cv_kana":"にった じゅんき",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -711,16 +773,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10023,
     "link":false,
     "link_cd":10023,
+    "CV":"加藤 慎也",
+    "cv_kana":"かとう しんや",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -745,16 +810,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10024,
     "link":false,
     "link_cd":10024,
+    "CV":"リア・アマリア",
+    "cv_kana":"りあ あまりあ",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -779,16 +847,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10025,
     "link":false,
     "link_cd":10025,
+    "CV":"星乃 真衣",
+    "cv_kana":"ほしの まい",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -813,16 +884,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10026,
     "link":false,
     "link_cd":10026,
+    "CV":"宮崎 綸",
+    "cv_kana":"みやざき りん",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -847,16 +921,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10027,
     "link":true,
     "link_cd":10027,
+    "CV":"彩月 ちさと",
+    "cv_kana":"あやつき ちさと",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -881,16 +958,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10028,
     "link":false,
     "link_cd":10028,
+    "CV":"槙野 旦",
+    "cv_kana":"まきの だん",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -915,16 +995,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10029,
     "link":false,
     "link_cd":10029,
+    "CV":"齋藤 響",
+    "cv_kana":"さいとう ひびき",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -949,16 +1032,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10030,
     "link":false,
     "link_cd":10030,
+    "CV":"土居 通聡",
+    "cv_kana":"どい みちあき",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -983,16 +1069,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":10031,
     "link":false,
     "link_cd":10031,
+    "CV":"小堀 真生",
+    "cv_kana":"こぼり まお",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1017,7 +1106,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -1027,6 +1117,8 @@
     "cd":10101,
     "link":false,
     "link_cd":10101,
+    "CV":"宮白 桃子",
+    "cv_kana":"みやしろ ももこ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -1051,7 +1143,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -1061,6 +1154,8 @@
     "cd":10102,
     "link":false,
     "link_cd":10102,
+    "CV":"小泉 龍之介",
+    "cv_kana":"こいずみ りゅうのすけ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -1085,7 +1180,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -1095,6 +1191,8 @@
     "cd":10103,
     "link":false,
     "link_cd":10103,
+    "CV":"冠 尚輝",
+    "cv_kana":"かんむり なおき",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1119,7 +1217,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -1129,6 +1228,8 @@
     "cd":10104,
     "link":false,
     "link_cd":10104,
+    "CV":"村井 雄治",
+    "cv_kana":"むらい ゆうじ",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1153,7 +1254,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -1163,6 +1265,8 @@
     "cd":10105,
     "link":false,
     "link_cd":10105,
+    "CV":"秋葉 恭平",
+    "cv_kana":"あきば きょうへい",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1187,7 +1291,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -1197,6 +1302,8 @@
     "cd":10201,
     "link":false,
     "link_cd":10201,
+    "CV":"桃園 りえる",
+    "cv_kana":"ももぞの りえる",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1221,7 +1328,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -1231,6 +1339,8 @@
     "cd":10202,
     "link":false,
     "link_cd":10202,
+    "CV":"川島 慶嗣",
+    "cv_kana":"かわしま よしつぐ",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1255,7 +1365,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -1265,6 +1376,8 @@
     "cd":10203,
     "link":false,
     "link_cd":10203,
+    "CV":"村上裕哉",
+    "cv_kana":"むらかみ ゆうや",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1289,7 +1402,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -1299,6 +1413,8 @@
     "cd":10204,
     "link":false,
     "link_cd":10204,
+    "CV":"島田 健司",
+    "cv_kana":"しまだ けんじ",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1323,7 +1439,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -1333,6 +1450,8 @@
     "cd":10205,
     "link":false,
     "link_cd":10205,
+    "CV":"中島 弘輝",
+    "cv_kana":"なかじま こうき",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1357,7 +1476,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":5,
@@ -1367,6 +1487,8 @@
     "cd":10206,
     "link":true,
     "link_cd":10027,
+    "CV":"杏乃 みはる",
+    "cv_kana":"あの みはる",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1391,7 +1513,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1401,6 +1524,8 @@
     "cd":10301,
     "link":false,
     "link_cd":10301,
+    "CV":"安東 心",
+    "cv_kana":"あんどう しん",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1425,7 +1550,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1435,6 +1561,8 @@
     "cd":10302,
     "link":false,
     "link_cd":10302,
+    "CV":"大 太郎",
+    "cv_kana":"だい たろう",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1459,7 +1587,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1469,6 +1598,8 @@
     "cd":10303,
     "link":false,
     "link_cd":10303,
+    "CV":"木戸 亮太",
+    "cv_kana":"きど りょうた",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1493,7 +1624,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1503,6 +1635,8 @@
     "cd":10304,
     "link":false,
     "link_cd":10304,
+    "CV":"山口 晶士",
+    "cv_kana":"やまぐち まさし",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1527,7 +1661,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1537,6 +1672,8 @@
     "cd":10305,
     "link":false,
     "link_cd":10305,
+    "CV":"吉村 伊織",
+    "cv_kana":"よしむら いおり",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1561,7 +1698,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1571,6 +1709,8 @@
     "cd":10306,
     "link":false,
     "link_cd":10306,
+    "CV":"山之内 宏樹",
+    "cv_kana":"やまのうち ひろき",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1595,7 +1735,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1605,6 +1746,8 @@
     "cd":10307,
     "link":false,
     "link_cd":10307,
+    "CV":"冠 尚輝",
+    "cv_kana":"かんむり なおき",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1629,7 +1772,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1639,6 +1783,8 @@
     "cd":10308,
     "link":false,
     "link_cd":10308,
+    "CV":"黒鉄 てつ",
+    "cv_kana":"くろがね てつ",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"電竜",
@@ -1663,7 +1809,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1673,6 +1820,8 @@
     "cd":10309,
     "link":false,
     "link_cd":10309,
+    "CV":"小林 全",
+    "cv_kana":"こばやし ぜん",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1697,7 +1846,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1707,6 +1857,8 @@
     "cd":10310,
     "link":false,
     "link_cd":10310,
+    "CV":"白城 もえの",
+    "cv_kana":"しらき もえの",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1731,7 +1883,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1741,6 +1894,8 @@
     "cd":10311,
     "link":false,
     "link_cd":10311,
+    "CV":"守 将悟",
+    "cv_kana":"もり しょうご",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1765,7 +1920,8 @@
     "life_effect":"",
     "power_effect":"BOTH",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1775,6 +1931,8 @@
     "cd":10312,
     "link":false,
     "link_cd":10312,
+    "CV":"伊藤 翔",
+    "cv_kana":"いとう しょう",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1799,7 +1957,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -1809,6 +1968,8 @@
     "cd":10313,
     "link":false,
     "link_cd":10313,
+    "CV":"知杏 芽美",
+    "cv_kana":"ちあん めみ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -1833,7 +1994,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -1843,6 +2005,8 @@
     "cd":10401,
     "link":false,
     "link_cd":10401,
+    "CV":"西門 志織",
+    "cv_kana":"さいもん しおり",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -1867,7 +2031,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -1877,6 +2042,8 @@
     "cd":10402,
     "link":false,
     "link_cd":10402,
+    "CV":"嶋原 彩心",
+    "cv_kana":"しまはら あやみ",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -1901,7 +2068,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -1911,6 +2079,8 @@
     "cd":10403,
     "link":false,
     "link_cd":10403,
+    "CV":"五十嵐 鳴",
+    "cv_kana":"いがらし めい",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -1935,7 +2105,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -1945,6 +2116,8 @@
     "cd":10404,
     "link":false,
     "link_cd":10404,
+    "CV":"新崎 瑞季",
+    "cv_kana":"しんざき みずき",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -1969,7 +2142,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -1979,6 +2153,8 @@
     "cd":10405,
     "link":false,
     "link_cd":10405,
+    "CV":"春瀬 なつみ",
+    "cv_kana":"はるせ なつみ",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -2003,7 +2179,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2013,6 +2190,8 @@
     "cd":10406,
     "link":false,
     "link_cd":10406,
+    "CV":"小澤 麗那",
+    "cv_kana":"おざわ れいな",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -2037,7 +2216,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2047,6 +2227,8 @@
     "cd":10407,
     "link":false,
     "link_cd":10407,
+    "CV":"酒井 玲",
+    "cv_kana":"さかい れい",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -2071,7 +2253,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2081,6 +2264,8 @@
     "cd":10408,
     "link":false,
     "link_cd":10408,
+    "CV":"夏生",
+    "cv_kana":"なつき",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"メロウディア",
@@ -2105,7 +2290,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2115,6 +2301,8 @@
     "cd":10409,
     "link":false,
     "link_cd":10409,
+    "CV":"武笠 友美",
+    "cv_kana":"たけがさ ともみ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"聖焔龍（フォルティア）",
@@ -2139,7 +2327,8 @@
     "life_effect":"",
     "power_effect":"BOTH",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2149,6 +2338,8 @@
     "cd":10410,
     "link":false,
     "link_cd":10410,
+    "CV":"廣庭 渓斗",
+    "cv_kana":"ひろにわ けいと",
     "rarity":"シルバー",
     "race":"ドラゴン",
     "category":"ドラゴライダー",
@@ -2173,7 +2364,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2183,6 +2375,8 @@
     "cd":10411,
     "link":false,
     "link_cd":10411,
+    "CV":"綾野 情司",
+    "cv_kana":"あやの じょうじ",
     "rarity":"ゴールド",
     "race":"ドラゴン",
     "category":"電竜",
@@ -2207,7 +2401,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2217,6 +2412,8 @@
     "cd":10412,
     "link":false,
     "link_cd":10412,
+    "CV":"川村 海乃",
+    "cv_kana":"かわむら うみの",
     "rarity":"レジェンド",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -2241,7 +2438,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -2251,6 +2449,8 @@
     "cd":10413,
     "link":false,
     "link_cd":10413,
+    "CV":"レノ 聡",
+    "cv_kana":"れの さとし",
     "rarity":"ブロンズ",
     "race":"ドラゴン",
     "category":"ノーカテゴリ",
@@ -2275,16 +2475,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20001,
     "link":false,
     "link_cd":20001,
+    "CV":"茶熊 にじ",
+    "cv_kana":"ちゃぐま にじ",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2309,16 +2512,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20002,
     "link":false,
     "link_cd":20002,
+    "CV":"乙幡 美成",
+    "cv_kana":"おとはた みなり",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2343,16 +2549,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20003,
     "link":false,
     "link_cd":20003,
+    "CV":"鷲尾 侑南",
+    "cv_kana":"わしお ゆうな",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2377,16 +2586,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20004,
     "link":false,
     "link_cd":20004,
+    "CV":"橋本 千明",
+    "cv_kana":"はしもと ちあき",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2411,16 +2623,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20005,
     "link":false,
     "link_cd":20005,
+    "CV":"宮元 悠里",
+    "cv_kana":"みやもと ゆうり",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2445,16 +2660,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20006,
     "link":false,
     "link_cd":20006,
+    "CV":"五十嵐 鳴",
+    "cv_kana":"いがらし めい",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2479,16 +2697,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20007,
     "link":false,
     "link_cd":20007,
+    "CV":"音羽 れの",
+    "cv_kana":"おとわ れの",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2513,16 +2734,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20008,
     "link":false,
     "link_cd":20008,
+    "CV":"二階堂 結",
+    "cv_kana":"にかいどう ゆい",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -2547,16 +2771,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20009,
     "link":false,
     "link_cd":20009,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2581,16 +2808,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20010,
     "link":false,
     "link_cd":20010,
+    "CV":"柏木 智仁",
+    "cv_kana":"かしわぎ ともひと",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2615,16 +2845,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20011,
     "link":false,
     "link_cd":20011,
+    "CV":"都帆 衿朱",
+    "cv_kana":"とほ えりす",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2649,16 +2882,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20012,
     "link":false,
     "link_cd":20012,
+    "CV":"橘高 けい",
+    "cv_kana":"きだか けい",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2683,16 +2919,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20013,
     "link":false,
     "link_cd":20013,
+    "CV":"朝香 心",
+    "cv_kana":"あさか こころ",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2717,16 +2956,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20014,
     "link":false,
     "link_cd":20014,
+    "CV":"乙幡 美成",
+    "cv_kana":"おとはた みなり",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2751,16 +2993,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-12-16",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20015,
     "link":false,
     "link_cd":20015,
+    "CV":"前内 孝文",
+    "cv_kana":"まえうち たかふみ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2785,16 +3030,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20016,
     "link":false,
     "link_cd":20016,
+    "CV":"宮崎 綸",
+    "cv_kana":"みやざき りん",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -2819,16 +3067,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20017,
     "link":true,
     "link_cd":20017,
+    "CV":"あまの あきこ",
+    "cv_kana":"あまの あきこ",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -2853,16 +3104,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20018,
     "link":false,
     "link_cd":20018,
+    "CV":"村上 紀生",
+    "cv_kana":"むらかみ のりお",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -2887,16 +3141,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20019,
     "link":false,
     "link_cd":20019,
+    "CV":"池辺 久美子",
+    "cv_kana":"いけべ くみこ",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -2921,16 +3178,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20020,
     "link":false,
     "link_cd":20020,
+    "CV":"池 ちさ子",
+    "cv_kana":"いけ ちさこ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -2955,16 +3215,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20021,
     "link":false,
     "link_cd":20021,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -2989,16 +3252,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20022,
     "link":false,
     "link_cd":20022,
+    "CV":"朝香 心",
+    "cv_kana":"あさか こころ",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3023,16 +3289,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20023,
     "link":false,
     "link_cd":20023,
+    "CV":"闇 子丹",
+    "cv_kana":"えん したん",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3057,16 +3326,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20024,
     "link":false,
     "link_cd":20024,
+    "CV":"福田 聖月",
+    "cv_kana":"ふくだ みつき",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3091,16 +3363,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20025,
     "link":false,
     "link_cd":20025,
+    "CV":"加藤 慎也",
+    "cv_kana":"かとう しんや",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3125,16 +3400,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20026,
     "link":false,
     "link_cd":20026,
+    "CV":"彩月 ちさと",
+    "cv_kana":"あやつき ちさと",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3159,16 +3437,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20027,
     "link":false,
     "link_cd":20027,
+    "CV":"土居 通聡",
+    "cv_kana":"どい みちあき",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3193,16 +3474,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20028,
     "link":false,
     "link_cd":20028,
+    "CV":"堂坂 有希",
+    "cv_kana":"どうさか ゆうき",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3227,16 +3511,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20029,
     "link":false,
     "link_cd":20029,
+    "CV":"さかえ りょう",
+    "cv_kana":"さかえ りょう",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3261,16 +3548,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":20030,
     "link":false,
     "link_cd":20030,
+    "CV":"伊咲 いおり",
+    "cv_kana":"いさき いおり",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3295,7 +3585,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -3305,6 +3596,8 @@
     "cd":20101,
     "link":false,
     "link_cd":20101,
+    "CV":"小戸森 さらり",
+    "cv_kana":"こともり さらり",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -3329,7 +3622,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -3339,6 +3633,8 @@
     "cd":20102,
     "link":false,
     "link_cd":20102,
+    "CV":"下鶴 直幸",
+    "cv_kana":"しもづる なおゆき",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -3363,7 +3659,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -3373,6 +3670,8 @@
     "cd":20103,
     "link":false,
     "link_cd":20103,
+    "CV":"百瀬 安由未",
+    "cv_kana":"ももせ あゆみ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3397,7 +3696,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -3407,6 +3707,8 @@
     "cd":20104,
     "link":false,
     "link_cd":20104,
+    "CV":"金田 智紀",
+    "cv_kana":"かなだ ともき",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3431,7 +3733,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -3441,6 +3744,8 @@
     "cd":20105,
     "link":false,
     "link_cd":20105,
+    "CV":"ましろ りょう",
+    "cv_kana":"ましろ りょう",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3465,7 +3770,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3475,6 +3781,8 @@
     "cd":20106,
     "link":true,
     "link_cd":20017,
+    "CV":"蓬莱 エマ",
+    "cv_kana":"ほうらい えま",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3499,7 +3807,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3509,6 +3818,8 @@
     "cd":20201,
     "link":false,
     "link_cd":20201,
+    "CV":"和泉 琴音",
+    "cv_kana":"いずみ ことね",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3533,7 +3844,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3543,6 +3855,8 @@
     "cd":20202,
     "link":false,
     "link_cd":20202,
+    "CV":"桃園 りえる",
+    "cv_kana":"ももぞの りえる",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3567,7 +3881,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3577,6 +3892,8 @@
     "cd":20203,
     "link":false,
     "link_cd":20203,
+    "CV":"平尾 夏愛",
+    "cv_kana":"ひらお なつめ",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3601,7 +3918,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3611,6 +3929,8 @@
     "cd":20204,
     "link":false,
     "link_cd":20204,
+    "CV":"鴉紋 ゆうく",
+    "cv_kana":"あもん ゆうく",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3635,7 +3955,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3645,6 +3966,8 @@
     "cd":20205,
     "link":false,
     "link_cd":20205,
+    "CV":"中島 弘輝",
+    "cv_kana":"なかじま こうき",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3669,7 +3992,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3679,6 +4003,8 @@
     "cd":20206,
     "link":false,
     "link_cd":20206,
+    "CV":"川島 慶嗣",
+    "cv_kana":"かわしま よしつぐ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3703,7 +4029,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3713,6 +4040,8 @@
     "cd":20207,
     "link":false,
     "link_cd":20207,
+    "CV":"法元 明菜",
+    "cv_kana":"ほうもと あきな",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3737,7 +4066,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3747,6 +4077,8 @@
     "cd":20208,
     "link":false,
     "link_cd":20208,
+    "CV":"中澤 宏佑",
+    "cv_kana":"なかざわ こうすけ",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3771,7 +4103,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3781,6 +4114,8 @@
     "cd":20209,
     "link":false,
     "link_cd":20209,
+    "CV":"犬丸 義貴",
+    "cv_kana":"いぬまる よしき",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3805,7 +4140,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3815,6 +4151,8 @@
     "cd":20210,
     "link":false,
     "link_cd":20210,
+    "CV":"篠原 なるみ",
+    "cv_kana":"しのはら なるみ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3839,7 +4177,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3849,6 +4188,8 @@
     "cd":20211,
     "link":false,
     "link_cd":20211,
+    "CV":"高川 みな",
+    "cv_kana":"たかがわ みな",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3873,7 +4214,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3883,6 +4225,8 @@
     "cd":20212,
     "link":false,
     "link_cd":20212,
+    "CV":"島田 健司",
+    "cv_kana":"しまだ けんじ",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3907,7 +4251,8 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -3917,6 +4262,8 @@
     "cd":20213,
     "link":false,
     "link_cd":20213,
+    "CV":"九条 尊",
+    "cv_kana":"くじょう たける",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -3941,7 +4288,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -3951,6 +4299,8 @@
     "cd":20301,
     "link":false,
     "link_cd":20301,
+    "CV":"宮咲 あかり",
+    "cv_kana":"みやざき あかり",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -3975,7 +4325,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -3985,6 +4336,8 @@
     "cd":20302,
     "link":false,
     "link_cd":20302,
+    "CV":"阿部 開",
+    "cv_kana":"あべ かい",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4009,7 +4362,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -4019,6 +4373,8 @@
     "cd":20303,
     "link":false,
     "link_cd":20303,
+    "CV":"塙 有咲",
+    "cv_kana":"はなわ ありさ",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4043,7 +4399,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -4053,6 +4410,8 @@
     "cd":20304,
     "link":false,
     "link_cd":20304,
+    "CV":"知杏 芽美",
+    "cv_kana":"ちあん めみ",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4077,7 +4436,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -4087,6 +4447,8 @@
     "cd":20305,
     "link":false,
     "link_cd":20305,
+    "CV":"守 将悟",
+    "cv_kana":"もり しょうご",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4111,7 +4473,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4121,6 +4484,8 @@
     "cd":20401,
     "link":false,
     "link_cd":20401,
+    "CV":"西門 志織",
+    "cv_kana":"さいもん しおり",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"メイドロボ",
@@ -4145,7 +4510,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4155,6 +4521,8 @@
     "cd":20402,
     "link":false,
     "link_cd":20402,
+    "CV":"酒井 玲",
+    "cv_kana":"さかい れい",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"アドミラルシップ",
@@ -4179,7 +4547,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4189,6 +4558,8 @@
     "cd":20403,
     "link":false,
     "link_cd":20403,
+    "CV":"レノ 聡",
+    "cv_kana":"れの さとし",
     "rarity":"シルバー",
     "race":"アンドロイド",
     "category":"テックノイズ",
@@ -4213,7 +4584,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4223,6 +4595,8 @@
     "cd":20404,
     "link":false,
     "link_cd":20404,
+    "CV":"川村 海乃",
+    "cv_kana":"かわむら うみの",
     "rarity":"ブロンズ",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4247,7 +4621,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4257,6 +4632,8 @@
     "cd":20405,
     "link":false,
     "link_cd":20405,
+    "CV":"新崎 瑞季",
+    "cv_kana":"しんざき みずき",
     "rarity":"レジェンド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4281,7 +4658,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -4291,6 +4669,8 @@
     "cd":20406,
     "link":false,
     "link_cd":20406,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -4315,16 +4695,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30001,
     "link":false,
     "link_cd":30001,
+    "CV":"宮内 倖羽",
+    "cv_kana":"みやうち こはね",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4349,16 +4732,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30002,
     "link":false,
     "link_cd":30002,
+    "CV":"橘 立夏",
+    "cv_kana":"たちばな りっか",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4383,16 +4769,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30003,
     "link":false,
     "link_cd":30003,
+    "CV":"成宮 杏",
+    "cv_kana":"なるみや あん",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4417,16 +4806,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30004,
     "link":false,
     "link_cd":30004,
+    "CV":"都帆 衿朱",
+    "cv_kana":"とほ えりす",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4451,16 +4843,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30005,
     "link":false,
     "link_cd":30005,
+    "CV":"都帆 衿朱",
+    "cv_kana":"とほ えりす",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4485,16 +4880,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30006,
     "link":false,
     "link_cd":30006,
+    "CV":"一寺 美穂",
+    "cv_kana":"いちでら みほ",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4519,16 +4917,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30007,
     "link":false,
     "link_cd":30007,
+    "CV":"二階堂 結",
+    "cv_kana":"にかいどう ゆい",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4553,16 +4954,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30008,
     "link":false,
     "link_cd":30008,
+    "CV":"彩月 ちさと",
+    "cv_kana":"あやつき ちさと",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -4587,16 +4991,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30009,
     "link":false,
     "link_cd":30009,
+    "CV":"一寺 美穂",
+    "cv_kana":"いちでら みほ",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4621,16 +5028,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30010,
     "link":false,
     "link_cd":30010,
+    "CV":"前内 孝文",
+    "cv_kana":"まえうち たかふみ",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4655,16 +5065,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30011,
     "link":false,
     "link_cd":30011,
+    "CV":"福田 聖月",
+    "cv_kana":"ふくだ みつき",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4689,16 +5102,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30012,
     "link":false,
     "link_cd":30012,
+    "CV":"池 ちさ子",
+    "cv_kana":"いけ ちさこ",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4723,16 +5139,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30013,
     "link":false,
     "link_cd":30013,
+    "CV":"福田 聖月",
+    "cv_kana":"ふくだ みつき",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4757,16 +5176,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30014,
     "link":false,
     "link_cd":30014,
+    "CV":"一 潤",
+    "cv_kana":"いち じゅん",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4791,16 +5213,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30015,
     "link":false,
     "link_cd":30015,
+    "CV":"柏木 智仁",
+    "cv_kana":"かしわぎ ともひと",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4825,16 +5250,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30016,
     "link":false,
     "link_cd":30016,
+    "CV":"園枝 大輝",
+    "cv_kana":"そのえだ だいき",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -4859,16 +5287,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30017,
     "link":false,
     "link_cd":30017,
+    "CV":"小堀 真生",
+    "cv_kana":"こぼり まお",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -4893,16 +5324,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30018,
     "link":false,
     "link_cd":30018,
+    "CV":"漢那 仁史",
+    "cv_kana":"かんな ひとし",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -4927,16 +5361,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30019,
     "link":false,
     "link_cd":30019,
+    "CV":"津々良 篤",
+    "cv_kana":"つづら あつし",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -4961,16 +5398,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30020,
     "link":false,
     "link_cd":30020,
+    "CV":"槙野 旦",
+    "cv_kana":"まきの だん",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -4995,16 +5435,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30021,
     "link":false,
     "link_cd":30021,
+    "CV":"音羽 れの",
+    "cv_kana":"おとわ れの",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5029,16 +5472,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30022,
     "link":false,
     "link_cd":30022,
+    "CV":"土居 通聡",
+    "cv_kana":"どい みちあき",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5063,16 +5509,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30023,
     "link":false,
     "link_cd":30023,
+    "CV":"乾 真由璃",
+    "cv_kana":"いぬい まゆり",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5097,16 +5546,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30024,
     "link":true,
     "link_cd":30024,
+    "CV":"梶原 信也",
+    "cv_kana":"かじわら しんや",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5131,16 +5583,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30025,
     "link":false,
     "link_cd":30025,
+    "CV":"積木 瑞希",
+    "cv_kana":"つみき みずき",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5165,16 +5620,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30026,
     "link":false,
     "link_cd":30026,
+    "CV":"成宮 杏",
+    "cv_kana":"なるみや あん",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5199,16 +5657,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30027,
     "link":false,
     "link_cd":30027,
+    "CV":"朝香 心",
+    "cv_kana":"あさか こころ",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5233,16 +5694,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30028,
     "link":false,
     "link_cd":30028,
+    "CV":"飯嶋 涼夏",
+    "cv_kana":"いいじま すずか",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5267,16 +5731,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30029,
     "link":false,
     "link_cd":30029,
+    "CV":"林 祐人",
+    "cv_kana":"はやし ゆうと",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5301,16 +5768,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":30030,
     "link":false,
     "link_cd":30030,
+    "CV":"槙野 旦",
+    "cv_kana":"まきの だん",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5335,7 +5805,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5345,6 +5816,8 @@
     "cd":30101,
     "link":false,
     "link_cd":30101,
+    "CV":"野花 ゆうか",
+    "cv_kana":"のばな ゆうか",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -5369,7 +5842,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5379,6 +5853,8 @@
     "cd":30102,
     "link":false,
     "link_cd":30102,
+    "CV":"秋葉 恭平",
+    "cv_kana":"あきば きょうへい",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -5403,7 +5879,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5413,6 +5890,8 @@
     "cd":30103,
     "link":false,
     "link_cd":30103,
+    "CV":"藤咲 果乃",
+    "cv_kana":"ふじさき かの",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5437,7 +5916,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5447,6 +5927,8 @@
     "cd":30104,
     "link":false,
     "link_cd":30104,
+    "CV":"村井 雄治",
+    "cv_kana":"むらい ゆうじ",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5471,7 +5953,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5481,6 +5964,8 @@
     "cd":30105,
     "link":false,
     "link_cd":30105,
+    "CV":"日笠 陽子",
+    "cv_kana":"ひかさ ようこ",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5505,7 +5990,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5515,6 +6001,8 @@
     "cd":30106,
     "link":false,
     "link_cd":30106,
+    "CV":"関口 理咲",
+    "cv_kana":"せきぐち りさき",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5539,7 +6027,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5549,6 +6038,8 @@
     "cd":30107,
     "link":false,
     "link_cd":30107,
+    "CV":"森永 翼",
+    "cv_kana":"もりなが つばさ",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5573,7 +6064,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5583,6 +6075,8 @@
     "cd":30108,
     "link":false,
     "link_cd":30108,
+    "CV":"宮白 桃子",
+    "cv_kana":"みやしろ ももこ",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5607,7 +6101,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5617,6 +6112,8 @@
     "cd":30109,
     "link":false,
     "link_cd":30109,
+    "CV":"荒木 藍加",
+    "cv_kana":"あらき あいか",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5641,7 +6138,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5651,6 +6149,8 @@
     "cd":30110,
     "link":false,
     "link_cd":30110,
+    "CV":"ましろ りょう",
+    "cv_kana":"ましろ りょう",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5675,7 +6175,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5685,6 +6186,8 @@
     "cd":30111,
     "link":false,
     "link_cd":30111,
+    "CV":"百瀬 安由未",
+    "cv_kana":"ももせ あゆみ",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5709,7 +6212,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5719,6 +6223,8 @@
     "cd":30112,
     "link":false,
     "link_cd":30112,
+    "CV":"冠 尚輝",
+    "cv_kana":"かんむり なおき",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5743,7 +6249,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -5753,6 +6260,8 @@
     "cd":30113,
     "link":false,
     "link_cd":30113,
+    "CV":"小泉 龍之介",
+    "cv_kana":"こいずみ りゅうのすけ",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5777,7 +6286,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -5787,6 +6297,8 @@
     "cd":30201,
     "link":false,
     "link_cd":30201,
+    "CV":"ユルドゥズ 香音",
+    "cv_kana":"ゆるどぅず かのん",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -5811,7 +6323,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -5821,6 +6334,8 @@
     "cd":30202,
     "link":false,
     "link_cd":30202,
+    "CV":"中澤 宏佑",
+    "cv_kana":"なかざわ こうすけ",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5845,7 +6360,8 @@
     "life_effect":"",
     "power_effect":"BOTH",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -5855,6 +6371,8 @@
     "cd":30203,
     "link":false,
     "link_cd":30203,
+    "CV":"森浦 啓悟",
+    "cv_kana":"もりうら けいご",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5879,7 +6397,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -5889,6 +6408,8 @@
     "cd":30204,
     "link":false,
     "link_cd":30204,
+    "CV":"和泉 琴音",
+    "cv_kana":"いずみ ことね",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5913,7 +6434,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -5923,6 +6445,8 @@
     "cd":30205,
     "link":false,
     "link_cd":30205,
+    "CV":"鴉紋 ゆうく",
+    "cv_kana":"あもん ゆうく",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5947,7 +6471,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":5,
@@ -5957,6 +6482,8 @@
     "cd":30214,
     "link":true,
     "link_cd":30024,
+    "CV":"ゆぴぴ",
+    "cv_kana":"ゆぴぴ",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -5981,7 +6508,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -5991,6 +6519,8 @@
     "cd":30301,
     "link":false,
     "link_cd":30301,
+    "CV":"小林 全",
+    "cv_kana":"こばやし ぜん",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6015,7 +6545,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -6025,6 +6556,8 @@
     "cd":30302,
     "link":false,
     "link_cd":30302,
+    "CV":"宮咲 あかり",
+    "cv_kana":"みやざき あかり",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6049,7 +6582,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -6059,6 +6593,8 @@
     "cd":30303,
     "link":false,
     "link_cd":30303,
+    "CV":"福本 悠",
+    "cv_kana":"ふくもと ゆう",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6083,7 +6619,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -6093,6 +6630,8 @@
     "cd":30304,
     "link":false,
     "link_cd":30304,
+    "CV":"菅原 もも",
+    "cv_kana":"すがわら もも",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6117,7 +6656,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -6127,6 +6667,8 @@
     "cd":30305,
     "link":false,
     "link_cd":30305,
+    "CV":"阿部 開",
+    "cv_kana":"あべ かい",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6151,7 +6693,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6161,6 +6704,8 @@
     "cd":30401,
     "link":false,
     "link_cd":30401,
+    "CV":"小澤 麗那",
+    "cv_kana":"おざわ れいな",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6185,7 +6730,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6195,6 +6741,8 @@
     "cd":30402,
     "link":false,
     "link_cd":30402,
+    "CV":"一宮 功樹",
+    "cv_kana":"いちみや こうき",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6219,7 +6767,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6229,6 +6778,8 @@
     "cd":30403,
     "link":false,
     "link_cd":30403,
+    "CV":"小泉 龍之介 \/ 木立 萌子",
+    "cv_kana":"こいずみ りゅうのすけ \/ きだち もえこ",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6253,7 +6804,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6263,6 +6815,8 @@
     "cd":30404,
     "link":false,
     "link_cd":30404,
+    "CV":"レノ 聡",
+    "cv_kana":"れの さとし",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6287,7 +6841,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6297,6 +6852,8 @@
     "cd":30405,
     "link":false,
     "link_cd":30405,
+    "CV":"廣庭 渓斗",
+    "cv_kana":"ひろにわ けいと",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6321,7 +6878,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6331,6 +6889,8 @@
     "cd":30406,
     "link":false,
     "link_cd":30406,
+    "CV":"加藤 健",
+    "cv_kana":"かとう けん",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6355,7 +6915,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6365,6 +6926,8 @@
     "cd":30407,
     "link":false,
     "link_cd":30407,
+    "CV":"綾野 情司",
+    "cv_kana":"あやの じょうじ",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6389,7 +6952,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6399,6 +6963,8 @@
     "cd":30408,
     "link":false,
     "link_cd":30408,
+    "CV":"眞對 友樹也",
+    "cv_kana":"まつい ゆきや",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"秘饗（バンケット）",
@@ -6423,7 +6989,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6433,6 +7000,8 @@
     "cd":30409,
     "link":false,
     "link_cd":30409,
+    "CV":"新崎 瑞季",
+    "cv_kana":"しんざき みずき",
     "rarity":"ゴールド",
     "race":"エレメンタル",
     "category":"ナチュリア",
@@ -6457,7 +7026,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6467,6 +7037,8 @@
     "cd":30410,
     "link":false,
     "link_cd":30410,
+    "CV":"一宮 功樹",
+    "cv_kana":"いちみや こうき",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"鬼刹（きせつ）",
@@ -6491,7 +7063,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6501,6 +7074,8 @@
     "cd":30411,
     "link":false,
     "link_cd":30411,
+    "CV":"川村 海乃",
+    "cv_kana":"かわむら うみの",
     "rarity":"シルバー",
     "race":"エレメンタル",
     "category":"風花森（ふかしん）",
@@ -6525,7 +7100,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6535,6 +7111,8 @@
     "cd":30412,
     "link":false,
     "link_cd":30412,
+    "CV":"嶋原 彩心",
+    "cv_kana":"しまはら あやみ",
     "rarity":"ブロンズ",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6559,7 +7137,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -6569,6 +7148,8 @@
     "cd":30413,
     "link":false,
     "link_cd":30413,
+    "CV":"加藤 健",
+    "cv_kana":"かとう けん",
     "rarity":"レジェンド",
     "race":"エレメンタル",
     "category":"ノーカテゴリ",
@@ -6593,16 +7174,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40001,
     "link":false,
     "link_cd":40001,
+    "CV":"槙野 旦",
+    "cv_kana":"まきの だん",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6627,16 +7211,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40002,
     "link":false,
     "link_cd":40002,
+    "CV":"北原 知奈",
+    "cv_kana":"きたはら ちな",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6661,16 +7248,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40003,
     "link":false,
     "link_cd":40003,
+    "CV":"日々 優理香",
+    "cv_kana":"ひび ゆりこ",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6695,16 +7285,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40004,
     "link":false,
     "link_cd":40004,
+    "CV":"砂田 佑樹",
+    "cv_kana":"すなだ ゆうき",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6729,16 +7322,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40005,
     "link":false,
     "link_cd":40005,
+    "CV":"生井沢 優太",
+    "cv_kana":"なまいざわ ゆうた",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6763,16 +7359,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40006,
     "link":false,
     "link_cd":40006,
+    "CV":"鳴島 萌華",
+    "cv_kana":"なるしま もえか",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6797,16 +7396,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40007,
     "link":false,
     "link_cd":40007,
+    "CV":"紀ノ 貴紀",
+    "cv_kana":"きの たかのり",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6831,16 +7433,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40008,
     "link":false,
     "link_cd":40008,
+    "CV":"石川 栄一",
+    "cv_kana":"いしかわ えいいち",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -6865,16 +7470,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40009,
     "link":false,
     "link_cd":40009,
+    "CV":"あまの あきこ",
+    "cv_kana":"あまの あきこ",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"白騎士",
@@ -6899,16 +7507,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40010,
     "link":false,
     "link_cd":40010,
+    "CV":"土居 通聡",
+    "cv_kana":"どい みちあき",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"白騎士",
@@ -6933,16 +7544,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40011,
     "link":false,
     "link_cd":40011,
+    "CV":"宮元 悠里",
+    "cv_kana":"みやもと ゆうり",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"白騎士",
@@ -6967,16 +7581,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40012,
     "link":false,
     "link_cd":40012,
+    "CV":"堂坂 有希",
+    "cv_kana":"どうさか ゆうき",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7001,16 +7618,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40013,
     "link":false,
     "link_cd":40013,
+    "CV":"小堀 真生",
+    "cv_kana":"こぼり まお",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7035,16 +7655,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40014,
     "link":false,
     "link_cd":40014,
+    "CV":"さかえ りょう",
+    "cv_kana":"さかえ りょう",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7069,16 +7692,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40015,
     "link":false,
     "link_cd":40015,
+    "CV":"茶熊 にじ",
+    "cv_kana":"ちゃぐま にじ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7103,16 +7729,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
     "is_latest":true,
     "updated_at":"2025-07-16",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40016,
     "link":false,
     "link_cd":40016,
+    "CV":"嶺本 翔馬",
+    "cv_kana":"みねもと しょうま",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7137,16 +7766,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40017,
     "link":false,
     "link_cd":40017,
+    "CV":"梶原 信也",
+    "cv_kana":"かじわら しんや",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7171,16 +7803,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40018,
     "link":false,
     "link_cd":40018,
+    "CV":"橘 立夏",
+    "cv_kana":"たちばな りっか",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7205,16 +7840,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40019,
     "link":false,
     "link_cd":40019,
+    "CV":"漢那 仁史",
+    "cv_kana":"かんな ひとし",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7239,16 +7877,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40020,
     "link":true,
     "link_cd":40020,
+    "CV":"八木 大貴",
+    "cv_kana":"やぎ ひろき",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7273,16 +7914,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40021,
     "link":false,
     "link_cd":40021,
+    "CV":"新田 純輝",
+    "cv_kana":"にった じゅんき",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7307,16 +7951,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40022,
     "link":false,
     "link_cd":40022,
+    "CV":"二階堂 結",
+    "cv_kana":"にかいどう ゆい",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7341,16 +7988,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40023,
     "link":false,
     "link_cd":40023,
+    "CV":"堀内 祐花",
+    "cv_kana":"ほりうち ゆうか",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7375,16 +8025,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40024,
     "link":false,
     "link_cd":40024,
+    "CV":"池辺 久美子",
+    "cv_kana":"いけべ くみこ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7409,16 +8062,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40025,
     "link":false,
     "link_cd":40025,
+    "CV":"さかえ りょう",
+    "cv_kana":"さかえ りょう",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7443,16 +8099,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40026,
     "link":false,
     "link_cd":40026,
+    "CV":"前内 孝文",
+    "cv_kana":"まえうち たかふみ",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7477,16 +8136,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40027,
     "link":false,
     "link_cd":40027,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7511,16 +8173,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40028,
     "link":false,
     "link_cd":40028,
+    "CV":"こりす",
+    "cv_kana":"こりす",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7545,16 +8210,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40029,
     "link":false,
     "link_cd":40029,
+    "CV":"津々良 篤",
+    "cv_kana":"つづら あつし",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7579,16 +8247,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":40030,
     "link":false,
     "link_cd":40030,
+    "CV":"齋藤 響",
+    "cv_kana":"さいとう ひびき",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7613,7 +8284,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":4,
@@ -7623,6 +8295,8 @@
     "cd":40101,
     "link":false,
     "link_cd":40101,
+    "CV":"藤咲 果乃",
+    "cv_kana":"ふじさき かの",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -7647,7 +8321,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7657,6 +8332,8 @@
     "cd":40102,
     "link":false,
     "link_cd":40102,
+    "CV":"ましろ りょう",
+    "cv_kana":"ましろ りょう",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"白騎士",
@@ -7681,7 +8358,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7691,6 +8369,8 @@
     "cd":40103,
     "link":false,
     "link_cd":40103,
+    "CV":"森永 翼",
+    "cv_kana":"もりなが つばさ",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7715,7 +8395,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7725,6 +8406,8 @@
     "cd":40104,
     "link":false,
     "link_cd":40104,
+    "CV":"小泉 龍之介",
+    "cv_kana":"こいずみ りゅうのすけ",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7749,7 +8432,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7759,6 +8443,8 @@
     "cd":40105,
     "link":false,
     "link_cd":40105,
+    "CV":"百瀬 安由未",
+    "cv_kana":"ももせ あゆみ",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7783,7 +8469,8 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7793,6 +8480,8 @@
     "cd":40106,
     "link":false,
     "link_cd":40106,
+    "CV":"景浦 大輔",
+    "cv_kana":"かげうら だいすけ",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7817,7 +8506,8 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7827,6 +8517,8 @@
     "cd":40107,
     "link":false,
     "link_cd":40107,
+    "CV":"関口 理咲",
+    "cv_kana":"せきぐち りさき",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7851,7 +8543,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7861,6 +8554,8 @@
     "cd":40108,
     "link":false,
     "link_cd":40108,
+    "CV":"野花 ゆうか",
+    "cv_kana":"のばな ゆうか",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7885,7 +8580,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7895,6 +8591,8 @@
     "cd":40109,
     "link":false,
     "link_cd":40109,
+    "CV":"小戸森 さらり",
+    "cv_kana":"こともり さらり",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7919,7 +8617,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7929,6 +8628,8 @@
     "cd":40110,
     "link":false,
     "link_cd":40110,
+    "CV":"秋葉 恭平",
+    "cv_kana":"あきば きょうへい",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -7953,7 +8654,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7963,6 +8665,8 @@
     "cd":40111,
     "link":false,
     "link_cd":40111,
+    "CV":"森中 葵",
+    "cv_kana":"もりなか あおい",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -7987,7 +8691,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -7997,6 +8702,8 @@
     "cd":40112,
     "link":false,
     "link_cd":40112,
+    "CV":"金田 智紀",
+    "cv_kana":"かなだ ともき",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8021,7 +8728,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -8031,6 +8739,8 @@
     "cd":40113,
     "link":false,
     "link_cd":40113,
+    "CV":"村井 雄治",
+    "cv_kana":"むらい ゆうじ",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8055,7 +8765,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -8065,6 +8776,8 @@
     "cd":40201,
     "link":false,
     "link_cd":40201,
+    "CV":"中澤 宏佑",
+    "cv_kana":"なかざわ こうすけ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"愚者愚者（クラウンクラウド）",
@@ -8089,7 +8802,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -8099,6 +8813,8 @@
     "cd":40202,
     "link":false,
     "link_cd":40202,
+    "CV":"九条 尊",
+    "cv_kana":"くじょう たける",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8123,7 +8839,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -8133,6 +8850,8 @@
     "cd":40203,
     "link":false,
     "link_cd":40203,
+    "CV":"平尾 夏愛",
+    "cv_kana":"ひらお なつめ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8157,7 +8876,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -8167,6 +8887,8 @@
     "cd":40204,
     "link":false,
     "link_cd":40204,
+    "CV":"ユルドゥズ 香音",
+    "cv_kana":"ゆるどぅず かのん",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8191,7 +8913,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -8201,6 +8924,8 @@
     "cd":40205,
     "link":false,
     "link_cd":40205,
+    "CV":"山内 璃久亜",
+    "cv_kana":"やまうち りくあ",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8225,7 +8950,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":5,
@@ -8235,6 +8961,8 @@
     "cd":40206,
     "link":true,
     "link_cd":40020,
+    "CV":"まぐねっこ・つなかん",
+    "cv_kana":"まぐねっこ・つなかん",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8259,7 +8987,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8269,6 +8998,8 @@
     "cd":40301,
     "link":false,
     "link_cd":40301,
+    "CV":"宮沢 拓弥",
+    "cv_kana":"みやざわ たくみ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8293,7 +9024,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8303,6 +9035,8 @@
     "cd":40302,
     "link":false,
     "link_cd":40302,
+    "CV":"白城 もえの",
+    "cv_kana":"しらき もえの",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8327,7 +9061,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8337,6 +9072,8 @@
     "cd":40303,
     "link":false,
     "link_cd":40303,
+    "CV":"菅原 もも",
+    "cv_kana":"すがわら もも",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8361,7 +9098,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8371,6 +9109,8 @@
     "cd":40304,
     "link":false,
     "link_cd":40304,
+    "CV":"伊藤 翔",
+    "cv_kana":"いとう しょう",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8395,7 +9135,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8405,6 +9146,8 @@
     "cd":40305,
     "link":false,
     "link_cd":40305,
+    "CV":"阿部 開",
+    "cv_kana":"あべ かい",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8429,7 +9172,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8439,6 +9183,8 @@
     "cd":40306,
     "link":false,
     "link_cd":40306,
+    "CV":"長月 あおい",
+    "cv_kana":"ながつき あおい",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8463,7 +9209,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8473,6 +9220,8 @@
     "cd":40307,
     "link":false,
     "link_cd":40307,
+    "CV":"蒼井 陽葵",
+    "cv_kana":"あおい ひまり",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8497,7 +9246,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8507,6 +9257,8 @@
     "cd":40308,
     "link":false,
     "link_cd":40308,
+    "CV":"木目沢 昌吾",
+    "cv_kana":"きめざわ しょうご",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8531,7 +9283,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8541,6 +9294,8 @@
     "cd":40309,
     "link":false,
     "link_cd":40309,
+    "CV":"守 将悟",
+    "cv_kana":"もり しょうご",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8565,7 +9320,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8575,6 +9331,8 @@
     "cd":40310,
     "link":false,
     "link_cd":40310,
+    "CV":"荒木 藍加",
+    "cv_kana":"あらき あいか",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8599,7 +9357,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8609,6 +9368,8 @@
     "cd":40311,
     "link":false,
     "link_cd":40311,
+    "CV":"小林 全",
+    "cv_kana":"こばやし ぜん",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8633,7 +9394,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8643,6 +9405,8 @@
     "cd":40312,
     "link":false,
     "link_cd":40312,
+    "CV":"福本 悠",
+    "cv_kana":"ふくもと ゆう",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8667,7 +9431,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -8677,6 +9442,8 @@
     "cd":40313,
     "link":false,
     "link_cd":40313,
+    "CV":"知杏 芽美",
+    "cv_kana":"ちあん めみ",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8701,7 +9468,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8711,6 +9479,8 @@
     "cd":40401,
     "link":false,
     "link_cd":40401,
+    "CV":"木立 萌子 \/ 綾野 情司",
+    "cv_kana":"きだち もえこ \/ あやの じょうじ",
     "rarity":"ゴールド",
     "race":"ルミナス",
     "category":"ロスリス",
@@ -8735,7 +9505,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8745,6 +9516,8 @@
     "cd":40402,
     "link":false,
     "link_cd":40402,
+    "CV":"嶋原 彩心",
+    "cv_kana":"しまはら あやみ",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"白騎士",
@@ -8769,7 +9542,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8779,6 +9553,8 @@
     "cd":40403,
     "link":false,
     "link_cd":40403,
+    "CV":"小澤 麗那",
+    "cv_kana":"おざわ れいな",
     "rarity":"シルバー",
     "race":"ルミナス",
     "category":"蒼ノ刀",
@@ -8803,7 +9579,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8813,6 +9590,8 @@
     "cd":40404,
     "link":false,
     "link_cd":40404,
+    "CV":"西門 志織",
+    "cv_kana":"さいもん しおり",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8837,7 +9616,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8847,6 +9627,8 @@
     "cd":40405,
     "link":false,
     "link_cd":40405,
+    "CV":"矢野 優美華",
+    "cv_kana":"やの ゆみか",
     "rarity":"ブロンズ",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8871,7 +9653,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -8881,6 +9664,8 @@
     "cd":40406,
     "link":false,
     "link_cd":40406,
+    "CV":"眞對 友樹也",
+    "cv_kana":"まつい ゆきや",
     "rarity":"レジェンド",
     "race":"ルミナス",
     "category":"ノーカテゴリ",
@@ -8905,16 +9690,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":true
+    "CHECK":true,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50001,
     "link":false,
     "link_cd":50001,
+    "CV":"砂田 佑樹",
+    "cv_kana":"すなだ ゆうき",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -8939,16 +9727,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50002,
     "link":false,
     "link_cd":50002,
+    "CV":"堀内 祐花",
+    "cv_kana":"ほりうち ゆうか",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -8973,16 +9764,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50003,
     "link":false,
     "link_cd":50003,
+    "CV":"生井沢 優太",
+    "cv_kana":"なまいざわ ゆうた",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9007,16 +9801,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50004,
     "link":false,
     "link_cd":50004,
+    "CV":"林 祐人",
+    "cv_kana":"はやし ゆうと",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9041,16 +9838,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50005,
     "link":false,
     "link_cd":50005,
+    "CV":"石川 栄一",
+    "cv_kana":"いしかわ えいいち",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9075,16 +9875,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50006,
     "link":false,
     "link_cd":50006,
+    "CV":"音羽 れの",
+    "cv_kana":"おとわ れの",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9109,16 +9912,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50007,
     "link":false,
     "link_cd":50007,
+    "CV":"飯嶋 涼夏",
+    "cv_kana":"いいじま すずか",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9143,16 +9949,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50008,
     "link":false,
     "link_cd":50008,
+    "CV":"鳴島 萌華",
+    "cv_kana":"なるしま もえか",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9177,16 +9986,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50009,
     "link":false,
     "link_cd":50009,
+    "CV":"橘高 けい",
+    "cv_kana":"きだか けい",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9211,16 +10023,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50010,
     "link":false,
     "link_cd":50010,
+    "CV":"都帆 衿朱",
+    "cv_kana":"とほ えりす",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9245,16 +10060,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50011,
     "link":false,
     "link_cd":50011,
+    "CV":"積木 瑞希",
+    "cv_kana":"つみき みずき",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9279,16 +10097,19 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50012,
     "link":false,
     "link_cd":50012,
+    "CV":"星乃 真衣",
+    "cv_kana":"ほしの まい",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9313,16 +10134,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50013,
     "link":false,
     "link_cd":50013,
+    "CV":"橋本 千明",
+    "cv_kana":"はしもと ちあき",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9347,16 +10171,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50014,
     "link":false,
     "link_cd":50014,
+    "CV":"こりす",
+    "cv_kana":"こりす",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9381,16 +10208,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50015,
     "link":false,
     "link_cd":50015,
+    "CV":"鷲尾 侑南",
+    "cv_kana":"わしお ゆうな",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9415,16 +10245,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50016,
     "link":false,
     "link_cd":50016,
+    "CV":"乾 真由璃",
+    "cv_kana":"いぬい まゆり",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9449,16 +10282,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50017,
     "link":false,
     "link_cd":50017,
+    "CV":"北原 知奈",
+    "cv_kana":"きたはら ちな",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -9483,16 +10319,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
     "is_latest":true,
     "updated_at":"2025-07-16",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50018,
     "link":true,
     "link_cd":50018,
+    "CV":"津々良 篤",
+    "cv_kana":"つづら あつし",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9517,16 +10356,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50019,
     "link":false,
     "link_cd":50019,
+    "CV":"村上 紀生",
+    "cv_kana":"むらかみ のりお",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9551,16 +10393,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50020,
     "link":false,
     "link_cd":50020,
+    "CV":"闇 子丹",
+    "cv_kana":"えん したん",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9585,16 +10430,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50021,
     "link":false,
     "link_cd":50021,
+    "CV":"加藤 慎也",
+    "cv_kana":"かとう しんや",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9619,16 +10467,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50022,
     "link":false,
     "link_cd":50022,
+    "CV":"八木 大貴",
+    "cv_kana":"やぎ ひろき",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9653,16 +10504,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50023,
     "link":false,
     "link_cd":50023,
+    "CV":"八木 大貴",
+    "cv_kana":"やぎ ひろき",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9687,16 +10541,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50024,
     "link":false,
     "link_cd":50024,
+    "CV":"北原 知奈",
+    "cv_kana":"きたはら ちな",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9721,16 +10578,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50025,
     "link":false,
     "link_cd":50025,
+    "CV":"前内 孝文",
+    "cv_kana":"まえうち たかふみ",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9755,16 +10615,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50026,
     "link":false,
     "link_cd":50026,
+    "CV":"鷲尾 侑南",
+    "cv_kana":"わしお ゆうな",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9789,16 +10652,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50027,
     "link":false,
     "link_cd":50027,
+    "CV":"伊咲 いおり",
+    "cv_kana":"いさき いおり",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9823,16 +10689,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50028,
     "link":false,
     "link_cd":50028,
+    "CV":"宮崎 綸",
+    "cv_kana":"みやざき りん",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9857,16 +10726,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50029,
     "link":false,
     "link_cd":50029,
+    "CV":"あまの あきこ",
+    "cv_kana":"あまの あきこ",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9891,16 +10763,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50030,
     "link":false,
     "link_cd":50030,
+    "CV":"新田 純輝",
+    "cv_kana":"にった じゅんき",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9925,16 +10800,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":50031,
     "link":false,
     "link_cd":50031,
+    "CV":"小堀 真生",
+    "cv_kana":"こぼり まお",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -9959,7 +10837,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -9969,6 +10848,8 @@
     "cd":50101,
     "link":false,
     "link_cd":50101,
+    "CV":"藤咲 果乃",
+    "cv_kana":"ふじさき かの",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -9993,7 +10874,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -10003,6 +10885,8 @@
     "cd":50102,
     "link":false,
     "link_cd":50102,
+    "CV":"森永 翼",
+    "cv_kana":"もりなが つばさ",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -10027,7 +10911,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -10037,6 +10922,8 @@
     "cd":50103,
     "link":false,
     "link_cd":50103,
+    "CV":"下鶴 直幸",
+    "cv_kana":"しもづる なおゆき",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10061,7 +10948,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -10071,6 +10959,8 @@
     "cd":50104,
     "link":false,
     "link_cd":50104,
+    "CV":"宮白 桃子",
+    "cv_kana":"みやしろ ももこ",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10095,7 +10985,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -10105,6 +10996,8 @@
     "cd":50105,
     "link":false,
     "link_cd":50105,
+    "CV":"景浦 大輔",
+    "cv_kana":"かげうら だいすけ",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10129,7 +11022,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10139,6 +11033,8 @@
     "cd":50201,
     "link":false,
     "link_cd":50201,
+    "CV":"村上裕哉",
+    "cv_kana":"むらかみ ゆうや",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10163,7 +11059,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10173,6 +11070,8 @@
     "cd":50202,
     "link":false,
     "link_cd":50202,
+    "CV":"篠原 なるみ",
+    "cv_kana":"しのはら なるみ",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10197,7 +11096,8 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10207,6 +11107,8 @@
     "cd":50203,
     "link":false,
     "link_cd":50203,
+    "CV":"鴉紋 ゆうく",
+    "cv_kana":"あもん ゆうく",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10231,7 +11133,8 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":5,
@@ -10241,6 +11144,8 @@
     "cd":50204,
     "link":false,
     "link_cd":50204,
+    "CV":"柊 優花",
+    "cv_kana":"ひいらぎ ゆか",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10265,7 +11170,8 @@
     "life_effect":"BOTH_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10275,6 +11181,8 @@
     "cd":50205,
     "link":false,
     "link_cd":50205,
+    "CV":"高川 みな",
+    "cv_kana":"たかがわ みな",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10299,7 +11207,8 @@
     "life_effect":"BOTH_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10309,6 +11218,8 @@
     "cd":50206,
     "link":false,
     "link_cd":50206,
+    "CV":"森浦 啓悟",
+    "cv_kana":"もりうら けいご",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10333,7 +11244,8 @@
     "life_effect":"BOTH_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10343,6 +11255,8 @@
     "cd":50207,
     "link":false,
     "link_cd":50207,
+    "CV":"山内 璃久亜",
+    "cv_kana":"やまうち りくあ",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10367,7 +11281,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10377,6 +11292,8 @@
     "cd":50208,
     "link":false,
     "link_cd":50208,
+    "CV":"中島 弘輝",
+    "cv_kana":"なかじま こうき",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10401,7 +11318,8 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10411,6 +11329,8 @@
     "cd":50209,
     "link":false,
     "link_cd":50209,
+    "CV":"山内 璃久亜",
+    "cv_kana":"やまうち りくあ",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10435,7 +11355,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10445,6 +11366,8 @@
     "cd":50210,
     "link":false,
     "link_cd":50210,
+    "CV":"島田 健司",
+    "cv_kana":"しまだ けんじ",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10469,7 +11392,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10479,6 +11403,8 @@
     "cd":50211,
     "link":false,
     "link_cd":50211,
+    "CV":"平尾 夏愛",
+    "cv_kana":"ひらお なつめ",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10503,7 +11429,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"BOTH",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10513,6 +11440,8 @@
     "cd":50212,
     "link":false,
     "link_cd":50212,
+    "CV":"九条 尊",
+    "cv_kana":"くじょう たける",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10537,7 +11466,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -10547,6 +11477,8 @@
     "cd":50213,
     "link":false,
     "link_cd":50213,
+    "CV":"犬丸 義貴",
+    "cv_kana":"いぬまる よしき",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10571,7 +11503,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":5,
@@ -10581,6 +11514,8 @@
     "cd":50214,
     "link":true,
     "link_cd":50018,
+    "CV":"星乃ノワル",
+    "cv_kana":"ほしの のわる",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10605,7 +11540,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -10615,6 +11551,8 @@
     "cd":50301,
     "link":false,
     "link_cd":50301,
+    "CV":"蒼井 陽葵",
+    "cv_kana":"あおい ひまり",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10639,7 +11577,8 @@
     "life_effect":"BOTH_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -10649,6 +11588,8 @@
     "cd":50302,
     "link":false,
     "link_cd":50302,
+    "CV":"塙 有咲",
+    "cv_kana":"はなわ ありさ",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10673,7 +11614,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -10683,6 +11625,8 @@
     "cd":50303,
     "link":false,
     "link_cd":50303,
+    "CV":"宮沢 拓弥",
+    "cv_kana":"みやざわ たくみ",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10707,7 +11651,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -10717,6 +11662,8 @@
     "cd":50304,
     "link":false,
     "link_cd":50304,
+    "CV":"木目沢 昌吾",
+    "cv_kana":"きめざわ しょうご",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10741,7 +11688,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -10751,6 +11699,8 @@
     "cd":50305,
     "link":false,
     "link_cd":50305,
+    "CV":"福本 悠",
+    "cv_kana":"ふくもと ゆう",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10775,7 +11725,8 @@
     "life_effect":"",
     "power_effect":"BOTH",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10785,6 +11736,8 @@
     "cd":50401,
     "link":false,
     "link_cd":50401,
+    "CV":"矢野 優美華",
+    "cv_kana":"やの ゆみか",
     "rarity":"シルバー",
     "race":"シェイド",
     "category":"昏き霊園（スレイヴヤード）",
@@ -10809,7 +11762,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10819,6 +11773,8 @@
     "cd":50402,
     "link":false,
     "link_cd":50402,
+    "CV":"夏生",
+    "cv_kana":"なつき",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"マディスキア",
@@ -10843,7 +11799,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10853,6 +11810,8 @@
     "cd":50403,
     "link":false,
     "link_cd":50403,
+    "CV":"廣庭 渓斗",
+    "cv_kana":"ひろにわ けいと",
     "rarity":"ゴールド",
     "race":"シェイド",
     "category":"炎閻魔（えんえんま）",
@@ -10877,7 +11836,8 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10887,6 +11847,8 @@
     "cd":50404,
     "link":false,
     "link_cd":50404,
+    "CV":"武笠 友美",
+    "cv_kana":"たけがさ ともみ",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10911,7 +11873,8 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10921,6 +11884,8 @@
     "cd":50405,
     "link":false,
     "link_cd":50405,
+    "CV":"眞對 友樹也",
+    "cv_kana":"まつい ゆきや",
     "rarity":"ブロンズ",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10945,7 +11910,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -10955,6 +11921,8 @@
     "cd":50406,
     "link":false,
     "link_cd":50406,
+    "CV":"酒井 玲",
+    "cv_kana":"さかい れい",
     "rarity":"レジェンド",
     "race":"シェイド",
     "category":"ノーカテゴリ",
@@ -10979,16 +11947,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80001,
     "link":false,
     "link_cd":80001,
+    "CV":"齋藤 響",
+    "cv_kana":"さいとう ひびき",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11013,16 +11984,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80002,
     "link":false,
     "link_cd":80002,
+    "CV":"柏木 智仁",
+    "cv_kana":"かしわぎ ともひと",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11047,16 +12021,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80003,
     "link":false,
     "link_cd":80003,
+    "CV":"村上 紀生",
+    "cv_kana":"むらかみ のりお",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11081,16 +12058,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80005,
     "link":false,
     "link_cd":80005,
+    "CV":"五十嵐 鳴",
+    "cv_kana":"いがらし めい",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -11115,16 +12095,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80006,
     "link":false,
     "link_cd":80006,
+    "CV":"宮内 倖羽",
+    "cv_kana":"みやうち こはね",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11149,16 +12132,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"BOTH",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80007,
     "link":false,
     "link_cd":80007,
+    "CV":"飯嶋 涼夏",
+    "cv_kana":"いいじま すずか",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11183,16 +12169,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"DOWN",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80008,
     "link":false,
     "link_cd":80008,
+    "CV":"石川 栄一",
+    "cv_kana":"いしかわ えいいち",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11217,16 +12206,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80009,
     "link":false,
     "link_cd":80009,
+    "CV":"鳴島 萌華",
+    "cv_kana":"なるしま もえか",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11251,16 +12243,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80010,
     "link":false,
     "link_cd":80010,
+    "CV":"加藤 慎也",
+    "cv_kana":"かとう しんや",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11285,16 +12280,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80011,
     "link":false,
     "link_cd":80011,
+    "CV":"砂田 佑樹",
+    "cv_kana":"すなだ ゆうき",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11319,16 +12317,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80012,
     "link":false,
     "link_cd":80012,
+    "CV":"リア・アマリア",
+    "cv_kana":"りあ あまりあ",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11353,16 +12354,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80013,
     "link":false,
     "link_cd":80013,
+    "CV":"北原 知奈",
+    "cv_kana":"きたはら ちな",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11387,16 +12391,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80015,
     "link":false,
     "link_cd":80015,
+    "CV":"成宮 杏",
+    "cv_kana":"なるみや あん",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11421,16 +12428,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80016,
     "link":false,
     "link_cd":80016,
+    "CV":"嶺本 翔馬",
+    "cv_kana":"みねもと しょうま",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11455,16 +12465,19 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80017,
     "link":false,
     "link_cd":80017,
+    "CV":"積木 瑞希",
+    "cv_kana":"つみき みずき",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11489,16 +12502,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80018,
     "link":false,
     "link_cd":80018,
+    "CV":"朝香 心",
+    "cv_kana":"あさか こころ",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11523,16 +12539,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80019,
     "link":false,
     "link_cd":80019,
+    "CV":"乙幡 美成",
+    "cv_kana":"おとはた みなり",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11557,16 +12576,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80021,
     "link":false,
     "link_cd":80021,
+    "CV":"橘 立夏",
+    "cv_kana":"たちばな りっか",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11591,16 +12613,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80023,
     "link":false,
     "link_cd":80023,
+    "CV":"橋本 千明",
+    "cv_kana":"はしもと ちあき",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11625,16 +12650,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80024,
     "link":false,
     "link_cd":80024,
+    "CV":"宮内 倖羽",
+    "cv_kana":"みやうち こはね",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11659,16 +12687,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80025,
     "link":false,
     "link_cd":80025,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11693,16 +12724,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80026,
     "link":false,
     "link_cd":80026,
+    "CV":"紫原 恒星",
+    "cv_kana":"しはら こうせい",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11727,16 +12761,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80027,
     "link":false,
     "link_cd":80027,
+    "CV":"犬丸 義貴",
+    "cv_kana":"いぬまる よしき",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11761,16 +12798,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80028,
     "link":false,
     "link_cd":80028,
+    "CV":"漢那 仁史",
+    "cv_kana":"かんな ひとし",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11795,16 +12835,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80029,
     "link":false,
     "link_cd":80029,
+    "CV":"闇 子丹",
+    "cv_kana":"えん したん",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11829,16 +12872,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":80030,
     "link":false,
     "link_cd":80030,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11863,7 +12909,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -11873,6 +12920,8 @@
     "cd":80101,
     "link":false,
     "link_cd":80101,
+    "CV":"小戸森 さらり",
+    "cv_kana":"こともり さらり",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11897,7 +12946,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -11907,6 +12957,8 @@
     "cd":80102,
     "link":false,
     "link_cd":80102,
+    "CV":"野花 ゆうか",
+    "cv_kana":"のばな ゆうか",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11931,7 +12983,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -11941,6 +12994,8 @@
     "cd":80103,
     "link":false,
     "link_cd":80103,
+    "CV":"荒木 藍加",
+    "cv_kana":"あらき あいか",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11965,7 +13020,8 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -11975,6 +13031,8 @@
     "cd":80104,
     "link":false,
     "link_cd":80104,
+    "CV":"森永 翼",
+    "cv_kana":"もりなが つばさ",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -11999,7 +13057,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -12009,6 +13068,8 @@
     "cd":80105,
     "link":false,
     "link_cd":80105,
+    "CV":"森中 葵",
+    "cv_kana":"もりなか あおい",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12033,7 +13094,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":4,
@@ -12043,6 +13105,8 @@
     "cd":80106,
     "link":false,
     "link_cd":80106,
+    "CV":"関口 理咲",
+    "cv_kana":"せきぐち りさき",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12067,7 +13131,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -12077,6 +13142,8 @@
     "cd":80107,
     "link":false,
     "link_cd":80107,
+    "CV":"冠 尚輝",
+    "cv_kana":"かんむり なおき",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12101,7 +13168,8 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -12111,6 +13179,8 @@
     "cd":80108,
     "link":false,
     "link_cd":80108,
+    "CV":"景浦 大輔",
+    "cv_kana":"かげうら だいすけ",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12135,7 +13205,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"STEAL",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12145,6 +13216,8 @@
     "cd":80201,
     "link":false,
     "link_cd":80201,
+    "CV":"川島 慶嗣",
+    "cv_kana":"かわしま よしつぐ",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12169,7 +13242,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12179,6 +13253,8 @@
     "cd":80202,
     "link":false,
     "link_cd":80202,
+    "CV":"和泉 琴音",
+    "cv_kana":"いずみ ことね",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12203,7 +13279,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12213,6 +13290,8 @@
     "cd":80203,
     "link":false,
     "link_cd":80203,
+    "CV":"ユルドゥズ 香音",
+    "cv_kana":"ゆるどぅず かのん",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12237,7 +13316,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12247,6 +13327,8 @@
     "cd":80204,
     "link":false,
     "link_cd":80204,
+    "CV":"桃園 りえる",
+    "cv_kana":"ももぞの りえる",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12271,7 +13353,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12281,6 +13364,8 @@
     "cd":80205,
     "link":false,
     "link_cd":80205,
+    "CV":"平尾 夏愛",
+    "cv_kana":"ひらお なつめ",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12305,7 +13390,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12315,6 +13401,8 @@
     "cd":80206,
     "link":false,
     "link_cd":80206,
+    "CV":"篠原 なるみ",
+    "cv_kana":"しのはら なるみ",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12339,7 +13427,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12349,6 +13438,8 @@
     "cd":80207,
     "link":false,
     "link_cd":80207,
+    "CV":"森浦 啓悟",
+    "cv_kana":"もりうら けいご",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12373,7 +13464,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -12383,6 +13475,8 @@
     "cd":80208,
     "link":false,
     "link_cd":80208,
+    "CV":"村上裕哉",
+    "cv_kana":"むらかみ ゆうや",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12407,7 +13501,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12417,6 +13512,8 @@
     "cd":80301,
     "link":false,
     "link_cd":80301,
+    "CV":"知杏 芽美",
+    "cv_kana":"ちあん めみ",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12441,7 +13538,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12451,6 +13549,8 @@
     "cd":80302,
     "link":false,
     "link_cd":80302,
+    "CV":"宮咲 あかり",
+    "cv_kana":"みやざき あかり",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12475,7 +13575,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12485,6 +13586,8 @@
     "cd":80303,
     "link":false,
     "link_cd":80303,
+    "CV":"塙 有咲",
+    "cv_kana":"はなわ ありさ",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12509,7 +13612,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12519,6 +13623,8 @@
     "cd":80304,
     "link":false,
     "link_cd":80304,
+    "CV":"白城 もえの",
+    "cv_kana":"しらき もえの",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12543,7 +13649,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12553,6 +13660,8 @@
     "cd":80305,
     "link":false,
     "link_cd":80305,
+    "CV":"蒼井 陽葵",
+    "cv_kana":"あおい ひまり",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12577,7 +13686,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12587,6 +13697,8 @@
     "cd":80306,
     "link":false,
     "link_cd":80306,
+    "CV":"木目沢 昌吾",
+    "cv_kana":"きめざわ しょうご",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12611,7 +13723,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12621,6 +13734,8 @@
     "cd":80307,
     "link":false,
     "link_cd":80307,
+    "CV":"宮沢 拓弥",
+    "cv_kana":"みやざわ たくみ",
     "rarity":"レジェンド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12645,7 +13760,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -12655,6 +13771,8 @@
     "cd":80308,
     "link":false,
     "link_cd":80308,
+    "CV":"菅原 もも",
+    "cv_kana":"すがわら もも",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12679,7 +13797,8 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12689,6 +13808,8 @@
     "cd":80309,
     "link":true,
     "link_cd":80025,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12713,7 +13834,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12723,6 +13845,8 @@
     "cd":80401,
     "link":false,
     "link_cd":80401,
+    "CV":"武笠 友美",
+    "cv_kana":"たけがさ ともみ",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12747,7 +13871,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12757,6 +13882,8 @@
     "cd":80402,
     "link":false,
     "link_cd":80402,
+    "CV":"一宮 功樹",
+    "cv_kana":"いちみや こうき",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12781,7 +13908,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12791,6 +13919,8 @@
     "cd":80403,
     "link":false,
     "link_cd":80403,
+    "CV":"木立 萌子",
+    "cv_kana":"きだち もえこ",
     "rarity":"シルバー",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12815,7 +13945,8 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12825,6 +13956,8 @@
     "cd":80404,
     "link":false,
     "link_cd":80404,
+    "CV":"夏生",
+    "cv_kana":"なつき",
     "rarity":"ゴールド",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12849,7 +13982,8 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -12859,6 +13993,8 @@
     "cd":80405,
     "link":false,
     "link_cd":80405,
+    "CV":"加藤 健",
+    "cv_kana":"かとう けん",
     "rarity":"ブロンズ",
     "race":"イノセント",
     "category":"ノーカテゴリ",
@@ -12883,16 +14019,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90001,
     "link":false,
     "link_cd":90001,
+    "CV":"齋藤 響",
+    "cv_kana":"さいとう ひびき",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -12917,16 +14056,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90002,
     "link":false,
     "link_cd":90002,
+    "CV":"石川 栄一",
+    "cv_kana":"いしかわ えいいち",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -12951,16 +14093,19 @@
     "life_effect":"",
     "power_effect":"UP",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90003,
     "link":false,
     "link_cd":90003,
+    "CV":"星乃 真衣",
+    "cv_kana":"ほしの まい",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -12985,16 +14130,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90004,
     "link":false,
     "link_cd":90004,
+    "CV":"林 祐人",
+    "cv_kana":"はやし ゆうと",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13019,16 +14167,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90005,
     "link":false,
     "link_cd":90005,
+    "CV":"堀内 祐花",
+    "cv_kana":"ほりうち ゆうか",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13053,16 +14204,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90006,
     "link":false,
     "link_cd":90006,
+    "CV":"こりす",
+    "cv_kana":"こりす",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13087,16 +14241,19 @@
     "life_effect":"SELF_DAMAGE",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90007,
     "link":false,
     "link_cd":90007,
+    "CV":"茶熊 にじ",
+    "cv_kana":"ちゃぐま にじ",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13121,16 +14278,19 @@
     "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90008,
     "link":false,
     "link_cd":90008,
+    "CV":"生井沢 優太",
+    "cv_kana":"なまいざわ ゆうた",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13155,16 +14315,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90009,
     "link":false,
     "link_cd":90009,
+    "CV":"橘高 けい",
+    "cv_kana":"きだか けい",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13189,16 +14352,19 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awaking The Oracle「神託者の覚醒」",
+    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
     "cd":90011,
     "link":false,
     "link_cd":90011,
+    "CV":"新田 純輝",
+    "cv_kana":"にった じゅんき",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13223,7 +14389,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":2,
@@ -13233,6 +14400,8 @@
     "cd":90101,
     "link":false,
     "link_cd":90101,
+    "CV":"下鶴 直幸",
+    "cv_kana":"しもづる なおゆき",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13257,7 +14426,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":3,
@@ -13267,6 +14437,8 @@
     "cd":90201,
     "link":false,
     "link_cd":90201,
+    "CV":"高川 みな",
+    "cv_kana":"たかがわ みな",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13291,7 +14463,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"UP",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":6,
@@ -13301,6 +14474,8 @@
     "cd":90301,
     "link":false,
     "link_cd":90301,
+    "CV":"伊藤 翔",
+    "cv_kana":"いとう しょう",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13325,7 +14500,8 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   },
   {
     "version":7,
@@ -13335,6 +14511,8 @@
     "cd":90401,
     "link":false,
     "link_cd":90401,
+    "CV":"矢野 優美華",
+    "cv_kana":"やの ゆみか",
     "rarity":"レジェンド",
     "race":"旧神",
     "category":"ノーカテゴリ",
@@ -13359,6 +14537,7 @@
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
-    "CHECK":false
+    "CHECK":false,
+    "cv_id":0
   }
 ]

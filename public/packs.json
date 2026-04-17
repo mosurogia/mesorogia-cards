@@ -1,11 +1,11 @@
 {
   "packs": [
     {
-      "en": "Awaking The Oracle",
+      "en": "Awakeing The Oracle",
       "jp": "「神託者の覚醒」",
-      "slug": "awaking-the-oracle",
-      "key": "awaking-the-oracle",
-      "selector": "#pack-awaking-the-oracle"
+      "slug": "awakeing-the-oracle",
+      "key": "awakeing-the-oracle",
+      "selector": "#pack-awakeing-the-oracle"
     },
     {
       "en": "Beyond the Sanctuary",
@@ -65,7 +65,7 @@
     }
   ],
   "order": [
-    "Awaking The Oracle",
+    "Awakeing The Oracle",
     "Beyond the Sanctuary",
     "Creeping Souls",
     "Drawn Sword",
