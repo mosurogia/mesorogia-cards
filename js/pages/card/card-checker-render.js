@@ -200,6 +200,47 @@ function buildPackSectionHTML(packEn, packJp, cardsGroupedByRace, packKey, packG
   return html;
 }
 
+function setupPackTweetLinks_(root){
+  if (!root) return;
+
+  root.querySelectorAll('.pack-section').forEach(section => {
+    const link = section.querySelector('.pack-tweet-link');
+    if (!link) return;
+
+    const packKey = section.dataset.packkey || '';
+    const packNameMain = section.querySelector('.pack-name-main')?.textContent?.trim() || '';
+    const packNameSub = section.querySelector('.pack-name-sub')?.textContent?.trim() || '';
+
+    const packObj = Array.isArray(window.packs)
+      ? window.packs.find(p => String(p.key) === String(packKey))
+      : null;
+
+    const cards = packObj && typeof window.queryCardsByPack === 'function'
+      ? window.queryCardsByPack(packObj)
+      : section.querySelectorAll('.card');
+
+    const sum = window.Summary?.calcSummary
+      ? window.Summary.calcSummary(cards)
+      : null;
+
+    if (!sum) return;
+
+    const header = packNameMain || 'パック所持率';
+    const packLabel = packNameSub
+      ? `${packNameMain}「${packNameSub}」`
+      : packNameMain;
+
+    const text = window.buildShareText({
+      header,
+      sum,
+      packName: packLabel,
+      packSum: sum
+    });
+
+    link.href = `https://twitter.com/intent/tweet?text=${text}`;
+  });
+}
+
 
 // JSON → パックごとのセクションHTMLを生成して mount に描画
 async function renderAllPacks({
@@ -278,6 +319,7 @@ async function renderAllPacks({
   mount.innerHTML = parts.join('');
 
   // 生成後にイベントを委譲で付与
+  setupPackTweetLinks_(mount);
   attachPackControls(mount);
 }
 
