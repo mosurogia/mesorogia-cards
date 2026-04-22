@@ -225,19 +225,16 @@ function setupPackTweetLinks_(root){
 
     if (!sum) return;
 
-    const header = packNameMain || 'パック所持率';
     const packLabel = packNameSub
       ? `${packNameMain}「${packNameSub}」`
-      : packNameMain;
+      : packNameMain || 'パック所持率';
 
     const text = window.buildShareText({
-      header,
-      sum,
-      packName: packLabel,
-      packSum: sum
+      header: packLabel,
+      sum
     });
 
-    link.href = `https://twitter.com/intent/tweet?text=${text}`;
+    link.href = `https://x.com/intent/tweet?text=${text}`;
   });
 }
 
