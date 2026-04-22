@@ -99,20 +99,12 @@ function typeCostPowerCd(a, b) {
 
 function detectPackGroup_(packEn, packJp, packKey, idx){
   const any = `${packEn||''} ${packJp||''} ${packKey||''}`.toLowerCase();
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
 
-
-  // 基本：packs.json の並び想定（0..4がA..E、それ以降は特殊）
-  if (idx === 0) return 'a';
-  if (idx === 1) return 'b';
-  if (idx === 2) return 'c';
-  if (idx === 3) return 'd';
-  if (idx === 4) return 'e';
-  if (idx === 5) return 'f';
-
-  // 例外：コラボっぽい名前が入ってたら collab
+  if (any.includes('特殊') || any.includes('special')) return 'special';
   if (any.includes('コラボ') || any.includes('collab')) return 'collab';
 
-  return 'special';
+  return letters[idx] || 'z';
 }
 
 // パック1つ分のHTMLを組み立てる
