@@ -8,17 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
     <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#111827">
 
     <!-- ===== タイトル ===== -->
     <title>神託のメソロギア デッキ投稿｜共有・ランキング｜モスロギア</title>
 
     <!-- ===== SEO ===== -->
-    <meta name="description" content="神託のメソロギアのデッキ投稿一覧ページ。強いデッキ・人気デッキ・最新デッキを検索・閲覧できます。マイ投稿も確認可能。">
+    <meta name="description" content="神託のメソロギアのデッキ投稿一覧ページ。強いデッキ・人気デッキ・最新デッキを検索・閲覧できます。マイページも確認可能。">
     <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
 
     <!-- ===== OGP ===== -->
     <meta property="og:title" content="神託のメソロギア デッキ投稿｜モスロギア">
-    <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿デッキ一覧やマイ投稿をチェックできます。">
+    <meta property="og:description" content="神託のメソロギアのデッキ投稿・共有ページです。投稿デッキ一覧やマイページをチェックできます。">
     <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deck-post.html">
     <meta property="og:type" content="website">
@@ -27,7 +30,7 @@
     <!-- ===== Twitter Card ===== -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="モスロギア｜神託のメソロギア デッキ投稿">
-    <meta name="twitter:description" content="デッキ投稿・共有ができる非公式ページ。投稿デッキ一覧やマイ投稿を確認できます。">
+    <meta name="twitter:description" content="デッキ投稿・共有ができる非公式ページ。投稿デッキ一覧やマイページを確認できます。">
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
 
     <!-- ===== CSS ===== -->
@@ -54,10 +57,22 @@
         <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
     </div>
     <nav class="header-nav">
-        <a href="cards.html">📖 図鑑</a>
-        <a href="deckmaker.html">🃏 デッキメーカー</a>
-        <a class="active-page" href="deck-post.html">📤 デッキ投稿</a>
+        <a  href="cards.html">
+            <img src="img/header_icon_1.webp" alt="">
+            <span>図鑑</span>
+        </a>
+
+        <a href="deckmaker.html">
+            <img src="img/header_icon_2.webp" alt="">
+            <span>デッキメーカー</span>
+        </a>
+
+        <a class="active-page" href="deck-post.html">
+            <img src="img/header_icon_3.webp" alt="">
+            <span>デッキ投稿</span>
+        </a>
     </nav>
+    <div class="header-account" data-header-auth></div>
 </header>
 
 <!--全体投稿一覧ページ -->
@@ -65,14 +80,17 @@
 
     <!-- ツールバー -->
     <div class="toolbar" id="toolbar">
-        <div class="spacer"></div>
+
+        <button class="btn-ghost pwa-install-toolbar js-pwa-install-toolbar" type="button">
+            📱 アプリで見る
+        </button>
 
         <button class="btn-ghost" type="button" onclick="location.href='deckmaker.html'">
             ➕ デッキを投稿する
         </button>
 
         <button id="toMineBtn" class="btn-ghost" type="button" aria-controls="pageMine">
-            👤 マイ投稿
+            👤 マイページ
         </button>
     </div>
 
@@ -193,8 +211,8 @@
         <button id="backToListBtn" class="btn-ghost" type="button">← 戻る</button>
 
         <div class="mine-header-title">
-            <h2 id="title-mine" style="margin: .5rem 0 0;">マイ投稿</h2>
-            <button id="mineHelpBtn" class="mine-help-btn" type="button" aria-label="マイ投稿の説明">
+            <h2 id="title-mine" style="margin: .5rem 0 0;">マイページ</h2>
+            <button id="mineHelpBtn" class="mine-help-btn" type="button" aria-label="マイページの説明">
                 ?
             </button>
         </div>
@@ -203,15 +221,16 @@
     <!-- ▼ マイ投稿：説明モーダル -->
     <div id="mineHelpModal" class="modal" style="display:none;">
         <div class="modal-content mine-help-modal" role="dialog" aria-modal="true" aria-labelledby="mineHelpTitle">
-            <h3 id="mineHelpTitle" class="filter-maintitle">マイ投稿について</h3>
+            <h3 id="mineHelpTitle" class="filter-maintitle">マイページについて</h3>
 
             <div class="mine-header-note" style="margin:0;">
                 <p class="mine-header-lead">
-                    マイページでは、ログインすることで<strong>自分が投稿したデッキ</strong>を確認できます。
+                    マイページでは、ログインすることで<strong>自分の投稿</strong>と<strong>いいねしたデッキ</strong>を確認できます。
                 </p>
 
                 <ul class="mine-header-list">
                     <li>🗂 自分のデッキ投稿を一覧で確認できます</li>
+                    <li>❤️ いいねしたデッキを一覧で確認できます</li>
                     <li>✏️ 投稿したデッキの<strong>デッキ解説編集</strong>ができます</li>
                     <li>🗑 不要になったデッキ投稿の<strong>削除</strong>ができます</li>
                 </ul>
@@ -220,7 +239,6 @@
                     🧪 <strong>ベータ版のお知らせ</strong><br>
                     今後のアップデートで、以下の機能を追加予定です。
                     <ul>
-                        <li>❤️ いいねしたデッキ一覧の表示</li>
                         <li>🏷 タグの編集機能</li>
                         <li>🃏 デッキコード・デッキ内容の編集機能</li>
                     </ul>
@@ -240,9 +258,9 @@
 
             <!-- 上段：ID＋ボタンを横並び -->
             <div class="mine-login-top">
-                <!-- 左：ログインID -->
+                <!-- 左：ユーザー名 -->
                 <div class="mine-login-row">
-                    <span class="mine-login-label">ログイン状況(ID):</span>
+                    <span class="mine-login-label">ユーザー名:</span>
                     <span id="mine-login-username" class="mine-login-username">未ログイン</span>
                 </div>
 
@@ -251,15 +269,23 @@
 
                     <!-- 未ログイン時：新規登録 / ログイン -->
                     <div id="auth-mini-loggedout" style="display:none;">
-                        <button type="button" id="open-login-modal" class="auth-mini-btn" data-open="authLoginModal">
-                            新規登録 / ログイン
-                        </button>
+                        <div class="auth-mini-actions">
+                            <button type="button" class="auth-mini-btn primary" data-open="authLoginModal"
+                                data-auth-entry="login">
+                                ログイン
+                            </button>
+                            <button type="button" class="auth-mini-btn" data-open="authLoginModal"
+                                data-auth-entry="signup">
+                                新規登録
+                            </button>
+                        </div>
                     </div>
 
                     <!-- ログイン時：アカウントデータ ＋ ログアウト -->
                     <div id="auth-mini-loggedin" style="display:none;">
                         <div class="auth-logged-in-row">
-                            <button class="btn ghost" type="button" id="account-data-btn" data-open="accountDataModal">
+                            <button class="btn ghost" type="button" id="account-data-btn"
+                                data-open="accountDataModal" data-account-scope="deckPost">
                                 アカウントデータ
                             </button>
                             <button class="btn danger" type="button" id="auth-logout-btn">
@@ -279,6 +305,18 @@
         </div>
     </section>
 
+    <!-- マイ投稿内タブ -->
+    <nav class="mine-tabs" role="tablist" aria-label="マイ投稿メニュー">
+        <button id="mineTabPosts" class="mine-tab is-active" type="button" role="tab"
+            aria-selected="true" aria-controls="mineMainLayout" data-mine-tab="posts">
+            マイ投稿
+        </button>
+        <button id="mineTabLiked" class="mine-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="mineMainLayout" data-mine-tab="liked">
+            いいねしたデッキ
+        </button>
+    </nav>
+
 
         <!-- =========================
                     マイ投稿：一覧＋詳細レイアウト（PC用）
@@ -295,8 +333,8 @@
 
                 <!-- ★ 未ログイン時に表示する案内 -->
                 <div id="mine-error" class="mine-nologin" style="display:none;">
-                    <p>ここにあなたの投稿が表示されます。</p>
-                    <p>ログインすると、投稿したデッキ一覧を確認できます。</p>
+                    <p id="mine-error-title">ここにあなたの投稿が表示されます。</p>
+                    <p id="mine-error-msg">ログインすると、投稿したデッキ一覧を確認できます。</p>
                 </div>
 
                 <!-- マイ投稿が0件のときの案内 -->
@@ -390,6 +428,22 @@
                         <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
                     </div>
                 </details>
+
+                <!-- ▼ 過去のキャンペーン（終了済みのみ表示） -->
+                <div class="filter-section" id="postFilterCampaignSection" style="display:none;">
+                    <div class="filter-section-title">▼ 過去のキャンペーン</div>
+                    <div id="postFilterCampaignArea" class="filter-group" data-key="キャンペーン">
+                        <!-- JS で終了済みキャンペーンの .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </div>
+
+                <!-- ▼ 環境（環境基準シートから生成） -->
+                <div class="filter-section" id="postFilterEnvironmentSection" style="display:none;">
+                    <div class="filter-section-title">▼ 環境</div>
+                    <div id="postFilterEnvironmentArea" class="filter-group" data-key="環境">
+                        <!-- JS で .filter-btn.post-filter-env-btn を並べる -->
+                    </div>
+                </div>
             </div>
             <!-- ユーザータグで絞り込み -->
             <div class="filter-block filter-section">
@@ -469,7 +523,7 @@
                         <form id="auth-login-form" class="auth-login-form">
 
                             <div class="poster-line" style="margin-top:6px;">
-                                <input id="auth-username" name="username" type="text" placeholder="ログインID" autocomplete="username"
+                                <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
                                     autocapitalize="none" autocorrect="off" spellcheck="false">
                             </div>
 
@@ -491,7 +545,11 @@
                                 <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
                             </div>
 
-                            <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:.5rem 0 0; font-size:.9rem;">
+                            <button type="button" class="auth-forgot-link" id="auth-forgot-password">
+                                パスワードを忘れた場合
+                            </button>
+
+                            <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;">
                             </p>
                         </form>
 
@@ -499,72 +557,13 @@
                         <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
                             <p style="margin:0;">ログイン中です。</p>
                             <p style="margin:4px 0 0; font-size:.85rem; opacity:.8;">
-                                アカウント情報の変更は、マイ投稿ページの「ログイン状況」枠から行えます。
+                                アカウント情報の変更は、マイページの「ログイン状況」枠から行えます。
                             </p>
                         </div>
 
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- ▼ アカウントデータ モーダル（form版） -->
-        <div class="account-modal" id="accountDataModal" style="display:none;">
-            <form id="account-data-form" class="modal-content" role="dialog" aria-modal="true"
-                aria-labelledby="accountModalTitle">
-
-                <div class="account-modal-head">
-                    <h3 id="accountModalTitle">アカウントデータ変更</h3>
-                    <button type="button" class="account-close" data-close="accountDataModal" aria-label="閉じる">×</button>
-                </div>
-
-                <div class="account-modal-body">
-                    <!-- 新しいログイン名 -->
-                    <div class="account-field">
-                        <label>新しいログイン名</label>
-                        <input id="acct-login-name" name="new-username" type="text" autocomplete="username"
-                            placeholder="新しいログイン名を入力">
-                    </div>
-
-                    <!-- 新しいパスワード -->
-                    <div class="account-field">
-                        <label>新しいパスワード</label>
-                        <div class="account-pass-row">
-                            <input id="acct-password" name="new-password" type="password" autocomplete="new-password"
-                                placeholder="※4文字以上">
-                            <button type="button" class="btn ghost" id="acct-pass-toggle">表示</button>
-                        </div>
-                        <small class="account-hint">※ 保存時に現在のパスワード確認を行います</small>
-                    </div>
-
-                    <!-- 投稿者名 -->
-                    <div class="account-field">
-                        <label>投稿者名</label>
-                        <input id="acct-poster-name" name="poster-name" type="text" autocomplete="nickname"
-                            placeholder="投稿に表示する名前（任意）">
-                    </div>
-
-                    <!-- Xアカウント -->
-                    <div class="account-field">
-                        <label>Xアカウント</label>
-                        <div class="X-info">
-                            <input id="acct-x" name="poster-x" type="text" inputmode="verbatim" placeholder="（@なし可）">
-                            <button type="button" class="x-link-btn" id="acct-x-open" title="Xプロフィールを開く">X を確認</button>
-                        </div>
-                    </div>
-
-                    <div class="account-note">
-                        ※ 投稿者名・Xアカウントを登録すると、次回以降のログイン時に自動入力されます。
-                    </div>
-                </div>
-
-                <div class="account-modal-footer">
-                    <button type="button" class="btn ghost" data-close="accountDataModal">キャンセル</button>
-                    <!-- クリックで JS が送信するので type="button" のままでOK -->
-                    <button type="submit" class="btn danger" id="acct-save-btn" disabled>保存</button>
-                </div>
-
-            </form>
         </div>
 
 
@@ -669,7 +668,7 @@
 
 
 <!-- ===== マナ効率 ヘルプモーダル ===== -->
-<div id="manaEfficiencyHelpModal" class="modal" style="display:none;">
+<div id="manaHelpModal" class="modal" style="display:none;">
     <div class="modal-content flow-modal">
         <button id="mana-help-close" class="modal-close-x" type="button" aria-label="閉じる">
             ×
@@ -680,10 +679,15 @@
         </h3>
 
         <ol class="flow-steps">
-            <li>マナ効率は「デッキが重いか・軽いか」を見る指標です。</li>
-            <li>（総チャージャー量＋初期マナ4）÷ 総コスト で計算しています。</li>
-            <li>数値が高いほど、マナに余裕があります。</li>
-            <li>数値が低いほど、事故しやすい構成です。</li>
+        <li>マナ効率は「デッキが重いか・軽いか」を見る指標です。</li>
+        <li>（総チャージャー量＋初期マナ4）÷ 総コスト で計算しています。</li>
+        <li>数値が高いほど、マナに余裕があります。</li>
+        <li>数値が低いほど、事故しやすい構成です。</li>
+        <li>
+            ・1.5以上：マナ多め<br>
+            ・1.0前後：適正<br>
+            ・1.0未満：マナ少なめ
+        </li>
         </ol>
 
         <p class="flow-note">
@@ -744,16 +748,40 @@
 <script src="js/common/core/card-sort.js"></script>
 <script src="js/common/storage/owned.js"></script>
 
+
+<script src="js/common/filter/chip-bar.js"></script>
+
 <!-- アカウント関係 -->
 <script src="js/common/account/auth-core.js"></script>
 <script src="js/common/account/auth-ui.js"></script>
 <script src="js/common/account/account.js"></script>
+<script src="js/common/account/account-app-data-sync.js"></script>
+<script src="js/common/account/account-data-manager.js"></script>
+<script src="js/common/account/account-match-results.js"></script>
+<script src="js/common/account/header-auth.js"></script>
 
 <!-- 画像生成 -->
+<script src="js/common/deck/deck-peek.js"></script>
 <script src="js/common/deck/image-export.js"></script>
+<script src="js/common/deck/deck-analysis.js"></script>
+<script src="js/common/deck/deck-note-presets.js"></script>
+<script src="js/common/card/card-detail.js"></script>
+<script src="js/common/card/card-image-viewer.js"></script>
+<script src="js/common/card/card-pick-modal.js"></script>
+
+<!-- ▼ デッキ全体表示：オーバーレイ -->
+<button id="deckpeek-button" type="button">
+    デッキ表示
+</button>
+<!-- デッキ全体表示オーバーレイ -->
+<div id="deckpeek-overlay">
+    <div class="deckpeek-grid" id="deckpeek-grid"></div>
+</div>
 
 <!-- ページ固有 -->
 <script src="js/pages/deck-post/deck-post-page-loader.js"></script>
+<script src="js/common/pwa/install-ui.js"></script>
+<script src="js/common/pwa/register.js"></script>
 
 
 </body>

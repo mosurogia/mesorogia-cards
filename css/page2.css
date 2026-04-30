@@ -18,6 +18,29 @@
     text-shadow: 1px 1px 2px black;
 }
 
+/* デッキメーカーのカード一覧はPCで多めに並べる */
+#grid .card {
+    width: calc((100% - 45px) / 10);
+}
+
+@media (max-width: 1440px) {
+    #grid .card {
+        width: calc((100% - 35px) / 8);
+    }
+}
+
+@media (max-width: 1024px) {
+    #grid .card {
+        width: calc((100% - 25px) / 6);
+    }
+}
+
+@media (max-width: 768px) {
+    #grid .card {
+        width: calc((100% - 15px) / 4);
+    }
+}
+
 /*=========================
         3.サーチバー
 ==========================*/
@@ -64,7 +87,7 @@
         width: 100%;
         padding: 0 8px;
         white-space: nowrap;
-        overflow: visible;
+        overflow: hidden;
     }
 
     .search-bar button {
@@ -72,6 +95,14 @@
         padding: 1vw 5px;
         white-space: nowrap;
         grid-area: filter;
+    }
+
+    /* 並び順切り替えボタンは絞り込みボタン扱いにしない */
+    .search-bar .sort-order-toggle {
+        min-width: 3.4rem;
+        height: 36px;
+        padding: 0 8px;
+        grid-area: auto;
     }
 }
 
@@ -114,7 +145,7 @@
 /*=======デッキバー=========*/
 .deck-bar-wrapper {
     display: flex;
-    overflow: hidden;
+    overflow: visible;
 }
     @media (max-width: 768px) {
     .deck-bar-wrapper {
@@ -150,6 +181,12 @@
         padding: 4px 0px 0px 0px;
     }
 }
+@media (max-width: 410px) {
+    .deck-bar-top {
+        min-height: 95px;
+        gap: 2px;
+    }
+}
 /*デッキバーカードレイアウト*/
 .deck-card {
     width: 110px;
@@ -163,7 +200,7 @@
 }
 @media (max-width: 768px) {
     .deck-card {
-        width: 80px;
+        width: 85px;
         /* スマホではこのサイズに */
         height: auto;
         /* 縦幅は画像サイズに任せる or 調整 */
@@ -229,6 +266,7 @@
 @media (max-width: 410px) {
 .deck-summary {
         font-size: 8.5px;
+        width: 100px;
     }
 }
 @media (max-width: 768px) {
@@ -720,6 +758,61 @@
     transform: translateX(-50%) translateY(0);
 }
 
+#saved-deck-code-copy-toast.dm-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%) translateY(10px);
+    z-index: 999999;
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100vw - 24px);
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .85);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+#saved-deck-code-copy-toast.dm-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+}
+
+.dm-toast,
+#saved-deck-code-copy-toast.dm-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(0, 0, 0, .85);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 999999;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    max-width: calc(100vw - 24px);
+}
+
+.dm-toast.show,
+#saved-deck-code-copy-toast.dm-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 
@@ -806,26 +899,148 @@
 }
 
 /*=======デッキリストゾーン=======*/
+/*デッキリスト枠*/
+.deck-list-section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/*デッキリスト見出し*/
+#deck-layout .deck-list-header {
+    flex: 0 0 auto;
+    --subtab-active: #d65a5a;
+    background: linear-gradient(180deg, #fff8f8 0%, #ffecec 100%);
+    padding: 10px 14px;
+    gap: 8px;
+}
+
+#deck-layout .deck-list-header span {
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: clamp(12px, 2.6vw, 15px);
+    position: relative;
+}
+
+#deck-layout .deck-list-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+#deck-layout .deck-representative-open,
+#deck-layout .deck-count-adjust-toggle,
+#deck-layout .deck-list-menu-toggle {
+    height: 26px;
+    padding: 0 8px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    border-radius: 8px;
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    color: #1f3f5f;
+    cursor: pointer;
+}
+
+#deck-layout .deck-representative-open:focus-visible,
+#deck-layout .deck-count-adjust-toggle:focus-visible,
+#deck-layout .deck-list-menu-toggle:focus-visible,
+#deck-layout .deck-list-menu-panel button:focus-visible {
+    outline: 2px solid #1f6feb;
+    outline-offset: 2px;
+}
+
+#deck-layout .deck-list-menu {
+    position: relative;
+}
+
+#deck-layout .deck-list-menu-toggle {
+    min-width: 32px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+#deck-layout .deck-list-menu-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 30;
+    width: 132px;
+    padding: 6px;
+    display: grid;
+    gap: 4px;
+    border: 1px solid rgba(0, 0, 0, .16);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+}
+
+#deck-layout .deck-list-menu-panel[hidden] {
+    display: none;
+}
+
+#deck-layout .deck-list-menu-panel button {
+    width: 100%;
+    min-height: 32px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background: #f6f8fb;
+    color: #1f2937;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+#deck-layout .deck-list-menu-panel button:hover {
+    background: #e9f5fb;
+}
+
+@media (max-width: 768px) {
+    #deck-layout .deck-list-header {
+        padding: 6px 8px;
+        gap: 6px;
+    }
+
+    #deck-layout .deck-list-actions {
+        gap: 4px;
+    }
+
+    #deck-layout .deck-representative-open,
+    #deck-layout .deck-count-adjust-toggle,
+    #deck-layout .deck-list-menu-toggle {
+        height: 24px;
+        padding: 0 6px;
+        font-size: 12px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    #deck-layout .deck-list-menu-toggle {
+        min-width: 28px;
+    }
+}
+
+
 /*カードリスト画面*/
 #deck-card-list {
     position: relative;
-    background-image: url(../img/cardlist.webp);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(180deg, #fff8f8 0%, #ffecec 100%);
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     /* 横5列 */
-    gap: 4px;
+    gap: 2px;
     padding: 8px;
-    min-height: 140px;
+    min-height: 85px;
     align-content: start;
     justify-content: start;
     overflow-y: auto;
     max-height: none;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 768px) {
 #deck-card-list {
         flex: 1;
         min-width: 0;
@@ -833,23 +1048,28 @@
 }
 
 /*種族別背景*/
-.race-bg-ドラゴン {
+.race-bg-ドラゴン,
+#deck-card-list.race-bg-ドラゴン {
     background: var(--race-dragon-bg);
 }
 
-.race-bg-アンドロイド {
+.race-bg-アンドロイド,
+#deck-card-list.race-bg-アンドロイド {
     background: var(--race-android-bg);
 }
 
-.race-bg-エレメンタル {
+.race-bg-エレメンタル,
+#deck-card-list.race-bg-エレメンタル {
     background: var(--race-elemental-bg);
 }
 
-.race-bg-ルミナス {
+.race-bg-ルミナス,
+#deck-card-list.race-bg-ルミナス {
     background: var(--race-luminous-bg);
 }
 
-.race-bg-シェイド {
+.race-bg-シェイド,
+#deck-card-list.race-bg-シェイド {
     background: var(--race-shade-bg);
 }
 
@@ -859,9 +1079,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
-    opacity: 0.8;
-    text-shadow: 1px 1px 2px #000;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #7f1d1d;
+    opacity: 0.9;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
     text-align: center;
     pointer-events: none;
     z-index: 1;
@@ -870,208 +1092,89 @@
 /*各カード*/
 .deck-entry {
     position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     box-sizing: border-box;
+    padding: 0px 2px;
+    border: 1px solid rgba(0, 0, 0, .14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .76);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
     cursor: pointer;
-    aspect-ratio: 424 / 532;
 }
 
 .deck-entry img {
     width: 100%;
+    aspect-ratio: 424 / 532;
     height: auto;
     display: block;
     border-radius: 6px;
 }
+
+.deck-entry-count-controls {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    padding-top: 2px;
+}
+@media (max-width: 768px) {
+    .deck-entry-count-controls {
+        gap: 2px;
+    }
+}
+
+#deck-card-list.is-count-controls-visible .deck-entry-count-controls {
+    display: grid;
+}
+
+.deck-entry-count-btn {
+    min-width: 0;
+    padding: .15rem .2rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #1f2937;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: clamp(.72rem, 1.5vw, 1rem);
+    line-height: 1.1;
+}
+@media (max-width: 768px) {
+    .deck-entry-count-btn {
+        font-size: clamp(.5rem, 2vw, 1rem);
+        padding: .1rem .15rem;
+    }
+}
+
+.deck-entry-count-btn:hover {
+    background: #f8fafc;
+}
+
+.deck-entry-count-btn:active {
+    transform: scale(0.985);
+}
+
+.deck-entry-count-btn:focus-visible {
+    outline: 2px solid #1f6feb;
+    outline-offset: 2px;
+}
+
+.deck-entry-count-btn:disabled {
+    background: #e5e7eb;
+    color: #8a8f98;
+    border-color: #cfd4dc;
+    cursor: not-allowed;
+    filter: grayscale(.35);
+    opacity: .75;
+}
+
 /*メインカード*/
 .deck-entry.representative {
     outline: 3px solid crimson;
     outline-offset: -2px;
     border-radius: 6px;
     box-shadow: 0 0 10px limegreen;
-}
-
-/* ==== カード操作モーダル ==== */
-.cardop-modal {
-    width: min(30vw, 250px);
-    max-height: 90vh;
-    overflow: auto;
-    border-radius: 12px;
-    padding: 4px;
-}
-
-@media (max-width: 768px) {
-    .cardop-modal {
-        width: min(30vw, 200px);
-        padding: 3px;
-    }
-}
-
-.cardop-header {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: .25rem;
-}
-
-/* ここだけがドラッグゾーン */
-.cardop-topline {
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: move;
-    padding: 2px 6px;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #f3f4ff, #ffffff);
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
-}
-
-/* 「ここをドラッグ」感を少し強める */
-.cardop-move-hint {
-    font-size: clamp(.325rem, 1vw, .625rem);
-    color: #666;
-    margin-top: 2px;
-}
-
-
-/* 右上の×を少し小ぶりに */
-.cardop-close {
-    background: #eee;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: .15rem .35rem;
-    cursor: pointer;
-    font-size: .75rem;
-    line-height: 1;
-}
-
-.cardop-title {
-    font-size: .85rem;
-    font-size: clamp(.6rem, 1.5vw, .9rem);
-    margin: 0;
-}
-
-.cardop-body {
-    display: grid;
-    gap: 5px;
-}
-@media (max-width: 768px) {
-    .cardop-body {
-            gap: 2px;
-        }
-}
-/* 画像＋バッジ */
-.cardop-figure {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 424 / 532;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f6f6f6;
-}
-
-.cardop-figure img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.cardop-figure .count-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    border-radius: 999px;
-    min-width: 24px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 12px;
-    /* ← やや控えめ */
-    padding: 0 6px;
-}
-
-/* 操作行 */
-.cardop-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
-}
-
-.cardop-row .full {
-    grid-column: 1 / -1;
-}
-
-.cardop-btn {
-    padding: .3rem .4rem;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
-    background: #fff;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: clamp(.4rem, 1.5vw, .8rem);
-    transition: filter .15s ease, transform .06s ease;
-}
-
-.cardop-btn:active {
-    transform: scale(0.985);
-}
-
-.cardop-btn.primary {
-    background: linear-gradient(90deg, #6a5acd, #9aa0ff);
-    color: #fff;
-    border: none;
-}
-
-
-/* 効果一覧 */
-.cardop-effects {
-    display: grid;
-    gap: .35rem;
-}
-
-
-.cardop-effects .eff {
-    border: 1px dashed #e5e7eb;
-    border-radius: 10px;
-    background: #fafafa;
-    padding: 5px;
-    font-size: clamp(.4rem, 1.5vw, .9rem);
-}
-@media (max-width: 768px) {
-    .cardop-effects .eff {
-    padding: 2.5px;
-    }
-}
-.cardop-effects .eff-name {
-    font-weight: 700;
-    margin-bottom: .2rem;
-}
-
-.cardop-effects .eff-text {
-    line-height: 1.5;
-    white-space: pre-wrap;
-}
-
-
-/* ドラッグ時の位置調整（親.modal を固定） */
-#cardOpModal {
-    position: fixed;
-    inset: 0;
-    display: none;
-    pointer-events: none;
-    z-index: 4000;
-    background: transparent;
-}
-
-#cardOpModal.show {
-    display: block;
-}
-
-#cardOpModal .modal-content {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: auto;
 }
 
 /* ===== Deck Peek（モバイル用：押してる間だけデッキリストを覗く） ===== */
@@ -1202,7 +1305,7 @@
     align-items: center; /* タブと？ボタンを縦中央に */
 }
 
-.subtab-bar .tab {
+.subtab-bar .tab{
     padding: 8px 12px;
 }
 
@@ -1540,6 +1643,11 @@
     /* 可視・不可視はJSで切替 */
     z-index: 3000;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, .08);
+}
+
+body.is-pwa-standalone .deck-code-controls,
+body.is-pwa-standalone .deck-code-controls.floating {
+    bottom: var(--app-bottom-nav-offset);
 }
 
 /* モバイル以外では常に無効（念のため） */
@@ -2178,108 +2286,221 @@
 }
 
 /* ---- デッキ解説ツールバー---- */
+.note-preset-wrap {
+    position: relative;
+    margin-bottom: 3px;
+}
+
 .note-toolbar {
     display: grid;
-    grid-template-columns: 3fr 3fr auto;
-    /* 左:プリセット / 中:プリセット / 右:全表示 */
-    grid-template-rows: 26px 26px;
-    gap: 3px;
-    margin-bottom: 3px;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    /* 左:プリセット分類 / 右:全表示 */
+    gap: 6px;
+    align-items: stretch;
 }
 @media (max-width: 768px) {
     .note-toolbar {
-    grid-template-rows: 32px 32px;
-    gap: 6px;
+        grid-template-columns: 1fr;
     }
-}
-/* 左2/3はプリセット 2×2 を敷き詰める */
-.note-presets-grid {
-    grid-column: 1 / span 2;
-    /* 左と中を占有 */
-    grid-row: 1 / span 2;
-    /* 2段ぶん占有 */
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 26px);
-    gap: 3px;
-    min-width: 0;
 
-}
-@media (max-width: 768px) {
-    .note-presets-grid {
-        grid-template-rows: 32px 32px;
+    .note-toolbar-right {
+        display: block;
     }
 }
-/* 右1/3は“全表示”を縦2段分の高さで正方形気味に */
+
+/* プリセット分類ボタンを左右に並べる */
+.note-presets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    min-width: 0;
+}
+
 .note-toolbar-right {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    /* 2段ぶんの高さ */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* プリセットは“存在感控えめ＆横長” */
-/* プリセットボタンの色ごとデザイン */
-.note-preset-btn {
+/* プリセット分類ボタン */
+.note-preset-menu-btn,
+.note-card-ref-btn {
     border: none;
     border-radius: 8px;
-    padding: 0.35rem 0.5rem;
-    font-size: .75rem;
+    padding: 0.55rem 0.75rem;
+    min-height: 38px;
+    font-size: .82rem;
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.2;
     cursor: pointer;
     color: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.06s ease, box-shadow 0.2s ease;
+    transition: transform 0.06s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-
-/* 個別カラー */
-.note-preset-btn[data-preset="deck-overview"] {
+.note-preset-menu-btn[data-preset-menu="templates"] {
     background: linear-gradient(90deg, #68a6ff, #a4d0ff);
     box-shadow: 0 2px 6px rgba(104, 166, 255, 0.25);
 }
 
-.note-preset-btn[data-preset="play-guide"] {
+.note-preset-menu-btn[data-preset-menu="sections"] {
     background: linear-gradient(90deg, #fbbf24, #fde68a);
     box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
 }
 
-.note-preset-btn[data-preset="matchup"] {
-    background: linear-gradient(90deg, #f87171, #fca5a5);
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
-}
-
-.note-preset-btn[data-preset="results"] {
+.note-card-ref-btn {
     background: linear-gradient(90deg, #34d399, #a7f3d0);
     box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
 }
 
-.note-preset-btn:hover {
+.note-preset-menu-btn[aria-pressed="true"] {
+    filter: brightness(.95) saturate(1.1);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, .18);
+}
+
+.note-preset-menu-btn:hover,
+.note-card-ref-btn:hover,
+.note-preset-choice:hover,
+.note-preset-help-btn:hover,
+.note-preset-more-btn:hover {
     filter: brightness(1.03);
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
 }
 
-.note-preset-btn:active {
-    transform: scale(.97);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+.note-preset-menu-btn:active,
+.note-card-ref-btn:active,
+.note-preset-choice:active,
+.note-preset-help-btn:active,
+.note-preset-more-btn:active {
+    transform: scale(.98);
 }
 
+.note-preset-menu-btn:focus-visible,
+.note-card-ref-btn:focus-visible,
+.note-preset-choice:focus-visible,
+.note-preset-help-btn:focus-visible,
+.note-preset-more-btn:focus-visible,
+.note-showall-btn:focus-visible {
+    outline: 3px solid rgba(47, 128, 237, .35);
+    outline-offset: 2px;
+}
 
-/* “全表示”は2段ぶんの高さで正方形に近づける */
+/* 候補パネル */
+.note-preset-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 40;
+    width: min(100%, 520px);
+    max-height: min(58vh, 420px);
+    overflow: auto;
+    margin: 0;
+    padding: 8px;
+    border: 1px solid rgba(49, 116, 164, .18);
+    border-radius: 8px;
+    background: #f8fbff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+}
+
+.note-preset-panel[hidden] {
+    display: none;
+}
+
+.note-preset-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.note-preset-choice-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 32px;
+    gap: 4px;
+    min-width: 0;
+}
+
+.note-preset-more-row {
+    grid-column: 1 / -1;
+}
+
+.note-preset-choice,
+.note-preset-help-btn,
+.note-preset-more-btn {
+    border: 1px solid rgba(49, 116, 164, .22);
+    border-radius: 8px;
+    background: #fff;
+    color: #223;
+    cursor: pointer;
+    min-height: 32px;
+    transition: transform 0.06s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.note-preset-choice {
+    padding: 0.35rem 0.5rem;
+    font-size: .78rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.note-preset-more-btn {
+    width: 100%;
+    padding: 0.45rem 0.5rem;
+    font-size: .78rem;
+    font-weight: 700;
+    color: #2f80ed;
+    background: #eef6ff;
+}
+
+.note-preset-help-btn {
+    padding: 0;
+    font-weight: 700;
+    color: #2f80ed;
+}
+
+.note-preset-help {
+    margin-top: 6px;
+    color: #555;
+    font-size: .78rem;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+@media (max-width: 768px) {
+    .note-preset-list {
+        grid-template-columns: 1fr;
+    }
+
+    .note-preset-panel {
+        width: 100%;
+        max-height: min(62vh, 420px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .note-preset-menu-btn,
+    .note-card-ref-btn,
+    .note-preset-choice,
+    .note-preset-help-btn,
+    .note-preset-more-btn,
+    .note-showall-btn {
+        transition: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .note-presets-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* 全表示ボタン */
 .note-showall-btn {
-    height: calc(26px * 2 + 8px);
-    aspect-ratio: 1 / 1;
-    /* ほぼ正方形 */
-    width: auto;
+    min-height: 38px;
+    width: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: .75rem;
     cursor: pointer;
@@ -2291,7 +2512,30 @@
 }
 @media (max-width: 768px) {
     .note-showall-btn {
-    height: calc(32px * 2 + 6px);
+        width: 100%;
+    }
+
+    .note-toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .note-presets-grid {
+        display: contents;
+    }
+
+    .note-preset-menu-btn,
+    .note-card-ref-btn,
+    .note-showall-btn {
+        min-height: 40px;
+        padding: 0.45rem 0.5rem;
+        font-size: .78rem;
+    }
+
+    .text-side .note-presets-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -2303,6 +2547,71 @@
 
 .note-showall-btn:active {
     transform: scale(.985);
+}
+
+/* カード選択モーダル */
+#cardPickResult {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 4px;
+    align-items: start;
+    margin: 3px 0;
+}
+
+.card-pick-modal {
+    margin: 48px auto 0;
+    min-height: min(420px, calc(100vh - 72px));
+}
+
+.card-pick-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card-pick-item {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.card-pick-item:focus-visible {
+    outline: 3px solid rgba(47, 128, 237, .45);
+    outline-offset: 2px;
+}
+
+.card-pick-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+}
+
+.card-pick-empty {
+    grid-column: 1 / -1;
+    padding: 12px;
+    color: #666;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    #cardPickResult {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .card-pick-modal {
+        margin-top: 20px;
+        min-height: min(360px, calc(100vh - 32px));
+    }
+
+    #cardPickResult {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }
 
 
@@ -2402,8 +2711,8 @@
 }
 
 
-.text-side .note-presets-grid{
-    grid-template-rows: repeat(2, 30px);
+.text-side .note-presets-grid {
+    grid-auto-rows: minmax(38px, auto);
 }
 #note-full-text {
     width: 100%;
@@ -3410,18 +3719,211 @@ font-size: .8rem;
 }
 
 /*======デッキ保存リスト=========*/
-/*保存デッキ一覧*/
+/*デッキ保管庫*/
 
 #saved-deck {
-    margin: 10px 0 5px;
-    justify-content: space-between;
+    margin: 10px 0 6px;
+    padding: 8px 10px;
     font-size: 25px;
     display: flex;
-    align-items: end;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+    border: 1px solid rgba(31, 41, 55, .12);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .72);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
 }
+
+.saved-deck-head-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
 .saved-deck-title{
     margin: 0;
     font-size: clamp(24px,5vw,35px);
+    line-height: 1.1;
+    min-width: 0;
+}
+
+.saved-deck-head-meta {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.45rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.saved-deck-source {
+    font-weight: 800;
+}
+
+.saved-deck-account-settings-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 28px;
+    padding: .45rem .5rem;
+    margin: 0;
+    background: linear-gradient(90deg, #ef4444, #f97316);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .7rem;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+}
+
+.saved-deck-auth-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.saved-deck-auth-actions .cards-auth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0.3rem 0.52rem;
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+    background: #fff;
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+
+.saved-deck-auth-actions .cards-auth-btn.primary {
+    background: #6c63ff;
+    color: #fff;
+}
+
+.saved-deck-auth-actions .cards-auth-btn:hover,
+.saved-deck-auth-actions .cards-auth-btn.primary:hover {
+    background: #5b54e6;
+    border-color: #5b54e6;
+    color: #fff;
+}
+
+.saved-deck-auth-actions .cards-auth-btn:focus-visible {
+    outline: 2px solid rgba(108, 99, 255, .45);
+    outline-offset: 2px;
+}
+
+.saved-deck-match-link {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.saved-deck-match-link-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* min-height: 20px; */
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #2563eb;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+
+.saved-deck-match-link-btn:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+    text-decoration: none;
+}
+
+.saved-deck-match-link-btn:focus-visible {
+    outline: 2px solid rgba(37, 99, 235, .45);
+    outline-offset: 2px;
+}
+
+.saved-deck-match-link-btn:disabled {
+    border-color: #cbd5e1;
+    background: #e5e7eb;
+    color: #64748b;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+    #saved-deck {
+        padding: 8px;
+    }
+
+    .saved-deck-head-top {
+        align-items: flex-start;
+    }
+
+    .saved-deck-head-meta {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .saved-deck-auth-actions {
+        gap: 3px;
+    }
+
+    .saved-deck-auth-actions .cards-auth-btn {
+        min-height: 26px;
+        padding: 0.26rem 0.36rem;
+        border-radius: 7px;
+        font-size: 10px;
+        line-height: 1;
+    }
+
+    .saved-deck-account-settings-btn {
+        padding: 0.24rem 0.38rem;
+        border-radius: 7px;
+        font-size: 10px;
+    }
+
+    .saved-deck-match-link {
+        margin-left: 0;
+    }
+
+    .saved-deck-match-link-btn {
+        width: 100%;
+        padding: .4rem 0.4rem;
+        font-size: 11px;
+    }
+
+    .saved-deck-source {
+        padding: 0.24rem 0.38rem;
+        font-size: 10px;
+    }
+
+    .saved-deck-source::before {
+        width: .45rem;
+        height: .45rem;
+    }
 }
 /*デッキ数カウント*/
 #savedDeckCount {
@@ -3430,21 +3932,18 @@ font-size: .8rem;
     color: #333;
 }
 
-/*注意書き*/
-.saved-deck-massage {
-    color: red;
-    font-weight: bold;
-    font-size: 15px;
-    margin-top: 10px;
-}
-
 /*保存デッキリスト*/
 #savedDeckList {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    /* ⬅ 2列対応 */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.3em;
     margin-top: 0.2em;
+}
+
+@media (max-width: 600px) {
+    #savedDeckList {
+        grid-template-columns: 1fr;
+    }
 }
 
 #savedDeckList p {
@@ -3453,37 +3952,303 @@ font-size: .8rem;
 
 .saved-deck-item {
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-rows: auto auto;
     gap: 0.5em;
     border: 1px solid #ccc;
     background-color: #fff;
 }
 
-.saved-deck-item img {
-    width: 80px;
+.saved-deck-item.race-bg-ドラゴン {
+    background: var(--race-dragon-bg);
+}
+
+.saved-deck-item.race-bg-アンドロイド {
+    background: var(--race-android-bg);
+}
+
+.saved-deck-item.race-bg-エレメンタル {
+    background: var(--race-elemental-bg);
+}
+
+.saved-deck-item.race-bg-ルミナス {
+    background: var(--race-luminous-bg);
+}
+
+.saved-deck-item.race-bg-シェイド {
+    background: var(--race-shade-bg);
+}
+
+.saved-deck-main {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 0.6em;
+    align-items: start;
+}
+
+.saved-deck-thumb {
+    position: relative;
+    width: 100px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.saved-deck-thumb:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .35);
+    outline-offset: 2px;
+}
+
+.saved-deck-thumb img {
+    width: 100px;
     height: auto;
+    display: block;
     object-fit: cover;
 }
 
+.saved-deck-thumb-peek {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255, 255, 255, .82);
+    border-radius: 9999px;
+    background: rgba(17, 24, 39, .78);
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .24);
+    pointer-events: none;
+}
+
+.saved-deck-thumb:hover .saved-deck-thumb-peek {
+    background: rgba(37, 99, 235, .88);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+    .saved-deck-main {
+        grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+    .saved-deck-thumb,
+    .saved-deck-thumb img {
+        width: 80px;
+    }
+}
+
 .saved-deck-info {
-    flex: 1 1 200px;
     display: flex;
     flex-direction: column;
     gap: 0.25em;
-    min-width: 150px;
+    min-width: 0;
 }
 
 .saved-deck-info .row {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5em;
 }
 
+.saved-deck-title-row {
+    justify-content: space-between;
+}
+
+.saved-deck-title-row strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.saved-deck-number {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 2px 7px;
+    border: 1px solid rgba(31, 41, 55, .18);
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, .62);
+    color: #374151;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.saved-deck-summary {
+    position: relative;
+    display: block;
+    margin: 0 0.35em 0.35em;
+    padding: 0 0.35em 0.35em;
+}
+
+.saved-deck-summary-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35em;
+}
+
+.saved-deck-type-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px;
+}
+
+.saved-deck-count-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    min-height: 24px;
+    padding: 3px 8px;
+    border: 1px solid rgba(31, 41, 55, .18);
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, .7);
+    color: #1f2937;
+    font-size: clamp(.6rem, 1.8vw, .8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.saved-deck-code-copy {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    overflow: visible;
+    border: 1px solid rgba(22, 163, 74, .38);
+    border-radius: 8px;
+    background: rgba(240, 253, 244, .82);
+    color: #15803d;
+    font-size: clamp(.58rem, 1.6vw, .76rem);
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.saved-deck-code-copy.is-empty {
+    border-color: rgba(31, 41, 55, .16);
+    background: rgba(255, 255, 255, .58);
+    color: #4b5563;
+}
+
+.saved-deck-code-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 8px;
+    cursor: default;
+}
+
+.saved-deck-code-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    min-width: 44px;
+    padding: 0 8px;
+    border: 0;
+    border-left: 1px solid rgba(22, 163, 74, .3);
+    background: rgba(255, 255, 255, .68);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.saved-deck-code-copy.has-code:hover {
+    background: #dcfce7;
+    border-color: rgba(22, 163, 74, .65);
+}
+
+.saved-deck-code-copy-btn:hover:not(:disabled) {
+    background: rgba(22, 163, 74, .12);
+}
+
+.saved-deck-code-copy-btn:disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.saved-deck-code-copy-btn:focus-visible {
+    outline: 3px solid rgba(22, 163, 74, .32);
+    outline-offset: -3px;
+}
+
+.saved-deck-code-copy[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    z-index: 20;
+    width: max-content;
+    max-width: min(260px, 70vw);
+    padding: 6px 8px;
+    border: 1px solid rgba(31, 41, 55, .18);
+    border-radius: 8px;
+    background: #111827;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: normal;
+    text-align: left;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity .16s ease, transform .16s ease;
+}
+
+.saved-deck-code-copy[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 3px);
+    z-index: 21;
+    width: 8px;
+    height: 8px;
+    background: #111827;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px) rotate(45deg);
+    transition: opacity .16s ease, transform .16s ease;
+}
+
+.saved-deck-code-copy[data-tooltip]:hover::after,
+.saved-deck-code-copy:focus-within::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.saved-deck-code-copy[data-tooltip]:hover::before,
+.saved-deck-code-copy:focus-within::before {
+    opacity: 1;
+    transform: translate(-50%, 0) rotate(45deg);
+}
+
+.saved-deck-type-box {
+    margin-top: -10px;
+    padding: 14px 8px 8px;
+    border: 1px solid rgba(31, 41, 55, .14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .32);
+}
+
+.saved-deck-summary .type-chip {
+    flex: 0 0 auto;
+    font-size: clamp(.58rem, 1.5vw, .78rem);
+    padding-inline: 6px;
+}
+
 .saved-deck-info .row small {
-    font-size: 0.75em;
     color: #555;
 }
 
@@ -3492,6 +4257,222 @@ font-size: .8rem;
     flex-direction: column;
     gap: 0.5em;
     min-width: 80px;
+}
+
+.deck-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
+    width:100%;
+    padding-right: 0;
+}
+
+.deck-buttons-top,
+.deck-buttons-bottom {
+    display: flex;
+    gap: 0.45em;
+}
+
+.deck-buttons-top .saved-deck-action {
+    width: 100%;
+}
+
+.deck-buttons-bottom .saved-deck-action {
+    flex: 1 1 0;
+}
+
+.saved-deck-action {
+    min-height: 32px;
+    padding: 0.35em 0.75em;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #1f2937;
+    font-size: clamp(.75rem, 2vw, .9rem);
+    white-space: nowrap;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .16s ease;
+}
+
+.saved-deck-action:hover {
+    transform: translateY(-1px);
+}
+
+.saved-deck-action:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .35);
+    outline-offset: 2px;
+}
+
+.saved-deck-action-load {
+    border-color: rgba(37, 99, 235, .45);
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.saved-deck-action-load:hover {
+    background: #dbeafe;
+    border-color: rgba(37, 99, 235, .7);
+}
+
+.saved-deck-action-code {
+    border-color: rgba(22, 163, 74, .45);
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.saved-deck-action-code:hover {
+    background: #dcfce7;
+    border-color: rgba(22, 163, 74, .7);
+}
+
+.saved-deck-action-delete {
+    border-color: rgba(220, 38, 38, .45);
+    background: #fff1f2;
+    color: #b91c1c;
+}
+
+.saved-deck-action-delete:hover {
+    background: #ffe4e6;
+    border-color: rgba(220, 38, 38, .7);
+}
+
+#saved-deckpeek-overlay {
+    position: fixed;
+    z-index: 3400;
+    display: none;
+    min-width: 200px;
+    max-width: min(360px, calc(100vw - 16px));
+    max-height: min(72vh, 520px);
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .97);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .18);
+}
+
+#saved-deckpeek-overlay .saved-deckpeek-inner {
+    max-height: calc(min(72vh, 520px) - 12px);
+    overflow: auto;
+}
+
+#saved-deckpeek-overlay .deckpeek-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .saved-deck-action {
+        transition: none;
+    }
+
+    .saved-deck-action:hover {
+        transform: none;
+    }
+}
+
+/* ===== 保存デッキ戦績モーダル ===== */
+.deck-match-modal {
+    width: min(560px, calc(100vw - 24px));
+    max-width: 560px;
+}
+
+.deck-match-target {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.deck-match-target span {
+    color: #555;
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.deck-match-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 0.65rem;
+    margin: 0.5rem 0 0.75rem;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    background: #f6f8fa;
+}
+
+.deck-match-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.deck-match-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    font-weight: 700;
+}
+
+.deck-match-form input,
+.deck-match-form select,
+.deck-match-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #b8c0cc;
+    border-radius: 6px;
+    padding: 0.55rem;
+    font: inherit;
+    background: #fff;
+}
+
+.deck-match-form textarea {
+    resize: vertical;
+}
+
+.deck-match-field-wide,
+.deck-match-status,
+.deck-match-actions {
+    grid-column: 1 / -1;
+}
+
+.deck-match-status {
+    min-height: 1.4em;
+    color: #166534;
+    font-weight: 700;
+}
+
+.deck-match-status.is-error {
+    color: #b91c1c;
+}
+
+.deck-match-actions {
+    margin-top: 0;
+}
+
+.deck-match-submit:disabled {
+    opacity: 0.6;
+    cursor: progress;
+}
+
+.deck-buttons button:focus-visible,
+.deck-match-form input:focus-visible,
+.deck-match-form select:focus-visible,
+.deck-match-form textarea:focus-visible,
+.deck-match-close:focus-visible,
+.deck-match-cancel:focus-visible,
+.deck-match-submit:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .deck-match-form {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ===== デッキ投稿ヘルプ（？ボタン＋モーダル） ===== */
@@ -3524,7 +4505,6 @@ font-size: .8rem;
 /* ===== キーボードフォーカスの可視化 ===== */
 .analyze-button:focus-visible,
 .filter-toggle-button:focus-visible,
-.cardop-btn:focus-visible,
 .note-preset-btn:focus-visible,
 .note-showall-btn:focus-visible,
 .deck-code-controls button:focus-visible,
@@ -3547,7 +4527,6 @@ font-size: .8rem;
   .tag-chips .chip,
   .deck-code-controls button,
   .post-actions button,
-  .cardop-btn,
   .analyze-button,
   .paste-code-controls button,
   .btn,
@@ -3556,4 +4535,3 @@ font-size: .8rem;
     animation: none !important;
   }
 }
-

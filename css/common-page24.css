@@ -3,179 +3,17 @@
    - 1-1. アカウントデータ モーダル
    - 1-2. Auth ローディング / トースト
    - 1-3. 投稿フォーム内ミニログイン UI
-   - 1-3-1. ログインIDチップ共通
+   - 1-3-1. ユーザー名チップ共通
    - 1-3-2. 危険系ボタン（ログアウトなど）
 ========================================= */
-
-
 /*-----------------------------------------
-  1-1. アカウントデータ モーダル（UI）
-  ※ 開閉/保存ロジックは JS 側で実装
-------------------------------------------*/
-
-.account-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 4000;
-    justify-content: center;
-    align-items: center;
-}
-
-#accountDataModal {
-    z-index: 3500;
-}
-
-.account-modal .modal-content {
-    background: #fff;
-    max-width: 950px;
-    position: relative;
-    box-sizing: border-box;
-    margin: auto;
-    width: min(720px, 94vw);
-    max-height: 88vh;
-    overflow: auto;
-    border-radius: 12px;
-    padding: 12px;
-    align-items: center;
-}
-
-.account-modal-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.account-modal-head h3 {
-    margin: 0;
-    font-size: clamp(18px, 3.8vw, 22px);
-}
-
-.account-close {
-    background: #eee;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 32px;
-    height: 32px;
-    line-height: 1;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.account-modal-body {
-    display: grid;
-    gap: 10px;
-    margin-top: 8px;
-}
-
-.account-field {
-    display: grid;
-    gap: 6px;
-}
-
-.account-field label {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #374151;
-}
-
-.account-field input[type="text"],
-.account-field input[type="password"] {
-    width: 100%;
-    padding: .45rem .6rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
-}
-
-.account-pass-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-
-.account-hint {
-    color: #6b7280;
-    font-size: .8rem;
-}
-
-.account-note {
-    margin-top: 4px;
-    color: #374151;
-    font-size: .9rem;
-}
-
-.account-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-/* 小さめ画面最適化 */
-@media (max-width: 700px) {
-    .account-field label {
-        font-size: .9rem;
-    }
-}
-
-/* X 行：既存の .X-info を横並び均等 */
-.X-info {
-    display: flex;
-    width: 100%;
-    gap: 5px;
-}
-
-.X-info input {
-    flex: 1;
-}
-
-/* X ボタン共通 */
-.x-link-btn {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.7rem;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.x-link-btn:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.x-link-btn:focus-visible
- {
-    outline: 2px solid rgba(59, 130, 246, 0.6);
-    outline-offset: 2px;
-}
-/* ===== 動きの軽減（アクセシビリティ） ===== */
-@media (prefers-reduced-motion: reduce) {
-    .x-link-btn
-    {
-        transition: none !important;
-        animation: none !important;
-    }
-}
-
-/*-----------------------------------------
-  1-2. Auth ローディング / トースト（共通）
+  1-1. Auth ローディング / トースト（共通）
 ------------------------------------------*/
 
 .auth-status {
     position: fixed;
     inset: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -241,21 +79,37 @@
 /* === 投稿者UI === */
 /* === 投稿フォーム内ミニログインUI ================== */
 
-/* 未ログイン：1ボタン（ログイン/新規登録） */
+/* 未ログイン：ログイン / 新規登録ボタン */
 .auth-mini-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: .8rem;
-    background: #6c63ff;
-    color: #fff;
+    background: #fff;
+    color: #4f46e5;
     padding: .35rem .8rem;
     border-radius: 8px;
-    border: none;
+    border: 1px solid #6c63ff;
     cursor: pointer;
     font-weight: 700;
     white-space: nowrap;
 }
 
+.auth-mini-btn.primary {
+    background: #6c63ff;
+    color: #fff;
+}
+
 .auth-mini-btn:hover {
+    border-color: #5b54e6;
+    background: #5b54e6;
+    color: #fff;
     opacity: .9;
+}
+
+.auth-mini-btn:focus-visible {
+    outline: 2px solid #4b3f8a;
+    outline-offset: 2px;
 }
 
 /* ログイン中UIのボタン */
@@ -294,19 +148,6 @@
     height: 30px;
 }
 
-.btn.ghost {
-    font-size: .7rem;
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    color: #333;
-    border-radius: 8px;
-    padding: .35rem .6rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 /* 登録 / ログイン */
 /* ===== 未ログインカード ===== */
 
@@ -314,12 +155,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .auth-mini-title {
     font-size: 1rem;
     font-weight: 700;
     color: #4b3f8a;
+}
+
+.auth-mini-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
 }
 
 .auth-buttons {
@@ -346,6 +196,45 @@
     border-radius: 8px;
     padding: .3rem .7rem;
     font-weight: 700;
+}
+
+.auth-buttons .auth-mode-switch {
+    font-size: .8rem;
+    padding: .3rem .7rem;
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+    background: #fff;
+    color: #4f46e5;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.auth-buttons .auth-mode-switch:hover {
+    border-color: #5b54e6;
+    background: #f5f4ff;
+}
+
+.auth-forgot-link {
+    justify-self: start;
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    color: #4f46e5;
+    font-size: .8rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.auth-forgot-link:hover {
+    color: #3730a3;
+}
+
+.auth-forgot-link:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
 
@@ -381,7 +270,7 @@
 }
 
 /*-----------------------------------------
-  1-3-1. ログインIDチップ共通
+  1-3-1. ユーザー名チップ共通
 ------------------------------------------*/
 
 /* 表示専用の登録IDバッジに見せる */
@@ -452,7 +341,7 @@
   1-3-2. 危険系ボタン（ログアウトなど）
 ------------------------------------------*/
 
-.btn.danger {
+.auth-logged-in-row .btn.danger {
     background: linear-gradient(90deg, #ef4444, #f97316);
     color: #fff;
     border: none;
@@ -867,6 +756,89 @@
 /* 未達成時は少し薄く */
 .criteria-item.is-ng {
     opacity: .6;
+}
+
+.campaign-game-user-id-wrap {
+    display: grid;
+    gap: 5px;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .28);
+}
+
+.campaign-game-user-id-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: #fff;
+    font-size: .84rem;
+    font-weight: 800;
+}
+
+.campaign-game-user-id-input {
+    width: min(100%, 260px);
+    min-height: 38px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, .65);
+    background: rgba(255, 255, 255, .94);
+    color: #0f172a;
+    padding: 8px 10px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.campaign-game-user-id-input:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, .9);
+    outline-offset: 2px;
+}
+
+.campaign-game-user-id-note {
+    color: rgba(255, 255, 255, .9);
+    font-size: .76rem;
+    line-height: 1.45;
+}
+
+.campaign-game-user-id-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .9);
+    color: #475569;
+    font-size: .72rem;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.campaign-game-user-id-status.is-ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.campaign-game-user-id-status.is-ng {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.campaign-game-user-id-status.is-empty {
+    background: rgba(255, 255, 255, .9);
+    color: #475569;
+}
+
+.campaign-tag-help {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, .9);
+    font-size: .78rem;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.campaign-tag-help.is-disabled {
+    opacity: .85;
 }
 
 /* =========================

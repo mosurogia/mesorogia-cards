@@ -15,7 +15,7 @@
 
 /* 検索バー（PC基本：flex） */
 .search-bar {
-    padding: 0 4px;
+    padding: 0 2px;
     position: sticky;
     top: 0;
     z-index: 2000;
@@ -57,24 +57,71 @@
 }
 
 /* sort */
-.search-bar-right #sort-select {
+.sort-controls {
     order: 3;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 0 1 13rem;
+    min-width: 0;
+    margin-right: auto;
+}
+
+.search-bar-right #sort-select {
     white-space: nowrap;
-    width: auto;
+    width: 100%;
     height: 36px;
-    flex: 0 0 auto;
-    min-width: 4rem;
+    flex: 1 1 auto;
+    min-width: 0;
     font-size: clamp(13px, 3vw, 18px);
     padding: 0 8px;
-    margin-right: auto;
+    color: #1f3f5f;
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    border: 1px solid #b5d9f3;
+    border-radius: 4px 0 0 4px;
+    font-weight: 700;
+}
+
+.sort-order-toggle {
+    flex: 0 0 auto;
+    min-width: 3.8rem;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: 900;
+    color: #1f3f5f;
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    border: 1px solid #b5d9f3;
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: filter .15s ease, transform .06s ease, box-shadow .15s ease;
+}
+
+.search-bar-right #sort-select:hover,
+.sort-order-toggle:hover {
+    filter: brightness(.98);
+    box-shadow: 0 1px 4px rgba(90, 150, 200, .25);
+}
+
+.sort-order-toggle:active {
+    transform: translateY(1px);
+}
+
+.search-bar-right #sort-select:focus-visible,
+.sort-order-toggle:focus-visible {
+    outline: 2px solid #2f80ed;
+    outline-offset: 2px;
 }
 
 /* フィルター/グループ（openFilterModal系 共通） */
 .search-bar button[onclick*="openFilterModal"] {
     order: 4;
     min-width: 4rem;
-    padding: 0 10px;
-    font-size: 1.05rem;
+    padding: 0 17.5px;
+    font-size: 1.1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     height: 36px;
 
     background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
@@ -178,6 +225,302 @@
     --_filter-fill: var(--type-blocker-bg);
 }
 
+/* カード選択モーダル内フィルター */
+.card-pick-filters {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(132px, auto) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 4px;
+    row-gap: 8px;
+    margin: 8px 0 10px;
+}
+
+.card-pick-type-filter {
+    order: 0;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    gap: 3px;
+    align-self: start;
+}
+
+.card-pick-type-filter .type-icon-btn {
+    width: 34px;
+    height: 34px;
+    padding: 3px;
+}
+
+.card-pick-folder-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+    gap: 4px;
+}
+
+.card-pick-folder {
+    position: static;
+    min-width: 0;
+}
+
+.card-pick-folder summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    min-width: 0;
+    height: 34px;
+    padding: 0 7px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg, rgba(180, 180, 180, .5), rgba(180, 180, 180, .5)) border-box;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 900;
+    list-style: none;
+    white-space: nowrap;
+    transition: transform .08s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+.card-pick-folder:not(.is-active) summary {
+    opacity: .55;
+}
+
+.card-pick-folder summary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+}
+
+.card-pick-folder[open] summary,
+.card-pick-folder.is-active summary {
+    background:
+        linear-gradient(#e9f5fb, #e9f5fb) padding-box,
+        linear-gradient(90deg, rgba(47, 128, 237, .6), rgba(47, 128, 237, .6)) border-box;
+    box-shadow:
+        0 0 0 2px rgba(0, 0, 0, .15),
+        inset 0 0 0 2px rgba(255, 255, 255, .6);
+    opacity: 1;
+}
+
+.card-pick-folder summary::-webkit-details-marker {
+    display: none;
+}
+
+.card-pick-folder summary::after {
+    content: "▾";
+    font-size: 11px;
+    opacity: .65;
+}
+
+.card-pick-folder[open] summary::after {
+    content: "▴";
+}
+
+.card-pick-folder summary:focus-visible,
+.card-pick-option:focus-visible,
+.card-pick-chips .chip-mini:focus-visible {
+    outline: 3px solid rgba(47, 128, 237, .45);
+    outline-offset: 2px;
+}
+
+.card-pick-option-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    width: min(84vw, 520px);
+    max-height: min(58vh, 420px);
+    margin: 0;
+    padding: 8px;
+    overflow-y: auto;
+    border: 1px solid rgba(49, 116, 164, .18);
+    border-radius: 8px;
+    background: #f8fbff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+}
+
+#cardPickPackOptions {
+    right: 0;
+    left: auto;
+}
+
+.card-pick-option {
+    --ring: rgba(0, 0, 0, .18);
+    --ring-accent: color-mix(in srgb, var(--ring) 85%, white);
+    width: 100%;
+    min-height: 32px;
+    border: 1px solid rgba(49, 116, 164, .22);
+    border-left: 5px solid var(--ring);
+    border-radius: 8px;
+    background: #fff;
+    color: #223;
+    padding: .35rem .5rem;
+    font-size: .78rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.card-pick-option:hover,
+.card-pick-option.is-active {
+    background: #eef6ff;
+    border-color: rgba(49, 116, 164, .22);
+    border-left-color: var(--ring-accent);
+    box-shadow: 0 2px 8px rgba(47, 128, 237, .13);
+}
+
+.card-pick-option.is-active {
+    box-shadow: inset 0 0 0 2px var(--ring), 0 2px 8px rgba(47, 128, 237, .16);
+}
+
+.card-pick-option[data-cat-race="ドラゴン"] {
+    --ring: var(--race-dragon);
+}
+
+.card-pick-option[data-cat-race="アンドロイド"] {
+    --ring: var(--race-android);
+}
+
+.card-pick-option[data-cat-race="エレメンタル"] {
+    --ring: var(--race-elemental);
+}
+
+.card-pick-option[data-cat-race="ルミナス"] {
+    --ring: var(--race-luminous);
+}
+
+.card-pick-option[data-cat-race="シェイド"] {
+    --ring: var(--race-shade);
+}
+
+.card-pick-option[data-cat-race="イノセント"] {
+    --ring: var(--race-innocent);
+}
+
+.card-pick-option[data-cat-race="旧神"] {
+    border-left-color: transparent;
+    border-image: var(--old-god) 1;
+}
+
+.card-pick-option.is-active[data-cat-race="旧神"] {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .55), inset 0 0 0 2px rgba(255, 255, 255, .4);
+}
+
+.card-pick-option[data-pack="Awakening The Oracle"] {
+    --ring: rgb(var(--pack-a-rgb));
+    --ring-accent: rgb(var(--pack-a-accent-rgb));
+}
+
+.card-pick-option[data-pack="Beyond the Sanctuary"] {
+    --ring: rgb(var(--pack-b-rgb));
+    --ring-accent: rgb(var(--pack-b-accent-rgb));
+}
+
+.card-pick-option[data-pack="Creeping Souls"] {
+    --ring: rgb(var(--pack-c-rgb));
+    --ring-accent: rgb(var(--pack-c-accent-rgb));
+}
+
+.card-pick-option[data-pack="Drawn Sword"] {
+    --ring: rgb(var(--pack-d-rgb));
+    --ring-accent: rgb(var(--pack-d-accent-rgb));
+}
+
+.card-pick-option[data-pack="Ensemble of Slience"] {
+    --ring: rgb(var(--pack-e-rgb));
+    --ring-accent: rgb(var(--pack-e-accent-rgb));
+}
+
+.card-pick-option[data-pack="Fallen Fate"] {
+    --ring: rgb(var(--pack-f-rgb));
+    --ring-accent: rgb(var(--pack-f-accent-rgb));
+}
+
+.card-pick-option[data-pack="Glory of the Gods"] {
+    --ring: rgb(var(--pack-g-rgb));
+    --ring-accent: rgb(var(--pack-g-accent-rgb));
+}
+
+.card-pick-option[data-pack="その他特殊カード"] {
+    --ring: rgb(var(--pack-special-rgb));
+    --ring-accent: rgb(var(--pack-special-accent-rgb));
+}
+
+.card-pick-option[data-pack="コラボカード"] {
+    --ring: rgb(var(--pack-collab-rgb));
+    --ring-accent: rgb(var(--pack-collab-accent-rgb));
+}
+
+.card-pick-option-empty {
+    color: #666;
+    font-size: 13px;
+}
+
+.card-pick-chips {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.card-pick-chips .chip-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 6px;
+    padding: 3px 8px;
+    font-size: clamp(.6rem, 2.6vw, .75rem);
+    border-radius: 999px;
+    border: 1px solid #ffb7c9;
+    background: #fff6f9;
+    color: #9b355e;
+    line-height: normal;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card-pick-chips .chip-mini .x {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: .75rem;
+    font-weight: 900;
+    line-height: 1;
+    padding: 0;
+}
+
+@media (max-width: 600px) {
+    .card-pick-filters {
+        grid-template-columns: minmax(126px, auto) minmax(0, 1fr);
+        column-gap: 4px;
+        row-gap: 7px;
+    }
+
+    .card-pick-type-filter .type-icon-btn {
+        width: 32px;
+        height: 32px;
+        padding: 2px;
+    }
+
+    .card-pick-folder summary {
+        height: 32px;
+        padding: 0 6px;
+        font-size: 12px;
+    }
+
+    .card-pick-option-list {
+        grid-template-columns: 1fr;
+        width: min(82vw, 360px);
+    }
+}
+
 /* 0.3) search-bar：アイコンボタン（共通見た目用） */
 .search-icon-btn {
     display: inline-flex;
@@ -257,10 +600,19 @@
     }
 
     /* 2段目：sort + filter/group ボタン（左寄せ） */
+    .sort-controls {
+        flex: 1 1 11.5rem;
+        min-width: 11.5rem;
+    }
+
     .search-bar-right #sort-select {
-        flex: 1 1 7.5rem;
-        min-width: 7.5rem;
         padding: 0 6px;
+        font-size: 13px;
+    }
+
+    .sort-order-toggle {
+        min-width: 3.4rem;
+        padding: 0 8px;
         font-size: 13px;
     }
 
@@ -297,8 +649,27 @@
 #filterModal {
     display: none;
     flex-direction: column;
-    max-height: 120vh;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: 100vh;
+    padding: 56px 0 24px;
+    box-sizing: border-box;
     overflow-y: auto;
+}
+
+#filterModal .modal-content {
+    max-height: calc(100vh - 80px);
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    #filterModal {
+        padding: 18px 0 14px;
+    }
+
+    #filterModal .modal-content {
+        max-height: calc(100vh - 32px);
+    }
 }
 
 .modal {
@@ -309,6 +680,10 @@
     z-index: 2000;
     justify-content: center;
     align-items: center;
+}
+
+#cardZoomModal {
+    z-index: 5000;
 }
 
 .modal-content {
@@ -324,16 +699,21 @@
     margin: auto;
 }
 
-/* メインタイトル（sticky） */
-.filter-maintitle {
+/* フィルターモーダル上部固定 */
+.filter-modal-head {
     position: sticky;
     top: 0;
     z-index: 1;
-    margin: 0 -15px 8px;
+    margin: 0 -15px 10px;
+    background: rgba(255, 255, 255, .96);
+    border-bottom: 1px solid #eee;
+}
+
+/* メインタイトル */
+.filter-maintitle {
+    margin: 0;
     padding: 10px 15px;
     font-size: clamp(14px, 3.5vw, 20px);
-    background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, .92) 100%);
-    border-bottom: 1px solid #eee;
 }
 
 /* セクションタイトル */
@@ -342,6 +722,437 @@
     margin: 3px 2px;
     font-weight: 700;
     font-size: clamp(12px, 2.8vw, 16px);
+}
+
+/* フィルターモーダル内タブ */
+.filter-modal-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.filter-modal-tab {
+    position: relative;
+    min-height: 42px;
+    padding: 0 2px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #667085;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0;
+    text-align: center;
+    font-size: clamp(12px, 2.8vw, 16px);
+}
+
+.filter-modal-tab::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: -1px;
+    left: 18px;
+    height: 3px;
+    border-radius: 999px 999px 0 0;
+    background: transparent;
+}
+
+.filter-modal-tab:hover {
+    color: #1f3f5f;
+}
+
+.filter-modal-tab.is-active {
+    color: #c23b5a;
+}
+
+.filter-modal-tab.is-active::after {
+    background: #c23b5a;
+}
+
+.filter-modal-tab:focus-visible {
+    outline: 2px solid #2b90ff;
+    outline-offset: 2px;
+}
+
+.filter-modal-pane {
+    display: none;
+}
+
+.filter-modal-pane.is-active {
+    display: block;
+}
+
+.filter-auth-lock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 8px;
+    border: 1px solid rgba(43, 144, 255, .24);
+    border-radius: 8px;
+    background: rgba(43, 144, 255, .08);
+    color: #17456f;
+    font-size: clamp(.6rem, 2.5vw, 1rem);
+    font-weight: 700;
+    text-align: center;
+}
+
+/* =========================================
+   カード詳細モーダル
+========================================= */
+.card-detail-modal-root {
+    position: fixed;
+    inset: 0;
+    display: none;
+    pointer-events: none;
+    z-index: 4000;
+    background: transparent;
+}
+
+.card-detail-modal-root.show {
+    display: block;
+    pointer-events: auto;
+}
+
+.card-detail-modal-root .modal-content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+}
+
+.card-detail-modal {
+    width: min(680px, 92vw);
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.card-detail-modal-move-hint {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, .14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .86);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+    color: #555;
+    cursor: move;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.card-detail-modal-move-hint:hover {
+    background: #fff;
+    border-color: rgba(0, 0, 0, .24);
+}
+
+.card-detail-modal-body {
+    display: grid;
+    grid-template-columns: minmax(190px, 260px) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+.card-detail-modal-figure {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 424 / 532;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f6f6f6;
+    cursor: zoom-in;
+}
+
+.card-detail-modal-figure:focus-visible {
+    outline: 2px solid rgba(194, 59, 90, .5);
+    outline-offset: 2px;
+}
+
+.card-detail-modal-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-detail-modal-info {
+    display: grid;
+    grid-template-rows: auto auto auto auto 1fr;
+    gap: 6px;
+    min-width: 0;
+}
+
+.card-detail-modal-title-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 32px 32px;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-detail-modal-title {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.35;
+    min-width: 0;
+}
+
+.card-detail-modal-close {
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, .86);
+    border: 1px solid rgba(0, 0, 0, .14);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: #333;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+.card-detail-modal-close:hover {
+    background: #fff0f3;
+    border-color: rgba(194, 59, 90, .45);
+    color: #c23b5a;
+}
+
+.card-detail-modal-close:focus-visible,
+.card-detail-effect-tab:focus-visible {
+    outline: 2px solid rgba(194, 59, 90, .5);
+    outline-offset: 2px;
+}
+
+.card-detail-modal-move-hint:focus-visible {
+    outline: 2px solid rgba(0, 0, 0, .35);
+    outline-offset: 2px;
+}
+
+.card-detail-modal-help {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 1;
+    display: grid;
+    gap: 4px;
+    min-width: 160px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .14);
+    color: #333;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.card-detail-modal-help[hidden] {
+    display: none;
+}
+
+.card-detail-modal-help::before {
+    content: "";
+    position: absolute;
+    right: 38px;
+    top: -6px;
+    width: 10px;
+    height: 10px;
+    border-left: 1px solid rgba(0, 0, 0, .12);
+    border-top: 1px solid rgba(0, 0, 0, .12);
+    background: rgba(255, 255, 255, .96);
+    transform: rotate(45deg);
+}
+
+.card-detail-modal-pack,
+.card-detail-modal-meta,
+.card-detail-modal-cv {
+    font-size: .95rem;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.card-detail-modal-pack {
+    font-weight: 700;
+    color: #444;
+}
+
+.card-detail-modal-meta,
+.card-detail-modal-cv {
+    color: #333;
+}
+
+.card-detail-modal-effect {
+    min-height: 0;
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 10px;
+    background: #fafafa;
+    padding: 8px;
+}
+
+.card-detail-modal-effect-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.card-detail-effect-tab {
+    position: relative;
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    padding: 4px 0 7px;
+    font-size: .9rem;
+    line-height: 1.3;
+    color: #555;
+    cursor: pointer;
+}
+
+.card-detail-effect-tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: transparent;
+}
+
+.card-detail-effect-tab.is-active {
+    color: #c23b5a;
+    font-weight: 700;
+}
+
+.card-detail-effect-tab.is-active::after {
+    background: #c23b5a;
+}
+
+.card-detail-modal-effect-body .effect-name {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: .95rem;
+}
+
+.card-detail-modal-effect-body .effect-text {
+    font-size: .9rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 768px) {
+    .card-detail-modal {
+        width: min(88vw, 360px);
+        max-height: 82vh;
+        padding: 5px;
+    }
+
+    .card-detail-modal-body {
+        grid-template-columns: minmax(78px, 25%) minmax(0, 1fr);
+        grid-template-areas:
+            "figure title"
+            "figure pack"
+            "figure meta"
+            "figure cv"
+            "effect effect";
+        gap: 5px 6px;
+    }
+
+    .card-detail-modal-figure {
+        grid-area: figure;
+        max-width: 100px;
+        margin: 0;
+    }
+
+    .card-detail-modal-info {
+        display: contents;
+    }
+
+    .card-detail-modal-close,
+    .card-detail-modal-move-hint {
+        width: 28px;
+        height: 28px;
+    }
+
+    .card-detail-modal-title-row {
+        grid-area: title;
+        grid-template-columns: minmax(0, 1fr) 28px 28px;
+        gap: 4px;
+    }
+
+    .card-detail-modal-help {
+        position: fixed;
+        left: 50%;
+        right: auto;
+        top: auto;
+        bottom: 18px;
+        transform: translateX(-50%);
+        width: fit-content;
+        max-width: min(72vw, 220px);
+        min-width: 0;
+        padding: 6px 10px;
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .card-detail-modal-help::before {
+        content: none;
+    }
+
+    .card-detail-modal-title {
+        font-size: .72rem;
+        line-height: 1.25;
+    }
+
+    .card-detail-modal-pack,
+    .card-detail-modal-meta,
+    .card-detail-modal-cv,
+    .card-detail-effect-tab,
+    .card-detail-modal-effect-body .effect-name {
+        font-size: .68rem;
+    }
+
+    .card-detail-modal-pack {
+        grid-area: pack;
+    }
+
+    .card-detail-modal-meta {
+        grid-area: meta;
+    }
+
+    .card-detail-modal-cv {
+        grid-area: cv;
+    }
+
+    .card-detail-modal-effect {
+        grid-area: effect;
+        padding: 6px;
+    }
+
+    .card-detail-modal-effect-tabs {
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .card-detail-modal-effect-body .effect-text {
+        font-size: .66rem;
+        line-height: 1.5;
+    }
 }
 
 /* =====================================================
@@ -386,7 +1197,7 @@
     justify-content: center;
     min-height: 36px;
     padding: 8px;
-    border-radius: 10px;
+    border-radius: 8px;
 
     border: 1px solid rgba(0, 0, 0, .12);
     background: #f7f7f9;
@@ -394,7 +1205,7 @@
 
     font-size: clamp(.6rem, 2.5vw, 1rem);
     line-height: 1.1;
-    letter-spacing: .02em;
+    letter-spacing: 0;
 
     text-overflow: ellipsis;
     overflow: hidden;
@@ -505,6 +1316,198 @@
     gap: 2px;
     padding: 8px 4px;
     font-size: clamp(.3rem, 2vw, 1rem);
+}
+
+/* データソース表示・認証ボタン共通 */
+.data-source-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.data-source-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 20px;
+    padding: .3rem .65rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.data-source-badge[data-tooltip] {
+    cursor: help;
+}
+
+.data-source-badge::before {
+    content: "";
+    width: .55rem;
+    height: .55rem;
+    border-radius: 999px;
+    background: #9ca3af;
+}
+
+.data-source-badge.is-account {
+    border-color: #86efac;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.data-source-badge.is-account::before {
+    background: #22c55e;
+}
+
+.data-source-badge.is-local {
+    border-color: #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.data-source-badge.is-local::before {
+    background: #f59e0b;
+}
+
+.data-source-badge.is-syncing {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.data-source-badge.is-syncing::before {
+    background: #3b82f6;
+}
+
+.data-source-badge.is-error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.data-source-badge.is-error::before {
+    background: #ef4444;
+}
+
+.data-source-badge[data-tooltip]::after {
+    content: none;
+}
+
+.data-source-badge[data-tooltip]:hover::after,
+.data-source-badge[data-tooltip]:focus::after {
+    content: none;
+}
+
+#data-source-badge-tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 4600;
+    width: min(280px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    padding: 7px 9px;
+    border: 1px solid rgba(31, 41, 55, .18);
+    border-radius: 8px;
+    box-sizing: border-box;
+    background: #111827;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.45;
+    white-space: pre-line;
+    text-align: left;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity .16s ease, transform .16s ease;
+}
+
+#data-source-badge-tooltip.is-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.data-source-auth-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.data-source-auth-actions .cards-auth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0.3rem 0.52rem;
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+    background: #fff;
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+
+.data-source-auth-actions .cards-auth-btn.primary {
+    background: #6c63ff;
+    color: #fff;
+}
+
+.data-source-auth-actions .cards-auth-btn:hover,
+.data-source-auth-actions .cards-auth-btn.primary:hover {
+    background: #5b54e6;
+    border-color: #5b54e6;
+    color: #fff;
+}
+
+.data-source-auth-actions .cards-auth-btn:focus-visible {
+    outline: 2px solid rgba(108, 99, 255, .45);
+    outline-offset: 2px;
+}
+
+@media (max-width: 430px) {
+    .data-source-auth-actions {
+        gap: 3px;
+    }
+
+    .data-source-auth-actions .cards-auth-btn{
+        min-height: 26px;
+        padding: 0.24rem 0.38rem;
+        font-size: 10px;
+        line-height: 1;
+    }
+
+    .data-source-badge::before {
+        width: .45rem;
+        height: .45rem;
+    }
+}
+
+/* カードグループの保存状態表示 */
+.filter-card-group-status {
+    grid-column: 1 / -1;
+    width: fit-content;
+}
+
+.filter-card-group-source-row {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+.filter-card-group-auth-actions {
+    width: fit-content;
 }
 
 /* 左側：グループ名 */
@@ -741,7 +1744,7 @@
 }
 
 /* パック色注入（--ring / --ring-accent） */
-.filter-group[data-key="パック名"] .filter-btn[data-pack="Awaking The Oracle"] {
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Awakening The Oracle"] {
     --ring: rgb(var(--pack-a-rgb));
     --ring-accent: rgb(var(--pack-a-accent-rgb));
 }
@@ -857,9 +1860,271 @@
     --ring: rgba(0, 0, 0, .18);
 }
 
+/* =====================================================
+    12) CV FILTER（入力 + 一覧 + 下部展開）
+===================================================== */
+.cv-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.cv-filter-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 38px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    font-size: clamp(.85rem, 2.4vw, 1rem);
+    border: 1px solid rgba(0, 0, 0, .16);
+    border-radius: 10px;
+    background: #fff;
+    color: #222;
+}
+
+.cv-filter-input:focus {
+    outline: 2px solid rgba(43, 144, 255, .22);
+    border-color: #2b90ff;
+}
+
+.cv-suggest {
+    margin: 6px 2px 0;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+.cv-suggest[hidden] {
+    display: none;
+}
+
+.cv-suggest-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    padding: 6px 10px;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+    background: #fff;
+    color: #222;
+    font-size: 13px;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cv-suggest-item:last-child {
+    border-bottom: 0;
+}
+
+.cv-suggest-item:hover,
+.cv-suggest-item.is-active {
+    background: rgba(43, 144, 255, .07);
+}
+
+.cv-suggest-item:focus-visible {
+    outline: 2px solid rgba(43, 144, 255, .45);
+    outline-offset: -2px;
+}
+
+.cv-suggest-text {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cv-suggest-count {
+    font-size: 12px;
+    opacity: .72;
+    white-space: nowrap;
+}
+
+.cv-list-toggle {
+    flex: 0 0 auto;
+    min-width: 4.2rem;
+    padding: 0 12px;
+    white-space: nowrap;
+}
+
+.cv-list-toggle.is-active {
+    background: #2b90ff;
+    border-color: #2b90ff;
+    color: #fff;
+}
+
+.cv-list-panel {
+    display: none;
+    margin: 8px 2px 2px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    background: rgba(0, 0, 0, .03);
+}
+
+.cv-list-panel.is-open {
+    display: block;
+}
+
+.cv-list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.cv-list-title {
+    font-size: 12px;
+    font-weight: 900;
+    opacity: .9;
+}
+
+.cv-list-close {
+    border: 1px solid rgba(0, 0, 0, .16);
+    background: #fff;
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cv-index-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.cv-index-btn {
+    flex: 0 0 auto;
+    border: 1px solid rgba(0, 0, 0, .14);
+    background: #fff;
+    border-radius: 8px;
+    padding: 4px 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 1.3;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.cv-index-btn:hover {
+    background: rgba(43, 144, 255, .08);
+    border-color: rgba(43, 144, 255, .35);
+}
+
+.cv-index-btn.is-active {
+    background: #2b90ff;
+    border-color: #2b90ff;
+    color: #fff;
+}
+
+.cv-index-btn:focus-visible,
+.cv-list-item:focus-visible {
+    outline: 2px solid rgba(43, 144, 255, .45);
+    outline-offset: 2px;
+}
+
+.cv-list-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.cv-list-placeholder {
+    font-size: 13px;
+    opacity: .72;
+    padding: 8px 2px;
+}
+
+.cv-list-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 8px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cv-list-item:hover {
+    background: rgba(43, 144, 255, .07);
+    border-color: rgba(43, 144, 255, .28);
+}
+
+.cv-list-name {
+    min-width: 0;
+    font-weight: 800;
+}
+
+.cv-list-kana {
+    min-width: 0;
+    font-size: 12px;
+    opacity: .72;
+}
+
+.cv-list-count {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    font-size: 12px;
+    opacity: .72;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .cv-list-body {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .cv-list-body {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .cv-filter-row {
+        gap: 6px;
+    }
+
+    .cv-filter-input {
+        height: 34px;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .cv-list-toggle {
+        min-width: 3.8rem;
+        padding: 0 10px;
+    }
+
+    .cv-list-body {
+        max-height: 260px;
+    }
+}
 
 /* =====================================================
-   12) COST/POWER RANGE（横並び / selectの幅）
+    13) COST/POWER RANGE（横並び / selectの幅）
 ===================================================== */
 .filter-range-wrapper {
     display: grid;
@@ -867,7 +2132,9 @@
     column-gap: 8px;
 }
 
-.filter-range-wrapper .filter-group {
+/* コスト・パワーの範囲セレクト専用 */
+.filter-range-wrapper .filter-group[data-key="コスト"],
+.filter-range-wrapper .filter-group[data-key="パワー"] {
     grid-template-columns: auto auto auto;
     align-items: center;
     justify-content: start;
@@ -897,7 +2164,7 @@
 
 
 /* =====================================================
-   13) EXTRA CONDITIONS（さらに詳しい条件）
+   14) EXTRA CONDITIONS（さらに詳しい条件）
 ===================================================== */
 .filter-subtitle {
     margin: 14px 2px 8px;
@@ -906,12 +2173,6 @@
     color: #333;
     padding-top: 6px;
     border-top: 2px solid #eee;
-}
-
-#extra-conditions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem;
 }
 
 /* 特殊効果 */
@@ -937,7 +2198,7 @@
 
 
 /* =====================================================
-   14) MODAL FOOTER（下部ボタン固定）
+   15) MODAL FOOTER（下部ボタン固定）
 ===================================================== */
 .modal-footer {
     position: sticky;
@@ -956,11 +2217,13 @@
     min-height: 36px;
     padding: 8px 12px;
     border-radius: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
 /* =====================================================
-   15) FLOW MODAL（使い方モーダル）
+   16) FLOW MODAL（使い方モーダル）
 ===================================================== */
 .flow-modal {
     max-width: 480px;
@@ -970,6 +2233,11 @@
 }
 
 .modal-close-x {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    padding-top: 3px;
     position: absolute;
     right: 12px;
     top: 10px;
@@ -977,6 +2245,7 @@
     background: transparent;
     font-size: 2rem;
     cursor: pointer;
+
 }
 
 .flow-title {
@@ -1003,7 +2272,7 @@
 
 
 /* =====================================================
-   16) ACTIVE CHIPS BAR（選択中フィルタ表示バー）
+   17) ACTIVE CHIPS BAR（選択中フィルタ表示バー）
 ===================================================== */
 #active-chips-bar {
     border-bottom: 1px solid #e7e7e7;
@@ -1076,7 +2345,7 @@
 }
 
 /* =====================================================
-   17) CARDS EMPTY STATE（カードが見つからないときの表示）
+   18) CARDS EMPTY STATE（カードが見つからないときの表示）
 ===================================================== */
 
 .cards-empty-state {
@@ -1117,7 +2386,7 @@
 
 
 /* =====================================================
-   20) CARD GRID（カード一覧）
+   19) CARD GRID（カード一覧）
 ===================================================== */
 .grid {
     display: flex;
@@ -1181,12 +2450,11 @@
     aspect-ratio: 1 / 1;
     background-color: #ccc;
     border-radius: 999px;
-    padding: 0;
 }
 
 
 /* =====================================================
-   21) CARD DETAIL（カード詳細）
+   20) CARD DETAIL（カード詳細）
 ===================================================== */
 .card-detail {
     display: none;
@@ -1215,20 +2483,38 @@
 }
 
 .detail-zoom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     padding: 0;
-    margin-right: 8px;
     width: 28px;
     height: 28px;
     border-radius: 999px;
     border: 1px solid rgba(0, 0, 0, .18);
-    background: #fff;
+    background: rgba(255, 255, 255, .92);
     color: #1f3f5f;
     cursor: pointer;
     flex: 0 0 auto;
+
+    transition: transform .08s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.detail-zoom-btn:hover {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
 }
 
 .detail-zoom-btn:active {
     transform: scale(0.97);
+}
+
+.detail-zoom-btn .zoom-ic {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    pointer-events: none;
 }
 
 .card-name {
@@ -1246,7 +2532,7 @@
 
 
 /* =====================================================
-   22) Owned Editor（詳細内の所持編集UI）
+   21) Owned Editor（詳細内の所持編集UI）
 ===================================================== */
 .card-title-row {
     position: relative;
@@ -1373,7 +2659,7 @@
 
 
 /* =====================================================
-   23) META / EFFECT / TYPE BACKGROUND
+   22) META / EFFECT / TYPE BACKGROUND
 ===================================================== */
 .card-meta {
     color: #333;
@@ -1384,8 +2670,77 @@
     margin-bottom: 2px;
 }
 
+.card-meta.card-cv {
+    margin-top: 2px;
+    margin-bottom: 4px;
+    font-size: 0.85em;
+}
+
+.card-cv-label,
+.card-cv-name {
+    font-weight: 700;
+}
+
+.card-cv-search-btn {
+    appearance: none;
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 24px;
+    margin-left: 4px;
+    border: 1px solid rgba(42, 130, 96, .34);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .7);
+    color: #24745a;
+    padding: 0;
+    font: inherit;
+    font-size: .9em;
+    line-height: 1;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.card-cv-search-btn:hover {
+    background: rgba(42, 130, 96, .1);
+    border-color: rgba(42, 130, 96, .56);
+}
+
+.card-cv-search-btn:focus-visible {
+    outline: 2px solid #2a8260;
+    outline-offset: 2px;
+}
+
 .card-effect {
     line-height: 1.5;
+}
+
+.card-adjustment-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 10px;
+}
+
+.card-adjustment-btn {
+    min-height: 30px;
+    padding: 4px 10px;
+    border: 1px solid #b5d9f3;
+    border-radius: 4px;
+    background: #fff;
+    color: #1f3f5f;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.card-adjustment-btn.is-active {
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    border-color: #73b9e8;
+}
+
+.card-adjustment-btn:focus-visible {
+    outline: 2px solid #2f80ed;
+    outline-offset: 2px;
 }
 
 /* タイプ別背景色 */

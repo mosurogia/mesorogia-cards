@@ -1,5 +1,7 @@
 
 :root {
+    --app-bottom-nav-offset: 0px;
+
     /* =========================
            タイプカラー（mrt-chip / マリガン結果と共通）
            ========================= */
@@ -76,6 +78,43 @@
     /* コラボ：ゴールド寄り（外部・華やか） */
     --pack-collab-rgb: 90,85,120;
     --pack-collab-accent-rgb: 150, 135, 200;
+
+    /* ===== z-index 管理 ===== */
+    --z-base: 1;
+
+    --z-card-badge: 5;
+    --z-card-ui: 10;
+
+    --z-sticky-low: 1000;
+    --z-floating: 1500;
+    --z-bottom-nav: 1700;
+
+    --z-sticky: 2000;
+    --z-floating-control: 3000;
+    --z-peek: 3400;
+
+    --z-backdrop: 3990;
+    --z-modal: 4000;
+    --z-drawer-backdrop: 4300;
+    --z-drawer: 4400;
+
+    --z-tooltip: 4600;
+    --z-menu: 5000;
+    --z-toast: 99999;
+    --z-loading: 1000000;
+
+/*
+z-index 方針
+
+1〜99        部品内の重なり
+1000〜1999   ヘッダー・下部ナビ・固定UI
+2000〜3999   stickyバー・プレビュー・補助UI
+4000〜4999   モーダル・ドロワー・ツールチップ
+5000〜9999   アカウントメニューなど最前面UI
+99999〜      トースト
+1000000      ローディング
+*/
+
 }
 
 /*========= 種族枠線 ==========*/
@@ -298,6 +337,8 @@ button,
 
 /*ヘッダー関連*/
 .main-header {
+    --header-nav-font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+
     height: 3.5rem;
     background-image: url("../img/header.webp");
     background-repeat: repeat-x;
@@ -307,11 +348,18 @@ button,
     background-position: center center;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start !important;
+    gap: 6px;
+    box-sizing: border-box;
     padding: 0px 5px;
     color: white;
     top: 0;
     z-index: 1000;
+    overflow: visible;
+}
+
+.header-logo {
+    flex: 0 0 auto;
 }
 
 .header-logo img {
@@ -321,41 +369,824 @@ button,
     object-fit: contain;
 }
 
+.main-header > .header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: calc(100% - 140px);
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    min-width: 0;
+}
 
-.header-nav a {
+.main-header>.header-nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
     margin-left: 1rem;
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+    font-size: var(--header-nav-font-size);
     background-color: rgba(0, 0, 0, 0.4);
-    padding: 6px 0.2em;
+    padding: 4px 0.38em;
     border-radius: 6px;
     transition: background-color 0.3s;
 }
+
+.main-header>.header-nav a img {
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    flex: 0 0 auto;
+    display: block;
+    transform: translateY(2px) scale(1.45);
+}
+
+.main-header>.header-nav a span {
+    line-height: 1;
+}
+
 @media (max-width: 768px) {
-    .header-nav a {
-        font-size: 1.05rem;
-        font-size: clamp(.6rem, 2.45vw, 1.05rem);
+    .main-header {
+        --header-nav-font-size: clamp(.7rem, 2.45vw, 1.05rem);
+    }
+
+    .main-header > .header-nav a {
+        font-size: var(--header-nav-font-size);
+        gap: 4px;
+    }
+
+    .main-header>.header-nav a img {
+        width: 30px;
+    }
+
+    .main-header>.header-nav a span {
+        font-size: var(--header-nav-font-size);
     }
 }
 @media (max-width: 560px) {
-    .header-nav a {
+    .main-header > .header-nav a {
         margin-left: 0.1rem;
+    }
+
+    .main-header>.header-nav a img {
+        width: 25px;
     }
 }
 
-.header-nav a:hover {
+.main-header > .header-nav a:hover {
     background-color: rgba(255, 255, 255, 0.2);
     /* 軽いホバー効果 */
     text-decoration: none;
 }
 
-.header-nav a.active-page {
+.main-header > .header-nav a.active-page {
     background-color: rgba(255, 255, 255, 0.5);
     color: #fff;
     box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ヘッダーアカウント導線 */
+.main-header > .header-account {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: 6px;
+    min-width: 0;
+}
+
+.main-header .header-auth-login,
+.main-header .header-auth-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    max-width: 180px;
+    padding: .35rem .8rem;
+    border: none;
+    border-radius: 8px;
+    background: #6c63ff;
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    text-shadow: none;
+    white-space: nowrap;
+}
+.main-header .header-auth-login,
+.main-header .header-auth-user {
+    font-size: calc(var(--header-nav-font-size) * 0.85);
+}
+
+.main-header .header-auth-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.main-header .header-auth-login:hover,
+.main-header .header-auth-user:hover {
+    background: #5b54e6;
+}
+
+.main-header .header-auth-login:focus-visible,
+.main-header .header-auth-user:focus-visible,
+.main-header .header-auth-menu button:focus-visible,
+.main-header .header-auth-menu a:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.95);
+    outline-offset: 2px;
+}
+
+.main-header .header-auth-dropdown {
+    position: relative;
+}
+
+.main-header .header-auth-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 5000;
+    display: grid;
+    min-width: 170px;
+    padding: 6px;
+    border: 1px solid rgba(17, 24, 39, 0.16);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+.main-header .header-auth-menu[hidden] {
+    display: none;
+}
+
+.main-header .header-auth-menu button,
+.main-header .header-auth-menu a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #111827;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.main-header .header-auth-menu button:hover,
+.main-header .header-auth-menu a:hover {
+    background: #eef2ff;
+    text-decoration: none;
+}
+
+.main-header .header-auth-menu .header-auth-logout {
+    color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        gap: 4px;
+        padding: 4px 5px;
+        height: 2.5rem;
+    }
+
+    .header-logo img {
+        height: 1.4rem;
+        margin-top: 4px;
+    }
+
+    .main-header .header-auth-login,
+    .main-header .header-auth-user {
+        max-width: 120px;
+        padding: 7px;
+    }
+
+
+    .main-header .header-auth-menu {
+        min-width: 150px;
+    }
+
+    .main-header .header-auth-menu button,
+    .main-header .header-auth-menu a {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .main-header {
+        align-items: center;
+    }
+
+    .main-header > .header-nav {
+        justify-content: flex-end;
+        max-width: calc(100% - 90px);
+    }
+
+    .main-header > .header-nav a {
+        padding: 5px 0.15em;
+    }
+
+    .main-header .header-auth-login,
+    .main-header .header-auth-user {
+        max-width: 100px;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-header .header-auth-login,
+    .main-header .header-auth-user {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* アカウントモーダル共通（authページ未読込でも使える最小定義） */
+.account-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 6000;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-modal .modal-content {
+    box-sizing: border-box;
+    width: min(720px, 94vw);
+    max-height: 88vh;
+    margin: auto;
+    padding: 6px;
+    overflow: auto;
+    border-radius: 8px;
+    background: #fff;
+    color: #111827;
+}
+
+.account-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.account-modal-head h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.account-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3px;
+
+    width: 32px;
+    height: 32px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: #f3f4f6;
+    color: #111827;
+
+    font-size: 18px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.account-modal-body {
+    display: grid;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.account-field,
+.auth-login-form {
+    display: grid;
+    gap: 6px;
+}
+
+.account-field label {
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.account-field input[type="text"],
+.account-field input[type="password"],
+.poster-line input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.poster-line,
+.account-pass-row,
+.X-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.poster-line input,
+.account-pass-row input,
+.X-info input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.auth-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+.btn.ghost,
+.btn.primary,
+.btn.danger,
+.x-link-btn {
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn.ghost {
+    min-width: 60px;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #333;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.btn.primary {
+    padding: 0.4rem 0.7rem;
+    border: 0;
+    background: #4f46e5;
+    color: #fff;
+}
+
+.auth-buttons .auth-mode-switch {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+    background: #fff;
+    color: #4f46e5;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.auth-buttons .auth-mode-switch:hover {
+    border-color: #5b54e6;
+    background: #f5f4ff;
+}
+
+.auth-forgot-link {
+    justify-self: start;
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    color: #4f46e5;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.auth-forgot-link:hover {
+    color: #3730a3;
+}
+
+.auth-forgot-link:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* =========================
+   アカウントデータ：危険リセットボタン
+========================= */
+
+.account-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    width: auto;
+    min-width: 220px;
+    min-height: 38px;
+    padding: 0.45rem 0.9rem;
+    margin-left: auto;
+
+    border: 1px solid #991b1b;
+    border-radius: 999px;
+
+    background: linear-gradient(90deg, #dc2626 0%, #f97316 100%);
+
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: .02em;
+
+    box-shadow:
+        0 6px 14px rgba(220, 38, 38, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .16);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+
+    transition:
+        transform .12s ease,
+        filter .12s ease;
+}
+
+.account-reset-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+.account-reset-btn:active {
+    transform: translateY(1px);
+}
+
+.account-reset-icon {
+    display: inline-grid;
+    place-items: center;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 999px;
+
+    background: #fff;
+    color: #dc2626;
+
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.x-link-btn {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    background: #111827;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.account-hint,
+.account-note,
+.auth-inline-status {
+    color: #4b5563;
+    font-size: 0.85rem;
+}
+
+.account-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.account-data-content .account-modal-footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.account-data-content .account-modal-footer .btn {
+    width: 100%;
+    min-width: 0;
+}
+
+.account-footer-logout.btn.ghost {
+    background: linear-gradient(90deg, #ef4444, #f97316);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .5rem .7rem;
+    font-weight: 700;
+    font-size: .85rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    justify-self: stretch;
+    text-align: center;
+}
+
+/* アカウント設定モーダル */
+.account-data-content {
+    display: flex;
+    flex-direction: column;
+    width: min(860px, 94vw);
+    overflow: hidden;
+}
+
+.account-data-content .account-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.account-data-content .account-modal-head,
+.account-data-content .account-jump-chips,
+.account-data-content .account-modal-footer {
+    flex: 0 0 auto;
+}
+
+.account-jump-chips {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 0 2px;
+    border-bottom: 2px solid #d1d5db;
+    -webkit-overflow-scrolling: touch;
+}
+
+.account-jump-chips::-webkit-scrollbar {
+    height: 6px;
+}
+
+.account-jump-chip {
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.34rem 0.65rem;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    background: transparent;
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.account-jump-chip:hover {
+    background: #f3f4f6;
+}
+
+.account-jump-chip.is-active {
+    position: relative;
+    border-color: #93c5fd;
+    background: #fff;
+    color: #3730a3;
+}
+
+.account-jump-chip.is-active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    background: #fff;
+}
+
+.account-jump-chip:focus-visible,
+.account-data-section button:focus-visible,
+.account-close:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}
+
+.account-data-sections {
+    align-content: start;
+}
+
+.account-data-section {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #f9fafb;
+    scroll-margin-top: 12px;
+}
+.account-section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-section-head h4 {
+    margin: 0;
+
+    color: #111827;
+    font-size: 1rem;
+}
+
+.account-section-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+
+    background: #fff;
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.account-section-link:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, .10);
+}
+
+.account-section-link img {
+    display: block;
+
+    width: 18px;
+    height: 18px;
+
+    object-fit: contain;
+}
+
+.account-section-status {
+    flex: 0 0 auto;
+
+    padding: 2px 8px;
+    margin-left: auto;
+
+    border-radius: 999px;
+
+    background: #e5e7eb;
+    color: #374151;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.account-data-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+}
+
+.account-data-summary div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.account-data-summary-wide {
+    grid-column: 1 / -1;
+}
+
+.account-data-summary dt {
+    color: #6b7280;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.account-data-summary dd {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: #111827;
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+.account-copy-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-copy-value>span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.account-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    width: 28px;
+    height: 28px;
+    padding: 5px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: #f9fafb;
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        transform .12s ease;
+}
+
+.account-copy-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.account-copy-btn:active {
+    transform: scale(.94);
+}
+
+.account-copy-btn img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    transform: scale(1.5);
+    object-fit: contain;
+}
+
+.account-copy-btn.is-copied {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+.account-section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* アカウント設定：保存ボタン */
+.account-section-actions>button[type="submit"] {
+    min-width: 160px;
+    min-height: 42px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .account-jump-chips {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 2px;
+        overflow-x: hidden;
+        padding-inline: 0;
+    }
+
+    .account-jump-chip {
+        width: auto;
+        min-width: 0;
+        min-height: 34px;
+        padding: 0.25rem 0.05rem;
+        overflow: hidden;
+        font-size: clamp(7px, 1.8vw, 10px);
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+        text-align: center;
+        white-space: normal;
+    }
 }
 
 
@@ -388,19 +1219,32 @@ button,
 }
 
 /*上部に戻るボタン*/
+/* =========================
+   上部に戻るボタン
+========================= */
 #scrollTopFixed {
     position: fixed;
+    z-index: 1500;
+
     bottom: 20px;
     right: 20px;
+
     width: 40px;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
     padding: 0;
-    font-size: 25px;
-    background-color: #eee;
+
+    border: none;
     border-radius: 50%;
-    border: 1px solid #aaa;
+
+    background: rgba(17, 24, 39, 0.72);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 900;
+
     cursor: pointer;
-    z-index: 1500;
+    pointer-events: none;
 }
 
 
@@ -423,24 +1267,26 @@ footer a:hover {
 }
 
 /* =========================
-   Compact Footer (site-footer)
+    Compact Footer (site-footer)
 ========================= */
 .site-footer {
     margin-top: 18px;
-    padding: 10px 12px;
     border-top: 1px solid rgba(0, 0, 0, .08);
     background: rgba(255, 255, 255, .92);
     backdrop-filter: blur(6px);
     text-align: left;
-    padding: 10px 12px;
+    padding: 20px 12px 10px;
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        /* 固定ボタンと重なってもフッターリンクを押せる余白を確保 */
+        padding-bottom: calc(72px + env(safe-area-inset-bottom));
+    }
 }
 
 .footer-mini {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
 }
 
 .footer-mini-left {
@@ -514,11 +1360,433 @@ footer a:hover {
 /* SP: さらに詰める */
 @media (max-width: 480px) {
     .site-footer {
-        padding: 8px 10px;
+        padding: 8px 10px calc(72px + env(safe-area-inset-bottom));
     }
 
     .footer-mini-left {
         font-size: 12px;
+        gap: 2px;
     }
 }
 
+.footer-pwa-install {
+    appearance: none;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #3366cc;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(0, 0, 0, .25);
+}
+
+.footer-pwa-install:hover {
+    opacity: .8;
+}
+
+.footer-pwa-sep.is-hidden {
+    display: none;
+}
+
+.footer-pwa-install:focus-visible,
+.pwa-install-nudge button:focus-visible,
+.pwa-install-dialog button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.pwa-install-nudge {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1800;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(420px, calc(100vw - 32px));
+    padding: 12px;
+    color: #172033;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, .14);
+    border-radius: 8px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, .18);
+}
+
+.pwa-install-nudge[hidden] {
+    display: none;
+}
+
+.pwa-install-nudge-text {
+    display: grid;
+    gap: 2px;
+    font-size: 13px;
+}
+
+.pwa-install-nudge-text strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.pwa-install-nudge-actions {
+    display: flex;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.pwa-install-nudge button,
+.pwa-install-dialog button {
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    font: inherit;
+    cursor: pointer;
+}
+
+.pwa-install-nudge-primary,
+.pwa-install-primary {
+    color: #ffffff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.pwa-install-nudge-later {
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.pwa-install-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(17, 24, 39, .48);
+}
+
+.pwa-install-dialog {
+    position: relative;
+    width: min(360px, 100%);
+    padding: 20px;
+    color: #111827;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+}
+
+.pwa-install-dialog h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+}
+
+.pwa-install-dialog p {
+    margin: 0 0 16px;
+    font-size: .95rem;
+}
+
+@media (max-width: 768px) {
+    .pwa-install-nudge {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pwa-install-nudge-actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pwa-install-nudge,
+    .pwa-install-modal {
+        scroll-behavior: auto;
+    }
+}
+
+/* PWA表示時のアプリ下部メニュー */
+.app-bottom-nav {
+    display: none;
+}
+
+body.is-pwa-standalone {
+    --app-bottom-nav-offset: calc(67px + env(safe-area-inset-bottom));
+    padding-bottom: var(--app-bottom-nav-offset);
+}
+
+body.is-pwa-standalone .main-header {
+    display: none;
+}
+
+body.is-pwa-standalone .site-footer {
+    display: none;
+}
+
+body.is-pwa-standalone .app-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5000;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(50px, .4fr);
+    min-height: 58px;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, .96);
+    border-top: 1px solid rgba(0, 0, 0, .14);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, .1);
+}
+
+.app-bottom-nav[hidden] {
+    display: none;
+}
+
+.app-bottom-nav a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    min-height: 48px;
+    color: #374151;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px 2px;
+}
+
+.app-bottom-nav a[data-key="settings"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.app-bottom-nav a img {
+    width: 28px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+    scale: calc(1.6);
+}
+
+.app-bottom-nav a span {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.app-bottom-nav a.is-active {
+    color: #ffffff;
+    background: #2563eb;
+}
+
+.app-bottom-nav a.is-active img {
+    transform: scale(1.08);
+}
+
+.app-bottom-nav a:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.app-bottom-nav a.has-bottom-tab-menu::after {
+    content: "⋯";
+
+    position: absolute;
+    top: 4px;
+    right: 8px;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    opacity: .55;
+}
+
+.bottom-tab-menu {
+    position: fixed;
+    z-index: 5000;
+
+    display: grid;
+    gap: 6px;
+
+    padding: 6px;
+
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+
+    opacity: 0;
+    transform: translateY(8px);
+    transition: .15s ease;
+}
+
+.bottom-tab-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.bottom-tab-menu button {
+    min-height: 50px;
+    padding: 6px 4px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .9);
+    overflow: hidden;
+}
+
+/* 図鑑：カード一覧 / 所持率 */
+.bottom-tab-menu[data-menu-key="cards"] button:nth-child(1) {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, .38), rgba(0, 0, 0, .38)),
+        url("../img/chekertab1.webp");
+}
+
+.bottom-tab-menu[data-menu-key="cards"] button:nth-child(2) {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, .38), rgba(0, 0, 0, .38)),
+        url("../img/chekertab2.webp");
+}
+
+/* デッキ：構築 / 投稿 */
+.bottom-tab-menu[data-menu-key="deckmaker"] button:nth-child(1) {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, .38), rgba(0, 0, 0, .38)),
+        url("../img/makertab1.webp");
+}
+
+.bottom-tab-menu[data-menu-key="deckmaker"] button:nth-child(2) {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, .38), rgba(0, 0, 0, .38)),
+        url("../img/makertab2.webp");
+}
+
+.app-bottom-nav-menu-icon {
+    display: grid;
+    place-items: center;
+
+    width: 28px;
+    height: 28px;
+
+    color: currentColor;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1;
+
+    transform: translateY(-1px);
+}
+
+.app-nav-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 1000000;
+    display: grid;
+    place-items: center;
+    gap: 10px;
+    color: #111827;
+    background: rgba(255, 255, 255, .72);
+    backdrop-filter: blur(2px);
+    font-weight: 700;
+}
+
+.app-nav-loading[hidden] {
+    display: none;
+}
+
+.app-nav-loading > span {
+    display: block;
+}
+
+.app-nav-loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(37, 99, 235, .22);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: app-nav-loading-spin .8s linear infinite;
+}
+
+@keyframes app-nav-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 360px) {
+    .app-bottom-nav a {
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-nav-loading-spinner {
+        animation: none;
+    }
+}
+
+.app-back-to-top {
+    position: fixed;
+    right: 14px;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    z-index: 1200;
+
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 999px;
+
+    background: rgba(17, 24, 39, 0.72);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 900;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+body.is-pwa-standalone .app-back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* 設定ページ仮レイアウト */
+.settings-shell {
+    width: min(960px, calc(100% - 24px));
+    margin: 24px auto;
+}
+
+.settings-hero,
+.settings-section {
+    margin-bottom: 16px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 8px;
+}
+
+.settings-hero h1,
+.settings-section h2 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.settings-hero p,
+.settings-section p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.7;
+}

@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
     <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#111827">
 
     <!-- ===== タイトル ===== -->
     <title>神託のメソロギア カード一覧｜検索・所持率チェッカー｜モスロギア図鑑</title>
@@ -54,10 +57,22 @@
         <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ" />
     </div>
     <nav class="header-nav">
-        <a class="active-page" href="cards.html">📖 図鑑</a>
-        <a href="deckmaker.html">🃏 デッキメーカー</a>
-        <a href="deck-post.html">📤 デッキ投稿</a>
+        <a class="active-page" href="cards.html">
+            <img src="img/header_icon_1.webp" alt="">
+            <span>図鑑</span>
+        </a>
+
+        <a href="deckmaker.html">
+            <img src="img/header_icon_2.webp" alt="">
+            <span>デッキメーカー</span>
+        </a>
+
+        <a href="deck-post.html">
+            <img src="img/header_icon_3.webp" alt="">
+            <span>デッキ投稿</span>
+        </a>
     </nav>
+    <div class="header-account" data-header-auth></div>
 </header>
 
 <!-- タブバー -->
@@ -69,6 +84,7 @@
         <span>📊 所持率チェッカー</span>
     </div>
 </div>
+
 
 <!-- ✅ tab1: カード一覧 -->
 <div id="cards" class="tab-content active">
@@ -119,15 +135,16 @@
                     </div>
 
                     <div class="search-bar-right">
-                        <select id="sort-select" onchange="sortCards()">
-                            <option value="default">通常順</option>
-                            <option value="cost-asc">コスト昇順</option>
-                            <option value="cost-desc">コスト降順</option>
-                            <option value="power-asc">パワー昇順</option>
-                            <option value="power-desc">パワー降順</option>
-                            <option value="category-order">カテゴリ順</option>
-                            <option value="rarity-order">レアリティ順</option>
-                        </select>
+                        <div class="sort-controls">
+                            <select id="sort-select" onchange="sortCards()" aria-label="並び順">
+                                <option value="default">通常順</option>
+                                <option value="cost">コスト順</option>
+                                <option value="power">パワー順</option>
+                                <option value="category">カテゴリ順</option>
+                                <option value="rarity">レアリティ順</option>
+                            </select>
+                            <button id="sort-order-toggle" class="sort-order-toggle" type="button" data-order="asc" aria-label="昇順と降順を切り替え" aria-pressed="false">昇順</button>
+                        </div>
 
                         <button class="search-icon-btn" type="button" onclick="openFilterModal('filters')">
                             <span class="icon">📊</span><span class="label">フィルター</span>
@@ -138,31 +155,10 @@
                 <div id="active-chips-bar" style="display:none;">
                     <div class="chips-scroll"></div>
                 </div>
-            </div>
-
-            <!-- フィルターモーダル（カード一覧用） -->
-            <div class="modal" id="filterModal">
-                <div class="modal-content">
-                    <h3 class="filter-maintitle">絞り込み</h3>
-
-
-                    <!-- ✅ Pane: フィルター -->
-                    <section class="filter-modal-pane is-active" data-pane="filters" role="tabpanel">
-                        <div id="main-filters">
-                            <!-- フィルターボタン内容（JS生成） -->
-                        </div>
-
-                        <!-- 詳細フィルター -->
-                        <h4 class="filter-subtitle">さらに詳しい条件フィルター</h4>
-                        <div id="detail-filters"></div>
-                    </section>
-
-                    <!-- 下部ボタン（共通） -->
-                    <div class="modal-footer">
-                        <button class="modal-buttun" id="applyFilterBtn">この条件で絞り込む</button>
-                        <button class="modal-buttun" onclick="resetFilters()">リセット</button>
-                        <button class="modal-buttun" onclick="closeFilterModal()" type="button">閉じる</button>
-                    </div>
+                <!-- グループ一括操作 -->
+                <div id="group-bulk-actions" style="display:none;">
+                    <button id="group-select-all-btn">表示中のカードをすべて選択</button>
+                    <button id="group-reset-btn">選択カードをリセット</button>
                 </div>
             </div>
 
@@ -171,7 +167,7 @@
                 <!--カード内容をJSで自動生成-->
             </div>
 
-            <!-- カード拡大モーダル（画像のみ） -->
+            <!-- カード拡大モーダル（画像のみ）
             <div id="cardZoomModal" class="modal" style="display:none;">
                 <div class="modal-content card-zoom" style="position:relative">
                     <button id="cardZoomClose" aria-label="閉じる" class="modal-close-x">×</button>
@@ -179,6 +175,7 @@
                         style="max-width:90vw;max-height:85vh;object-fit:contain;display:block;margin:auto;" />
                 </div>
             </div>
+            -->
         </div>
 
         <!-- ✅ SP：カードグループ ドロワー（重ね表示） -->
@@ -210,6 +207,7 @@
             <!-- 各パック所持率 -->
             <div id="pack-summary-list">
                 <!-- 所持率サマリー一覧はJSから生成されます -->
+                <div class="pack-summary-loading">所持率を読み込み中...</div>
             </div>
         </aside>
 
@@ -218,34 +216,42 @@
             <!--所持率サマリー上部バー -->
             <div class="top-summary">
                 <div class="summary-bar">
-                    <!-- 「全カード」ボタン -->
-                    <button id="show-all-btn" class="show-all-btn" type="button" onclick="showAllCardsTop()">
-                        全カード
+                    <!-- ログイン / 新規登録ボタン -->
+                    <div id="cards-auth-actions" class="cards-auth-actions data-source-auth-actions">
+                        <button class="cards-auth-btn primary" type="button" data-open="authLoginModal"
+                            data-auth-entry="login">
+                            ログイン
+                        </button>
+                        <button class="cards-auth-btn" type="button" data-open="authLoginModal"
+                            data-auth-entry="signup">
+                            新規登録
+                        </button>
+                    </div>
+
+                    <button id="checker-account-settings-btn" class="btn danger checker-account-settings-btn" type="button"
+                        data-open="accountDataModal" data-account-scope="cards">
+                        <span class="checker-account-settings-label-full">アカウント設定</span>
+                        <span class="checker-account-settings-label-short">設定</span>
                     </button>
 
-                    <a id="mobile-tweet-link" href="#" target="_blank" rel="noopener" class="custom-tweet-button">
+                    <span id="owned-data-source" class="owned-data-source data-source-badge" aria-live="polite">
+                        確認中...
+                    </span>
+
+                    <button id="show-missing-all-top" class="menu-btn">不足カードリスト</button>
+
+                    <a id="top-tweet-link" href="#" target="_blank" rel="noopener" class="custom-tweet-button">
                         <img src="img/x-logo.svg" alt="Post" class="tweet-icon">
                         <span>ポスト</span>
                     </a>
                 </div>
 
                 <!-- トップのゲージ(全カードのみ) -->
-                <div id="mobile-pack-summary"></div>
-
-                <!-- 1段目 -->
-                <div class="menu-mobile menu-mobile-row1">
-                    <!-- 全体（全カード/不足）切替 -->
-                    <div id="top-pack-view-toggle" class="view-toggle top-pack-view-toggle" role="tablist" aria-label="表示切替">
-                        <button type="button" class="toggle-pack-view-btn is-active" data-view="all">全カード表示</button>
-                        <button type="button" class="toggle-pack-view-btn" data-view="incomplete">不足カード表示</button>
-                    </div>
-                    <!--不足カード-->
-                    <button id="show-missing-all-mobile" class="menu-btn">不足カードリスト</button>
-                </div>
+                <div id="top-pack-summary"></div>
 
                 <!-- 2段目 -->
-                <div class="menu-mobile menu-mobile-row2">
-                    <div id="mobile-pack-tabs" class="mobile-pack-tabs" aria-label="パックタブ"></div>
+                <div class="top-menu top-menu-row2">
+                    <div id="pack-jump-tabs" class="pack-jump-tabs" aria-label="パック移動タブ"></div>
                 </div>
             </div>
             <!-- カード一覧（パックごと） -->
@@ -313,6 +319,71 @@
     </div>
 </footer>
 
+<!-- ▼ ログイン / 新規登録 モーダル -->
+<div class="account-modal" id="authLoginModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+        <div class="account-modal-head">
+            <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+            <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+        </div>
+
+        <div class="account-modal-body">
+            <div class="auth-stack">
+                <!-- 非ログイン時に表示 -->
+                <form id="auth-login-form" class="auth-login-form">
+                    <div class="poster-line" style="margin-top:6px;">
+                        <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
+                            autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="poster-line">
+                        <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                            autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                    </div>
+
+                    <div class="poster-line">
+                        <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                            autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="auth-buttons">
+                        <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                        <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                    </div>
+
+                    <button type="button" class="auth-forgot-link" id="auth-forgot-password">
+                        パスワードを忘れた場合
+                    </button>
+
+                    <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;">
+                    </p>
+                </form>
+
+                <!-- ログイン中に表示 -->
+                <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                    <p style="margin:0;">ログイン中です。</p>
+                    <p style="margin:4px 0 0; font-size:.85rem; opacity:.8;">
+                        アカウント情報の変更は、ヘッダーのアカウントメニューから行えます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ▼ アカウントデータ モーダル -->
+
+
+<!-- ▼ パスワード保存用の隠しログインフォーム -->
+<form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on" style="position:absolute; left:-9999px; top:-9999px;
+             width:1px; height:1px; overflow:hidden;
+             opacity:0; pointer-events:none;">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="current-password">
+</form>
+<iframe name="auth-login-save-frame" style="display:none;"></iframe>
+
 <!-- ====== JavaScript ====== -->
 <!-- 共通処理 -->
 <script src="js/common/core/defs.js"></script>
@@ -320,6 +391,14 @@
 <script src="js/common/core/app-helpers.js"></script>
 <script src="js/common/core/card-sort.js"></script>
 
+<!-- アカウント関係 -->
+<script src="js/common/account/auth-core.js"></script>
+<script src="js/common/account/auth-ui.js"></script>
+<script src="js/common/account/account.js"></script>
+<script src="js/common/account/account-app-data-sync.js"></script>
+<script src="js/common/account/account-data-manager.js"></script>
+<script src="js/common/account/account-match-results.js"></script>
+<script src="js/common/account/header-auth.js"></script>
 
 <script src="js/common/storage/owned.js"></script>
 <script src="js/common/card/summary.js"></script>
@@ -329,20 +408,24 @@
 
 <!-- カード共通 -->
 <script src="js/common/card/cardGrid.js"></script>
-<script src="js/common/card/card-detail-template.js"></script>
 <script src="js/common/card/card-detail.js"></script>
-<script src="js/common/card/card-preview.js"></script>
+<script src="js/common/card/card-image-viewer.js"></script>
+
+<script src="js/common/filter/keyword-filter.js"></script>
+<script src="js/common/filter/chip-bar.js"></script>
 <script src="js/common/card/cardFilter.js"></script>
+
 
 <!--グループ-->
 <script src="js/common/storage/card-groups.js"></script>
 
 <!-- 画像生成 -->
-<script src="js/common/deck/image-export.js"></script>
 <script src="js/common/card/group-image-export.js"></script>
 
 <!-- 図鑑ページ専用 -->
-<script src="js/pages/card/card-page-loader.js"></script>
+<script src="js/pages/cards/cards-page-loader.js"></script>
+<script src="js/common/pwa/install-ui.js"></script>
+<script src="js/common/pwa/register.js"></script>
 
 </body>
 </html>

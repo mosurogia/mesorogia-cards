@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- ===== 基本設定 ===== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#111827">
+
+    <!-- ===== タイトル ===== -->
+    <title>戦績ページ｜モスロギア</title>
+    <meta name="description" content="モスロギアの戦績管理ページです。保存デッキごとの戦績と全体戦績を確認できます。">
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/match-results.html">
+
+    <!-- ===== OGP ===== -->
+    <meta property="og:title" content="戦績ページ｜モスロギア">
+    <meta property="og:description" content="保存デッキごとの戦績と全体戦績を確認できるページです。">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
+    <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/match-results.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="モスロギア">
+
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/common-page124.css">
+    <link rel="stylesheet" href="css/common-page24.css">
+    <link rel="stylesheet" href="css/page5.css">
+</head>
+
+<body>
+<header class="main-header">
+    <div class="header-logo">
+        <img src="img/tatudosi.webp" alt="神託のメソロギア ロゴ">
+    </div>
+    <nav class="header-nav">
+        <a href="cards.html">
+            <img src="img/header_icon_1.webp" alt="">
+            <span>図鑑</span>
+        </a>
+
+        <a href="deckmaker.html">
+            <img src="img/header_icon_2.webp" alt="">
+            <span>デッキメーカー</span>
+        </a>
+
+        <a href="deck-post.html">
+            <img src="img/header_icon_3.webp" alt="">
+            <span>デッキ投稿</span>
+        </a>
+    </nav>
+    <div class="header-account" data-header-auth></div>
+</header>
+
+<main class="match-results-shell">
+    <div class="match-results-layout">
+        <aside class="match-results-aside" aria-labelledby="todayMatchListTitle">
+            <h2 id="todayMatchListTitle" class="match-section-title">今日の戦績</h2>
+            <div id="todayMatchList" class="today-match-list" aria-live="polite"></div>
+        </aside>
+
+        <div class="match-results-main">
+            <div class="match-page-header">
+                <h1 class="match-page-title">戦績管理</h1>
+                <div class="match-page-header-auth data-source-auth-actions">
+                    <button class="cards-auth-btn primary" type="button" data-open="authLoginModal" data-auth-entry="login">
+                        ログイン
+                    </button>
+                    <button class="cards-auth-btn" type="button" data-open="authLoginModal" data-auth-entry="signup">
+                        新規登録
+                    </button>
+                    <button id="match-account-settings-btn" class="btn danger match-account-settings-btn" type="button"
+                        data-open="accountDataModal" data-account-scope="matchResults">
+                        アカウント設定
+                    </button>
+                </div>
+            </div>
+
+            <div class="match-results-tabs view-toggle" role="tablist" aria-label="戦績ページの表示切り替え">
+                <button type="button" class="match-results-tab view-btn is-active" id="matchInputTab" role="tab" aria-selected="true" aria-controls="matchInputPanel" data-match-tab="input">対戦入力</button>
+                <button type="button" class="match-results-tab view-btn" id="settingsTab" role="tab" aria-selected="false" aria-controls="settingsPanel" data-match-tab="settings">設定</button>
+            </div>
+
+            <section class="match-detail-section match-tab-panel is-active" id="matchInputPanel" role="tabpanel"
+                aria-labelledby="matchInputTab" data-match-panel="input">
+                <div class="match-entry-deck-field">
+                    <span id="matchEntryDeckLabel" class="match-entry-field-label">現在のデッキ：未選択</span>
+                    <div id="matchEntryDeckChoices" class="match-entry-deck-choices" role="radiogroup" aria-label="現在のデッキ"></div>
+                </div>
+
+                <div class="match-workspace">
+                    <div class="match-workspace-tabs" role="tablist" aria-label="対戦入力と戦績の切り替え">
+                        <button type="button" class="match-workspace-tab is-entry is-active" data-match-view-tab="entry"
+                            aria-selected="true">対戦入力</button>
+                        <button type="button" class="match-workspace-tab is-history" data-match-view-tab="history"
+                            aria-selected="false">戦績</button>
+                    </div>
+
+                    <form class="match-entry-form match-workspace-panel is-active" id="matchEntryForm"
+                        data-match-view-panel="entry">
+                        <input type="hidden" name="deckId" id="matchEntryDeckId">
+                        <input type="hidden" name="playedAt" id="matchEntryPlayedAt">
+
+                        <div class="match-opponent-field">
+                            <span id="matchOpponentLabel" class="match-entry-field-label">対戦デッキ：未選択</span>
+                            <input type="hidden" name="opponentDeck" id="matchOpponentDeck">
+                            <div id="matchOpponentPicker" class="match-opponent-picker"></div>
+                        </div>
+
+                        <div class="match-entry-choice-row">
+                            <fieldset class="match-entry-choice">
+                                <legend>勝敗</legend>
+                                <div class="match-choice-buttons">
+                                    <label class="match-choice-button">
+                                        <input type="radio" name="result" value="win" required>
+                                        <span>勝ち</span>
+                                    </label>
+                                    <label class="match-choice-button">
+                                        <input type="radio" name="result" value="lose" required>
+                                        <span>負け</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="match-entry-choice">
+                                <legend>優先権（任意）</legend>
+                                <div class="match-choice-buttons">
+                                    <label class="match-choice-button">
+                                        <input type="radio" name="priority" value="self">
+                                        <span>先攻</span>
+                                    </label>
+                                    <label class="match-choice-button">
+                                        <input type="radio" name="priority" value="opponent">
+                                        <span>後攻</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <label class="match-entry-wide">
+                            <span>メモ（任意）</span>
+                            <textarea name="memo" rows="2" maxlength="200" placeholder="試合メモ"></textarea>
+                        </label>
+
+                        <div class="match-entry-actions">
+                            <button type="submit" class="btn primary" id="matchEntrySubmit">登録</button>
+                        </div>
+                    </form>
+
+                    <div class="match-workspace-panel" data-match-view-panel="history" hidden>
+                        <div class="match-history-section" aria-labelledby="matchHistoryRateTitle">
+                            <div class="match-history-heading" id="matchHistoryTitle"></div>
+                            <div id="matchSummary"></div>
+                            <div id="matchHistoryBody" aria-live="polite"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="match-detail-section match-tab-panel" id="settingsPanel" role="tabpanel" aria-labelledby="settingsTab" data-match-panel="settings" hidden>
+                <div class="settings-panel-content">
+                    <section class="settings-hero" aria-labelledby="settings-title">
+                        <h2 id="settings-title">設定</h2>
+                        <p>ログイン情報、保存デッキ、投稿デッキ、サイト情報をまとめて管理できる場所として準備中です。</p>
+                    </section>
+
+                    <section class="settings-section" aria-labelledby="settings-account-title">
+                        <h2 id="settings-account-title">アカウント情報</h2>
+                        <p>ログイン状態、投稿者名、Xアカウントなどをここで確認・変更できるようにする予定です。</p>
+                    </section>
+
+                    <section class="settings-section" aria-labelledby="settings-deck-title">
+                        <h2 id="settings-deck-title">デッキ情報</h2>
+                        <p>保存デッキや投稿デッキへの導線をここにまとめる予定です。</p>
+                    </section>
+
+                    <section class="settings-section" aria-labelledby="settings-site-title">
+                        <h2 id="settings-site-title">サイト情報</h2>
+                        <p><strong>モスロギア</strong> はアプリ「神託のメソロギア」の非公式ファンサイトです。</p>
+                        <p><a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">公式サイト</a></p>
+                        <p>© 2025 Mesorogia Cards</p>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<!-- ▼ ログイン / 新規登録 モーダル -->
+<div class="account-modal" id="authLoginModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+        <div class="account-modal-head">
+            <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+            <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+        </div>
+
+        <div class="account-modal-body">
+            <div class="auth-stack">
+                <!-- ▼ 非ログイン時に表示 -->
+                <form id="auth-login-form" class="auth-login-form">
+                    <div class="poster-line" style="margin-top:6px;">
+                        <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
+                            autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="poster-line">
+                        <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                            autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                    </div>
+
+                    <!-- ▼ 新規登録用の確認パスワード欄 -->
+                    <div class="poster-line">
+                        <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                            autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="auth-buttons">
+                        <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                        <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                    </div>
+
+                    <button type="button" class="auth-forgot-link" id="auth-forgot-password">
+                        パスワードを忘れた場合
+                    </button>
+
+                    <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:.5rem 0 0; font-size:.9rem;"></p>
+                </form>
+
+                <!-- ▼ ログイン中に表示 -->
+                <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                    <p style="margin:0;">ログイン中です。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ▼ パスワード保存用の隠しログインフォーム -->
+<form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on"
+    style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="current-password">
+</form>
+<iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
+
+<!-- スクリプト群 -->
+<script src="js/common/core/defs.js"></script>
+<script src="js/common/core/app-helpers.js"></script>
+<script src="js/common/storage/deck-saved-store.js"></script>
+<script src="js/common/account/auth-core.js"></script>
+<script src="js/common/account/auth-ui.js"></script>
+<script src="js/common/account/account.js"></script>
+<script src="js/common/account/account-app-data-sync.js"></script>
+<script src="js/common/account/account-data-manager.js"></script>
+<script src="js/common/account/account-match-results.js"></script>
+<script src="js/common/account/header-auth.js"></script>
+<script src="js/pages/match-results/match-results.js"></script>
+<script src="js/common/pwa/install-ui.js"></script>
+<script src="js/common/pwa/register.js"></script>
+</body>
+</html>
