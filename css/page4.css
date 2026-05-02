@@ -1071,7 +1071,7 @@ body {
     /* 一覧＋詳細 全体の2カラムレイアウト */
     .post-main-layout {
         display: grid;
-        grid-template-columns: minmax(320px, 30%) minmax(0, 1fr);
+        grid-template-columns: minmax(320px, 35%) minmax(0, 1fr);
         gap: 16px;
         /* 画面高さいっぱいを使って中をスクロールさせる */
         min-height: calc(100dvh - 230px);
@@ -1289,6 +1289,282 @@ body {
     background: #f9fafb;
     border-radius: 14px;
     padding: 4px 4px 8px;
+}
+
+/* 所持カード比較 */
+.deck-compare-block {
+    margin: 10px 0;
+}
+
+.deck-compare-toggle {
+    position: relative;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-weight: 700;
+    font-size: .95rem;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+}
+
+.deck-compare-toggle[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    width: min(320px, calc(100vw - 32px));
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #111827;
+    color: #ffffff;
+    font-size: .78rem;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: left;
+    white-space: normal;
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 10;
+}
+
+.deck-compare-toggle[data-tooltip]:hover::after,
+.deck-compare-toggle[data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.deck-compare-toggle:hover {
+    background: #f8fafc;
+    border-color: #9ca3af;
+}
+
+.deck-compare-toggle:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.deck-compare-toggle.is-active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.deck-compare-toggle:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.deck-compare-result {
+    margin-top: 8px;
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.deck-compare-message {
+    display: grid;
+    gap: 6px;
+    color: #374151;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.deck-compare-message.is-complete {
+    color: #047857;
+    font-weight: 700;
+}
+
+.deck-compare-checker-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.deck-compare-checker-link:focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+}
+
+.deck-compare-actions {
+    display: flex;
+    margin-top: 10px;
+}
+
+.deck-shortage-summary {
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.deck-shortage-rarity-list {
+    margin-bottom: 8px;
+}
+
+.deck-shortage-list {
+    display: grid;
+    gap: 6px;
+}
+
+.deck-shortage-row {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+.deck-shortage-thumb {
+    width: 42px;
+    aspect-ratio: 424 / 532;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.deck-shortage-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.deck-shortage-row-body {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.deck-shortage-row-main {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.deck-shortage-name {
+    font-weight: 700;
+    color: #111827;
+}
+
+.deck-shortage-rarity-label,
+.deck-shortage-counts {
+    font-size: .78rem;
+    color: #6b7280;
+}
+
+.deck-compare-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 4200;
+}
+
+.deck-compare-popup-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, .35);
+}
+
+.deck-compare-popup-panel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(92vw, 360px);
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 18px 16px 14px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .25);
+}
+
+.deck-compare-popup-close {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .06);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.deck-compare-popup-title {
+    padding-right: 28px;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #111827;
+}
+
+.deck-compare-popup-text {
+    margin-top: 8px;
+    color: #4b5563;
+    font-size: .9rem;
+    line-height: 1.55;
+}
+
+.deck-compare-popup-actions {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.deck-compare-popup-actions.is-auth {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.deck-compare-popup-actions.is-auth .auth-mini-btn {
+    min-height: 40px;
+    width: 100%;
+    padding: .45rem .75rem;
+    font-size: .9rem;
+    box-shadow: none;
+}
+
+.deck-compare-popup-actions.is-auth .deck-compare-popup-secondary {
+    grid-column: 1 / -1;
+}
+
+.deck-compare-popup-primary,
+.deck-compare-popup-secondary {
+    min-height: 38px;
+    border-radius: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.deck-compare-popup-primary {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: #fff;
+}
+
+.deck-compare-popup-secondary {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
 }
 
 .post-detail-chartbox {
@@ -2007,7 +2283,8 @@ body {
 
 /* 対象構成表示中：それ以外を薄く */
 .post-decklist.is-pack-focus .deck-entry:not(.pack-hl),
-.post-decklist.is-rarity-focus .deck-entry:not(.pack-hl) {
+.post-decklist.is-rarity-focus .deck-entry:not(.pack-hl),
+.post-decklist.is-shortage-focus .deck-entry:not(.shortage-hl) {
     opacity: .35;
     filter: grayscale(.6) brightness(.9);
     transition: opacity .15s ease, filter .15s ease;
@@ -2015,10 +2292,44 @@ body {
 
 /* 強調カードはそのまま */
 .post-decklist.is-pack-focus .deck-entry.pack-hl,
-.post-decklist.is-rarity-focus .deck-entry.pack-hl {
+.post-decklist.is-rarity-focus .deck-entry.pack-hl,
+.post-decklist.is-shortage-focus .deck-entry.shortage-hl {
     opacity: 1;
     filter: none;
     z-index: 2;
+}
+
+/* 不足カード強調 */
+.deck-entry.shortage-hl {
+    position: relative;
+}
+
+.deck-entry.shortage-hl::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 3px solid #ef4444;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px rgba(254, 202, 202, .75), 0 6px 14px rgba(185, 28, 28, .2);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.post-decklist .shortage-badge {
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    min-width: 34px;
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+    z-index: 4;
 }
 
 /* パック別カラー割当 */

@@ -994,6 +994,22 @@ button,
     background: #f9fafb;
     scroll-margin-top: 12px;
 }
+
+.account-site-info {
+    display: grid;
+    gap: 6px;
+}
+
+.account-site-info p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.7;
+}
+
+.account-site-info .footer-link {
+    font-weight: 700;
+}
+
 .account-section-head {
     display: flex;
     align-items: center;
@@ -1155,7 +1171,42 @@ button,
 .account-section-actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
+}
+
+.account-offline-card-note,
+.account-offline-card-saved-at,
+.account-offline-card-error {
+    margin: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.account-offline-card-note,
+.account-offline-card-saved-at {
+    color: #374151;
+    font-size: 0.88rem;
+}
+
+.account-offline-card-progress {
+    min-width: 0;
+    color: #374151;
+    font-size: 0.86rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+#offline-card-save-status {
+    max-width: 55%;
+    white-space: normal;
+    text-align: right;
+}
+
+.account-offline-card-error {
+    color: #b91c1c;
+    font-size: 0.84rem;
+    font-weight: 700;
 }
 
 /* アカウント設定：保存ボタン */
@@ -1186,6 +1237,15 @@ button,
         overflow-wrap: anywhere;
         text-align: center;
         white-space: normal;
+    }
+
+    .account-offline-card-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .account-offline-card-actions .btn {
+        width: 100%;
     }
 }
 
@@ -1244,7 +1304,6 @@ button,
     font-weight: 900;
 
     cursor: pointer;
-    pointer-events: none;
 }
 
 
@@ -1389,7 +1448,164 @@ footer a:hover {
     display: none;
 }
 
+.pwa-header-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 58px;
+    padding: 6px 18px;
+    overflow: hidden;
+
+    color: #fff;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, .88), rgba(15, 18, 28, .94)),
+        url("../img/header.webp");
+    background-size: auto 58px;
+    background-position: center;
+
+    border-top: 1px solid rgba(255, 230, 150, .35);
+    border-bottom: 1px solid rgba(255, 230, 150, .35);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, .22);
+}
+
+.pwa-header-banner::before,
+.pwa-header-banner::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: min(30vw, 500px);
+    height: 70px;
+    transform: translateY(-50%);
+    opacity: .28;
+    pointer-events: none;
+}
+
+.pwa-header-banner::before {
+    left: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(124, 108, 255, .35), transparent 34%),
+        linear-gradient(90deg, rgba(255, 230, 150, .20), transparent);
+}
+
+.pwa-header-banner::after {
+    right: 0;
+    background:
+        radial-gradient(circle at 80% 50%, rgba(255, 230, 150, .25), transparent 34%),
+        linear-gradient(270deg, rgba(124, 108, 255, .25), transparent);
+}
+
+.pwa-header-banner[hidden] {
+    display: none;
+}
+
+.pwa-header-banner-icon {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+}
+
+.pwa-header-banner-icon img {
+    display: block;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 0 16px rgba(255, 255, 255, .18);
+}
+
+.pwa-header-banner-text {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.pwa-header-banner-text strong {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, .8);
+}
+
+.pwa-header-banner-text span {
+    color: rgba(255, 255, 255, .82);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pwa-header-banner-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.pwa-header-banner button {
+    min-height: 36px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+.pwa-header-banner-primary {
+    color: #fff;
+    background: linear-gradient(180deg, #7c6cff, #4f46e5);
+    border: 1px solid rgba(210, 205, 255, .85);
+    box-shadow:
+        0 0 14px rgba(124, 108, 255, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+.pwa-header-banner-primary:hover {
+    filter: brightness(1.08);
+}
+
+.pwa-header-banner-close {
+    color: rgba(255, 255, 255, .78);
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .20);
+}
+
+.pwa-header-banner-close:hover {
+    background: rgba(255, 255, 255, .12);
+}
+
+.pwa-header-banner-preview {
+    position: absolute;
+    right: 28px;
+    top: -90%;
+    width: 130px;
+    height: 210px;
+    overflow: hidden;
+    border-radius: 18px;
+    opacity: .28;
+    transform: translateY(-50%) rotate(-4deg);
+    pointer-events: none;
+    box-shadow: 0 0 28px rgba(0, 0, 0, .55);
+}
+
+.pwa-header-banner-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
 .footer-pwa-install:focus-visible,
+.pwa-header-banner button:focus-visible,
 .pwa-install-nudge button:focus-visible,
 .pwa-install-dialog button:focus-visible {
     outline: 2px solid #2563eb;
@@ -1487,6 +1703,66 @@ footer a:hover {
 }
 
 @media (max-width: 768px) {
+    .pwa-header-banner {
+        justify-content: flex-start;
+        gap: 8px;
+        min-height: 54px;
+        padding: 6px 8px;
+    }
+
+    .pwa-header-banner-preview{
+        top: -90%;
+    }
+
+    .pwa-header-banner-icon img {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+    }
+
+    .pwa-header-banner-text {
+        min-width: 0;
+        gap: 1px;
+        text-align: left;
+    }
+
+    .pwa-header-banner-text strong {
+        font-size: clamp(.7rem, 2.45vw, 1.05rem);
+        line-height: 1.2;
+    }
+
+    .pwa-header-banner-text span {
+        font-size: 10px;
+        line-height: 1.2;
+        white-space: normal;
+    }
+
+    .pwa-header-banner-actions {
+        flex: 0 0 auto;
+        display: flex;
+        gap: 5px;
+        justify-content: flex-end;
+    }
+
+    .pwa-header-banner button {
+        min-height: 32px;
+        padding: 6px 9px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .pwa-install-nudge {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pwa-install-nudge-actions {
+        justify-content: flex-end;
+    }
+
     .pwa-install-nudge {
         right: 10px;
         bottom: 10px;
@@ -1501,6 +1777,7 @@ footer a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .pwa-header-banner,
     .pwa-install-nudge,
     .pwa-install-modal {
         scroll-behavior: auto;
@@ -1515,6 +1792,21 @@ footer a:hover {
 body.is-pwa-standalone {
     --app-bottom-nav-offset: calc(67px + env(safe-area-inset-bottom));
     padding-bottom: var(--app-bottom-nav-offset);
+}
+
+/* アプリ版では下部メニューとタブメニューに重ならない位置へ上げる */
+body.is-pwa-standalone .floating-btn {
+    bottom: calc(var(--app-bottom-nav-offset) + 3px);
+}
+
+/* カードグループ編集中の完了ボタンは通常ボタンの上に並べる */
+body.is-pwa-standalone .floating-btn.floating-btn--done {
+    bottom: calc(var(--app-bottom-nav-offset) + 50px);
+}
+
+/* アプリ版は専用のページ上部ボタンを使うため旧ボタンは非表示 */
+body.is-pwa-standalone #scrollTopFixed {
+    display: none !important;
 }
 
 body.is-pwa-standalone .main-header {
@@ -1761,12 +2053,6 @@ body.is-pwa-standalone .app-back-to-top.is-visible {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
-}
-
-/* 設定ページ仮レイアウト */
-.settings-shell {
-    width: min(960px, calc(100% - 24px));
-    margin: 24px auto;
 }
 
 .settings-hero,

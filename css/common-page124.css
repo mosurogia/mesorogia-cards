@@ -1315,7 +1315,7 @@
     justify-content: space-between;
     gap: 2px;
     padding: 8px 4px;
-    font-size: clamp(.3rem, 2vw, 1rem);
+    font-size: clamp(.6rem, 2.5vw, 1rem);
 }
 
 /* データソース表示・認証ボタン共通 */
@@ -1504,6 +1504,7 @@
 .filter-card-group-source-row {
     grid-column: 1 / -1;
     width: 100%;
+    margin-bottom: 5px;
 }
 
 .filter-card-group-auth-actions {

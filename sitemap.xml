@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- カード一覧ページ -->
   <url>
-    <loc>https://mosurogia.github.io/mesorogia-cards/</loc>
+    <loc>https://mosurogia.github.io/mesorogia-cards/cards.html</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- デッキメーカー -->
   <url>
     <loc>https://mosurogia.github.io/mesorogia-cards/deckmaker.html</loc>
-    <priority>0.9</priority>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
+  <!-- デッキ投稿 -->
   <url>
     <loc>https://mosurogia.github.io/mesorogia-cards/deck-post.html</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 戦績ページ -->
   <url>
-    <loc>https://mosurogia.github.io/mesorogia-cards/cardcheker.html</loc>
-    <priority>0.8</priority>
+    <loc>https://mosurogia.github.io/mesorogia-cards/match-results.html</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
 
 </urlset>

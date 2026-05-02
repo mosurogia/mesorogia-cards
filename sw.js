@@ -86,6 +86,11 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
+  if (shouldUseCardNetworkFirst(requestUrl)) {
+    event.respondWith(networkFirst(event.request, false));
+    return;
+  }
+
   if (shouldUseCacheFirst(requestUrl)) {
     event.respondWith(cacheFirst(event.request));
     return;
@@ -103,6 +108,18 @@ function shouldUseCacheFirst(url) {
   return config.cacheFirstExtensions.some(function (extension) {
     return url.pathname.endsWith(extension);
   });
+}
+
+function shouldUseCardNetworkFirst(url) {
+  return isCardDataJson(url) || isCardImage(url);
+}
+
+function isCardDataJson(url) {
+  return /\/public\/(?:cards_latest|cards_latest\.meta|cards_versions|packs|cv|environments)\.json$/.test(url.pathname);
+}
+
+function isCardImage(url) {
+  return /\/img\/(?:\d{5}|00000)\.webp$/.test(url.pathname);
 }
 
 function shouldUseNetworkFirst(url) {
