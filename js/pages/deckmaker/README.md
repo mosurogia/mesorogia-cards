@@ -20,8 +20,8 @@ deckmaker専用9ファイル構成で成立します。\
 ### ② キャンペーンは1ファイルに閉じ込める
 
 -   分散させない\
--   post.js に混ぜない\
--   campaign.js に完全集約
+-   deckmaker-post.js に混ぜない\
+-   deckmaker-campaign.js に完全集約
 
 ### ③ entryは起動ハブのみ
 
@@ -37,11 +37,11 @@ js/pages/deckmaker/
 -   deckmaker-loader.js ...... 専用ローダー（唯一の正）
 -   deckmaker-entry.js ...... 起動ハブ
 -   deckmaker-tabs.js ...... タブ制御
--   deck.js ...... デッキ状態管理
--   deck-ui.js ...... UI補助（deck-info + card-display 統合）
--   filter.js ...... フィルター・タグ同期
--   post.js ...... 投稿本体（submit / validation）
--   campaign.js ...... キャンペーン専用
+-   deckmaker-deck.js ...... デッキ状態管理
+-   deckmaker-ui.js ...... UI補助（deck-info + card-display 統合）
+-   deckmaker-filter.js ...... フィルター・タグ同期
+-   deckmaker-post.js ...... 投稿本体（submit / validation）
+-   deckmaker-campaign.js ...... キャンペーン専用
 -   （予備枠）...... 将来拡張用
 
 ------------------------------------------------------------------------
@@ -64,28 +64,28 @@ js/pages/deckmaker/
 -   タブ表示切替\
 -   投稿タブ表示時の再描画トリガー
 
-### deck.js
+### deckmaker-deck.js
 
 -   デッキ状態管理\
 -   枚数制限（通常3枚 / 旧神1枚）\
 -   メイン種族制限\
 -   addCard / removeCard / updateDeck
 
-### deck-ui.js
+### deckmaker-ui.js
 
 -   deck-info.js + card-display.js を統合\
 -   デッキ統計表示\
 -   カード詳細モーダル\
 -   UI補助処理
 
-### filter.js
+### deckmaker-filter.js
 
 -   カード一覧フィルター\
 -   タグ選択ロジック\
 -   readSelectedTags / writeSelectedTags\
 -   キャンペーンタグ同期
 
-### post.js
+### deckmaker-post.js
 
 -   投稿フォーム制御\
 -   バリデーション\
@@ -94,7 +94,7 @@ js/pages/deckmaker/
 -   成功／失敗UI制御\
 -   キャンペーン参加フラグ受け取り
 
-### campaign.js（最重要）
+### deckmaker-campaign.js（最重要）
 
 キャンペーン関連はすべてここに集約します。
 
@@ -136,27 +136,27 @@ entry内で以下を実行する：
 
 ### ❌ やらないこと
 
--   キャンペーンロジックを post.js / filter.js に分散しない\
+-   キャンペーンロジックを deckmaker-post.js / deckmaker-filter.js に分散しない\
 -   entry.js に実処理を書かない\
 -   タグ管理とキャンペーン判定を混在させない
 
 ### ✅ 守ること
 
--   キャンペーンは campaign.js のみ\
--   post.js は投稿制御のみ\
--   filter.js はタグ管理のみ\
--   UI補助は deck-ui.js のみ
+-   キャンペーンは deckmaker-campaign.js のみ\
+-   deckmaker-post.js は投稿制御のみ\
+-   deckmaker-filter.js はタグ管理のみ\
+-   UI補助は deckmaker-ui.js のみ
 
 ------------------------------------------------------------------------
 
 ## 5) 変更時の早見表
 
--   デッキ枚数制限がおかしい → deck.js\
--   フィルターが効かない → filter.js\
--   投稿できない → post.js\
--   キャンペーン表示がおかしい → campaign.js\
--   投稿前モーダルが出ない → campaign.js\
--   デッキ統計表示がおかしい → deck-ui.js\
+-   デッキ枚数制限がおかしい → deckmaker-deck.js\
+-   フィルターが効かない → deckmaker-filter.js\
+-   投稿できない → deckmaker-post.js\
+-   キャンペーン表示がおかしい → deckmaker-campaign.js\
+-   投稿前モーダルが出ない → deckmaker-campaign.js\
+-   デッキ統計表示がおかしい → deckmaker-ui.js\
 -   起動順で動かない → deckmaker-loader.js
 
 ------------------------------------------------------------------------
@@ -169,13 +169,13 @@ entry内で以下を実行する：
 -   削除しやすい\
 -   拡張しやすい
 
-### ② post.jsが肥大しない
+### ② deckmaker-post.jsが肥大しない
 
 -   投稿制御に集中できる
 
 ### ③ 将来キャンペーン終了時も簡単
 
--   campaign.js を外すだけで完結
+-   deckmaker-campaign.js を外すだけで完結
 
 ------------------------------------------------------------------------
 
@@ -186,7 +186,7 @@ entry内で以下を実行する：
 -   条件別ボーナス\
 -   レート連動イベント
 
-すべて campaign.js に追加する。
+すべて deckmaker-campaign.js に追加する。
 
 ------------------------------------------------------------------------
 

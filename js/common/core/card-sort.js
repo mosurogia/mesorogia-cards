@@ -27,7 +27,9 @@
    * cd を 5桁文字列に正規化
    */
   function normCd5_(cd) {
-    return String(cd ?? '').trim().padStart(5, '0').slice(0, 5);
+    if (typeof window.normCd5 === 'function') return window.normCd5(cd);
+    const s = String(cd ?? '').trim();
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
   }
 
   /**
@@ -127,6 +129,75 @@
   }
 
   /**
+   * 昇順・降順ボタンの状態を取得
+   */
+  function getSortOrder_() {
+    const orderEl = document.getElementById('sort-order-toggle');
+    return orderEl?.dataset?.order === 'desc' ? 'desc' : 'asc';
+  }
+
+  /**
+   * 旧形式のソート値を新形式へ寄せる
+   */
+  function normalizeSortValue_(sortValue) {
+    const value = String(sortValue || 'default');
+    if (value === 'cost-asc' || value === 'cost-desc') return 'cost';
+    if (value === 'power-asc' || value === 'power-desc') return 'power';
+    if (value === 'category-order') return 'category';
+    if (value === 'rarity-order') return 'rarity';
+    return value;
+  }
+
+  /**
+   * 旧形式のソート値から向きを補完
+   */
+  function normalizeSortOrder_(sortValue, sortOrder) {
+    const value = String(sortValue || '');
+    if (value.endsWith('-desc')) return 'desc';
+    if (value.endsWith('-asc')) return 'asc';
+    return sortOrder === 'desc' ? 'desc' : 'asc';
+  }
+
+  /**
+   * 昇順・降順ボタンの表示を更新
+   */
+  function updateSortOrderButton_(order) {
+    const orderEl = document.getElementById('sort-order-toggle');
+    if (!orderEl) return;
+
+    const nextOrder = order === 'desc' ? 'desc' : 'asc';
+    orderEl.dataset.order = nextOrder;
+    orderEl.textContent = nextOrder === 'desc' ? '降順' : '昇順';
+    orderEl.setAttribute('aria-pressed', nextOrder === 'desc' ? 'true' : 'false');
+    orderEl.title = nextOrder === 'desc' ? '現在は降順です' : '現在は昇順です';
+  }
+
+  /**
+   * 昇順・降順ボタンを初期化
+   */
+  function initSortOrderToggle_() {
+    const orderEl = document.getElementById('sort-order-toggle');
+    if (!orderEl || orderEl.dataset.boundSortOrderToggle) return;
+
+    orderEl.dataset.boundSortOrderToggle = '1';
+    updateSortOrderButton_(getSortOrder_());
+    orderEl.addEventListener('click', () => {
+      const nextOrder = getSortOrder_() === 'desc' ? 'asc' : 'desc';
+      updateSortOrderButton_(nextOrder);
+      sortCards();
+    });
+  }
+
+  /**
+   * 昇順・降順を外部から切り替える
+   */
+  function toggleSortOrder() {
+    const nextOrder = getSortOrder_() === 'desc' ? 'asc' : 'desc';
+    updateSortOrderButton_(nextOrder);
+    sortCards();
+  }
+
+  /**
    * .card 要素からソートキーを取得
    */
   function getKeyFromCardEl_(cardEl) {
@@ -157,7 +228,9 @@
     const grid = document.getElementById('grid');
     if (!grid) return;
 
-    const sortValue = getSortValue_();
+    const rawSortValue = getSortValue_();
+    const sortValue = normalizeSortValue_(rawSortValue);
+    const sortOrder = normalizeSortOrder_(rawSortValue, getSortOrder_());
 
     const isList =
       grid.classList.contains('is-list') ||
@@ -177,27 +250,23 @@
       const a = getKeyFromCardEl_(aCard);
       const b = getKeyFromCardEl_(bCard);
 
+      const dir = sortOrder === 'desc' ? -1 : 1;
+
       switch (sortValue) {
-        case 'cost-asc':
-          return a.cost - b.cost || a.type - b.type || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+        case 'cost':
+          return (a.cost - b.cost) * dir || a.type - b.type || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
-        case 'cost-desc':
-          return b.cost - a.cost || a.type - b.type || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+        case 'power':
+          return (a.power - b.power) * dir || a.type - b.type || a.cost - b.cost || a.cd.localeCompare(b.cd, 'ja');
 
-        case 'power-asc':
-          return a.power - b.power || a.type - b.type || a.cost - b.cost || a.cd.localeCompare(b.cd, 'ja');
+        case 'category':
+          return (a.cat - b.cat) * dir || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
-        case 'power-desc':
-          return b.power - a.power || a.type - b.type || a.cost - b.cost || a.cd.localeCompare(b.cd, 'ja');
-
-        case 'category-order':
-          return a.cat - b.cat || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
-
-        case 'rarity-order':
-          return a.rarity - b.rarity || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+        case 'rarity':
+          return (a.rarity - b.rarity) * dir || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
         default:
-          return a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+          return (a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja')) * dir;
       }
     });
 
@@ -244,4 +313,11 @@
   window.sortCardEntries = window.sortCardEntries || sortCardEntries;
   window.sortCardCodes = window.sortCardCodes || sortCardCodes;
   window.sortCards = window.sortCards || sortCards;
+  window.toggleSortOrder = window.toggleSortOrder || toggleSortOrder;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSortOrderToggle_, { once: true });
+  } else {
+    initSortOrderToggle_();
+  }
 })();

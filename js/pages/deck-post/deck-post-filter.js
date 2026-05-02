@@ -36,7 +36,17 @@
   /** タグ表示条件 */
   function shouldShowTag_(tag) {
     const t = String(tag || '').trim();
-    return !!t;
+    if (!t) return false;
+    return !/[\[\]［］]/.test(t);
+  }
+
+  /** ユーザータグ検索用の正規化 */
+  function normalizeUserTagSearch_(value) {
+    return String(value || '')
+      .normalize('NFKC')
+      .trim()
+      .toLowerCase()
+      .replace(/[\u30a1-\u30f6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
   }
 
   /** キャンペーンタグのCSS */
@@ -71,7 +81,7 @@
 
   const arr = s.split(',')
     .map(x => x.trim())
-    .filter(Boolean);
+    .filter(shouldShowTag_);
 
   // ✅ キャンペーンタグを末尾に寄せる（相対順は維持）
   const normal = arr.filter(t => !isCamp(t));
@@ -201,6 +211,21 @@
     } catch (_) {}
 
     return Array.from(set);
+  }
+
+  /** 終了済みキャンペーンタグ取得 */
+  function getEndedCampaignTags_() {
+    const set = window.__campaignTagSet;
+    if (!(set instanceof Set) || !set.size) return [];
+
+    const active = String(window.__activeCampaignTag || '').trim();
+    const running = !!window.__isCampaignRunning;
+
+    return Array.from(set)
+      .map((t) => String(t || '').trim())
+      .filter(shouldShowTag_)
+      .filter((t, i, arr) => arr.indexOf(t) === i)
+      .filter((t) => !(running && active && t === active));
   }
 
   /** タグ分類（race / category / deckinfo） */
@@ -350,10 +375,170 @@
     const deckEl = document.getElementById('postFilterDeckInfoArea');
     const raceEl = document.getElementById('postFilterRaceArea');
     const catEl = document.getElementById('postFilterCategoryArea');
+    const campaignSection = document.getElementById('postFilterCampaignSection');
+    const campaignEl = document.getElementById('postFilterCampaignArea');
+    const endedCampaigns = getEndedCampaignTags_();
 
     renderTagButtons_(deckEl, sortTags_(deckinfo, 'deckinfo'));
     renderTagButtons_(raceEl, sortTags_(race, 'race'));
     renderTagButtons_(catEl, sortTags_(category, 'category'));
+    renderTagButtons_(campaignEl, endedCampaigns);
+
+    if (campaignSection) {
+      campaignSection.style.display = endedCampaigns.length ? '' : 'none';
+    }
+
+    renderEnvironmentFilterUI_();
+  }
+
+  // =========================
+  // 4.5) 環境フィルター
+  // =========================
+
+  const ENVIRONMENTS_JSON_URL = './public/environments.json';
+  let environmentCatalogPromise_ = null;
+  let environmentCatalog_ = [];
+
+  function normalizeYmd_(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+
+    const direct = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (direct) {
+      return `${direct[1]}-${String(direct[2]).padStart(2, '0')}-${String(direct[3]).padStart(2, '0')}`;
+    }
+
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return '';
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  function ymdToTime_(value) {
+    const ymd = normalizeYmd_(value);
+    if (!ymd) return 0;
+    const time = Date.parse(`${ymd}T00:00:00`);
+    return Number.isNaN(time) ? 0 : time;
+  }
+
+  function normalizeEnvironmentRow_(row) {
+    const envId = String(row?.env_id || row?.envId || row?.id || '').trim();
+    const label = String(row?.label || row?.name || envId || '').trim();
+    const startAt = normalizeYmd_(row?.start_at || row?.startAt);
+    const endAt = normalizeYmd_(row?.end_at || row?.endAt);
+    if (!envId || !label || !startAt) return null;
+
+    return {
+      envId,
+      label,
+      startAt,
+      endAt,
+      kind: String(row?.kind || '').trim(),
+      note: String(row?.note || '').trim(),
+    };
+  }
+
+  function completeEnvironmentRanges_(rows) {
+    const list = (rows || [])
+      .map(normalizeEnvironmentRow_)
+      .filter(Boolean)
+      .sort((a, b) => ymdToTime_(a.startAt) - ymdToTime_(b.startAt));
+
+    return list.map((env, index) => {
+      if (env.endAt) return env;
+
+      const next = list[index + 1];
+      if (!next) return env;
+
+      const nextStart = ymdToTime_(next.startAt);
+      if (!nextStart) return env;
+
+      const end = new Date(nextStart - 24 * 60 * 60 * 1000);
+      return {
+        ...env,
+        endAt: `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')}`,
+      };
+    });
+  }
+
+  function loadEnvironmentCatalog_() {
+    if (environmentCatalogPromise_) return environmentCatalogPromise_;
+
+    environmentCatalogPromise_ = fetch(ENVIRONMENTS_JSON_URL, { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error(`environment json ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        const raw = Array.isArray(json) ? json : (json?.environments || []);
+        environmentCatalog_ = completeEnvironmentRanges_(raw);
+        return environmentCatalog_;
+      })
+      .catch((err) => {
+        console.warn('[deck-post] environments.json 読み込み失敗:', err);
+        environmentCatalog_ = [];
+        return [];
+      });
+
+    return environmentCatalogPromise_;
+  }
+
+  function getEnvironmentById_(envId) {
+    const id = String(envId || '').trim();
+    return environmentCatalog_.find((env) => env.envId === id) || null;
+  }
+
+  function getPostJudgeYmd_(item) {
+    return normalizeYmd_(item?.createdAt || item?.created_at || item?.updatedAt || item?.updated_at || '');
+  }
+
+  function isPostInEnvironment_(item, env) {
+    const postTime = ymdToTime_(getPostJudgeYmd_(item));
+    const startTime = ymdToTime_(env?.startAt);
+    if (!postTime || !startTime) return false;
+
+    const endTime = ymdToTime_(env?.endAt);
+    if (postTime < startTime) return false;
+    return !endTime || postTime <= endTime;
+  }
+
+  function renderEnvironmentButtons_(envs) {
+    const section = document.getElementById('postFilterEnvironmentSection');
+    const root = document.getElementById('postFilterEnvironmentArea');
+    if (!section || !root) return;
+
+    const list = Array.isArray(envs) ? envs : [];
+    section.style.display = list.length ? '' : 'none';
+    root.replaceChildren();
+    if (!list.length) return;
+
+    const selected = window.PostFilterDraft?.selectedEnvironmentIds;
+    list.slice().reverse().forEach((env) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-btn post-filter-env-btn';
+      btn.dataset.envId = env.envId;
+      btn.textContent = env.label;
+      if (selected?.has(env.envId)) btn.classList.add('selected');
+
+      btn.addEventListener('click', () => {
+        const draft = window.PostFilterDraft;
+        draft.selectedEnvironmentIds ??= new Set();
+
+        if (draft.selectedEnvironmentIds.has(env.envId)) {
+          draft.selectedEnvironmentIds.delete(env.envId);
+          btn.classList.remove('selected');
+        } else {
+          draft.selectedEnvironmentIds.add(env.envId);
+          btn.classList.add('selected');
+        }
+      });
+
+      root.appendChild(btn);
+    });
+  }
+
+  function renderEnvironmentFilterUI_() {
+    loadEnvironmentCatalog_().then(renderEnvironmentButtons_);
   }
 
   // =========================
@@ -364,6 +549,7 @@
   window.PostFilterState ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
+    selectedEnvironmentIds: new Set(),
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
@@ -376,6 +562,7 @@
   window.PostFilterDraft ??= {
     selectedTags: new Set(),
     selectedUserTags: new Set(),
+    selectedEnvironmentIds: new Set(),
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
@@ -384,6 +571,9 @@
     selectedPostLabel: '',
   };
 
+  window.PostFilterState.selectedEnvironmentIds ??= new Set();
+  window.PostFilterDraft.selectedEnvironmentIds ??= new Set();
+
   /** state → draft 同期 */
   function syncDraftFromApplied_() {
     const applied = window.PostFilterState;
@@ -391,6 +581,7 @@
 
     draft.selectedTags = new Set(Array.from(applied?.selectedTags || []));
     draft.selectedUserTags = new Set(Array.from(applied?.selectedUserTags || []));
+    draft.selectedEnvironmentIds = new Set(Array.from(applied?.selectedEnvironmentIds || []));
     draft.selectedPosterKey = String(applied?.selectedPosterKey || '');
     draft.selectedPosterLabel = String(applied?.selectedPosterLabel || '');
     draft.selectedCardCds = new Set(Array.from(applied?.selectedCardCds || []));
@@ -405,164 +596,185 @@
 
   /** 適用中フィルターチップ更新 */
   function updateActiveChipsBar_() {
-    const bar = document.getElementById('active-chips-bar');
-    const sc = bar?.querySelector('.chips-scroll');
-    if (!bar || !sc) return;
+      const FilterChipBar = window.FilterChipBar;
+      if (!FilterChipBar?.render) return;
 
-    const st = window.PostFilterState || {};
-    const tags = Array.from(st.selectedTags || []);
-    const user = Array.from(st.selectedUserTags || []);
-    const posterLabel = String(st.selectedPosterLabel || '').trim();
-    const postLabel = String(st.selectedPostLabel || '').trim();
-    const postId = String(st.selectedPostId || '').trim();
-    const cards = Array.from(st.selectedCardCds || []);
-    const total = tags.length + user.length + (posterLabel ? 1 : 0) + cards.length + (postId ? 1 : 0);
+      const st = window.PostFilterState || {};
+      const tags = Array.from(st.selectedTags || []);
+      const user = Array.from(st.selectedUserTags || []);
+      const envIds = Array.from(st.selectedEnvironmentIds || []);
+      const posterLabel = String(st.selectedPosterLabel || '').trim();
+      const postLabel = String(st.selectedPostLabel || '').trim();
+      const postId = String(st.selectedPostId || '').trim();
+      const cards = Array.from(st.selectedCardCds || []);
+      const cardMode = String(st.selectedCardMode || 'or');
 
-    sc.replaceChildren();
+      const chips = [];
 
-    if (!total) {
-      bar.style.display = 'none';
-      return;
-    }
-    bar.style.display = '';
+      tags.forEach((t) => {
+          chips.push({
+              label: `🏷️${t}`,
+              className: 'chip-tag',
+              onRemove: () => {
+                  window.PostFilterState.selectedTags?.delete?.(t);
+                  window.PostFilterDraft?.selectedTags?.delete?.(t);
 
-    function addChip(label, onRemove, extraClass = '') {
-      const chip = document.createElement('span');
-      chip.className = `chip-mini ${extraClass}`.trim();
-      chip.textContent = label;
+                  try {
+                      document
+                          .querySelectorAll(`.post-filter-tag-btn[data-tag="${CSS.escape(t)}"]`)
+                          .forEach((btn) => btn.classList.remove('selected'));
+                  } catch (_) {}
 
-      const x = document.createElement('button');
-      x.type = 'button';
-      x.className = 'x';
-      x.textContent = '×';
-      x.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onRemove?.();
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
       });
 
-      chip.appendChild(x);
-      sc.appendChild(chip);
-    }
+      user.forEach((t) => {
+          chips.push({
+              label: `✍️${t}`,
+              className: 'chip-user',
+              onRemove: () => {
+                  window.PostFilterState.selectedUserTags?.delete?.(t);
+                  window.PostFilterDraft?.selectedUserTags?.delete?.(t);
 
-    tags.forEach((t) => {
-      addChip(`🏷️${t}`, () => {
-        window.PostFilterState.selectedTags?.delete?.(t);
-        window.PostFilterDraft?.selectedTags?.delete?.(t);
+                  try {
+                      window.__renderSelectedUserTags_?.();
+                  } catch (_) {}
 
-        try {
-          document
-            .querySelectorAll(`.post-filter-tag-btn[data-tag="${CSS.escape(t)}"]`)
-            .forEach((btn) => btn.classList.remove('selected'));
-        } catch (_) {}
-
-        window.DeckPostFilter?.updateActiveChipsBar?.();
-        window.DeckPostList?.applySortAndRerenderList?.(false);
-      }, 'chip-tag');
-    });
-
-    user.forEach((t) => {
-      addChip(`✍️${t}`, () => {
-        window.PostFilterState.selectedUserTags?.delete?.(t);
-        window.PostFilterDraft?.selectedUserTags?.delete?.(t);
-
-        try {
-          window.__renderSelectedUserTags_?.();
-        } catch (_) {}
-
-        window.DeckPostFilter?.updateActiveChipsBar?.();
-        window.DeckPostList?.applySortAndRerenderList?.(false);
-      }, 'chip-user');
-    });
-
-    if (posterLabel) {
-      addChip(`投稿者:${posterLabel}`, () => {
-        window.PostFilterState.selectedPosterKey = '';
-        window.PostFilterState.selectedPosterLabel = '';
-        window.PostFilterDraft.selectedPosterKey = '';
-        window.PostFilterDraft.selectedPosterLabel = '';
-
-        window.DeckPostFilter?.updateActiveChipsBar?.();
-        window.DeckPostList?.applySortAndRerenderList?.(false);
-      }, 'is-poster');
-    }
-
-    const cardMode = String(st.selectedCardMode || 'or');
-    if (cards.length) {
-      const labelHead = cardMode === 'and' ? 'AND' : 'OR';
-
-      cards.forEach((cd) => {
-        const name = (window.cardMap || window.allCardsMap || {})?.[cd]?.name || cd;
-
-        addChip(`🃏${labelHead}:${name}`, () => {
-          window.PostFilterState.selectedCardCds?.delete?.(cd);
-          window.PostFilterDraft?.selectedCardCds?.delete?.(cd);
-
-          try {
-            window.__renderSelectedCards_?.();
-          } catch (_) {}
-
-          window.DeckPostFilter?.updateActiveChipsBar?.();
-          window.DeckPostList?.applySortAndRerenderList?.(false);
-        }, 'chip-card');
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
       });
-    }
 
-    if (postId) {
-      addChip(`🔗投稿:${postLabel || postId}`, () => {
-        window.PostFilterState.selectedPostId = '';
-        window.PostFilterState.selectedPostLabel = '';
-        window.PostFilterDraft.selectedPostId = '';
-        window.PostFilterDraft.selectedPostLabel = '';
+      envIds.forEach((envId) => {
+          const env = getEnvironmentById_(envId);
+          const label = env?.label || envId;
+          chips.push({
+              label: `環境:${label}`,
+              className: 'chip-environment',
+              onRemove: () => {
+                  window.PostFilterState.selectedEnvironmentIds?.delete?.(envId);
+                  window.PostFilterDraft?.selectedEnvironmentIds?.delete?.(envId);
 
-        window.DeckPostFilter?.updateActiveChipsBar?.();
-        window.DeckPostList?.applySortAndRerenderList?.(false);
-      }, 'is-post');
-    }
+                  try {
+                      document
+                          .querySelectorAll(`.post-filter-env-btn[data-env-id="${CSS.escape(envId)}"]`)
+                          .forEach((btn) => btn.classList.remove('selected'));
+                  } catch (_) {}
 
-    const clr = document.createElement('span');
-    clr.className = 'chip-mini chip-clear';
-    clr.textContent = 'すべて解除';
-    clr.addEventListener('click', () => {
-      window.PostFilterState.selectedTags?.clear?.();
-      window.PostFilterState.selectedUserTags?.clear?.();
-      window.PostFilterDraft.selectedTags?.clear?.();
-      window.PostFilterDraft.selectedUserTags?.clear?.();
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
+      });
 
-      window.PostFilterState.selectedPosterKey = '';
-      window.PostFilterState.selectedPosterLabel = '';
-      window.PostFilterDraft.selectedPosterKey = '';
-      window.PostFilterDraft.selectedPosterLabel = '';
+      if (posterLabel) {
+          chips.push({
+              label: `投稿者:${posterLabel}`,
+              className: 'is-poster',
+              onRemove: () => {
+                  window.PostFilterState.selectedPosterKey = '';
+                  window.PostFilterState.selectedPosterLabel = '';
+                  window.PostFilterDraft.selectedPosterKey = '';
+                  window.PostFilterDraft.selectedPosterLabel = '';
 
-      window.PostFilterState.selectedCardCds?.clear?.();
-      window.PostFilterDraft.selectedCardCds?.clear?.();
-      window.PostFilterState.selectedCardMode = 'or';
-      window.PostFilterDraft.selectedCardMode = 'or';
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
+      }
 
-      window.PostFilterState.selectedPostId = '';
-      window.PostFilterState.selectedPostLabel = '';
-      window.PostFilterDraft.selectedPostId = '';
-      window.PostFilterDraft.selectedPostLabel = '';
+      if (cards.length) {
+          const labelHead = cardMode === 'and' ? 'AND' : 'OR';
 
-      try {
-        window.__renderSelectedCards_?.();
-      } catch (_) {}
+          cards.forEach((cd) => {
+              const name = (window.cardMap || window.allCardsMap || {})?.[cd]?.name || cd;
 
-      try {
-        document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
-      } catch (_) {}
+              chips.push({
+                  label: `🃏${labelHead}:${name}`,
+                  className: 'chip-card',
+                  onRemove: () => {
+                      window.PostFilterState.selectedCardCds?.delete?.(cd);
+                      window.PostFilterDraft?.selectedCardCds?.delete?.(cd);
 
-      try {
-        window.__renderSelectedUserTags_?.();
-      } catch (_) {}
+                      try {
+                          window.__renderSelectedCards_?.();
+                      } catch (_) {}
 
-      window.DeckPostFilter?.updateActiveChipsBar?.();
-      window.DeckPostList?.applySortAndRerenderList?.(false);
-    });
-    sc.appendChild(clr);
+                      window.DeckPostFilter?.updateActiveChipsBar?.();
+                      window.DeckPostList?.applySortAndRerenderList?.(false);
+                  }
+              });
+          });
+      }
+
+      if (postId) {
+          chips.push({
+              label: `🔗投稿:${postLabel || postId}`,
+              className: 'is-post',
+              onRemove: () => {
+                  window.PostFilterState.selectedPostId = '';
+                  window.PostFilterState.selectedPostLabel = '';
+                  window.PostFilterDraft.selectedPostId = '';
+                  window.PostFilterDraft.selectedPostLabel = '';
+
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
+      }
+
+      FilterChipBar.render({
+          rootId: 'active-chips-bar',
+          countText: '',
+          show: chips.length > 0,
+          showLeft: false,
+          chips,
+          clearLabel: 'すべて解除',
+          onClearAll: () => {
+              window.PostFilterState.selectedTags?.clear?.();
+              window.PostFilterState.selectedUserTags?.clear?.();
+              window.PostFilterState.selectedEnvironmentIds?.clear?.();
+              window.PostFilterDraft.selectedTags?.clear?.();
+              window.PostFilterDraft.selectedUserTags?.clear?.();
+              window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
+
+              window.PostFilterState.selectedPosterKey = '';
+              window.PostFilterState.selectedPosterLabel = '';
+              window.PostFilterDraft.selectedPosterKey = '';
+              window.PostFilterDraft.selectedPosterLabel = '';
+
+              window.PostFilterState.selectedCardCds?.clear?.();
+              window.PostFilterDraft.selectedCardCds?.clear?.();
+              window.PostFilterState.selectedCardMode = 'or';
+              window.PostFilterDraft.selectedCardMode = 'or';
+
+              window.PostFilterState.selectedPostId = '';
+              window.PostFilterState.selectedPostLabel = '';
+              window.PostFilterDraft.selectedPostId = '';
+              window.PostFilterDraft.selectedPostLabel = '';
+
+              try {
+                  window.__renderSelectedCards_?.();
+              } catch (_) {}
+
+              try {
+                  document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
+                  document.querySelectorAll('.post-filter-env-btn.selected').forEach((b) => b.classList.remove('selected'));
+              } catch (_) {}
+
+              try {
+                  window.__renderSelectedUserTags_?.();
+              } catch (_) {}
+
+              window.DeckPostFilter?.updateActiveChipsBar?.();
+              window.DeckPostList?.applySortAndRerenderList?.(false);
+          }
+      });
   }
-
-  //window.updateActiveChipsBar_ = updateActiveChipsBar_;
 
   // =========================
   // 7) 一覧フィルター再構築
@@ -623,6 +835,22 @@ function rebuildFilteredItems(){
 
   // ★ 投稿フィルター（タグ） — window.PostFilterState を見る
   const fs = window.PostFilterState;
+
+  // ① 環境（作成日ベース / 複数選択 OR）
+  const selectedEnvIds = Array.from(fs?.selectedEnvironmentIds || [])
+    .map((id) => String(id || '').trim())
+    .filter(Boolean);
+  if (selectedEnvIds.length) {
+    const selectedEnvs = selectedEnvIds
+      .map(getEnvironmentById_)
+      .filter(Boolean);
+
+    if (selectedEnvs.length) {
+      filtered = filtered.filter((item) =>
+        selectedEnvs.some((env) => isPostInEnvironment_(item, env))
+      );
+    }
+  }
 
   // ★ 投稿1件だけ表示（共有リンク用）
   const selPid = String(fs?.selectedPostId || '').trim();
@@ -794,6 +1022,7 @@ function rebuildFilteredItems(){
 
     applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
     applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
+    applied.selectedEnvironmentIds = new Set(Array.from(draft?.selectedEnvironmentIds || []));
     applied.selectedPosterKey = String(draft?.selectedPosterKey || '');
     applied.selectedPosterLabel = String(draft?.selectedPosterLabel || '');
     applied.selectedCardCds = new Set(Array.from(draft?.selectedCardCds || []));
@@ -811,6 +1040,7 @@ function rebuildFilteredItems(){
     window.PostFilterDraft ??= {
       selectedTags: new Set(),
       selectedUserTags: new Set(),
+      selectedEnvironmentIds: new Set(),
       selectedPosterKey: '',
       selectedPosterLabel: '',
       selectedCardCds: new Set(),
@@ -821,6 +1051,7 @@ function rebuildFilteredItems(){
 
     window.PostFilterDraft.selectedTags.clear();
     window.PostFilterDraft.selectedUserTags.clear();
+    window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
     window.PostFilterDraft.selectedPosterKey = '';
     window.PostFilterDraft.selectedPosterLabel = '';
     window.PostFilterDraft.selectedPostId = '';
@@ -832,6 +1063,7 @@ function rebuildFilteredItems(){
 
     try {
       document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
+      document.querySelectorAll('.post-filter-env-btn.selected').forEach((b) => b.classList.remove('selected'));
     } catch (_) {}
 
     const q = document.getElementById('userTagQuery');
@@ -860,7 +1092,9 @@ function rebuildFilteredItems(){
 
     window.PostFilterState.selectedTags?.clear?.();
     window.PostFilterState.selectedUserTags?.clear?.();
+    window.PostFilterState.selectedEnvironmentIds?.clear?.();
     window.PostFilterState.selectedCardCds?.clear?.();
+    window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
     window.PostFilterState.selectedPosterKey = '';
     window.PostFilterState.selectedPosterLabel = '';
     window.PostFilterState.selectedPostId = String(pid);
@@ -901,7 +1135,7 @@ function rebuildFilteredItems(){
     if (!Array.isArray(window.__cardNameIndex)) {
       const map = window.cardMap || {};
       window.__cardNameIndex = Object.values(map).map((card) => ({
-        cd5: String(card.cd || '').padStart(5, '0'),
+        cd5: window.normCd5 ? window.normCd5(card.cd) : String(card.cd || '').padStart(5, '0'),
         name: String(card.name || ''),
       }));
     }
@@ -922,11 +1156,13 @@ function rebuildFilteredItems(){
         return filtered
           .slice()
           .sort((a, b) => {
-            const cardA = window.cardMap?.[String(a.cd5 || '').padStart(5, '0')] || { cd: a.cd5 };
-            const cardB = window.cardMap?.[String(b.cd5 || '').padStart(5, '0')] || { cd: b.cd5 };
-            const keyA = window.getCardSortKeyFromCard(cardA);
-            const keyB = window.getCardSortKeyFromCard(cardB);
-            return window.compareCardKeys(keyA, keyB);
+            const cdA = window.normCd5 ? window.normCd5(a.cd5 || a.cd) : String(a.cd5 || a.cd || '').padStart(5, '0');
+            const cdB = window.normCd5 ? window.normCd5(b.cd5 || b.cd) : String(b.cd5 || b.cd || '').padStart(5, '0');
+
+            const cardA = window.cardMap?.[cdA] || { cd: cdA, type: '', cost: 0, power: 0 };
+            const cardB = window.cardMap?.[cdB] || { cd: cdB, type: '', cost: 0, power: 0 };
+
+            return window.compareCards?.(cardA, cardB) || cdA.localeCompare(cdB, 'ja');
           })
           .slice(0, limit);
       };
@@ -947,7 +1183,7 @@ function rebuildFilteredItems(){
     }
 
     resultEl.innerHTML = rows.map((row) => {
-      const cd5 = String(row.cd5 || row.cd || '').padStart(5, '0');
+      const cd5 = window.normCd5 ? window.normCd5(row.cd5 || row.cd) : String(row.cd5 || row.cd || '').padStart(5, '0');
 
       return `
         <button type="button" class="card-pick-item" data-cd="${cd5}">
@@ -971,6 +1207,18 @@ function rebuildFilteredItems(){
   function openCardPickModal(opts) {
     if (typeof opts === 'function') {
       opts = { onPicked: opts };
+    }
+
+    if (typeof window.openCardPickModal === 'function' && window.openCardPickModal !== openCardPickModal) {
+      const onPicked = typeof opts?.onPicked === 'function' ? opts.onPicked : null;
+      window.openCardPickModal({
+        ...opts,
+        onPicked: (picked) => {
+          const cd = (picked && typeof picked === 'object') ? picked.cd : picked;
+          onPicked?.(cd);
+        },
+      });
+      return;
     }
 
     cardPickOnPicked_ = typeof opts?.onPicked === 'function'
@@ -1034,6 +1282,7 @@ function rebuildFilteredItems(){
   function openPostFilter() {
     const m = document.getElementById('postFilterModal');
     if (m) m.style.display = 'flex';
+    renderEnvironmentFilterUI_();
   }
 
   /** フィルターモーダルを閉じる */
@@ -1051,6 +1300,7 @@ function rebuildFilteredItems(){
     buildPostFilterTagUI: buildPostFilterTagUI_,
     applySharedPostFromUrl: applySharedPostFromUrl_,
     shouldShowTag: shouldShowTag_,
+    normalizeUserTagSearch: normalizeUserTagSearch_,
     syncDraftFromApplied: syncDraftFromApplied_,
     updateActiveChipsBar: updateActiveChipsBar_,
     openCardPickModal,
@@ -1222,26 +1472,16 @@ function rebuildFilteredItems(){
         if (selEmpty) selEmpty.style.display = list.length ? 'none' : '';
       }
 
-      function escapeHtmlLocal_(s) {
-        return String(s).replace(/[&<>"']/g, (c) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-        })[c]);
-      }
-
       function renderSuggest_(queryRaw) {
         const freq = buildUserTagIndex_();
-        const query = String(queryRaw || '').trim().toLowerCase();
+        const query = normalizeUserTagSearch_(queryRaw);
         const selected = getDraftSet_();
 
         suggest.replaceChildren();
 
         const rows = [...freq.entries()]
           .filter(([t]) => !selected.has(t))
-          .filter(([t]) => !query || t.toLowerCase().includes(query))
+          .filter(([t]) => !query || normalizeUserTagSearch_(t).includes(query))
           .sort((a, b) => {
             if (b[1] !== a[1]) return b[1] - a[1];
             return a[0].localeCompare(b[0], 'ja');
@@ -1258,7 +1498,16 @@ function rebuildFilteredItems(){
           btn.type = 'button';
           btn.className = 'suggest-item';
           btn.dataset.utag = tag;
-          btn.innerHTML = `${escapeHtmlLocal_(tag)} <span class="c">${count}</span>`;
+
+          const label = document.createElement('span');
+          label.className = 'suggest-item-label';
+          label.textContent = tag;
+
+          const countBadge = document.createElement('span');
+          countBadge.className = 'c';
+          countBadge.textContent = String(count);
+
+          btn.append(label, countBadge);
 
           btn.addEventListener('click', (e) => {
             e.preventDefault();

@@ -37,75 +37,52 @@
   const updateDeckCode_ =
     (...args) => window.DeckPostApi?.updateDeckCode_?.(...args);
 
+  function normCd5_(cd) {
+    if (typeof window.normCd5 === 'function') return window.normCd5(cd);
+    const s = String(cd ?? '').trim();
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
+  }
+
   // =========================
   // 1) デッキ解説プリセット
   // =========================
-  const DECKNOTE_PRESETS = {
-    'deck-overview':
-`【デッキ概要】
-どんなコンセプトで作ったか、狙いの動きなど。
-例
-このデッキは〇〇を軸に△△を狙う構築です。□□とのシナジーが強力で、序盤から中盤にかけて盤面を制圧し、終盤は☆☆でフィニッシュを狙います。
+  const DECKNOTE_PRESETS = window.DeckNotePresets?.templates || {};
 
-【キーカード】
-主軸となるカード・シナジー解説。
-※詳しい解説はカード解説欄でも可
-例
-- 〇〇：このデッキのエースカード。□□とのコンボで大ダメージを狙えます。
+  function getDeckNotePresetTarget_(btn) {
+    return (
+      btn?.closest?.('.decknote-editor')?.querySelector('.decknote-textarea') ||
+      document.querySelector('.decknote-editor:not([hidden]) .decknote-textarea')
+    );
+  }
 
-【リーサルプラン】
-ライフ30点をどのように削るか、代表的な勝ち筋など。
-例
-8-8-8-6,10-10-10,8-10-10(+2) など。
-`,
+  function openDeckNoteCardRefPicker_(btn) {
+    const target = getDeckNotePresetTarget_(btn);
+    if (!target) return;
 
-    'play-guide':
-`【マリガン基準】
-初手で意識するカード、キープ基準など。
-例
-序盤使う→キープ
-終盤、メタカード→マリガン
+    const range = {
+      start: target.selectionStart ?? target.value.length,
+      end: target.selectionEnd ?? target.value.length
+    };
 
-【試合の立ち回り】
-試合の全体的な流れや意識するポイントなど。
-〈序盤〉
+    if (typeof window.openCardPickModal !== 'function') {
+      window.showMiniToast_?.('カード選択モーダルを読み込めませんでした');
+      return;
+    }
 
-〈中盤〉
+    window.openCardPickModal({
+      onPicked: (picked) => {
+        const name = String(picked?.name || '').trim();
+        if (!name) return;
+        window.DeckNotePresets?.insertText?.(target, `[[${name}]]`, range);
+      }
+    });
+  }
 
-〈終盤〉
-
-【プレイのコツ】
-状況判断やよくあるミスなど。
-例
-- △△を使うタイミングは重要。□□がある場合は早めに展開すること。
-`,
-
-    'matchup':
-`
-【相性一覧】
-〈有利対面〉
-〈不利対面〉
-
-【採用候補、対策カード】
-今回採用しなかったカードについて。
-環境・メタに合わせた検討予知など。
-例
-- △△：強力だが、□□とのシナジーが薄いため見送り。環境に○○が増えたら再検討。
-`,
-
-    'results':
-`【使用環境】
-使用期間・レート帯・環境など（例：シーズン〇〇／レート1600帯）
-
-【戦績】
-総試合数・勝敗（ざっくりでもOK）
-
-【課題・改善点】
-苦手な対面や構築上の弱点、今後調整したい点。
-
-【まとめ】
-使ってみた全体の印象、成果や気づきなど。`,
-  };
+  window.DeckNotePresets?.bindPresetUi?.({
+    key: 'deckPostEditor',
+    getTarget: getDeckNotePresetTarget_,
+    openCardRefPicker: openDeckNoteCardRefPicker_
+  });
 
   // =========================
   // 2) プリセット追記
@@ -121,15 +98,13 @@
     const preset = DECKNOTE_PRESETS[presetKey];
     if (!preset) return;
 
-    const cur = ta.value || '';
-
-    if (!cur.trim()) {
-      ta.value = preset;
-    } else {
-      const sep = cur.endsWith('\n') ? '\n' : '\n\n';
-      ta.value = cur + sep + preset;
+    if (window.DeckNotePresets?.appendText) {
+      window.DeckNotePresets.appendText(ta, preset);
+      return;
     }
 
+    const cur = ta.value || '';
+    ta.value = cur.trim() ? cur + (cur.endsWith('\n') ? '\n' : '\n\n') + preset : preset;
     ta.focus();
   }
 
@@ -224,6 +199,7 @@
       view.hidden = false;
 
       showActionToast_('デッキ解説を更新しました');
+      window.MesorogiaPwaInstall?.showNudge?.();
     } finally {
       saveBtn.disabled = false;
       saveBtn.textContent = prevText;
@@ -274,15 +250,13 @@
     grid.replaceChildren();
 
     const used = new Set();
-    const currentCd = String(
-      __cardNotesPickContext?.rowEl?.dataset?.cd || ''
-    ).trim().padStart(5, '0');
+    const currentCd = normCd5_(__cardNotesPickContext?.rowEl?.dataset?.cd);
 
     try {
       const rootEl = __cardNotesPickContext?.rootEl;
       if (rootEl) {
         rootEl.querySelectorAll('.post-card-note').forEach((row) => {
-          const cd = String(row.dataset.cd || '').trim().padStart(5, '0');
+          const cd = normCd5_(row.dataset.cd);
           if (cd) used.add(cd);
         });
       }
@@ -291,7 +265,7 @@
     if (currentCd) used.delete(currentCd);
 
     (candidates || []).forEach((c) => {
-      const cd5 = String(c?.cd5 || '').trim().padStart(5, '0');
+      const cd5 = normCd5_(c?.cd5);
       if (!cd5) return;
 
       const cell = document.createElement('div');
@@ -369,7 +343,7 @@
    */
   function makeCardNoteRow_(rowData) {
     const cdRaw = String(rowData?.cd || '').trim();
-    const cd5 = cdRaw ? cdRaw.padStart(5, '0') : '';
+    const cd5 = normCd5_(cdRaw);
     const cardMap = window.cardMap || {};
     const name = cd5
       ? ((cardMap[cd5] || {}).name || 'カード名未登録')
@@ -459,7 +433,7 @@
 
     const uniq = Array.from(
       new Set(
-        cds.map((x) => String(x || '').trim().padStart(5, '0')).filter(Boolean)
+        cds.map(normCd5_).filter(Boolean)
       )
     );
 
@@ -675,7 +649,7 @@
 
     const listRaw = readCardNotesFromEditor_(editor)
       .map((rowData) => ({
-        cd: String(rowData.cd || '').trim().padStart(5, '0'),
+        cd: normCd5_(rowData.cd),
         text: String(rowData.text || '').replace(/\r\n/g, '\n').trim(),
       }))
       .filter((rowData) => !!rowData.cd);
@@ -684,7 +658,7 @@
       const list = Array.isArray(arr) ? arr : [];
       return list
         .map((x) => ({
-          cd: String(x?.cd || '').trim().padStart(5, '0'),
+          cd: normCd5_(x?.cd),
           text: String(x?.text || '').replace(/\r\n/g, '\n').trim(),
         }))
         .filter((x) => !!x.cd);
@@ -734,6 +708,7 @@
       view.hidden = false;
 
       showActionToast_('カード解説を更新しました');
+      window.MesorogiaPwaInstall?.showNudge?.();
     } finally {
       saveBtn.disabled = false;
       saveBtn.textContent = prevText;
@@ -817,6 +792,7 @@
 
         modal.style.display = 'none';
         window.showMiniToast_?.('ユーザータグを保存しました');
+        window.MesorogiaPwaInstall?.showNudge?.();
       } finally {
         utSaveBtn.disabled = false;
         utSaveBtn.textContent = keep;
@@ -840,18 +816,6 @@
       }
 
       await window.openUserTagEditModal_(postId);
-      return;
-    }
-
-    // -------------------------
-    // プリセット追記
-    // -------------------------
-    const presetBtn = target.closest('.note-preset-btn');
-    if (presetBtn) {
-      const section = presetBtn.closest('.post-detail-section');
-      const ta = section?.querySelector('.decknote-textarea');
-      const presetKey = String(presetBtn.dataset.preset || '').trim();
-      appendPresetToTextarea_(ta, presetKey);
       return;
     }
 
@@ -1055,6 +1019,7 @@
       closeDeckCodeModal_();
 
       window.showMiniToast_('デッキコードを保存しました');
+      window.MesorogiaPwaInstall?.showNudge?.();
       return;
     }
 
@@ -1071,7 +1036,7 @@
       if (!cell || !__cardNotesPickContext) return;
       if (cell.classList.contains('disabled')) return;
 
-      const cd5 = String(cell.dataset.cd || '').trim().padStart(5, '0');
+      const cd5 = normCd5_(cell.dataset.cd);
       const cardMap = window.cardMap || {};
       const name = (cardMap[cd5] || {}).name || 'カード名未登録';
 

@@ -27,10 +27,20 @@
   window.CARDS_JSON_URL = window.CARDS_JSON_URL || './public/cards_latest.json';
   window.PACKS_JSON_URL = window.PACKS_JSON_URL || './public/packs.json';
 
+  function normalizeCd5ForCore_(cd) {
+    if (typeof window.normCd5 === 'function') return window.normCd5(cd);
+    const s = String(cd ?? '').trim();
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
+  }
+
+  function isLatestCardsUrl_(url) {
+    return /cards_latest\.json(?:[?#].*)?$/.test(String(url || ''));
+  }
+
 
   // =====================================================
   // 0.5) pack_name 文字列の分解（EN/JP抽出）＆ slug
-  //  - 例: "Awaking The Oracle「目覚めし神託」" -> {en:"Awaking The Oracle", jp:"目覚めし神託"}
+  //  - 例: "Awakening The Oracle「目覚めし神託」" -> {en:"Awakening The Oracle", jp:"目覚めし神託"}
   //  - 例: "Beyond the Sanctuary／聖域の先へ"   -> {en:"Beyond the Sanctuary", jp:"聖域の先へ"}
   //  - 例: "Drawn Sword" -> {en:"Drawn Sword", jp:""}
   // =====================================================
@@ -109,13 +119,23 @@
 
   let __latestCardsPromise = null;
 
+  function setCardsJsonUrl(url) {
+    const next = String(url || './public/cards_latest.json').trim() || './public/cards_latest.json';
+    if (window.CARDS_JSON_URL === next && !__latestCardsPromise) return;
+    window.CARDS_JSON_URL = next;
+    __latestCardsPromise = null;
+    window.cardMap = {};
+    window.allCardsMap = {};
+  }
+
   async function fetchLatestCards() {
     if (__latestCardsPromise) return __latestCardsPromise;
 
     __latestCardsPromise = (async () => {
       const allCards = await fetchJsonStrict_(window.CARDS_JSON_URL);
       if (!Array.isArray(allCards)) return [];
-      // is_latest だけ抽出
+      // latest 以外のスナップショットは、その時点で有効なカードをそのまま使う
+      if (!isLatestCardsUrl_(window.CARDS_JSON_URL)) return allCards.filter(Boolean);
       return allCards.filter(card => card && card.is_latest === true);
     })();
 
@@ -124,6 +144,57 @@
 
   // グローバル公開
   window.fetchLatestCards = window.fetchLatestCards || fetchLatestCards;
+  window.setCardsJsonUrl = window.setCardsJsonUrl || setCardsJsonUrl;
+
+  // =====================================================
+  // 2.5) カード画像パス解決
+  // =====================================================
+
+  function getCardImageSrc(cardOrCd, options = {}) {
+    const card = (cardOrCd && typeof cardOrCd === 'object') ? cardOrCd : null;
+    const cd = normalizeCd5ForCore_(card ? (card.cd ?? card.id) : cardOrCd);
+    const fallback = String(options.fallbackSrc || 'img/00000.webp');
+    if (!cd) return fallback;
+
+    const explicit = card?.image_path || card?.imagePath || card?.img || card?.image;
+    if (explicit) return String(explicit);
+
+    const variant = String(card?.image_variant || card?.imageVariant || '').trim();
+    const preferPreAdjustment =
+      options.preferPreAdjustment === true ||
+      variant === 'pre_adjustment' ||
+      variant === 'before_adjustment' ||
+      card?.has_pre_adjustment_image === true ||
+      card?.hasPreAdjustmentImage === true ||
+      card?.is_latest === false;
+
+    const base = preferPreAdjustment ? 'img/調整前/' : 'img/';
+    return `${base}${cd}.webp`;
+  }
+
+  function setCardImageSrc(img, cardOrCd, options = {}) {
+    if (!img) return;
+    const fallback = String(options.fallbackSrc || 'img/00000.webp');
+    const primary = getCardImageSrc(cardOrCd, options);
+    const cd = normalizeCd5ForCore_((cardOrCd && typeof cardOrCd === 'object') ? (cardOrCd.cd ?? cardOrCd.id) : cardOrCd);
+    const normal = cd ? `img/${cd}.webp` : fallback;
+
+    delete img.dataset.cardImageFallbackStep;
+    img.onerror = () => {
+      const step = Number(img.dataset.cardImageFallbackStep || 0);
+      img.dataset.cardImageFallbackStep = String(step + 1);
+      if (step === 0 && primary !== normal) {
+        img.src = normal;
+        return;
+      }
+      img.onerror = null;
+      img.src = fallback;
+    };
+    img.src = primary;
+  }
+
+  window.getCardImageSrc = window.getCardImageSrc || getCardImageSrc;
+  window.setCardImageSrc = window.setCardImageSrc || setCardImageSrc;
 
   // =====================================================
   // 3) cardMap 構築 & ensureCardMapLoaded（互換）
@@ -135,7 +206,7 @@
 
     for (const card of cards) {
       const cdRaw = card.cd ?? card.id ?? '';
-      const cd5 = String(cdRaw || '').trim().padStart(5, '0');
+      const cd5 = window.normCd5 ? window.normCd5(cdRaw) : String(cdRaw || '').trim().padStart(5, '0').slice(0, 5);
       if (!cd5) continue;
 
       window.cardMap[cd5] = {
@@ -149,11 +220,16 @@
         packName: card.packName ?? card.pack_name ?? '',
         pack_name: card.pack_name ?? '', // 互換（古い側が見ることがある）
         category: card.category || '',
+        CV: card.CV ?? '',
+        cv_kana: card.cv_kana ?? '',
         effect_name1: card.effect_name1 || '',
         effect_text1: card.effect_text1 || '',
         effect_name2: card.effect_name2 || '',
         effect_text2: card.effect_text2 || '',
         field: card.field ?? '',
+        image_path: card.image_path ?? card.imagePath ?? '',
+        image_variant: card.image_variant ?? card.imageVariant ?? '',
+        has_pre_adjustment_image: !!(card.has_pre_adjustment_image ?? card.hasPreAdjustmentImage),
         // ability: card.ability ?? '', --- IGNORE ---
         special_ability: (() => {
           const raw = (card.special_ability ?? '').trim();

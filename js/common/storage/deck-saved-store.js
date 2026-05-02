@@ -9,27 +9,71 @@
  * 依存（存在すれば使う）:
  * - window.formatYmd()
  * - window.readDeckNameInput() / window.writeDeckNameInput()
- * - window.readPostNote() / window.writePostNote()
- * - window.readUserTags() / window.writeUserTags()
- * - window.readSelectedTags() / window.writeSelectedTags()
- * - window.readCardNotes() / window.writeCardNotes()
  * ========================= */
 (function () {
     'use strict';
 
     const DEFAULT_KEY = 'savedDecks';
+    const DEFAULT_UPDATED_AT_KEY = 'savedDecksUpdatedAt';
     const DEFAULT_CAP = 20;
+    const listeners = new Set();
+    let displayList = null;
 
     function _safeJsonParse(raw, fallback) {
         try { return JSON.parse(raw); } catch { return fallback; }
     }
 
-    function _uniq(arr) {
-        return Array.from(new Set((arr || []).map(x => String(x ?? '').trim()).filter(Boolean)));
-    }
-
     function _ensureDate(v) {
         return v || (typeof window.formatYmd === 'function' ? window.formatYmd() : '');
+    }
+
+    function _newDeckId() {
+        const rand = Math.random().toString(36).slice(2, 8);
+        return `sd_${Date.now().toString(36)}_${rand}`;
+    }
+
+    function _touchUpdatedAt(key = DEFAULT_KEY) {
+        if (key !== DEFAULT_KEY) return '';
+        const updatedAt = new Date().toISOString();
+        try { localStorage.setItem(DEFAULT_UPDATED_AT_KEY, updatedAt); } catch {}
+        return updatedAt;
+    }
+
+    function _readUpdatedAt() {
+        try { return localStorage.getItem(DEFAULT_UPDATED_AT_KEY) || ''; } catch { return ''; }
+    }
+
+    function _isAccountDeckMode(key = DEFAULT_KEY) {
+        if (key !== DEFAULT_KEY) return false;
+        try {
+        const status = window.AccountSavedDecksSync?.getStatus?.() || {};
+        return status.source === 'account' || status.state === 'account' || status.state === 'syncing';
+        } catch {
+        return false;
+        }
+    }
+
+    function _isSavedDeckEditLocked(key = DEFAULT_KEY) {
+        if (key !== DEFAULT_KEY) return false;
+        try {
+        const sync = window.AccountSavedDecksSync || window.AccountAppDataSync;
+        if (sync && typeof sync.isReady === 'function' && !sync.isReady()) return true;
+        const status = sync?.getStatus?.() || {};
+        return !!(status.syncing || status.state === 'syncing');
+        } catch {
+        return false;
+        }
+    }
+
+    function _guardEdit(key = DEFAULT_KEY, opts = {}) {
+        if (opts.allowDuringSync || opts.persist === false) return null;
+        if (!_isSavedDeckEditLocked(key)) return null;
+        return { ok: false, reason: 'syncing' };
+    }
+
+    function _normalizeDeckId(v) {
+        const id = String(v || '').trim();
+        return id || _newDeckId();
     }
 
     // ---- 旧データを壊さず吸収するためのノーマライズ ----
@@ -37,27 +81,20 @@
         if (!d || typeof d !== 'object') return null;
 
         // 旧: {name, cardCounts, m, g, date}
-        // 将来: {name, cardCounts, m, g, date, note, poster, shareCode, selectTags, userTags, cardNotes}
+        // 現行: {id, name, cardCounts, m, g, date, shareCode, memo}
         const cardCounts = (d.cardCounts && typeof d.cardCounts === 'object') ? d.cardCounts : null;
         if (!cardCounts) return null;
 
         const out = {
+        id: _normalizeDeckId(d.id),
         name: String(d.name || '').trim() || '',
         cardCounts: { ...cardCounts },
         m: (d.m != null && String(d.m).trim()) ? String(d.m) : null,
         g: (d.g != null && Number.isFinite(+d.g)) ? (+d.g) : null,
         date: _ensureDate(d.date),
 
-        // 任意（後から追加してもOK）
-        note: (typeof d.note === 'string') ? d.note : '',
-        poster: (typeof d.poster === 'string') ? d.poster : '',
         shareCode: (typeof d.shareCode === 'string') ? d.shareCode : '',
-
-        selectTags: Array.isArray(d.selectTags) ? _uniq(d.selectTags) : [],
-        userTags: Array.isArray(d.userTags) ? _uniq(d.userTags) : [],
-
-        // cardNotes: [{cd,text}] 形式を想定。壊れてても空配列に落とす
-        cardNotes: Array.isArray(d.cardNotes) ? d.cardNotes : []
+        memo: (typeof d.memo === 'string') ? d.memo : ''
         };
 
         // 代表カードが deck に存在しないなら null
@@ -67,24 +104,64 @@
     }
 
     function _loadAll(key = DEFAULT_KEY) {
+        if (key === DEFAULT_KEY && Array.isArray(displayList)) {
+        return displayList.map(normalizeSavedDeck).filter(Boolean);
+        }
+
         const raw = localStorage.getItem(key);
         const arr = _safeJsonParse(raw || '[]', []);
         if (!Array.isArray(arr)) return [];
         const normalized = arr.map(normalizeSavedDeck).filter(Boolean);
+        const shouldPersistNormalized = arr.length !== normalized.length || arr.some(d => (
+        !d ||
+        !d.id ||
+        Object.prototype.hasOwnProperty.call(d, 'selectTags') ||
+        Object.prototype.hasOwnProperty.call(d, 'userTags') ||
+        Object.prototype.hasOwnProperty.call(d, 'note') ||
+        Object.prototype.hasOwnProperty.call(d, 'poster') ||
+        Object.prototype.hasOwnProperty.call(d, 'cardNotes') ||
+        !Object.prototype.hasOwnProperty.call(d, 'memo')
+        ));
 
         // date 欠落などがあれば補完して保存し直す
         let mutated = false;
         for (const d of normalized) {
         if (!d.date) { d.date = _ensureDate(''); mutated = true; }
         }
-        if (mutated) {
+        if (mutated || shouldPersistNormalized) {
         try { localStorage.setItem(key, JSON.stringify(normalized)); } catch {}
         }
         return normalized;
     }
 
-    function _saveAll(list, key = DEFAULT_KEY) {
+    function _emit(list) {
+        listeners.forEach(fn => {
+            try { fn(list); } catch {}
+        });
+    }
+
+    function _saveAll(list, key = DEFAULT_KEY, opts = {}) {
+        if (key === DEFAULT_KEY && (Array.isArray(displayList) || _isAccountDeckMode(key))) {
+        displayList = Array.isArray(list) ? list.map(normalizeSavedDeck).filter(Boolean) : [];
+        if (!_isAccountDeckMode(key)) _touchUpdatedAt(key);
+        if (!opts.silent) _emit(displayList);
+        return;
+        }
+
+        if (key === DEFAULT_KEY) displayList = null;
         localStorage.setItem(key, JSON.stringify(list));
+        _touchUpdatedAt(key);
+        if (!opts.silent) _emit(list);
+    }
+
+    function _setDisplayList(list, opts = {}) {
+        displayList = Array.isArray(list) ? list.map(normalizeSavedDeck).filter(Boolean) : [];
+        if (!opts.silent) _emit(displayList);
+        return displayList;
+    }
+
+    function _clearDisplayList() {
+        displayList = null;
     }
 
     function _isDeckEmpty(cardCounts) {
@@ -128,8 +205,18 @@
         return list[index] || null;
         },
 
+        getById(id, opts = {}) {
+        const key = opts.key || DEFAULT_KEY;
+        const deckId = String(id || '').trim();
+        if (!deckId) return null;
+        const list = _loadAll(key);
+        return list.find(d => d.id === deckId) || null;
+        },
+
         remove(index, opts = {}) {
         const key = opts.key || DEFAULT_KEY;
+        const locked = _guardEdit(key, opts);
+        if (locked) return locked;
         const list = _loadAll(key);
         if (!list[index]) return { ok: false, reason: 'not_found' };
         list.splice(index, 1);
@@ -139,8 +226,43 @@
 
         clear(opts = {}) {
         const key = opts.key || DEFAULT_KEY;
+        const locked = _guardEdit(key, opts);
+        if (locked) return locked;
+        if (key === DEFAULT_KEY && _isAccountDeckMode(key)) {
+            displayList = [];
+            _emit([]);
+            return { ok: true };
+        }
         localStorage.removeItem(key);
+        _touchUpdatedAt(key);
+        _emit([]);
         return { ok: true };
+        },
+
+        getUpdatedAt() {
+        return _readUpdatedAt();
+        },
+
+        replaceAll(list, opts = {}) {
+        const key = opts.key || DEFAULT_KEY;
+        const locked = _guardEdit(key, opts);
+        if (locked) return locked;
+        const normalized = Array.isArray(list) ? list.map(normalizeSavedDeck).filter(Boolean) : [];
+
+        if (key === DEFAULT_KEY && opts.persist === false) {
+            const shown = _setDisplayList(normalized, { silent: !!opts.silent });
+            return { ok: true, list: shown };
+        }
+
+        if (key === DEFAULT_KEY) _clearDisplayList();
+        _saveAll(normalized, key, { silent: !!opts.silent });
+        return { ok: true, list: normalized };
+        },
+
+        onChange(fn) {
+        if (typeof fn !== 'function') return () => {};
+        listeners.add(fn);
+        return () => listeners.delete(fn);
         },
 
         /**
@@ -149,7 +271,7 @@
          *  - deck: {cd:count}
          *  - representativeCd: string|null
          *  - name: string (任意) ※未指定なら readDeckNameInput() を試す
-         *  - note/poster/shareCode/selectTags/userTags/cardNotes (任意)
+         *  - shareCode/memo (任意)
          *  - getMainRace: function (任意) => race文字列
          */
         buildFromState(state = {}) {
@@ -167,47 +289,11 @@
             name = String(window.readDeckNameInput() || '').trim();
         }
 
-        // note
-        let note = (typeof state.note === 'string') ? state.note : '';
-        if (!note && typeof window.readPostNote === 'function') {
-            note = String(window.readPostNote() || '');
-        }
-
-        // poster
-        const poster = (typeof state.poster === 'string') ? state.poster : (document.getElementById('poster-name')?.value?.trim() || '');
-
         // shareCode
         const shareCode = (typeof state.shareCode === 'string') ? state.shareCode : (document.getElementById('post-share-code')?.value?.trim() || '');
 
-        // selectTags
-        let selectTags = Array.isArray(state.selectTags) ? state.selectTags : null;
-        if (!selectTags) {
-            try {
-            if (typeof window.readSelectedTags === 'function') selectTags = Array.from(window.readSelectedTags() || []);
-            } catch {}
-        }
-        if (!Array.isArray(selectTags)) selectTags = [];
-
-        // userTags
-        let userTags = Array.isArray(state.userTags) ? state.userTags : null;
-        if (!userTags) {
-            try {
-            if (typeof window.readUserTags === 'function') userTags = window.readUserTags() || [];
-            } catch {}
-        }
-        if (!Array.isArray(userTags)) userTags = [];
-
-        // cardNotes
-        let cardNotes = Array.isArray(state.cardNotes) ? state.cardNotes : null;
-        if (!cardNotes) {
-            try {
-            if (typeof window.readCardNotes === 'function') {
-                const v = window.readCardNotes();
-                cardNotes = Array.isArray(v) ? v : [];
-            }
-            } catch {}
-        }
-        if (!Array.isArray(cardNotes)) cardNotes = [];
+        // memo は将来の保存デッキ専用メモ欄用。投稿説明とは分ける。
+        const memo = (typeof state.memo === 'string') ? state.memo : '';
 
         // representative
         const m = (representativeCd && cardCounts[representativeCd]) ? String(representativeCd) : (Object.keys(cardCounts)[0] || null);
@@ -221,12 +307,8 @@
             m,
             g,
             date: _ensureDate(state.date),
-            note,
-            poster,
             shareCode,
-            selectTags,
-            userTags,
-            cardNotes
+            memo
         });
         },
 
@@ -240,6 +322,8 @@
          */
         upsert(savedDeck, opts = {}) {
         const key = opts.key || DEFAULT_KEY;
+        const locked = _guardEdit(key, opts);
+        if (locked) return locked;
         const cap = Number.isFinite(+opts.cap) ? (+opts.cap) : DEFAULT_CAP;
         const list = _loadAll(key);
 
@@ -257,6 +341,7 @@
             const yes = !!opts.confirmOverwrite(next.name);
             if (!yes) return { ok: false, reason: 'cancelled' };
             }
+            next.id = list[existingIndex].id || next.id;
             list[existingIndex] = next;
             _saveAll(list, key);
             return { ok: true, mode: 'overwrite', index: existingIndex, name: next.name, list };
@@ -273,4 +358,7 @@
     };
 
     window.SavedDeckStore = window.SavedDeckStore || SavedDeckStore;
+    try {
+        window.dispatchEvent(new CustomEvent('saved-deck-store:ready'));
+    } catch {}
 })();

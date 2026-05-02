@@ -59,7 +59,7 @@
         if (typeof opts.showCredit === 'boolean') spec.showCredit = opts.showCredit;
 
         // （以降は今のままでOK）
-        const loader = showLoadingOverlay('画像生成中…');
+        const loader = window.__DeckImgLoading?.show?.('画像生成中…');
         await nextFrame(); await nextFrame();
 
         const node = await buildShareNode(data, spec);
@@ -99,11 +99,11 @@
         target.style.overflow = prevOverflow;
 
         const name = (data.deckName || 'deck').replace(/[\/:*?"<>|]+/g,'_').slice(0,40);
-        downloadCanvas(canvas, `${name}_3x4.png`);
+        downloadCanvas(canvas, `${name}.png`);
         } finally {
         window.__isExportingDeckImg = false;
         node.remove();
-        hideLoadingOverlay(loader);
+        window.__DeckImgLoading?.hide?.(loader);
         }
     }
 
@@ -120,7 +120,11 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
     function buildDeckSummaryData(opts = {}){
         const cardMap = window.cardMap || {};
 
-        const normCd = (cd) => String(cd || '').trim().padStart(5,'0');
+        const normCd = (cd) => {
+            if (typeof window.normCd5 === 'function') return window.normCd5(cd);
+            const s = String(cd || '').trim();
+            return s ? s.padStart(5,'0').slice(0,5) : '';
+        };
 
         // deckRaw を「{cd:count}」に正規化
         const deckRaw = opts.deck ?? window.deck ?? {};
@@ -638,7 +642,7 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
     // 安全な画像ロード
     function loadCardImageSafe(cd){
         return new Promise((resolve)=>{
-        const code5 = (cd && String(cd).slice(0,5)) || '';
+        const code5 = window.normCd5 ? window.normCd5(cd) : ((cd && String(cd).slice(0,5)) || '');
         const img = new Image();
         img.decoding = 'async';
         img.loading = 'eager';
@@ -898,8 +902,6 @@ window.getCanvasSpecForPreview        = getCanvasSpec;
         document.body.appendChild(modal);
     }
     /* ✅ 追加：他機能（カードグループ等）から同じプレビューを使えるように公開 */
-    window.showDeckImgPreviewModal = window.showDeckImgPreviewModal || downloadCanvas;
-
     function getPreferredScale(){
         const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
         return Math.max(2, Math.min(3, dpr)); // 2〜3

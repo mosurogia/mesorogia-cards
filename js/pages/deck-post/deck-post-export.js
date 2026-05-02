@@ -119,8 +119,9 @@
    * 5桁cdへ正規化
    */
   function normalizeCd_(cd) {
+    if (typeof window.normCd5 === 'function') return window.normCd5(cd);
     const s = String(cd || '').trim();
-    return s ? s.padStart(5, '0') : '';
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
   }
 
   /**

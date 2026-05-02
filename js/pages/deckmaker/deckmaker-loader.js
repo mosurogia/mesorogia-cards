@@ -16,13 +16,13 @@
   // ロードするファイル（順番に注意）
   const FILES = [
     'deckmaker-entry.js',
-    'deck.js',
-    'filter.js',
-    'deck-ui.js',
-    'deck-shortage-ui.js',
-    'mulligan.js',
-    'post.js',
-    'campaign.js',
+    'deckmaker-deck.js',
+    'deckmaker-filter.js',
+    'deckmaker-ui.js',
+    'deckmaker-shortage-ui.js',
+    'deckmaker-mulligan.js',
+    'deckmaker-post.js',
+    'deckmaker-campaign.js',
     'deckmaker-tabs.js',
   ];
 

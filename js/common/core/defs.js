@@ -37,6 +37,20 @@
 })();
 
 // ========================
+// 共通：カードID正規化（5桁）
+// ========================
+(() => {
+  'use strict';
+
+  function normCd5(cd) {
+    const s = String(cd ?? '').trim();
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
+  }
+
+  window.normCd5 = window.normCd5 || normCd5;
+})();
+
+// ========================
 // 共通：DOM取得ショートハンド
 // ========================
 // - 互換：既に window.$id が定義されているなら上書きしない
@@ -55,16 +69,16 @@ window.BASE_PATH = window.BASE_PATH ?? '';
 // =======================================
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbzWFxosgtbVwm6KMrvCY7A48uyx79U4Amk86Ea_dnsVa5SGCq50PS3B5Ea4y2PaduGq/exec';
+  'https://script.google.com/macros/s/AKfycbwuPmx_Yz48oKvJxFjfV3sqnE5vNb3I3421SyiJ-tWk1Q3kiG6OtCX9fMa1KK03ZZyT/exec';
 
-window.DECKPOST_API_BASE = window.DECKPOST_API_BASE || window.GAS_API_BASE;
-window.AUTH_API_BASE     = window.AUTH_API_BASE     || window.GAS_API_BASE;
+window.DECKPOST_API_BASE ??= window.GAS_API_BASE;
+window.AUTH_API_BASE     ??= window.GAS_API_BASE;
 
 // ========================
 // 投稿・デッキ共通：タグ定義
 // ========================
 window.POST_TAG_CANDIDATES ??= [
-    "初心者向け",
+"初心者向け",
     "趣味構築",
     "ランク戦用",
     "大会入賞",

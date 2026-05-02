@@ -15,6 +15,58 @@
 
   // 一覧データをまとめて取得するときの1リクエスト上限
   const FETCH_LIMIT = 100;
+  let allListFetchPromise_ = null;
+
+  /**
+   * いいねボタンの中身を作る
+   */
+  function buildLikeButtonContent_(liked, likeCount) {
+    return `${liked ? '★' : '☆'}${Number(likeCount || 0)}`;
+  }
+
+  /**
+   * 共有URL時は初回から全件取得に切り替える
+   */
+  function shouldLoadAllItemsInitially_() {
+    try {
+      const sp = new URLSearchParams(window.location.search || '');
+      return !!(sp.get('pid') || sp.get('post'));
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /**
+   * フィルターボタンの準備状態を表示する
+   */
+  function updateFilterReadyState_() {
+    const btn = document.getElementById('filterBtn');
+    if (!btn) return;
+
+    const state = getDeckPostState_();
+    const ready = !!state?.list?.hasAllItems;
+    const loading = !ready;
+
+    btn.disabled = !ready;
+    btn.dataset.loading = loading ? '1' : '0';
+    btn.textContent = ready ? 'フィルター' : 'フィルター準備中…';
+    btn.title = ready
+      ? '全投稿を対象にフィルターできます'
+      : '全投稿の読み込み完了後に使えます';
+    btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+  }
+
+  /**
+   * マイページボタンの読み込み状態を表示する
+   */
+  function setToMineButtonLoading_(loading) {
+    const btn = document.getElementById('toMineBtn');
+    if (!btn) return;
+
+    btn.disabled = !!loading;
+    btn.dataset.loading = loading ? '1' : '0';
+    btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+  }
 
   // =========================
   // 1) state / 外部参照
@@ -38,6 +90,84 @@
    */
   function detail() {
     return window.DeckPostDetail || {};
+  }
+
+  /**
+   * 右詳細に合わせて左一覧のスクロール上限を調整
+   */
+  function updateListMaxHeightFromPane_(layoutId, paneId) {
+    const layout = document.getElementById(layoutId);
+    const pane = document.getElementById(paneId);
+    const master = layout?.querySelector('.post-master-column');
+    const list = master?.querySelector('.post-list');
+
+    if (!layout || !pane || !master || !list) return;
+
+    if (!window.matchMedia('(min-width: 1024px)').matches) {
+      layout.style.removeProperty('--post-list-max-height');
+      return;
+    }
+
+    const topFooter = master.querySelector('.list-footer--top');
+    const bottomFooter = master.querySelector('.list-footer--bottom');
+    const paneContent =
+      pane.querySelector('.post-detail-inner') ||
+      pane.querySelector('.post-detail-empty') ||
+      pane.firstElementChild ||
+      pane;
+    const paneHeight = Math.ceil(paneContent.getBoundingClientRect().height);
+    const reservedHeight =
+      (topFooter?.offsetHeight || 0) +
+      (bottomFooter?.offsetHeight || 0) +
+      24;
+    const nextMaxHeight = Math.max(320, paneHeight - reservedHeight);
+
+    layout.style.setProperty('--post-list-max-height', `${nextMaxHeight}px`);
+  }
+
+  /**
+   * 左右カラム高さの同期を初期化
+   */
+  function bindListPaneHeightSync_() {
+    if (window.__deckPostPaneHeightSyncBound) return;
+    window.__deckPostPaneHeightSyncBound = true;
+
+    const targets = [
+      { layoutId: 'postMainLayout', paneId: 'postDetailPane' },
+      { layoutId: 'mineMainLayout', paneId: 'postDetailPaneMine' },
+    ];
+
+    const refresh = () => {
+      window.requestAnimationFrame(() => {
+        targets.forEach(({ layoutId, paneId }) => {
+          updateListMaxHeightFromPane_(layoutId, paneId);
+        });
+      });
+    };
+
+    refresh();
+    window.addEventListener('resize', refresh, { passive: true });
+    window.addEventListener('orientationchange', refresh, { passive: true });
+
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(() => {
+        refresh();
+      });
+
+      targets.forEach(({ layoutId, paneId }) => {
+        const layout = document.getElementById(layoutId);
+        const pane = document.getElementById(paneId);
+        const master = layout?.querySelector('.post-master-column');
+        const topFooter = master?.querySelector('.list-footer--top');
+        const bottomFooter = master?.querySelector('.list-footer--bottom');
+
+        if (pane) observer.observe(pane);
+        if (topFooter) observer.observe(topFooter);
+        if (bottomFooter) observer.observe(bottomFooter);
+      });
+
+      window.__deckPostPaneHeightSyncObserver = observer;
+    }
   }
 
   // =========================
@@ -70,7 +200,7 @@
       const n = Number(nRaw || 0) || 0;
       if (!n) continue;
 
-      const cd5 = String(cd).padStart(5, '0');
+      const cd5 = window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5, '0');
       const packName =
         (cardMap[cd5] || {}).pack_name ||
         (cardMap[cd5] || {}).packName ||
@@ -132,7 +262,8 @@
    */
   function buildCardPc(item, opts = {}) {
     const D = detail();
-    const isMine = (opts.mode === 'mine');
+    const listMode = opts.mode || 'list';
+    const isMine = (listMode === 'mine');
     const bg = D.raceBg?.(item.races) || '';
 
     const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
@@ -147,8 +278,7 @@
     const likeCount = Number(item.likeCount || 0);
     const liked = !!item.liked;
     const favClass = liked ? ' active' : '';
-    const favSymbol = liked ? '★' : '☆';
-    const favText = `${favSymbol}${likeCount}`;
+    const favContent = buildLikeButtonContent_(liked, likeCount);
 
     const shareBtnHtml =
       `<button type="button" class="btn-post-share" data-postid="${escapeHtml(item.postId || '')}" aria-label="共有リンクをコピー">🔗</button>`;
@@ -163,12 +293,12 @@
       : `
         <div class="post-head-actions">
           ${shareBtnHtml}
-          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>
+          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favContent}</button>
         </div>
       `;
 
     return window.createElementFromHTML(`
-      <article class="post-card post-card--pc" data-postid="${escapeHtml(item.postId || '')}" style="${bg ? `--race-bg:${bg};` : ''}">
+      <article class="post-card post-card--pc" data-postid="${escapeHtml(item.postId || '')}" data-list-mode="${escapeHtml(listMode)}" style="${bg ? `--race-bg:${bg};` : ''}">
         <div class="sp-head">
           <div class="pc-head-left">
             ${detail().cardThumb?.(item.repImg, item.title) || ''}
@@ -226,7 +356,8 @@
    */
   function buildCardSp(item, opts = {}) {
     const D = detail();
-    const isMine = (opts.mode === 'mine');
+    const listMode = opts.mode || 'list';
+    const isMine = (listMode === 'mine');
 
     const mainRace = D.getMainRace?.(item.races) || '';
     const bg = D.raceBg?.(item.races) || '';
@@ -243,7 +374,7 @@
     const packChipsHtml = D.buildPackChipsHtml_?.(item) || '';
 
     const pidSan = String(item.postId || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-    const scope = isMine ? 'mine' : 'list';
+    const scope = listMode;
     const spPaneId = `sp-${scope}-${pidSan}`;
 
     const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
@@ -260,8 +391,7 @@
     const likeCount = Number(item.likeCount || 0);
     const liked = !!item.liked;
     const favClass = liked ? ' active' : '';
-    const favSymbol = liked ? '★' : '☆';
-    const favText = `${favSymbol}${likeCount}`;
+    const favContent = buildLikeButtonContent_(liked, likeCount);
 
     const notesHiddenId = `post-card-notes-hidden-${spPaneId}`;
     const notesValidId = `post-cardnote-validator-${spPaneId}`;
@@ -280,7 +410,7 @@
       : `
         <div class="post-head-actions">
           ${shareBtnHtml}
-          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favText}</button>
+          <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favContent}</button>
         </div>
       `;
 
@@ -345,7 +475,7 @@
     `;
 
     return window.createElementFromHTML(`
-      <article class="post-card post-card--sp" data-postid="${item.postId}" style="${bg ? `--race-bg:${bg};` : ''}">
+      <article class="post-card post-card--sp" data-postid="${escapeHtml(item.postId || '')}" data-list-mode="${escapeHtml(listMode)}" style="${bg ? `--race-bg:${bg};` : ''}">
         <div class="sp-head">
           <div class="sp-head-left">
             ${detail().cardThumb?.(item.repImg, item.title) || ''}
@@ -397,7 +527,7 @@
         </div>
 
         <div class="post-detail" hidden>
-          <div class="post-detail-inner" data-postid="${escapeHtml(item.postId || '')}">
+          <div class="post-detail-inner" data-postid="${escapeHtml(item.postId || '')}" data-list-mode="${escapeHtml(listMode)}">
             <div class="post-detail-section">
               <div class="post-detail-heading-row">
                 <div class="post-detail-heading">デッキリスト</div>
@@ -444,6 +574,18 @@
               </dd>
             </dl>
 
+            <div class="deck-compare-block">
+              <button type="button"
+                class="deck-compare-toggle"
+                aria-expanded="false"
+                aria-label="所持カードデータから不足カードを確認"
+                data-tooltip="所持率チェッカーのデータを参照して、このデッキの不足カードを確認します"
+                title="所持率チェッカーのデータを参照して、このデッキの不足カードを確認します">
+                不足カードを確認
+              </button>
+              <div class="deck-compare-result" hidden></div>
+            </div>
+
             <div class="post-detail-charts" data-postcharts="${escapeHtml(item.postId || '')}" data-paneid="${escapeHtml(spPaneId)}">
               <div class="post-detail-chartbox">
                 <div class="post-detail-charthead">
@@ -483,17 +625,19 @@
 
                 ${isMine ? `
                   <div class="decknote-editor" hidden>
-                    <div class="note-toolbar">
-                      <div class="note-presets-grid">
-                        <button type="button" class="note-preset-btn" data-preset="deck-overview">デッキ概要</button>
-                        <button type="button" class="note-preset-btn" data-preset="play-guide">プレイ方針</button>
-                        <button type="button" class="note-preset-btn" data-preset="matchup">対面考察</button>
-                        <button type="button" class="note-preset-btn" data-preset="results">実績レポート</button>
+                    <div class="note-preset-wrap note-preset-wrap--compact">
+                      <div class="note-toolbar">
+                        <div class="note-presets-grid">
+                          <button type="button" class="note-preset-menu-btn" data-preset-menu="templates">記事構成を追加</button>
+                          <button type="button" class="note-preset-menu-btn" data-preset-menu="sections">解説項目</button>
+                          <button type="button" class="note-card-ref-btn">文中にカードを追加</button>
+                        </div>
                       </div>
+                      <div class="note-preset-panel" hidden></div>
                     </div>
 
                     <div class="decknote-editor-hint">
-                      ※上のプリセットボタンを押すと定型文が挿入されます。
+                      ※見出しを追加したり、文中にカード名を挿入できます。
                     </div>
 
                     <textarea class="decknote-textarea" rows="14" data-original="${escapeHtml(deckNote || '')}">${escapeHtml(deckNote || '')}</textarea>
@@ -541,15 +685,50 @@
   }
 
   /**
+   * マイ投稿内の選択中タブを取得する
+   */
+  function getMineActiveTab_() {
+    const state = getDeckPostState_();
+    return state?.mine?.activeTab === 'liked' ? 'liked' : 'posts';
+  }
+
+  /**
+   * マイ投稿内タブ表示を更新する
+   */
+  function updateMineTabsUI_() {
+    const activeTab = getMineActiveTab_();
+    document.querySelectorAll('.mine-tab[data-mine-tab]').forEach((btn) => {
+      const active = btn.dataset.mineTab === activeTab;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  /**
+   * いいねしたデッキ一覧用の投稿を取得する
+   */
+  function getLikedDeckItems_() {
+    const state = getDeckPostState_();
+    return (state?.list?.allItems || []).filter((it) => !!it?.liked);
+  }
+
+  /**
    * マイ投稿件数表示更新
    */
-  function updateMineCountUI_() {
+  function updateMineCountUI_(tab = getMineActiveTab_(), totalOverride) {
     const state = getDeckPostState_();
-    const total = Number(state?.mine?.total || 0);
+    const total = Number(
+      totalOverride ?? (
+        tab === 'liked'
+          ? getLikedDeckItems_().length
+          : state?.mine?.total || 0
+      )
+    );
 
     const countTop = document.getElementById('resultCountMineTop');
     if (countTop) {
-      countTop.textContent = total ? `マイ投稿 ${total}件` : 'マイ投稿 0件';
+      const label = tab === 'liked' ? 'いいねしたデッキ' : 'マイ投稿';
+      countTop.textContent = `${label} ${total}件`;
     }
   }
 
@@ -626,7 +805,7 @@
     const selector = `.post-card[data-postid="${pid}"] .fav-btn`;
     document.querySelectorAll(selector).forEach((el) => {
       el.classList.toggle('active', !!liked);
-      el.textContent = `${liked ? '★' : '☆'}${Number(likeCount || 0)}`;
+      el.textContent = buildLikeButtonContent_(liked, likeCount);
     });
 
     const updateList = (list) => {
@@ -691,6 +870,11 @@
       const liked = !!res.liked;
       const likeCount = Number(res.likeCount || 0);
       applyLikeState_(pid, liked, likeCount);
+
+      const minePage = document.getElementById('pageMine');
+      if (minePage && !minePage.hidden && getMineActiveTab_() === 'liked') {
+        await loadMinePage(1);
+      }
     } finally {
       likePending[pid] = false;
       btn.disabled = false;
@@ -715,7 +899,9 @@
    * 右ペイン初期化HTML
    */
   function buildEmptyDetailPaneHtml_(mode = 'list') {
-    const accent = mode === 'mine' ? 'マイ投稿カード' : '投稿カード';
+    const accent = mode === 'mine'
+      ? 'マイ投稿カード'
+      : (mode === 'liked' ? 'いいねしたデッキカード' : '投稿カード');
 
     return `
       <div class="post-detail-empty">
@@ -791,7 +977,45 @@
     if (window.__deckPostListActionsBound) return;
     window.__deckPostListActionsBound = true;
 
-    document.addEventListener('click', async (e) => {
+document.addEventListener('click', async (e) => {
+
+    // =========================
+    // デッキ比較ポップアップ
+    // =========================
+    const deckComparePopupBtn = e.target.closest('#deckCompareNoticePopup [data-action]');
+    if (deckComparePopupBtn) {
+      const popup = document.getElementById('deckCompareNoticePopup');
+      const action = deckComparePopupBtn.dataset.action;
+      const postId = String(popup?.dataset?.postid || '').trim();
+
+      if (action === 'close') {
+        popup?.remove();
+        return;
+      }
+
+      if (action === 'auth-login' || action === 'auth-signup') {
+        popup?.remove();
+        const mode = action === 'auth-signup' ? 'signup' : 'login';
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal(mode);
+        } else {
+          document.querySelector(`[data-open="authLoginModal"][data-auth-entry="${mode}"]`)?.click();
+        }
+        return;
+      }
+
+      if (action === 'like') {
+        const favBtn = document.querySelector(
+          `.post-card[data-postid="${postId}"] .fav-btn`
+        );
+
+        if (favBtn) {
+          popup?.remove();
+          favBtn.click();
+        }
+        return;
+      }
+    }
       // =========================
       // いいね
       // =========================
@@ -887,43 +1111,106 @@
    */
   async function fetchAllList() {
     const state = getDeckPostState_();
-
-    const limit = FETCH_LIMIT;
-    let offset = 0;
-    let all = [];
-    let total = 0;
-
-    while (true) {
-      const res = await window.DeckPostApi.apiList({
-        limit,
-        offset,
-        mine: false,
-      });
-
-      if (!res || !res.ok) {
-        throw new Error((res && res.error) || 'list fetch failed');
-      }
-
-      const items = Array.isArray(res.items) ? res.items : [];
-      all.push(...items);
-
-      if (typeof res.total === 'number') {
-        total = res.total;
-      }
-
-      const nextOffset = (res.nextOffset ?? null);
-      if (nextOffset === null || items.length === 0) {
-        break;
-      }
-      offset = nextOffset;
+    if (state?.list?.hasAllItems) {
+      updateFilterReadyState_();
+      return state.list.allItems || [];
+    }
+    if (allListFetchPromise_) {
+      updateFilterReadyState_();
+      return allListFetchPromise_;
     }
 
-    state.list.allItems = all;
-    state.list.total = total || all.length;
-    state.list.hasAllItems = true;
+    updateFilterReadyState_();
+    allListFetchPromise_ = (async () => {
+      const limit = FETCH_LIMIT;
+      let offset = 0;
+      let all = [];
+      let total = 0;
+
+      while (true) {
+        const res = await window.DeckPostApi.apiList({
+          limit,
+          offset,
+          mine: false,
+        });
+
+        if (!res || !res.ok) {
+          throw new Error((res && res.error) || 'list fetch failed');
+        }
+
+        const items = Array.isArray(res.items) ? res.items : [];
+        all.push(...items);
+
+        if (typeof res.total === 'number') {
+          total = res.total;
+        }
+
+        const nextOffset = (res.nextOffset ?? null);
+        if (nextOffset === null || items.length === 0) {
+          break;
+        }
+        offset = nextOffset;
+      }
+
+      state.list.allItems = all;
+      state.list.items = all;
+      state.list.filteredItems = all;
+      state.list.total = total || all.length;
+      state.list.hasAllItems = true;
+      state.list.pageCache = {};
+
+      return all;
+    })().finally(() => {
+      allListFetchPromise_ = null;
+      updateFilterReadyState_();
+    });
+
+    return allListFetchPromise_;
+  }
+
+  /**
+   * 背景で全件取得を開始する
+   */
+  function prefetchAllListInBackground_() {
+    const state = getDeckPostState_();
+    if (state?.list?.hasAllItems || allListFetchPromise_) return;
+    updateFilterReadyState_();
+    fetchAllList().catch((e) => {
+      console.warn('prefetchAllListInBackground_ failed:', e);
+    });
+  }
+
+  /**
+   * 通常一覧の指定ページだけ取得
+   */
+  async function fetchListPage_(page) {
+    const state = getDeckPostState_();
+    const totalPages = Math.max(1, Number(state?.list?.totalPages || 1));
+    const p = Math.min(Math.max(Number(page || 1), 1), totalPages);
+    const offset = (p - 1) * PAGE_LIMIT;
+
+    const res = await window.DeckPostApi.apiList({
+      limit: PAGE_LIMIT,
+      offset,
+      mine: false,
+    });
+
+    if (!res || !res.ok) {
+      throw new Error((res && res.error) || 'list page fetch failed');
+    }
+
+    const items = Array.isArray(res.items) ? res.items : [];
+    const total = Number(res.total || 0);
+
+    state.list.items = items;
+    state.list.filteredItems = items;
+    state.list.total = total;
+    state.list.totalPages = Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT));
+    state.list.currentPage = Math.min(Math.max(p, 1), state.list.totalPages);
+    state.list.nextOffset = res.nextOffset ?? null;
     state.list.pageCache = {};
 
-    return all;
+    return items;
   }
 
   /**
@@ -934,6 +1221,10 @@
 
     // 全件取得されていない場合は取得する
     if (!state?.list?.hasAllItems) {
+      window.DeckPostList?.showListStatusMessage?.(
+        'loading',
+        '全投稿を読み込み中です…'
+      );
       await fetchAllList();
     }
 
@@ -991,11 +1282,46 @@
   /**
    * 一覧用：指定ページを描画
    */
-  function loadListPage(page) {
+  async function loadListPage(page) {
     const state = getDeckPostState_();
 
     const listEl = document.getElementById('postList');
     if (!listEl) return;
+
+    const requestedPage = Math.max(Number(page || 1), 1);
+    const hasCurrentPageItems =
+      Number(state?.list?.currentPage || 0) === requestedPage &&
+      Array.isArray(state?.list?.items) &&
+      state.list.items.length > 0;
+
+    if (!state?.list?.hasAllItems && requestedPage > 1) {
+      try {
+        listEl.replaceChildren();
+        showListStatusMessage('loading', '全投稿を読み込み中です…');
+        await fetchAllList();
+        window.DeckPostFilter?.rebuildFilteredItems?.();
+      } catch (e) {
+        console.error('全件取得に失敗しました', e);
+        showListStatusMessage(
+          'error',
+          '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+        );
+        return;
+      }
+    } else if (!state?.list?.hasAllItems && !hasCurrentPageItems) {
+      try {
+        listEl.replaceChildren();
+        showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+        await fetchListPage_(requestedPage);
+      } catch (e) {
+        console.error('一覧ページ取得に失敗しました', e);
+        showListStatusMessage(
+          'error',
+          '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+        );
+        return;
+      }
+    }
 
     const filtered = Array.isArray(state?.list?.filteredItems)
       ? state.list.filteredItems
@@ -1013,7 +1339,9 @@
 
     const start = (p - 1) * PAGE_LIMIT;
     const end = start + PAGE_LIMIT;
-    const pageItems = filtered.slice(start, end);
+    const pageItems = state?.list?.hasAllItems
+      ? filtered.slice(start, end)
+      : filtered;
 
     listEl.replaceChildren();
 
@@ -1133,16 +1461,163 @@
   }
 
   /**
+   * マイ投稿ページで使う認証トークンを取得する
+   */
+  function getMineAuthToken_() {
+    const state = getDeckPostState_();
+    return (
+      (window.Auth && window.Auth.token) ||
+      state?.token ||
+      window.DeckPostApi.resolveToken()
+    );
+  }
+
+  /**
+   * マイ投稿ページの未ログイン案内をタブごとに切り替える
+   */
+  function updateMineLoginMessage_(tab) {
+    const titleEl = document.getElementById('mine-error-title');
+    const msgEl = document.getElementById('mine-error-msg');
+    if (tab === 'liked') {
+      if (titleEl) titleEl.textContent = 'ここにいいねしたデッキが表示されます。';
+      if (msgEl) msgEl.textContent = 'ログインすると、いいねしたデッキ一覧を確認できます。';
+      return;
+    }
+
+    if (titleEl) titleEl.textContent = 'ここにあなたの投稿が表示されます。';
+    if (msgEl) msgEl.textContent = 'ログインすると、投稿したデッキ一覧を確認できます。';
+  }
+
+  /**
+   * マイ投稿ページの空表示をタブごとに切り替える
+   */
+  function updateMineEmptyMessage_(tab) {
+    const emptyEl = document.getElementById('mine-empty');
+    if (!emptyEl) return;
+
+    if (tab === 'liked') {
+      emptyEl.innerHTML = `
+        <p>まだいいねしたデッキがありません。</p>
+      `;
+      return;
+    }
+
+    emptyEl.innerHTML = `
+      <p>まだ投稿がありません。</p>
+      <p>
+        <a href="deckmaker.html" class="mine-empty-link">
+          🃏 デッキメーカーでデッキを作りましょう！
+        </a>
+      </p>
+    `;
+  }
+
+  /**
+   * マイ投稿ページの右ペインを初期表示に戻す
+   */
+  function resetMineDetailPane_(tab = getMineActiveTab_()) {
+    const paneMine = document.getElementById('postDetailPaneMine');
+    if (!paneMine) return;
+    paneMine.innerHTML = buildEmptyDetailPaneHtml_(tab === 'liked' ? 'liked' : 'mine');
+  }
+
+  /**
+   * PC幅では先頭カードを詳細ペインへ表示する
+   */
+  function showFirstMineCardDetail_() {
+    if (!window.matchMedia('(min-width: 1024px)').matches) return;
+    const firstCard = document.querySelector('#myPostList .post-card');
+    if (firstCard && typeof detail().showDetailPaneForArticle === 'function') {
+      detail().showDetailPaneForArticle(firstCard);
+    }
+  }
+
+  /**
+   * いいねしたデッキタブを描画する
+   */
+  async function loadLikedDeckPage_() {
+    const state = getDeckPostState_();
+    const listEl = document.getElementById('myPostList');
+    const emptyEl = document.getElementById('mine-empty');
+    const errorEl = document.getElementById('mine-error');
+    const loadingEl = document.getElementById('mine-loading');
+    if (!listEl) return;
+
+    updateMineTabsUI_();
+    updateMineLoginMessage_('liked');
+    updateMineEmptyMessage_('liked');
+
+    if (!getMineAuthToken_()) {
+      listEl.replaceChildren();
+      if (emptyEl) emptyEl.style.display = 'none';
+      if (errorEl) errorEl.style.display = '';
+      if (loadingEl) loadingEl.style.display = 'none';
+      updateMineCountUI_('liked', 0);
+      resetMineDetailPane_('liked');
+      return;
+    }
+
+    state.mine.loading = true;
+    if (loadingEl) loadingEl.style.display = '';
+    if (errorEl) errorEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    try {
+      if (!state?.list?.hasAllItems) {
+        listEl.replaceChildren();
+        listEl.innerHTML = '<div class="post-list-message">いいねしたデッキを読み込み中です…</div>';
+        await fetchAllList();
+      }
+
+      const likedItems = getLikedDeckItems_();
+      renderPostListInto('myPostList', likedItems, { mode: 'liked' });
+      updateMineCountUI_('liked', likedItems.length);
+
+      if (emptyEl) emptyEl.style.display = likedItems.length ? 'none' : '';
+      if (errorEl) errorEl.style.display = 'none';
+
+      if (likedItems.length) {
+        showFirstMineCardDetail_();
+      } else {
+        resetMineDetailPane_('liked');
+      }
+    } catch (e) {
+      console.error('loadLikedDeckPage_ error:', e);
+      if (errorEl) {
+        const titleEl = document.getElementById('mine-error-title');
+        const msgEl = document.getElementById('mine-error-msg');
+        if (titleEl) titleEl.textContent = 'いいねしたデッキの読み込みに失敗しました。';
+        if (msgEl) msgEl.textContent = '時間をおいてから、もう一度お試しください。';
+        errorEl.style.display = '';
+      }
+      resetMineDetailPane_('liked');
+    } finally {
+      state.mine.loading = false;
+      if (loadingEl) loadingEl.style.display = 'none';
+    }
+  }
+
+  /**
    * マイ投稿描画
    */
   async function loadMinePage(_page = 1) {
     const state = getDeckPostState_();
+    const activeTab = getMineActiveTab_();
+
+    updateMineTabsUI_();
+    if (activeTab === 'liked') {
+      await loadLikedDeckPage_();
+      return;
+    }
 
     const listEl = document.getElementById('myPostList');
     const emptyEl = document.getElementById('mine-empty');
     const errorEl = document.getElementById('mine-error');
     const loadingEl = document.getElementById('mine-loading');
     if (!listEl) return;
+
+    updateMineLoginMessage_('posts');
+    updateMineEmptyMessage_('posts');
 
     if (hasValidMineCache_() && !state.mine.loading) {
       const allItems = state.mine.items || [];
@@ -1153,22 +1628,16 @@
       state.mine.loading = false;
 
       renderPostListInto('myPostList', allItems, { mode: 'mine' });
-      updateMineCountUI_();
+      updateMineCountUI_('posts');
 
       if (emptyEl) emptyEl.style.display = allItems.length ? 'none' : '';
       if (errorEl) errorEl.style.display = 'none';
       if (loadingEl) loadingEl.style.display = 'none';
 
-      const paneMine = document.getElementById('postDetailPaneMine');
-      if (
-        paneMine &&
-        allItems.length &&
-        window.matchMedia('(min-width: 1024px)').matches
-      ) {
-        const firstCard = document.querySelector('#myPostList .post-card');
-        if (firstCard && typeof detail().showDetailPaneForArticle === 'function') {
-          detail().showDetailPaneForArticle(firstCard);
-        }
+      if (allItems.length) {
+        showFirstMineCardDetail_();
+      } else {
+        resetMineDetailPane_('posts');
       }
       return;
     }
@@ -1213,12 +1682,8 @@
           if (emptyEl) emptyEl.style.display = 'none';
           if (errorEl) errorEl.style.display = '';
 
-          const msgEl = document.getElementById('mine-error-msg');
-          if (msgEl) {
-            msgEl.textContent = 'マイ投稿を表示するにはログインが必要です。';
-          }
-
-          updateMineCountUI_();
+          updateMineLoginMessage_('posts');
+          updateMineCountUI_('posts');
           return;
         }
 
@@ -1241,30 +1706,16 @@
       window.DeckPostState.setMineItems(allItems, total || allItems.length);
 
       renderPostListInto('myPostList', allItems, { mode: 'mine' });
-      updateMineCountUI_();
+      updateMineCountUI_('posts');
 
       if (emptyEl) emptyEl.style.display = allItems.length ? 'none' : '';
 
       const paneMine = document.getElementById('postDetailPaneMine');
       if (paneMine) {
         if (!allItems.length) {
-          paneMine.innerHTML = `
-            <div class="post-detail-empty">
-              <div class="post-detail-empty-icon">👈</div>
-              <div class="post-detail-empty-text">
-                <div class="post-detail-empty-title">デッキ詳細パネル</div>
-                <p class="post-detail-empty-main">
-                  左の<span class="post-detail-empty-accent">マイ投稿カード</span>をクリックすると、<br>
-                  ここにそのデッキの詳細が表示されます。
-                </p>
-              </div>
-            </div>
-          `;
-        } else if (window.matchMedia('(min-width: 1024px)').matches) {
-          const firstCard = document.querySelector('#myPostList .post-card');
-          if (firstCard && typeof detail().showDetailPaneForArticle === 'function') {
-            detail().showDetailPaneForArticle(firstCard);
-          }
+          resetMineDetailPane_('posts');
+        } else {
+          showFirstMineCardDetail_();
         }
       }
     } catch (e) {
@@ -1288,7 +1739,11 @@
     updateMineLoginStatus();
 
     state.token = window.DeckPostApi.resolveToken();
+    allListFetchPromise_ = null;
+    state.list.hasAllItems = false;
+    state.list.allItems = [];
     window.DeckPostState.invalidateMineCache();
+    updateFilterReadyState_();
 
     if (window.DeckPostState.isInitialized()) {
       (async () => {
@@ -1314,9 +1769,11 @@
 
     if (mineVisible && !state.mine.loading) {
       (async () => {
-        try {
-          await prefetchMineItems_();
-        } catch (_) {}
+        if (getMineActiveTab_() === 'posts') {
+          try {
+            await prefetchMineItems_();
+          } catch (_) {}
+        }
         await window.DeckPostList?.loadMinePage?.(1);
       })();
     }
@@ -1364,6 +1821,9 @@
   async function init() {
     const state = getDeckPostState_();
 
+    bindListPaneHeightSync_();
+    updateFilterReadyState_();
+
     // =========================
     // 並び替えセレクト初期化
     // =========================
@@ -1389,14 +1849,39 @@
         '投稿一覧を読み込み中です…(5秒ほどかかります)'
       );
 
-      await window.DeckPostList?.fetchAllList?.();
+      if (shouldLoadAllItemsInitially_()) {
+        await window.DeckPostList?.fetchAllList?.();
+        window.DeckPostFilter?.applySharedPostFromUrl?.();
+        window.DeckPostFilter?.rebuildFilteredItems?.();
+      } else {
+        const res = await window.DeckPostApi.apiList({
+          limit: PAGE_LIMIT,
+          offset: 0,
+          mine: false,
+        });
+
+        if (!res || !res.ok) {
+          throw new Error((res && res.error) || 'initial list fetch failed');
+        }
+
+        const items = Array.isArray(res.items) ? res.items : [];
+        const total = Number(res.total || 0);
+
+        state.list.allItems = [];
+        state.list.items = items;
+        state.list.filteredItems = items;
+        state.list.total = total;
+        state.list.totalPages = Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT));
+        state.list.currentPage = 1;
+        state.list.nextOffset = res.nextOffset ?? null;
+        state.list.hasAllItems = false;
+        state.list.pageCache = {};
+        updateFilterReadyState_();
+      }
+
       prefetchMineItems_().catch(() => {});
-
-      window.DeckPostFilter?.applySharedPostFromUrl?.();
-      window.DeckPostFilter?.rebuildFilteredItems?.();
-
-      state.list.currentPage = 1;
-      window.DeckPostList?.loadListPage?.(1);
+      prefetchAllListInBackground_();
+      await window.DeckPostList?.loadListPage?.(1);
     } catch (e) {
       console.error('初期一覧取得に失敗しました', e);
       window.DeckPostList?.showListStatusMessage?.(
@@ -1421,14 +1906,19 @@
         clearTimeout(tid);
         tid = setTimeout(() => {
           // SP簡易オーバーレイが出っぱなしなら閉じる
-          const pane = document.getElementById('post-deckpeek-overlay');
+          const pane = document.getElementById('deckpeek-overlay');
           if (pane) pane.style.display = 'none';
 
           // 1023/1024 を跨いだら一覧を再描画
           const now = isPcWide();
           if (now !== last) {
             last = now;
-            window.DeckPostList?.applySortAndRerenderList?.();
+            const minePage = document.getElementById('pageMine');
+            if (minePage && !minePage.hidden) {
+              window.DeckPostList?.loadMinePage?.(1);
+            } else {
+              window.DeckPostList?.applySortAndRerenderList?.();
+            }
           }
         }, 120);
       };
@@ -1449,15 +1939,33 @@
     if (window.__deckPostPageSwitchBound) return;
     window.__deckPostPageSwitchBound = true;
 
+    document.querySelectorAll('.mine-tab[data-mine-tab]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const state = getDeckPostState_();
+        const nextTab = btn.dataset.mineTab === 'liked' ? 'liked' : 'posts';
+        if (state?.mine) state.mine.activeTab = nextTab;
+        updateMineTabsUI_();
+        await window.DeckPostList?.loadMinePage?.(1);
+      });
+    });
+
     document.getElementById('toMineBtn')?.addEventListener('click', async () => {
-      updateMineLoginStatus();
+      setToMineButtonLoading_(true);
 
       try {
-        await prefetchMineItems_();
-      } catch (_) {}
+        updateMineLoginStatus();
 
-      window.DeckPostList?.showMine?.();
-      await window.DeckPostList?.loadMinePage?.(1);
+        if (getMineActiveTab_() === 'posts') {
+          try {
+            await prefetchMineItems_();
+          } catch (_) {}
+        }
+
+        window.DeckPostList?.showMine?.();
+        await window.DeckPostList?.loadMinePage?.(1);
+      } finally {
+        setToMineButtonLoading_(false);
+      }
     });
 
     document.getElementById('backToListBtn')?.addEventListener('click', () => {

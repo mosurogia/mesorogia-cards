@@ -11,11 +11,72 @@
 
 (function(){
 const Auth = window.Auth;
+let authModalMode = 'login';
+let authUiLoading = false;
+
+function getAuthModeLabel(mode){
+    return mode === 'signup' ? '新規登録' : 'ログイン';
+}
+
+function setAuthModalMode(mode = 'login'){
+    authModalMode = mode === 'signup' ? 'signup' : 'login';
+
+    const isSignup = authModalMode === 'signup';
+    const title = document.getElementById('authLoginModalTitle');
+    const confirm = document.getElementById('auth-password-confirm');
+    const confirmRow = confirm?.closest?.('.poster-line');
+    const switchBtn = document.getElementById('auth-signup-btn');
+    const submitBtn = document.getElementById('auth-login-btn-submit');
+    const password = document.getElementById('auth-password');
+    const status = document.getElementById('auth-inline-status');
+
+    if (title) title.textContent = getAuthModeLabel(authModalMode);
+    if (confirmRow) confirmRow.style.display = isSignup ? '' : 'none';
+    if (!isSignup && confirm) confirm.value = '';
+
+    if (switchBtn) {
+    switchBtn.textContent = isSignup ? 'ログインはこちらから' : '新規登録はこちら';
+    switchBtn.classList.remove('primary');
+    switchBtn.classList.add('auth-mode-switch');
+    }
+
+    if (submitBtn) {
+    submitBtn.textContent = isSignup ? '新規登録' : 'ログイン';
+    submitBtn.classList.add('primary');
+    }
+
+    if (password) {
+    password.name = isSignup ? 'new-password' : 'current-password';
+    password.autocomplete = isSignup ? 'new-password' : 'current-password';
+    }
+
+    if (status) status.textContent = '';
+}
+
+function openAuthModal(mode = 'login'){
+    setAuthModalMode(mode);
+
+    const modal = document.getElementById('authLoginModal');
+    if (modal) modal.style.display = 'flex';
+
+    const target = document.getElementById('auth-username');
+    setTimeout(() => {
+    try { target?.focus?.(); } catch(_) {}
+    }, 0);
+}
+
+window.setAuthModalMode = setAuthModalMode;
+window.openAuthModal = openAuthModal;
 
 // ===== UI（グローバル公開版）====
 window.reflectLoginUI = function reflectLoginUI(){
     const loggedIn = !!(Auth?.user && Auth?.token && Auth?.verified);
     const user = loggedIn ? (Auth.user || {}) : null;
+    const authModal = document.getElementById('authLoginModal');
+    const isAuthModalOpen = !!(authModal && authModal.style.display !== 'none');
+    // ログイン処理中は、内部の認証成功反映で完了前にログイン済み表示へ切り替えない
+    const keepAuthFormVisible = !!(authUiLoading && isAuthModalOpen);
+    const showLoggedInPanel = loggedIn && !keepAuthFormVisible;
 
     // 既存のログインフォーム周り（大きい方）
     const $form     = document.getElementById('auth-login-form');
@@ -27,9 +88,13 @@ window.reflectLoginUI = function reflectLoginUI(){
     // 投稿フォーム内のミニ表示
     const $miniOut  = document.getElementById('auth-mini-loggedout');
     const $miniIn   = document.getElementById('auth-mini-loggedin');
+    const $cardsAuthActions = document.getElementById('cards-auth-actions');
+    const $summaryBar = document.querySelector('.summary-bar');
 
-    if ($form)   $form.style.display   = loggedIn ? 'none' : '';
-    if ($logged) $logged.style.display = loggedIn ? '' : 'none';
+    if ($form)   $form.style.display   = showLoggedInPanel ? 'none' : '';
+    if ($logged) $logged.style.display = showLoggedInPanel ? '' : 'none';
+    if ($cardsAuthActions) $cardsAuthActions.style.display = loggedIn ? 'none' : '';
+    if ($summaryBar) $summaryBar.classList.toggle('is-auth-logged-in', loggedIn);
 
     if (loggedIn){
     if ($disp) $disp.textContent = user.displayName || user.username || '(no name)';
@@ -46,6 +111,7 @@ window.reflectLoginUI = function reflectLoginUI(){
 
     if ($miniOut) $miniOut.style.display = loggedIn ? 'none' : '';
     if ($miniIn)  $miniIn.style.display  = loggedIn ? '' : 'none';
+    window.__CardGroupsUI?.refresh?.();
 
     // mine-login-note（マイ投稿ページ用）
     const note = document.querySelector('.mine-login-note');
@@ -72,6 +138,7 @@ window.reflectLoginUI = function reflectLoginUI(){
 
 // ===== 認証UIフィードバック =====
 function setAuthLoading(on, msg){
+    authUiLoading = !!on;
     const loginBtn  = document.getElementById('auth-login-btn-submit');
     const signupBtn = document.getElementById('auth-signup-btn');
     if (loginBtn)  loginBtn.disabled  = !!on;
@@ -91,6 +158,13 @@ function showAuthOK(msg){
 function showAuthError(msg){
     const st = document.getElementById('auth-inline-status');
     if (st) st.textContent = msg || 'エラーが発生しました';
+}
+
+function showForgotPasswordGuide(){
+    const st = document.getElementById('auth-inline-status');
+    if (!st) return;
+
+    st.textContent = 'ブラウザに保存されたパスワードをご確認ください。再設定が必要な場合は、ユーザー名・投稿者名・Xアカウント・投稿したデッキURLなど、本人確認に使える情報を添えて管理者へお問い合わせください。';
 }
 
 function startSlowTimer(ms = 5000) {
@@ -268,11 +342,23 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     }
 
-    document.getElementById('auth-signup-btn')?.addEventListener('click', doSignup);
+    const switchBtn = document.getElementById('auth-signup-btn');
+    if (switchBtn) {
+    switchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        setAuthModalMode(authModalMode === 'signup' ? 'login' : 'signup');
+        setTimeout(() => {
+        try { document.getElementById('auth-username')?.focus?.(); } catch(_) {}
+        }, 0);
+    });
+    }
+
     document.getElementById('auth-logout-btn')?.addEventListener('click', doLogout);
+    document.getElementById('auth-forgot-password')?.addEventListener('click', showForgotPasswordGuide);
 
     // 認証状態の初期化
     Auth?.init?.();
+    setAuthModalMode('login');
 
     // Enter 送信抑制（即ログイン防止）
     const loginForm = document.getElementById('auth-login-form');
@@ -285,9 +371,25 @@ window.addEventListener('DOMContentLoaded', () => {
     if (loginBtn) {
     loginBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        if (authModalMode === 'signup') {
+        doSignup();
+        } else {
         doLogin();
+        }
     });
     }
+
+    document.addEventListener('click', (e) => {
+    const entry = e.target.closest('[data-auth-entry]');
+    if (!entry) return;
+
+    const mode = entry.getAttribute('data-auth-entry');
+    openAuthModal(mode);
+
+    setTimeout(() => {
+        try { document.getElementById('auth-username')?.focus?.(); } catch(_) {}
+    }, 0);
+    });
 
     // 確認パスワード欄 Enter→登録
     const pwConfirm = document.getElementById('auth-password-confirm');

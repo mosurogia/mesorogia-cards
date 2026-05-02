@@ -38,6 +38,7 @@
         hasAllItems: false,
       },
       mine: {
+        activeTab: 'posts',
         items: [],
         loading: false,
         page: 1,

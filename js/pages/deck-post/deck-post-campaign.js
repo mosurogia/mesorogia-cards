@@ -94,6 +94,7 @@
         }
 
         window.DeckPostFilter?.refreshCampaignTagChips?.();
+        window.DeckPostFilter?.buildPostFilterTagUI?.();
     }
 
     /**

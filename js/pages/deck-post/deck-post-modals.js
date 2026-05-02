@@ -67,15 +67,15 @@
   // =========================
 
   function openManaHelp() {
-    openModalById_('manaEfficiencyHelpModal');
+    openModalById_('manaHelpModal');
   }
 
   function closeManaHelp() {
-    closeModalById_('manaEfficiencyHelpModal');
+    closeModalById_('manaHelpModal');
   }
 
   function bindManaHelpModal_() {
-    const modal = document.getElementById('manaEfficiencyHelpModal');
+    const modal = document.getElementById('manaHelpModal');
     const closeBtn = document.getElementById('mana-help-close');
 
     if (closeBtn && !closeBtn.dataset.boundManaHelpClose) {
@@ -83,7 +83,7 @@
       closeBtn.addEventListener('click', closeManaHelp);
     }
 
-    if (modal) bindBackdropClose_('manaEfficiencyHelpModal');
+    if (modal) bindBackdropClose_('manaHelpModal');
 
     if (!document.body.dataset.boundManaHelpOpen) {
       document.body.dataset.boundManaHelpOpen = '1';

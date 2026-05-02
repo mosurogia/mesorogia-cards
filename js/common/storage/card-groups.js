@@ -9,6 +9,7 @@
   'use strict';
 
   const LS_KEY = 'cardGroupsV1';
+  const LS_UPDATED_AT_KEY = 'cardGroupsUpdatedAt';
   const MAX_GROUPS = 10;
 
     // ========================================
@@ -56,19 +57,94 @@
     return 'g_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
   }
 
+  function normalizeCardsMap_(cards) {
+    const out = {};
+
+    if (Array.isArray(cards)) {
+      cards.forEach(cdRaw => {
+        const cd = window.normCd5 ? window.normCd5(cdRaw) : String(cdRaw || '').padStart(5, '0');
+        if (!cd || cd === '00000') return;
+        out[cd] = 1;
+      });
+      return out;
+    }
+
+    if (!cards || typeof cards !== 'object') return out;
+
+    Object.entries(cards).forEach(([cdRaw, value]) => {
+      const cd = window.normCd5 ? window.normCd5(cdRaw) : String(cdRaw || '').padStart(5, '0');
+      const count = (typeof value === 'number') ? (value | 0) : (value ? 1 : 0);
+      if (!cd || cd === '00000' || count <= 0) return;
+      out[cd] = 1;
+    });
+
+    return out;
+  }
+
+  function normalizeStateShape_(src) {
+    const base = (src && typeof src === 'object') ? clone_(src) : {};
+    const groups = (base.groups && typeof base.groups === 'object') ? base.groups : {};
+    const nextGroups = {};
+
+    Object.keys(groups).forEach(idRaw => {
+      const id = String(idRaw || '').trim();
+      if (!id) return;
+
+      const g = groups[id] || {};
+      nextGroups[id] = {
+        id,
+        name: String(g.name || ''),
+        fixed: !!g.fixed,
+        cards: normalizeCardsMap_(g.cards),
+      };
+    });
+
+    const orderSrc = Array.isArray(base.order) ? base.order : Object.keys(nextGroups);
+    const order = orderSrc
+      .map(v => String(v || '').trim())
+      .filter(id => !!nextGroups[id]);
+
+    Object.keys(nextGroups).forEach(id => {
+      if (!order.includes(id)) order.push(id);
+    });
+
+    return {
+      v: Number(base.v || 1),
+      order,
+      groups: nextGroups,
+      activeId: String(base.activeId || ''),
+      editingId: String(base.editingId || ''),
+      _editBase: null,
+      sys: (base.sys && typeof base.sys === 'object') ? base.sys : {},
+    };
+  }
+
   function read_() {
     try {
       const raw = localStorage.getItem(LS_KEY);
       const obj = raw ? JSON.parse(raw) : null;
       if (!obj || typeof obj !== 'object') return null;
-      return obj;
+      return normalizeStateShape_(obj);
     } catch {
       return null;
     }
   }
 
-  function write_(st) {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(st)); } catch {}
+  function touchUpdatedAt_() {
+    const updatedAt = new Date().toISOString();
+    try { localStorage.setItem(LS_UPDATED_AT_KEY, updatedAt); } catch {}
+    return updatedAt;
+  }
+
+  function readUpdatedAt_() {
+    try { return localStorage.getItem(LS_UPDATED_AT_KEY) || ''; } catch { return ''; }
+  }
+
+  function write_(st, opts = {}) {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(st));
+      if (opts.touch) touchUpdatedAt_();
+    } catch {}
   }
 
   function ensureDefault_() {
@@ -92,7 +168,7 @@
       }
       if (!st.sys.meta.deleted) {
         const cardsObj = {};
-        OFFICIAL_META.cards.forEach(cd => { cardsObj[String(cd).padStart(5,'0')] = 1; });
+        OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
         st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:cardsObj };
         st.order.push('meta');
         st.sys.meta.ver = OFFICIAL_META.ver;
@@ -132,7 +208,7 @@
       // ★ “未編集ユーザー”にだけ公式メタを反映
       if (!st.sys.meta.touched && st.sys.meta.ver !== OFFICIAL_META.ver) {
         const cardsObj = {};
-        OFFICIAL_META.cards.forEach(cd => { cardsObj[String(cd).padStart(5,'0')] = 1; });
+        OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
         st.groups.meta.cards = cardsObj;
         st.sys.meta.ver = OFFICIAL_META.ver;
       }
@@ -156,14 +232,77 @@
   const listeners = new Set();
   function emit_() { listeners.forEach(fn => { try { fn(state); } catch {} }); }
 
+  function clone_(obj) {
+    return JSON.parse(JSON.stringify(obj || {}));
+  }
+
   function getState() {
     state = ensureDefault_();
-    return JSON.parse(JSON.stringify(state));
+    return clone_(state);
   }
   function setState_(next) {
     state = next;
-    write_(state);
+    write_(state, { touch: true });
     emit_();
+  }
+
+  function isSyncReady_() {
+    const sync = window.AccountCardGroupsSync || window.AccountAppDataSync;
+    if (!sync || typeof sync.isReady !== 'function') return true;
+    return sync.isReady();
+  }
+
+  function notifyEditLocked_(reason) {
+    try {
+      window.dispatchEvent(new CustomEvent('card-groups:edit-locked', {
+        detail: { reason },
+      }));
+    } catch {}
+  }
+
+  function canEdit() {
+    const sync = window.AccountCardGroupsSync;
+    if (sync && typeof sync.isEditable === 'function') return sync.isEditable();
+    return isSyncReady_();
+  }
+
+  function guardEdit_() {
+    if (canEdit()) return null;
+    const reason = 'syncing';
+    notifyEditLocked_(reason);
+    return { ok: false, reason };
+  }
+
+  function hasUserData(stateLike) {
+    const st = stateLike ? clone_(stateLike) : getState();
+    const groups = st.groups || {};
+    const order = Array.isArray(st.order) ? st.order : Object.keys(groups);
+
+    if (order.some(id => id !== 'fav' && id !== 'meta' && groups[id])) return true;
+    if (Object.keys(groups.fav?.cards || {}).length > 0) return true;
+    if (st.sys?.fav?.touched || st.sys?.fav?.deleted) return true;
+    if (st.sys?.meta?.touched || st.sys?.meta?.deleted) return true;
+
+    return false;
+  }
+
+  function exportState() {
+    const st = getState();
+    st.activeId = '';
+    st.editingId = '';
+    st._editBase = null;
+    return st;
+  }
+
+  function replaceAll(nextState) {
+    const st = normalizeStateShape_(nextState);
+    st.activeId = '';
+    st.editingId = '';
+    st._editBase = null;
+    write_(st, { touch: true });
+    state = ensureDefault_();
+    emit_();
+    return { ok: true };
   }
 
   function listGroups() {
@@ -200,6 +339,9 @@ function uniqueName_(base, st, exceptId = '') {
 }
 
   function createGroup(name = '新しいグループ') {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     if (st.order.length >= MAX_GROUPS) return { ok: false, reason: 'limit' };
 
@@ -215,6 +357,9 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function renameGroup(id, name) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     const g = st.groups[id];
     if (!g) return { ok: false };
@@ -241,6 +386,9 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function deleteGroup(id) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     const g = st.groups[id];
     if (!g) return { ok: false };
@@ -265,6 +413,9 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function moveGroup(id, toIndex) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     const from = st.order.indexOf(id);
     if (from < 0) return { ok: false };
@@ -277,14 +428,26 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function setActive(id) {
+    if (!canEdit()) {
+      notifyEditLocked_('syncing');
+      return { ok: false, reason: 'syncing' };
+    }
+
     const st = getState();
-    st.activeId = (id && st.groups[id]) ? id : '';
+    const next = (id && st.groups[id]) ? id : '';
+    if (st.activeId === next) return { ok: true };
+    st.activeId = next;
     setState_(st);
     return { ok: true };
   }
 
   // ✅ active（フィルター）をトグル：同じなら解除
   function toggleActive(id){
+    if (!canEdit()) {
+      notifyEditLocked_('syncing');
+      return { ok: false, reason: 'syncing' };
+    }
+
     const st = getState();
     const next = (id && st.groups[id]) ? id : '';
     st.activeId = (st.activeId === next) ? '' : next;
@@ -293,11 +456,14 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function hashCardsObj_(cardsObj){
-    const keys = Object.keys(cardsObj || {}).map(s=>String(s).padStart(5,'0')).sort();
+    const keys = Object.keys(cardsObj || {}).map(s => window.normCd5 ? window.normCd5(s) : String(s).padStart(5,'0')).sort();
     return keys.join(',');
   }
 
   function startEditing(id) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     st.editingId = (id && st.groups[id]) ? id : '';
 
@@ -319,6 +485,9 @@ function uniqueName_(base, st, exceptId = '') {
 
   //新規作成→編集開始を “1回の保存” で行う（固まり対策）
   function createGroupAndEdit(name = '新しいグループ'){
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     if (st.order.length >= MAX_GROUPS) return { ok:false, reason:'limit' };
 
@@ -344,6 +513,9 @@ function uniqueName_(base, st, exceptId = '') {
 
 
   function stopEditing() {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
 
     // ★ 編集差分がある時だけ “touched” を立てる（fav/metaのみ）
@@ -370,10 +542,13 @@ function uniqueName_(base, st, exceptId = '') {
   }
 
   function toggleCardInGroup(groupId, cd) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
     const st = getState();
     const g = st.groups[groupId];
     if (!g) return { ok: false };
-    cd = String(cd || '').padStart(5, '0');
+    cd = window.normCd5 ? window.normCd5(cd) : String(cd || '').padStart(5, '0');
 
     g.cards = g.cards || {};
     if (g.cards[cd]) delete g.cards[cd];
@@ -383,11 +558,43 @@ function uniqueName_(base, st, exceptId = '') {
     return { ok: true };
   }
 
+  function addCardToGroup(groupId, cd) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
+    const st = getState();
+    const g = st.groups[groupId];
+    if (!g) return { ok: false };
+
+    cd = window.normCd5 ? window.normCd5(cd) : String(cd || '').padStart(5, '0');
+    g.cards = g.cards || {};
+
+    if (!g.cards[cd]) {
+      g.cards[cd] = 1;
+      setState_(st);
+    }
+
+    return { ok: true };
+  }
+
+  function clearGroupCards(groupId) {
+    const locked = guardEdit_();
+    if (locked) return locked;
+
+    const st = getState();
+    const g = st.groups[groupId];
+    if (!g) return { ok: false };
+
+    g.cards = {};
+    setState_(st);
+    return { ok: true };
+  }
+
   function hasCard(groupId, cd) {
     const st = getState();
     const g = st.groups[groupId];
     if (!g) return false;
-    cd = String(cd || '').padStart(5, '0');
+    cd = window.normCd5 ? window.normCd5(cd) : String(cd || '').padStart(5, '0');
     return !!(g.cards && g.cards[cd]);
   }
 
@@ -425,6 +632,11 @@ function uniqueName_(base, st, exceptId = '') {
   window.CardGroups = {
     MAX_GROUPS,
     getState,
+    getUpdatedAt: readUpdatedAt_,
+    exportState,
+    replaceAll,
+    hasUserData,
+    canEdit,
     listGroups,
     canCreate,
     createGroup,
@@ -437,6 +649,8 @@ function uniqueName_(base, st, exceptId = '') {
     createGroupAndEdit,
     stopEditing,
     toggleCardInGroup,
+    addCardToGroup,
+    clearGroupCards,
     hasCard,
     getActiveFilterSet,
     getEditingId,

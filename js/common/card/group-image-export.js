@@ -206,7 +206,11 @@
   // --------------------
   // utils
   // --------------------
-  function normCd(cd){ return String(cd || '').trim().padStart(5,'0').slice(0,5); }
+  function normCd(cd){
+    if (typeof window.normCd5 === 'function') return window.normCd5(cd);
+    const s = String(cd || '').trim();
+    return s ? s.padStart(5,'0').slice(0,5) : '';
+  }
 
   function loadCardImageSafe(cd){
     return new Promise((resolve)=>{

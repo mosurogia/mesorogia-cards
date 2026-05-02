@@ -23,6 +23,29 @@ const DeckPostApp = (() => {
     });
   }
 
+    // ===== 初期ハッシュ遷移 =====
+  async function openInitialHashPage_() {
+    const hash = String(location.hash || '').replace('#', '');
+
+    if (hash !== 'mine') return;
+
+    try {
+      // ログイン表示更新
+      window.DeckPostList?.handleAuthChanged?.();
+
+      // マイ投稿事前取得
+      await window.prefetchMineItems_?.();
+
+      // マイ投稿表示
+      window.DeckPostList?.showMine?.();
+
+      // 1ページ目読み込み
+      await window.DeckPostList?.loadMinePage?.(1);
+    } catch (e) {
+      console.error('初期マイ投稿表示失敗', e);
+    }
+  }
+
   // ===== 初期化 =====
   async function init() {
     if (initialized) return;
@@ -65,6 +88,9 @@ const DeckPostApp = (() => {
 
     // ⑤ キャンペーンUI初期化
     window.DeckPostCampaign?.init?.();
+
+    // ⑥ URLが deck-post.html#mine ならマイ投稿を開く
+    await openInitialHashPage_();
 
     initialized = true;
   }

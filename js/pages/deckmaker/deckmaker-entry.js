@@ -31,9 +31,9 @@
  * 【依存モジュール】
  * - common/card-core.js
  * - features/cardGrid.js（CardUI）
- * - deck.js（updateDeck / removeCard 等）
- * - filter.js
- * - deck-ui.js（任意）
+ * - deckmaker-deck.js（updateDeck / removeCard 等）
+ * - deckmaker-filter.js
+ * - deckmaker-ui.js（任意）
  * - loader.js（onDeckmakerReady）
  *
  * 【設計方針】
@@ -124,7 +124,7 @@
     const frag = document.createDocumentFragment();
 
     for (const raw of latest) {
-      const cd5 = String(raw.cd ?? raw.id ?? '').padStart(5, '0');
+      const cd5 = window.normCd5 ? window.normCd5(raw.cd ?? raw.id) : String(raw.cd ?? raw.id ?? '').padStart(5, '0');
       const card = window.cardMap?.[cd5] || { ...raw, cd: cd5 };
 
       // ✅ entryの差し替え生成を優先
@@ -158,7 +158,7 @@
     }
 
     // 2) オートセーブ復元（cardMap 準備後）
-    // deck.js は window.maybeRestoreFromStorage を公開している想定
+    // deckmaker-deck.js は window.maybeRestoreFromStorage を公開している想定
     try {
       window.maybeRestoreFromStorage?.();
 
