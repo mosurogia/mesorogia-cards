@@ -43,6 +43,8 @@
   }
 
   function parseCampaignRules_(camp){
+    const direct = camp?.rules;
+    if (direct && typeof direct === 'object') return direct || {};
     const raw = camp?.rulesJSON;
     if (!raw) return {};
     if (typeof raw === 'object') return raw || {};
@@ -121,6 +123,12 @@
     });
 
     return { ok: reasons.length === 0, reasons };
+  }
+
+  function getDeckConditionSummary_(camp){
+    const conditions = getDeckConditionRules_(camp);
+    if (!conditions.length) return '';
+    return conditions.map(formatDeckConditionLabel_).join(' / ');
   }
 
   function normalizeGameUserId_(value){
@@ -289,14 +297,33 @@
 
     const gameUserIdWrap = document.getElementById('campaign-game-user-id-wrap');
     const gameUserIdCriteria = criteriaRoot?.querySelector?.('[data-criteria="game-user-id"]');
+    const deckConditionCriteria = criteriaRoot?.querySelector?.('[data-criteria="deck-condition"]');
+    const deckConditionText = document.getElementById('campaign-deck-condition-text');
     const tagHelp = document.getElementById('campaign-tag-help');
+    const deckConditions = getDeckConditionRules_(camp);
+    const needsDeckCondition = deckConditions.length > 0;
 
     if (gameUserIdWrap) gameUserIdWrap.style.display = needsGameUserId ? '' : 'none';
     if (gameUserIdCriteria) gameUserIdCriteria.style.display = needsGameUserId ? '' : 'none';
+    if (deckConditionCriteria) deckConditionCriteria.style.display = needsDeckCondition ? '' : 'none';
+    if (deckConditionText && needsDeckCondition) {
+      deckConditionText.textContent = `デッキ条件：${getDeckConditionSummary_(camp)}`;
+    }
+    const requirementParts = [
+      ...(needsDeckCondition ? ['デッキ条件'] : []),
+      'ログイン',
+      'Xアカウント',
+      ...(needsGameUserId ? ['必要なID入力'] : []),
+    ];
+    const requirementText = `${requirementParts.join('、')}が完了すると選択できます`;
+    if (tagHelp) {
+      tagHelp.textContent = `${requirementText.replace('選択できます', '')}下の対象タグを選択できます。`;
+    }
 
-    function updateCriteriaUI({ isLoggedIn, hasX, hasTag, hasGameUserId }){
+    function updateCriteriaUI({ isLoggedIn, hasX, hasTag, hasGameUserId, deckOk }){
       if (!criteriaRoot) return;
       const map = {
+        'deck-condition': needsDeckCondition ? !!deckOk : true,
         login: !!isLoggedIn,
         x: !!hasX,
         tag: !!hasTag,
@@ -327,7 +354,8 @@
     const canSelectCampaignTag = ()=>{
       const st = getAuthState();
       const hasGameUserId = !needsGameUserId || isValidGameUserId_(readCampaignGameUserId_());
-      return !!(st.loggedIn && st.hasX && hasGameUserId);
+      const deckOk = checkDeckConditions_(camp).ok;
+      return !!(st.loggedIn && st.hasX && hasGameUserId && deckOk);
     };
 
     const setCampaignTagSelected = (on)=>{
@@ -358,30 +386,46 @@
       try{ window.updateCampaignBannerEligibility_?.(); }catch(_){}
     };
 
-    const refreshCampaignTagUI = ()=>{
+    const syncCampaignTagButtonState = (canSelect)=>{
       if (!tagRow || !tagBtn) return;
-      const canSelect = canSelectCampaignTag();
       tagRow.style.display = '';
       tagBtn.textContent = campTag() || 'キャンペーン';
       tagBtn.disabled = !canSelect;
       tagBtn.title = canSelect
         ? ''
-        : 'ログイン、Xアカウント、必要なID入力が完了すると選択できます';
+        : requirementText;
       if (tagHelp) tagHelp.classList.toggle('is-disabled', !canSelect);
+      tagBtn.classList.toggle('active', isCampaignTagSelected());
+      tagBtn.setAttribute('aria-pressed', String(isCampaignTagSelected()));
+    };
+
+    const refreshCampaignTagUI = ()=>{
+      if (!tagRow || !tagBtn) return;
+      const canSelect = canSelectCampaignTag();
+      syncCampaignTagButtonState(canSelect);
       if (!canSelect && isCampaignTagSelected()) setCampaignTagSelected(false);
-      setCampaignTagSelected(isCampaignTagSelected()); // UI sync only
     };
 
     bindCampaignGameUserIdInput_(refreshCampaignTagUI);
 
     window.updateCampaignBannerEligibility_ = function(){
       const st = getAuthState();
+      const deckResult = checkDeckConditions_(camp);
+      const canSelect = canSelectCampaignTag();
+      if (deckConditionText && needsDeckCondition) {
+        deckConditionText.textContent = deckResult.ok
+          ? `デッキ条件：${getDeckConditionSummary_(camp)}`
+          : `デッキ条件：${deckResult.reasons.join(' / ')}`;
+      }
       updateCriteriaUI({
         isLoggedIn: st.loggedIn,
         hasX: st.hasX,
         hasTag: isCampaignTagSelected(),
         hasGameUserId: isValidGameUserId_(readCampaignGameUserId_()),
+        deckOk: deckResult.ok,
       });
+      syncCampaignTagButtonState(canSelect);
+      if (!canSelect && isCampaignTagSelected()) setCampaignTagSelected(false);
     };
 
     if (tagRow && tagBtn){
@@ -400,6 +444,19 @@
         try { orig?.apply(this, args); } catch(_) {}
         try { refreshCampaignTagUI(); } catch(_) {}
       };
+    }
+
+    if (!window.__campaignDeckWatcherHooked){
+      window.__campaignDeckWatcherHooked = true;
+      ['addCard', 'removeCard', 'updateDeck', 'renderDeckList'].forEach(name => {
+        const orig = window[name];
+        if (typeof orig !== 'function') return;
+        window[name] = function(...args){
+          const ret = orig.apply(this, args);
+          setTimeout(() => window.updateCampaignBannerEligibility_?.(), 0);
+          return ret;
+        };
+      });
     }
 
     window.updateCampaignBannerEligibility_();
