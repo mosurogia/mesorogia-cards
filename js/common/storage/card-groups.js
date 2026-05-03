@@ -1,8 +1,8 @@
 /**
  * js/common/storage/card-groups.js
  * - カードグループのデータ/保存（localStorage）
- * - 最大10個
- * - 初期：お気に入り / メタカード（固定名）
+ * - ユーザー作成グループは最大10個
+ * - 初期：お気に入り / メタカード / 生成したいカード
  * - 複数所属OK
  */
 (function () {
@@ -11,6 +11,9 @@
   const LS_KEY = 'cardGroupsV1';
   const LS_UPDATED_AT_KEY = 'cardGroupsUpdatedAt';
   const MAX_GROUPS = 10;
+  const GENERATED_GROUP_ID = 'generated';
+  const DEFAULT_GROUP_IDS = new Set(['fav', 'meta', GENERATED_GROUP_ID]);
+  let persistLocal = true;
 
     // ========================================
   // 公式メタ（ここだけ日々更新する想定）
@@ -55,6 +58,23 @@
 
   function nowId_() {
     return 'g_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+  }
+
+  function isDefaultGroupId_(id) {
+    return DEFAULT_GROUP_IDS.has(String(id || ''));
+  }
+
+  function countUserGroups_(st) {
+    const order = Array.isArray(st?.order) ? st.order : [];
+    const groups = st?.groups || {};
+    return order.filter(id => groups[id] && !isDefaultGroupId_(id)).length;
+  }
+
+  function normalizeDefaultGroupOrder_(st) {
+    const defaults = ['fav', GENERATED_GROUP_ID, 'meta'].filter(id => st.groups?.[id]);
+    const users = (Array.isArray(st?.order) ? st.order : [])
+      .filter(id => st.groups?.[id] && !isDefaultGroupId_(id));
+    st.order = defaults.concat(users);
   }
 
   function normalizeCardsMap_(cards) {
@@ -141,10 +161,53 @@
   }
 
   function write_(st, opts = {}) {
+    if (opts.persist === false || !persistLocal) return;
     try {
       localStorage.setItem(LS_KEY, JSON.stringify(st));
       if (opts.touch) touchUpdatedAt_();
     } catch {}
+  }
+
+  function applyDefaultGroups_(st) {
+    st.groups = st.groups || {};
+    st.order = Array.isArray(st.order) ? st.order : [];
+    ensureSys_(st);
+
+    st.sys.fav.deleted = false;
+    st.sys.meta.deleted = false;
+
+    if (!st.groups.fav) {
+      st.groups.fav = { id:'fav', name:'お気に入り', fixed:true, cards:{} };
+    } else {
+      st.groups.fav.name = 'お気に入り';
+      st.groups.fav.fixed = true;
+      st.groups.fav.cards = normalizeCardsMap_(st.groups.fav.cards);
+    }
+
+    if (!st.groups.meta) st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:{} };
+    st.groups.meta.name = 'メタカード';
+    st.groups.meta.fixed = true;
+    if (!st.sys.meta.touched && st.sys.meta.ver !== OFFICIAL_META.ver) {
+      const cardsObj = {};
+      OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
+      st.groups.meta.cards = cardsObj;
+      st.sys.meta.ver = OFFICIAL_META.ver;
+    }
+
+    if (!st.groups[GENERATED_GROUP_ID]) {
+      st.groups[GENERATED_GROUP_ID] = { id:GENERATED_GROUP_ID, name:'生成したいカード', fixed:true, cards:{} };
+    } else {
+      st.groups[GENERATED_GROUP_ID].name = '生成したいカード';
+      st.groups[GENERATED_GROUP_ID].fixed = true;
+      st.groups[GENERATED_GROUP_ID].cards = normalizeCardsMap_(st.groups[GENERATED_GROUP_ID].cards);
+    }
+
+    st.order = st.order.filter(id => st.groups[id]);
+    normalizeDefaultGroupOrder_(st);
+
+    if (st.activeId && !st.groups[st.activeId]) st.activeId = '';
+    if (st.editingId && !st.groups[st.editingId]) st.editingId = '';
+    return st;
   }
 
   function ensureDefault_() {
@@ -161,67 +224,71 @@
 
       ensureSys_(st);
 
-      // 初回：fav/meta を作る（deleted でない限り）
-      if (!st.sys.fav.deleted) {
-        st.groups.fav = { id:'fav', name:'お気に入り', fixed:true, cards:{} };
-        st.order.push('fav');
-      }
-      if (!st.sys.meta.deleted) {
-        const cardsObj = {};
-        OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
-        st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:cardsObj };
-        st.order.push('meta');
-        st.sys.meta.ver = OFFICIAL_META.ver;
-      }
+      // 初回：固定グループを作る
+      st.groups.fav = { id:'fav', name:'お気に入り', fixed:true, cards:{} };
+      st.order.push('fav');
+      st.groups[GENERATED_GROUP_ID] = { id:GENERATED_GROUP_ID, name:'生成したいカード', fixed:true, cards:{} };
+      st.order.push(GENERATED_GROUP_ID);
+      const cardsObj = {};
+      OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
+      st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:cardsObj };
+      st.order.push('meta');
+      st.sys.meta.ver = OFFICIAL_META.ver;
 
       write_(st);
       return st;
     }
 
 
-    // 固定2グループが消えてたら復旧
+    // 固定グループが消えてたら復旧
     st.groups = st.groups || {};
     st.order = Array.isArray(st.order) ? st.order : [];
     ensureSys_(st);
 
+    st.sys.fav.deleted = false;
+    st.sys.meta.deleted = false;
+
     // fav
-    if (st.sys.fav.deleted) {
-      delete st.groups.fav;
-      st.order = st.order.filter(id => id !== 'fav');
-      if (st.activeId === 'fav') st.activeId = '';
-      if (st.editingId === 'fav') st.editingId = '';
-    } else {
-      if (!st.groups.fav) st.groups.fav = { id:'fav', name:'お気に入り', fixed:true, cards:{} };
-      if (!st.order.includes('fav')) st.order.unshift('fav');
-    }
+    if (!st.groups.fav) st.groups.fav = { id:'fav', name:'お気に入り', fixed:true, cards:{} };
+    st.groups.fav.name = 'お気に入り';
+    st.groups.fav.fixed = true;
+    st.groups.fav.cards = normalizeCardsMap_(st.groups.fav.cards);
+    if (!st.order.includes('fav')) st.order.unshift('fav');
 
     // meta
-    if (st.sys.meta.deleted) {
-      delete st.groups.meta;
-      st.order = st.order.filter(id => id !== 'meta');
-      if (st.activeId === 'meta') st.activeId = '';
-      if (st.editingId === 'meta') st.editingId = '';
-    } else {
-      if (!st.groups.meta) st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:{} };
-      if (!st.order.includes('meta')) st.order.unshift('meta');
+    if (!st.groups.meta) st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:{} };
+    st.groups.meta.name = 'メタカード';
+    st.groups.meta.fixed = true;
+    if (!st.order.includes('meta')) st.order.unshift('meta');
 
-      // ★ “未編集ユーザー”にだけ公式メタを反映
-      if (!st.sys.meta.touched && st.sys.meta.ver !== OFFICIAL_META.ver) {
-        const cardsObj = {};
-        OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
-        st.groups.meta.cards = cardsObj;
-        st.sys.meta.ver = OFFICIAL_META.ver;
-      }
+    // ★ “未編集ユーザー”にだけ公式メタを反映
+    if (!st.sys.meta.touched && st.sys.meta.ver !== OFFICIAL_META.ver) {
+      const cardsObj = {};
+      OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
+      st.groups.meta.cards = cardsObj;
+      st.sys.meta.ver = OFFICIAL_META.ver;
     }
+
+    // 生成したいカード（既存ユーザーにも配布し、名前編集/削除は不可）
+    if (!st.groups[GENERATED_GROUP_ID]) {
+      st.groups[GENERATED_GROUP_ID] = { id:GENERATED_GROUP_ID, name:'生成したいカード', fixed:true, cards:{} };
+    } else {
+      st.groups[GENERATED_GROUP_ID].name = '生成したいカード';
+      st.groups[GENERATED_GROUP_ID].fixed = true;
+      st.groups[GENERATED_GROUP_ID].cards = normalizeCardsMap_(st.groups[GENERATED_GROUP_ID].cards);
+    }
+    normalizeDefaultGroupOrder_(st);
 
 
     // 余計なIDを order から掃除
     st.order = st.order.filter(id => st.groups[id]);
 
-    // 上限超えてたら末尾を落とす（安全策）
-    while (st.order.length > MAX_GROUPS) {
-      const dropId = st.order.pop();
-      if (dropId && !st.groups[dropId]?.fixed) delete st.groups[dropId];
+    // ユーザー作成グループだけを上限対象にする
+    while (countUserGroups_(st) > MAX_GROUPS) {
+      const dropIndex = st.order.map(id => !!(!isDefaultGroupId_(id) && st.groups[id])).lastIndexOf(true);
+      if (dropIndex < 0) break;
+      const [dropId] = st.order.splice(dropIndex, 1);
+      if (dropId) delete st.groups[dropId];
     }
 
     write_(st);
@@ -237,7 +304,7 @@
   }
 
   function getState() {
-    state = ensureDefault_();
+    if (persistLocal) state = ensureDefault_();
     return clone_(state);
   }
   function setState_(next) {
@@ -278,8 +345,9 @@
     const groups = st.groups || {};
     const order = Array.isArray(st.order) ? st.order : Object.keys(groups);
 
-    if (order.some(id => id !== 'fav' && id !== 'meta' && groups[id])) return true;
+    if (order.some(id => !isDefaultGroupId_(id) && groups[id])) return true;
     if (Object.keys(groups.fav?.cards || {}).length > 0) return true;
+    if (Object.keys(groups[GENERATED_GROUP_ID]?.cards || {}).length > 0) return true;
     if (st.sys?.fav?.touched || st.sys?.fav?.deleted) return true;
     if (st.sys?.meta?.touched || st.sys?.meta?.deleted) return true;
 
@@ -294,13 +362,16 @@
     return st;
   }
 
-  function replaceAll(nextState) {
+  function replaceAll(nextState, opts = {}) {
     const st = normalizeStateShape_(nextState);
     st.activeId = '';
     st.editingId = '';
     st._editBase = null;
-    write_(st, { touch: true });
-    state = ensureDefault_();
+    applyDefaultGroups_(st);
+    if (opts.source === 'account' || opts.persist === false) persistLocal = false;
+    else if (opts.source === 'local' || opts.persist !== false) persistLocal = true;
+    write_(st, { touch: true, persist: opts.persist });
+    state = st;
     emit_();
     return { ok: true };
   }
@@ -312,7 +383,7 @@
 
   function canCreate() {
     const st = getState();
-    return st.order.length < MAX_GROUPS;
+    return countUserGroups_(st) < MAX_GROUPS;
   }
 
   // ✅ 同名回避用ユーティリティ
@@ -343,7 +414,7 @@ function uniqueName_(base, st, exceptId = '') {
     if (locked) return locked;
 
     const st = getState();
-    if (st.order.length >= MAX_GROUPS) return { ok: false, reason: 'limit' };
+    if (countUserGroups_(st) >= MAX_GROUPS) return { ok: false, reason: 'limit' };
 
     const id = nowId_();
 
@@ -364,22 +435,14 @@ function uniqueName_(base, st, exceptId = '') {
     const g = st.groups[id];
     if (!g) return { ok: false };
 
-    const isSystem = (id === 'fav' || id === 'meta');
-    if (g.fixed && !isSystem) return { ok: false, reason: 'fixed' };
+    if (isDefaultGroupId_(id)) return { ok: false, reason: 'fixed' };
+    if (g.fixed) return { ok: false, reason: 'fixed' };
 
     // ✅ 自分以外との同名を回避（自分自身は許可）
     const fallback = `グループ${st.order.indexOf(id) + 1}`;
     const safeName = uniqueName_(String(name || '').trim() || fallback, st, id);
 
-    const prev = String(g.name || '');
     g.name = safeName;
-
-    // ✅ システムは「実際に変わった時だけ touched」
-    if (isSystem && safeName !== prev) {
-      ensureSys_(st);
-      if (id === 'fav')  st.sys.fav.touched  = true;
-      if (id === 'meta') st.sys.meta.touched = true;
-    }
 
     setState_(st);
     return { ok: true };
@@ -393,15 +456,8 @@ function uniqueName_(base, st, exceptId = '') {
     const g = st.groups[id];
     if (!g) return { ok: false };
 
-    const isSystem = (id === 'fav' || id === 'meta');
-    if (g.fixed && !isSystem) return { ok: false, reason: 'fixed' };
-
-    // ✅ システムは「削除フラグ」を保存（次回復活させない）
-    if (isSystem) {
-      ensureSys_(st);
-      if (id === 'fav')  { st.sys.fav.deleted  = true; st.sys.fav.touched  = true; }
-      if (id === 'meta') { st.sys.meta.deleted = true; st.sys.meta.touched = true; }
-    }
+    if (isDefaultGroupId_(id)) return { ok: false, reason: 'fixed' };
+    if (g.fixed) return { ok: false, reason: 'fixed' };
 
     delete st.groups[id];
     st.order = st.order.filter(x => x !== id);
@@ -417,12 +473,20 @@ function uniqueName_(base, st, exceptId = '') {
     if (locked) return locked;
 
     const st = getState();
+    if (isDefaultGroupId_(id)) return { ok: false, reason: 'fixed' };
     const from = st.order.indexOf(id);
     if (from < 0) return { ok: false };
-    toIndex = Math.max(0, Math.min(st.order.length - 1, toIndex));
 
-    st.order.splice(from, 1);
-    st.order.splice(toIndex, 0, id);
+    const fixedCount = ['fav', GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).length;
+    const userOrder = st.order.filter(x => st.groups[x] && !isDefaultGroupId_(x));
+    const fromUserIndex = userOrder.indexOf(id);
+    const toUserIndex = Math.max(0, Math.min(userOrder.length - 1, toIndex - fixedCount));
+    if (fromUserIndex < 0) return { ok: false };
+    if (fromUserIndex === toUserIndex) return { ok: true };
+
+    userOrder.splice(fromUserIndex, 1);
+    userOrder.splice(toUserIndex, 0, id);
+    st.order = ['fav', GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).concat(userOrder);
     setState_(st);
     return { ok: true };
   }
@@ -489,7 +553,7 @@ function uniqueName_(base, st, exceptId = '') {
     if (locked) return locked;
 
     const st = getState();
-    if (st.order.length >= MAX_GROUPS) return { ok:false, reason:'limit' };
+    if (countUserGroups_(st) >= MAX_GROUPS) return { ok:false, reason:'limit' };
 
     const id = nowId_();
     const safeName = uniqueName_(name, st);

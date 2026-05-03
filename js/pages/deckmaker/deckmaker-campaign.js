@@ -54,6 +54,75 @@
     return !!rules.requireGameUserId;
   }
 
+  function getDeckConditionRules_(camp){
+    const rules = parseCampaignRules_(camp);
+    return Array.isArray(rules.deckConditions) ? rules.deckConditions : [];
+  }
+
+  function formatDeckConditionLabel_(cond){
+    const type = String(cond?.type || '').trim();
+    const rarity = String(cond?.rarity || '').trim();
+    const max = Number(cond?.max ?? cond?.value);
+    const min = Number(cond?.min ?? cond?.value);
+
+    if (cond?.label) return String(cond.label);
+    if (type === 'rarityMax' && rarity && Number.isFinite(max)) return `${rarity}${max}枚以下`;
+    if (type === 'rarityMin' && rarity && Number.isFinite(min)) return `${rarity}${min}枚以上`;
+    return '指定デッキ条件';
+  }
+
+  function getCurrentRarityCounts_(){
+    const deckMap = window.deck || {};
+    const cardMap = window.cardMap || window.allCardsMap || {};
+
+    try{
+      if (typeof window.buildDeckAnalysisCards === 'function' && typeof window.analyzeDeckCards === 'function'){
+        const cards = window.buildDeckAnalysisCards(deckMap, cardMap);
+        const analysis = window.analyzeDeckCards(cards);
+        return analysis?.rarityCounts || {};
+      }
+    }catch(_){}
+
+    const counts = {};
+    Object.entries(deckMap || {}).forEach(([cdRaw, nRaw]) => {
+      const n = Number(nRaw || 0) || 0;
+      if (!n) return;
+      const cd = typeof window.normCd5 === 'function'
+        ? window.normCd5(cdRaw)
+        : String(cdRaw ?? '').trim().padStart(5, '0').slice(0, 5);
+      const card = cardMap[cd] || cardMap[String(cdRaw)] || null;
+      const rarity = String(card?.rarity || '').trim();
+      if (!rarity) return;
+      counts[rarity] = (counts[rarity] || 0) + n;
+    });
+    return counts;
+  }
+
+  function checkDeckConditions_(camp){
+    const conditions = getDeckConditionRules_(camp);
+    if (!conditions.length) return { ok: true, reasons: [] };
+
+    const rarityCounts = getCurrentRarityCounts_();
+    const reasons = [];
+
+    conditions.forEach(cond => {
+      const type = String(cond?.type || '').trim();
+      const rarity = String(cond?.rarity || '').trim();
+      const count = Number(rarityCounts[rarity] || 0);
+      const max = Number(cond?.max ?? cond?.value);
+      const min = Number(cond?.min ?? cond?.value);
+      const label = formatDeckConditionLabel_(cond);
+
+      if (type === 'rarityMax' && rarity && Number.isFinite(max) && count > max){
+        reasons.push(`${label}（現在${count}枚）`);
+      }else if (type === 'rarityMin' && rarity && Number.isFinite(min) && count < min){
+        reasons.push(`${label}（現在${count}枚）`);
+      }
+    });
+
+    return { ok: reasons.length === 0, reasons };
+  }
+
   function normalizeGameUserId_(value){
     return String(value || '')
       .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
@@ -363,6 +432,11 @@
     }catch(_){}
     if (!hasTag) reasons.push('キャンペーンタグが未選択です');
 
+    const deckResult = checkDeckConditions_(camp);
+    if (!deckResult.ok) {
+      deckResult.reasons.forEach(reason => reasons.push(`デッキ条件未達：${reason}`));
+    }
+
     return { ok: reasons.length === 0, reasons };
   }
 
@@ -501,6 +575,7 @@
     onClickPostButton,
     readCampaignGameUserId_,
     isValidGameUserId_,
+    checkDeckConditions_,
   };
 
   // 互換（必要なら）

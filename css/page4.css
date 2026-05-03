@@ -1457,20 +1457,113 @@ body {
 
 .deck-shortage-row-main {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
+}
+
+.deck-shortage-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
 }
 
 .deck-shortage-name {
     font-weight: 700;
     color: #111827;
+    line-height: 1.35;
 }
 
 .deck-shortage-rarity-label,
 .deck-shortage-counts {
     font-size: .78rem;
     color: #6b7280;
+}
+
+.deck-shortage-side {
+    display: grid;
+    justify-items: end;
+    gap: 5px;
+    flex: 0 0 auto;
+    max-width: 104px;
+}
+
+.deck-shortage-group-add {
+    position: relative;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    max-width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #2563eb;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: .72rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.deck-shortage-group-add:hover {
+    background: #dbeafe;
+}
+
+.deck-shortage-group-add:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.deck-shortage-group-add.is-added {
+    border-color: #10b981;
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.deck-shortage-group-add[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 7px);
+    width: min(220px, calc(100vw - 40px));
+    padding: 7px 9px;
+    border-radius: 8px;
+    background: #111827;
+    color: #ffffff;
+    font-size: .72rem;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: left;
+    white-space: normal;
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 12;
+}
+
+.deck-shortage-group-add[data-tooltip]:hover::after,
+.deck-shortage-group-add[data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .deck-shortage-row {
+        grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .deck-shortage-side {
+        max-width: 92px;
+    }
+
+    .deck-shortage-group-add {
+        padding-inline: 7px;
+        font-size: .7rem;
+    }
 }
 
 .deck-compare-popup {

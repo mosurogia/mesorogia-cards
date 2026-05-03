@@ -102,7 +102,7 @@ function readOwnedDataSafe() {
 
         writeOwnedMapToStorage_(cache);
 
-        function emit_() {
+        function emit_(opts = {}) {
             dirty = true;
 
             listeners.forEach((fn) => {
@@ -111,7 +111,7 @@ function readOwnedDataSafe() {
                 } catch {}
             });
 
-            if (autosave) {
+            if (autosave && opts.persist !== false) {
                 writeOwnedMapToStorage_(cache, { touch: true });
             }
         }
@@ -161,17 +161,17 @@ function readOwnedDataSafe() {
                 emit_();
             },
 
-            replace(all) {
+            replace(all, opts = {}) {
                 cache = {};
                 for (const cd in all) {
                     const count = normalizeCount_(all[cd]);
                     if (count > 0) cache[String(cd)] = count;
                 }
-                emit_();
+                emit_(opts);
             },
 
-            replaceAll(all) {
-                this.replace(all);
+            replaceAll(all, opts = {}) {
+                this.replace(all, opts);
             },
 
             patch(partial) {

@@ -261,8 +261,9 @@ function buildOverallGridSectionHTML(cards){
   html += `    <span class="pack-title-text">ゲーム表示</span>`;
   html += `  </h3>`;
   html += `  <div class="checker-overall-note">`;
-  html += `    <div class="checker-note-sub">● アプリのカード一覧と同じ表示です</div>`;
-  html += `    <div class="checker-note-sub">※アプリ本体のフィルターでシグネチャーを「なし」にしてください</div>`;
+  html += `    <div class="checker-note-sub">● アプリのカード一覧とほとんど同じ表示です</div>`;
+  html += `    <div class="checker-note-sub">※アプリ本体のフィルターでシグネチャーと「なし」にしてエディションも「ノーマル」にしてください</div>`;
+  html += `    <div class="checker-note-sub">（シャインやプレミアムのカードは別で登録するのがおすすめです）</div>`;
   html += `  </div>`;
 
   html += `  <div class="checker-overall-pages" data-current-page="0" data-total-pages="${totalPages}">`;

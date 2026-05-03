@@ -618,6 +618,7 @@
       `;
     }
 
+    const generatedGroupId = 'generated';
     const rarityOrder = ['legend', 'gold', 'silver', 'bronze', 'unknown'];
     const rarityChips = rarityOrder
       .filter((key) => Number(result.rarityCounts[key] || 0) > 0)
@@ -638,10 +639,23 @@
         </div>
         <div class="deck-shortage-row-body">
           <div class="deck-shortage-row-main">
-            <span class="deck-shortage-name">${escHtml_(row.name)}</span>
-            <span class="deck-shortage-rarity-label">${escHtml_(row.rarity || '不明')}</span>
+            <div class="deck-shortage-text">
+              <span class="deck-shortage-name">${escHtml_(row.name)}</span>
+              <span class="deck-shortage-counts">必要${row.need} / 所持${row.owned} / 不足${row.missing}</span>
+            </div>
+            <div class="deck-shortage-side">
+              <span class="deck-shortage-rarity-label">${escHtml_(row.rarity || '不明')}</span>
+              <button type="button"
+                class="deck-shortage-group-add${window.CardGroups?.hasCard?.(generatedGroupId, row.cd) ? ' is-added' : ''}"
+                data-cd="${escHtml_(row.cd)}"
+                data-group-id="${generatedGroupId}"
+                data-tooltip="生成したいカードグループに追加します"
+                title="生成したいカードグループに追加します"
+                aria-label="${escHtml_(row.name)}を生成したいカードグループに追加">
+                ${window.CardGroups?.hasCard?.(generatedGroupId, row.cd) ? '追加済' : '生成候補に追加'}
+              </button>
+            </div>
           </div>
-          <div class="deck-shortage-counts">必要${row.need} / 所持${row.owned} / 不足${row.missing}</div>
         </div>
       </div>
     `).join('');
@@ -652,6 +666,99 @@
       <div class="deck-shortage-list">${rows}</div>
       ${checkerLink}
     `;
+  }
+
+  function updateDeckShortageGroupButtons_(cd) {
+    const safeCd = normCd5_(cd);
+    if (!safeCd) return;
+
+    document.querySelectorAll(`.deck-shortage-group-add[data-cd="${safeCd}"]`).forEach((button) => {
+      button.classList.add('is-added');
+      button.textContent = '追加済';
+      button.setAttribute('aria-label', '生成したいカードグループに追加済み');
+    });
+  }
+
+  function hasCardGroupUserData_() {
+    const state = window.CardGroups?.getState?.();
+    if (window.CardGroups?.hasUserData) return window.CardGroups.hasUserData(state);
+    return !!Object.keys(state?.groups?.generated?.cards || {}).length;
+  }
+
+  function shouldWriteLocalCardGroupsDirectly_() {
+    const status = window.AccountCardGroupsSync?.getStatus?.()
+      || window.AccountAppDataSync?.getStatus?.()
+      || {};
+    return String(status.source || status.state || '') === 'account' && !hasCardGroupUserData_();
+  }
+
+  function addCardToLocalGeneratedGroup_(cd) {
+    const safeCd = normCd5_(cd);
+    if (!safeCd) return { ok: false };
+
+    try {
+      const key = 'cardGroupsV1';
+      const updatedAtKey = 'cardGroupsUpdatedAt';
+      const raw = localStorage.getItem(key);
+      const state = raw ? JSON.parse(raw) : {};
+      const groups = (state.groups && typeof state.groups === 'object') ? state.groups : {};
+      const order = Array.isArray(state.order) ? state.order : [];
+      const generated = groups.generated || { id: 'generated', name: '生成したいカード', fixed: true, cards: {} };
+
+      generated.id = 'generated';
+      generated.name = '生成したいカード';
+      generated.fixed = true;
+      generated.cards = (generated.cards && typeof generated.cards === 'object') ? generated.cards : {};
+      generated.cards[safeCd] = 1;
+
+      groups.generated = generated;
+      if (!order.includes('generated')) order.push('generated');
+
+      const nextState = Object.assign({}, state, {
+        v: Number(state.v || 1),
+        order,
+        groups,
+      });
+
+      localStorage.setItem(key, JSON.stringify(nextState));
+      localStorage.setItem(updatedAtKey, new Date().toISOString());
+      return { ok: true };
+    } catch (_) {
+      return { ok: false };
+    }
+  }
+
+  function showDeckShortageGroupToast_(message) {
+    if (typeof window.showActionToast === 'function') {
+      window.showActionToast(message);
+      return;
+    }
+    if (typeof window.showMiniToast_ === 'function') {
+      window.showMiniToast_(message);
+    }
+  }
+
+  function handleDeckShortageGroupAdd_(button) {
+    const cd = normCd5_(button?.dataset?.cd);
+    const groupId = String(button?.dataset?.groupId || 'generated');
+    if (!cd || !window.CardGroups?.addCardToGroup) {
+      showDeckShortageGroupToast_('カードグループを読み込めませんでした');
+      return;
+    }
+
+    const result = shouldWriteLocalCardGroupsDirectly_()
+      ? addCardToLocalGeneratedGroup_(cd)
+      : window.CardGroups.addCardToGroup(groupId, cd);
+    if (!result?.ok) {
+      const message = result?.reason === 'syncing'
+        ? 'カードグループ同期中です。少し待ってから追加してください'
+        : 'カードグループに追加できませんでした';
+      showDeckShortageGroupToast_(message);
+      return;
+    }
+
+    updateDeckShortageGroupButtons_(cd);
+    showDeckShortageGroupToast_('生成したいカードに追加しました');
   }
 
   function buildDeckCompareCheckerLinkHtml_() {
@@ -2725,6 +2832,14 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
       e.preventDefault();
       e.stopPropagation();
       await handleDeckCompareClick_(deckCompareBtn);
+      return;
+    }
+
+    const shortageGroupAddBtn = e.target.closest('.post-detail-inner .deck-shortage-group-add');
+    if (shortageGroupAddBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleDeckShortageGroupAdd_(shortageGroupAddBtn);
       return;
     }
 

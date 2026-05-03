@@ -16,6 +16,8 @@
 
 function qs(sel, root = document) { return root.querySelector(sel); }
 const escapeHtml_ = window.escapeHtml_;
+const GENERATED_GROUP_ID = 'generated';
+const DEFAULT_GROUP_IDS = new Set(['fav', 'meta', GENERATED_GROUP_ID]);
 
 function ensureReady_() {
     return !!(window.CardGroups && document.getElementById('cards-groups-list') && document.getElementById('grid'));
@@ -105,6 +107,10 @@ function sumGroupCards_(cardsObj) {
     else if (v) total += 1; // boolean等は1枚扱い
   }
   return total;
+}
+
+function isDefaultGroup_(id) {
+  return DEFAULT_GROUP_IDS.has(String(id || ''));
 }
 
 // UI側の選択解除を外部から呼べるようにする（cardFilter から使う）
@@ -210,6 +216,7 @@ function renderSidebar_() {
     const isEditing = !!st.editingId;
     const selectedGroup = hasSel ? st.groups[uiSelectedId] : null;
     const selectedCardTotal = sumGroupCards_(selectedGroup?.cards || {});
+    const selectedFixedLocked = isDefaultGroup_(uiSelectedId);
 
     // 編集ボタン：通常は「選択が必要」／編集中は「終了ボタン」なので常に押せる
     {
@@ -224,7 +231,7 @@ function renderSidebar_() {
     {
     const b = qs('#cg-op-del', host);
     if (b) {
-        b.disabled = !canEditGroups || !hasSel;
+        b.disabled = !canEditGroups || !hasSel || selectedFixedLocked;
         b.classList.toggle('is-disabled', b.disabled);
     }
     }
@@ -242,7 +249,7 @@ function renderSidebar_() {
     ['#cg-op-up', '#cg-op-down'].forEach(sel => {
     const b = qs(sel, host);
     if (!b) return;
-    b.disabled = !canEditGroups || (!hasSel) || isEditing;
+    b.disabled = !canEditGroups || (!hasSel) || isEditing || selectedFixedLocked;
     b.classList.toggle('is-disabled', b.disabled);
     });
 
@@ -461,6 +468,7 @@ function bindRowEvents_(root) {
     e.preventDefault();
     e.stopPropagation();
     if (window.CardGroups.canEdit?.() === false) return;
+    if (isDefaultGroup_(gid)) return;
 
     uiSelectedId = gid;
     const input = row.querySelector('.cg-name-input');
