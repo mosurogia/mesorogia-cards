@@ -3,7 +3,7 @@
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10001,
     "link":false,
     "link_cd":10001,
@@ -34,13 +34,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10002,
     "link":false,
     "link_cd":10002,
@@ -71,13 +74,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10003,
     "link":false,
     "link_cd":10003,
@@ -108,13 +114,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10004,
     "link":false,
     "link_cd":10004,
@@ -145,13 +154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/調整前\/10004.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10005,
     "link":false,
     "link_cd":10005,
@@ -182,13 +194,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10006,
     "link":false,
     "link_cd":10006,
@@ -219,13 +234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10007,
     "link":false,
     "link_cd":10007,
@@ -256,13 +274,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10008,
     "link":false,
     "link_cd":10008,
@@ -293,13 +314,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10009,
     "link":false,
     "link_cd":10009,
@@ -330,13 +354,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10010,
     "link":false,
     "link_cd":10010,
@@ -367,13 +394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10011,
     "link":false,
     "link_cd":10011,
@@ -404,13 +434,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10012,
     "link":false,
     "link_cd":10012,
@@ -441,13 +474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10013,
     "link":false,
     "link_cd":10013,
@@ -478,13 +514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10014,
     "link":false,
     "link_cd":10014,
@@ -515,13 +554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10015,
     "link":false,
     "link_cd":10015,
@@ -552,13 +594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10016,
     "link":false,
     "link_cd":10016,
@@ -589,13 +634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10017,
     "link":false,
     "link_cd":10017,
@@ -626,13 +674,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10019,
     "link":false,
     "link_cd":10019,
@@ -663,13 +714,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10020,
     "link":false,
     "link_cd":10020,
@@ -700,13 +754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10021,
     "link":false,
     "link_cd":10021,
@@ -737,13 +794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10022,
     "link":false,
     "link_cd":10022,
@@ -774,13 +834,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10023,
     "link":false,
     "link_cd":10023,
@@ -811,13 +874,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10024,
     "link":false,
     "link_cd":10024,
@@ -848,13 +914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10025,
     "link":false,
     "link_cd":10025,
@@ -885,13 +954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10026,
     "link":false,
     "link_cd":10026,
@@ -922,13 +994,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10027,
     "link":true,
     "link_cd":10027,
@@ -959,13 +1034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10028,
     "link":false,
     "link_cd":10028,
@@ -996,13 +1074,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10029,
     "link":false,
     "link_cd":10029,
@@ -1033,13 +1114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10030,
     "link":false,
     "link_cd":10030,
@@ -1070,13 +1154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10031,
     "link":false,
     "link_cd":10031,
@@ -1107,13 +1194,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10031.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20001,
     "link":false,
     "link_cd":20001,
@@ -1144,13 +1234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20002,
     "link":false,
     "link_cd":20002,
@@ -1181,13 +1274,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20003,
     "link":false,
     "link_cd":20003,
@@ -1218,13 +1314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20004,
     "link":false,
     "link_cd":20004,
@@ -1255,13 +1354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20005,
     "link":false,
     "link_cd":20005,
@@ -1292,13 +1394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20006,
     "link":false,
     "link_cd":20006,
@@ -1329,13 +1434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20007,
     "link":false,
     "link_cd":20007,
@@ -1366,13 +1474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20008,
     "link":false,
     "link_cd":20008,
@@ -1403,13 +1514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20009,
     "link":false,
     "link_cd":20009,
@@ -1440,13 +1554,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20010,
     "link":false,
     "link_cd":20010,
@@ -1477,13 +1594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20011,
     "link":false,
     "link_cd":20011,
@@ -1514,13 +1634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20012,
     "link":false,
     "link_cd":20012,
@@ -1551,13 +1674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20013,
     "link":false,
     "link_cd":20013,
@@ -1588,13 +1714,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20014,
     "link":false,
     "link_cd":20014,
@@ -1625,13 +1754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20015,
     "link":false,
     "link_cd":20015,
@@ -1662,13 +1794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20016,
     "link":false,
     "link_cd":20016,
@@ -1699,13 +1834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20017,
     "link":true,
     "link_cd":20017,
@@ -1736,13 +1874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20018,
     "link":false,
     "link_cd":20018,
@@ -1773,13 +1914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20019,
     "link":false,
     "link_cd":20019,
@@ -1810,13 +1954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20020,
     "link":false,
     "link_cd":20020,
@@ -1847,13 +1994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20021,
     "link":false,
     "link_cd":20021,
@@ -1884,13 +2034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20022,
     "link":false,
     "link_cd":20022,
@@ -1921,13 +2074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20023,
     "link":false,
     "link_cd":20023,
@@ -1958,13 +2114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20024,
     "link":false,
     "link_cd":20024,
@@ -1995,13 +2154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20025,
     "link":false,
     "link_cd":20025,
@@ -2032,13 +2194,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20026,
     "link":false,
     "link_cd":20026,
@@ -2069,13 +2234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20027,
     "link":false,
     "link_cd":20027,
@@ -2106,13 +2274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20028,
     "link":false,
     "link_cd":20028,
@@ -2143,13 +2314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20029,
     "link":false,
     "link_cd":20029,
@@ -2180,13 +2354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20030,
     "link":false,
     "link_cd":20030,
@@ -2217,13 +2394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30001,
     "link":false,
     "link_cd":30001,
@@ -2254,13 +2434,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30002,
     "link":false,
     "link_cd":30002,
@@ -2291,13 +2474,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30003,
     "link":false,
     "link_cd":30003,
@@ -2328,13 +2514,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30004,
     "link":false,
     "link_cd":30004,
@@ -2365,13 +2554,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30005,
     "link":false,
     "link_cd":30005,
@@ -2402,13 +2594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30006,
     "link":false,
     "link_cd":30006,
@@ -2439,13 +2634,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30007,
     "link":false,
     "link_cd":30007,
@@ -2476,13 +2674,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30008,
     "link":false,
     "link_cd":30008,
@@ -2513,13 +2714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30009,
     "link":false,
     "link_cd":30009,
@@ -2550,13 +2754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30010,
     "link":false,
     "link_cd":30010,
@@ -2587,13 +2794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30011,
     "link":false,
     "link_cd":30011,
@@ -2624,13 +2834,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30012,
     "link":false,
     "link_cd":30012,
@@ -2661,13 +2874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30013,
     "link":false,
     "link_cd":30013,
@@ -2698,13 +2914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30014,
     "link":false,
     "link_cd":30014,
@@ -2735,13 +2954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30015,
     "link":false,
     "link_cd":30015,
@@ -2772,13 +2994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30016,
     "link":false,
     "link_cd":30016,
@@ -2809,13 +3034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30017,
     "link":false,
     "link_cd":30017,
@@ -2846,13 +3074,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30018,
     "link":false,
     "link_cd":30018,
@@ -2883,13 +3114,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30019,
     "link":false,
     "link_cd":30019,
@@ -2920,13 +3154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30020,
     "link":false,
     "link_cd":30020,
@@ -2957,13 +3194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30021,
     "link":false,
     "link_cd":30021,
@@ -2994,13 +3234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30022,
     "link":false,
     "link_cd":30022,
@@ -3031,13 +3274,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30023,
     "link":false,
     "link_cd":30023,
@@ -3068,13 +3314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30024,
     "link":true,
     "link_cd":30024,
@@ -3105,13 +3354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30025,
     "link":false,
     "link_cd":30025,
@@ -3142,13 +3394,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30026,
     "link":false,
     "link_cd":30026,
@@ -3179,13 +3434,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30027,
     "link":false,
     "link_cd":30027,
@@ -3216,13 +3474,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30028,
     "link":false,
     "link_cd":30028,
@@ -3253,13 +3514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30029,
     "link":false,
     "link_cd":30029,
@@ -3290,13 +3554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30030,
     "link":false,
     "link_cd":30030,
@@ -3327,13 +3594,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40001,
     "link":false,
     "link_cd":40001,
@@ -3364,13 +3634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40002,
     "link":false,
     "link_cd":40002,
@@ -3401,13 +3674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40003,
     "link":false,
     "link_cd":40003,
@@ -3438,13 +3714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40004,
     "link":false,
     "link_cd":40004,
@@ -3475,13 +3754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40005,
     "link":false,
     "link_cd":40005,
@@ -3512,13 +3794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40006,
     "link":false,
     "link_cd":40006,
@@ -3549,13 +3834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40007,
     "link":false,
     "link_cd":40007,
@@ -3586,13 +3874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40008,
     "link":false,
     "link_cd":40008,
@@ -3623,13 +3914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40009,
     "link":false,
     "link_cd":40009,
@@ -3660,13 +3954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40010,
     "link":false,
     "link_cd":40010,
@@ -3697,13 +3994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/調整前\/40010.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40011,
     "link":false,
     "link_cd":40011,
@@ -3734,13 +4034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40012,
     "link":false,
     "link_cd":40012,
@@ -3771,13 +4074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40013,
     "link":false,
     "link_cd":40013,
@@ -3808,13 +4114,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40014,
     "link":false,
     "link_cd":40014,
@@ -3845,13 +4154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40015,
     "link":false,
     "link_cd":40015,
@@ -3882,13 +4194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40016,
     "link":false,
     "link_cd":40016,
@@ -3919,13 +4234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40017,
     "link":false,
     "link_cd":40017,
@@ -3956,13 +4274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40018,
     "link":false,
     "link_cd":40018,
@@ -3993,13 +4314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40019,
     "link":false,
     "link_cd":40019,
@@ -4030,13 +4354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40020,
     "link":true,
     "link_cd":40020,
@@ -4067,13 +4394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40021,
     "link":false,
     "link_cd":40021,
@@ -4104,13 +4434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40022,
     "link":false,
     "link_cd":40022,
@@ -4141,13 +4474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40023,
     "link":false,
     "link_cd":40023,
@@ -4178,13 +4514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40024,
     "link":false,
     "link_cd":40024,
@@ -4215,13 +4554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40025,
     "link":false,
     "link_cd":40025,
@@ -4252,13 +4594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40026,
     "link":false,
     "link_cd":40026,
@@ -4289,13 +4634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40027,
     "link":false,
     "link_cd":40027,
@@ -4326,13 +4674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40028,
     "link":false,
     "link_cd":40028,
@@ -4363,13 +4714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40029,
     "link":false,
     "link_cd":40029,
@@ -4400,13 +4754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40030,
     "link":false,
     "link_cd":40030,
@@ -4437,13 +4794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50001,
     "link":false,
     "link_cd":50001,
@@ -4474,13 +4834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50002,
     "link":false,
     "link_cd":50002,
@@ -4511,13 +4874,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50003,
     "link":false,
     "link_cd":50003,
@@ -4548,13 +4914,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50004,
     "link":false,
     "link_cd":50004,
@@ -4585,13 +4954,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50005,
     "link":false,
     "link_cd":50005,
@@ -4622,13 +4994,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50006,
     "link":false,
     "link_cd":50006,
@@ -4659,13 +5034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50007,
     "link":false,
     "link_cd":50007,
@@ -4696,13 +5074,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50008,
     "link":false,
     "link_cd":50008,
@@ -4733,13 +5114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50009,
     "link":false,
     "link_cd":50009,
@@ -4770,13 +5154,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50010,
     "link":false,
     "link_cd":50010,
@@ -4807,13 +5194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50011,
     "link":false,
     "link_cd":50011,
@@ -4844,13 +5234,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50012,
     "link":false,
     "link_cd":50012,
@@ -4881,13 +5274,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50013,
     "link":false,
     "link_cd":50013,
@@ -4918,13 +5314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50014,
     "link":false,
     "link_cd":50014,
@@ -4955,13 +5354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50015,
     "link":false,
     "link_cd":50015,
@@ -4992,13 +5394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50016,
     "link":false,
     "link_cd":50016,
@@ -5029,13 +5434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50017,
     "link":false,
     "link_cd":50017,
@@ -5066,13 +5474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":false,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50018,
     "link":true,
     "link_cd":50018,
@@ -5103,13 +5514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50019,
     "link":false,
     "link_cd":50019,
@@ -5140,13 +5554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50020,
     "link":false,
     "link_cd":50020,
@@ -5177,13 +5594,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50021,
     "link":false,
     "link_cd":50021,
@@ -5214,13 +5634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50022,
     "link":false,
     "link_cd":50022,
@@ -5251,13 +5674,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50023,
     "link":false,
     "link_cd":50023,
@@ -5288,13 +5714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50024,
     "link":false,
     "link_cd":50024,
@@ -5325,13 +5754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50025,
     "link":false,
     "link_cd":50025,
@@ -5362,13 +5794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50026,
     "link":false,
     "link_cd":50026,
@@ -5399,13 +5834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50027,
     "link":false,
     "link_cd":50027,
@@ -5436,13 +5874,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50028,
     "link":false,
     "link_cd":50028,
@@ -5473,13 +5914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50029,
     "link":false,
     "link_cd":50029,
@@ -5510,13 +5954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50030,
     "link":false,
     "link_cd":50030,
@@ -5547,13 +5994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50031,
     "link":false,
     "link_cd":50031,
@@ -5584,13 +6034,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50031.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80001,
     "link":false,
     "link_cd":80001,
@@ -5621,13 +6074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80002,
     "link":false,
     "link_cd":80002,
@@ -5658,13 +6114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80003,
     "link":false,
     "link_cd":80003,
@@ -5695,13 +6154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80005,
     "link":false,
     "link_cd":80005,
@@ -5732,13 +6194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80006,
     "link":false,
     "link_cd":80006,
@@ -5769,13 +6234,16 @@
     "power_effect":"",
     "mana_effect":"BOTH",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80007,
     "link":false,
     "link_cd":80007,
@@ -5806,13 +6274,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80008,
     "link":false,
     "link_cd":80008,
@@ -5843,13 +6314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80009,
     "link":false,
     "link_cd":80009,
@@ -5880,13 +6354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80010,
     "link":false,
     "link_cd":80010,
@@ -5917,13 +6394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80011,
     "link":false,
     "link_cd":80011,
@@ -5954,13 +6434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80012,
     "link":false,
     "link_cd":80012,
@@ -5991,13 +6474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80013,
     "link":false,
     "link_cd":80013,
@@ -6028,13 +6514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80015,
     "link":false,
     "link_cd":80015,
@@ -6065,13 +6554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80016,
     "link":false,
     "link_cd":80016,
@@ -6102,13 +6594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80017,
     "link":false,
     "link_cd":80017,
@@ -6139,13 +6634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80018,
     "link":false,
     "link_cd":80018,
@@ -6176,13 +6674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80019,
     "link":false,
     "link_cd":80019,
@@ -6213,13 +6714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80021,
     "link":false,
     "link_cd":80021,
@@ -6250,13 +6754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80023,
     "link":false,
     "link_cd":80023,
@@ -6287,13 +6794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80024,
     "link":false,
     "link_cd":80024,
@@ -6324,13 +6834,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80025,
     "link":false,
     "link_cd":80025,
@@ -6361,13 +6874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80026,
     "link":false,
     "link_cd":80026,
@@ -6398,13 +6914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80027,
     "link":false,
     "link_cd":80027,
@@ -6435,13 +6954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80028,
     "link":false,
     "link_cd":80028,
@@ -6472,13 +6994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80029,
     "link":false,
     "link_cd":80029,
@@ -6509,13 +7034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80030,
     "link":false,
     "link_cd":80030,
@@ -6546,13 +7074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90001,
     "link":false,
     "link_cd":90001,
@@ -6583,13 +7114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90002,
     "link":false,
     "link_cd":90002,
@@ -6620,13 +7154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90003,
     "link":false,
     "link_cd":90003,
@@ -6657,13 +7194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90004,
     "link":false,
     "link_cd":90004,
@@ -6694,13 +7234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90005,
     "link":false,
     "link_cd":90005,
@@ -6731,13 +7274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90006,
     "link":false,
     "link_cd":90006,
@@ -6768,13 +7314,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90007,
     "link":false,
     "link_cd":90007,
@@ -6805,13 +7354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90008,
     "link":false,
     "link_cd":90008,
@@ -6842,13 +7394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90009,
     "link":false,
     "link_cd":90009,
@@ -6879,13 +7434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90011,
     "link":false,
     "link_cd":90011,
@@ -6916,6 +7474,9 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   }
 ]
