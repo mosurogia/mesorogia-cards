@@ -821,6 +821,11 @@
                 </div>
                 <!-- ③ 対象判定（まずは簡易：後でタグ連動に発展させる） -->
                     <div class="campaign-criteria">
+                        <div class="criteria-item" data-criteria="deck-condition" style="display:none;">
+                            <span class="criteria-check"></span>
+                            <span class="criteria-text" id="campaign-deck-condition-text">デッキ条件</span>
+                        </div>
+
                         <div class="criteria-item" data-criteria="login">
                             <span class="criteria-check"></span>
                             <span class="criteria-text">アカウントログイン</span>
@@ -864,7 +869,7 @@
 
                 <!-- ④ 対象タグ（キャンペーン参加トグル：見た目は選択タグchipと同じ） -->
                     <p id="campaign-tag-help" class="campaign-tag-help">
-                        ログイン、Xアカウント、必要なID入力が完了すると、下の対象タグを選択できます。
+                        デッキ条件、ログイン、Xアカウント、必要なID入力が完了すると、下の対象タグを選択できます。
                     </p>
                     <div id="campaign-banner-tagrow" class="tag-chips campaign-tagrow" style="display:none;">
                         <button type="button" id="campaign-tag-toggle" class="chip" aria-pressed="false">
