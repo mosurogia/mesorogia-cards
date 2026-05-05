@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-05-05-006',
-    staticCacheName: 'mesorogia-static-2026-05-05-006',
-    runtimeCacheName: 'mesorogia-runtime-2026-05-05-006',
+    version: '2026-05-06-001',
+    staticCacheName: 'mesorogia-static-2026-05-06-001',
+    runtimeCacheName: 'mesorogia-runtime-2026-05-06-001',
     appShell: [
       './cards.html',
       './deckmaker.html',
