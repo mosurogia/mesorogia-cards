@@ -88,6 +88,34 @@
   // =========================
   // 3) 共通GET(JSONP fallback)
   // =========================
+  function makeRequestError_(base, fallbackCode, fallbackReason) {
+    const err = new Error(base?.message || fallbackReason || 'request failed');
+    err.code = base?.code || fallbackCode;
+    err.reason = base?.reason || fallbackReason;
+    err.status = base?.status;
+    err.statusText = base?.statusText;
+    return err;
+  }
+
+  function fetchWithTimeout_(url, timeoutMs) {
+    const controller = (typeof AbortController === 'function') ? new AbortController() : null;
+    let timer = null;
+
+    if (controller) {
+      timer = setTimeout(() => controller.abort(), timeoutMs);
+    }
+
+    return fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      signal: controller ? controller.signal : undefined,
+    }).finally(() => {
+      if (timer) clearTimeout(timer);
+    });
+  }
+
   function jsonpRequest(url) {
     return new Promise((resolve, reject) => {
       const cbName =
@@ -97,11 +125,13 @@
 
       const sep = url.includes('?') ? '&' : '?';
       const script = document.createElement('script');
-      script.src = url + sep + 'callback=' + cbName;
+      script.src = url + sep + 'callback=' + encodeURIComponent(cbName);
       script.async = true;
+      script.referrerPolicy = 'no-referrer-when-downgrade';
 
       let cleaned = false;
       let timer = null;
+      let didCallback = false;
 
       const cleanup = () => {
         if (cleaned) return;
@@ -120,9 +150,10 @@
       timer = setTimeout(() => {
         cleanup();
         reject(new Error('JSONP timeout'));
-      }, 10000);
+      }, 30000);
 
       window[cbName] = (data) => {
+        didCallback = true;
         cleanup();
         resolve(data);
       };
@@ -132,35 +163,21 @@
         reject(new Error('JSONP script error'));
       };
 
-      document.body.appendChild(script);
+      script.onload = () => {
+        if (didCallback) return;
+        cleanup();
+        reject(new Error('JSONP callback missing'));
+      };
+
+      (document.head || document.body || document.documentElement).appendChild(script);
     });
   }
 
   async function fetchJsonWithJsonpFallback_(url) {
-    let requestUrl = null;
     let lastError = null;
-    try {
-      requestUrl = new URL(url);
-    } catch (_) {}
-
-    if (requestUrl && requestUrl.hostname === 'script.google.com') {
-      try {
-        return await jsonpRequest(url);
-      } catch (e) {
-        const err = new Error(e?.message || 'JSONP request failed');
-        err.code = 'JSONP_FAILED';
-        err.reason = 'JSONPでAPI応答を取得できませんでした。';
-        throw err;
-      }
-    }
 
     try {
-      const res = await fetch(url, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'omit',
-        cache: 'no-store',
-      });
+      const res = await fetchWithTimeout_(url, 12000);
 
       if (res.ok) {
         const data = await res.json().catch(() => null);
@@ -190,12 +207,15 @@
     try {
       return await jsonpRequest(url);
     } catch (e) {
-      const err = new Error(e?.message || lastError?.message || 'list request failed');
-      err.code = lastError?.code || 'JSONP_FAILED';
-      err.reason = lastError?.reason || 'JSONPでAPI応答を取得できませんでした。';
-      err.status = lastError?.status;
-      err.statusText = lastError?.statusText;
-      throw err;
+      throw makeRequestError_(
+        {
+          message: e?.message || lastError?.message || '',
+          status: lastError?.status,
+          statusText: lastError?.statusText,
+        },
+        'JSONP_FAILED',
+        'JSONPでAPI応答を取得できませんでした。'
+      );
     }
   }
 
