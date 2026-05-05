@@ -16,6 +16,39 @@
   // =========================
   const BASE = 'js/pages/deck-post/';
 
+  // ローダー段階の失敗もスマホ実機で見えるようにする。
+  window.debugLog = window.debugLog || function debugLog(...args) {
+    const el = document.getElementById('debug-log') || (() => {
+      const d = document.createElement('div');
+      d.id = 'debug-log';
+      d.style = [
+        'position:fixed',
+        'bottom:0',
+        'left:0',
+        'right:0',
+        'max-height:40%',
+        'overflow:auto',
+        'background:#000',
+        'color:#0f0',
+        'font-size:11px',
+        'z-index:99999',
+      ].join(';');
+      document.body.appendChild(d);
+      return d;
+    })();
+
+    el.insertAdjacentHTML(
+      'beforeend',
+      `<div>${args.map((a) => {
+        try {
+          return JSON.stringify(a);
+        } catch (_) {
+          return String(a);
+        }
+      }).join(' ')}</div>`
+    );
+  };
+
   function getAssetVersion_() {
     return String(window.MESOROGIA_PWA_CACHE_CONFIG?.version || 'dev').trim() || 'dev';
   }
@@ -65,8 +98,14 @@
     s.src = `${BASE}${file}?v=${encodeURIComponent(getAssetVersion_())}`;
     s.async = false;
 
-    s.onload = () => loadSeq_(files, i + 1, done);
+    window.debugLog?.('loader JS読込前', file);
+
+    s.onload = () => {
+      window.debugLog?.('loader JS読込成功', file);
+      loadSeq_(files, i + 1, done);
+    };
     s.onerror = () => {
+      window.debugLog?.('loader JS読込失敗', s.src);
       console.error('[deck-post-page-loader] failed:', s.src);
       alert('ページの初期化に失敗しました（JSロード失敗）\n' + s.src);
     };

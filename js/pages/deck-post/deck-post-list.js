@@ -1885,28 +1885,24 @@ document.addEventListener('click', async (e) => {
         window.DeckPostFilter?.applySharedPostFromUrl?.();
         window.DeckPostFilter?.rebuildFilteredItems?.();
       } else {
-debugLog('L1 初回apiList前');
+        window.debugLog?.('L1 初回apiList前');
 
-const res = await window.DeckPostApi.apiList({
-  limit: PAGE_LIMIT,
-  offset: 0,
-  mine: false,
-});
+        const res = await window.DeckPostApi.apiList({
+          limit: PAGE_LIMIT,
+          offset: 0,
+          mine: false,
+        });
 
-debugLog('L2 初回apiList結果', {
-  ok: res?.ok,
-  error: res?.error,
-  items: Array.isArray(res?.items) ? res.items.length : 'not array',
-  total: res?.total,
-  nextOffset: res?.nextOffset
-});
-
-if (!res || !res.ok) {
-  debugLog('❌ 初回apiList失敗', res);
-  throw new Error((res && res.error) || 'initial list fetch failed');
-}
+        window.debugLog?.('L2 初回apiList結果', {
+          ok: res?.ok,
+          error: res?.error,
+          items: Array.isArray(res?.items) ? res.items.length : 'not array',
+          total: res?.total,
+          nextOffset: res?.nextOffset,
+        });
 
         if (!res || !res.ok) {
+          window.debugLog?.('❌ 初回apiList失敗', res);
           throw new Error((res && res.error) || 'initial list fetch failed');
         }
 
@@ -1929,14 +1925,14 @@ if (!res || !res.ok) {
       // スマホ/タブレットでGAS連続取得が不安定なため、初期表示時の全件先読みは停止する。
       // prefetchAllListInBackground_();
       await window.DeckPostList?.loadListPage?.(1);
-} catch (e) {
-  debugLog('❌ 初期一覧取得catch', e.message);
-  console.error('初期一覧取得に失敗しました', e);
-  window.DeckPostList?.showListStatusMessage?.(
-    'error',
-    '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
-  );
-}finally {
+    } catch (e) {
+      window.debugLog?.('❌ 初期一覧取得catch', e.message);
+      console.error('初期一覧取得に失敗しました', e);
+      window.DeckPostList?.showListStatusMessage?.(
+        'error',
+        '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+      );
+    } finally {
       state.list.loading = false;
     }
 

@@ -4,28 +4,37 @@
  * - 各モジュールの初期化順を管理
 ================================================== */
 
-// ★ここに追加（ファイル最上部でOK）
-window.debugLog = function(...args){
+// ローダーを経由しない古いキャッシュでも最低限ログを出せるようにする。
+window.debugLog = window.debugLog || function debugLog(...args) {
   const el = document.getElementById('debug-log') || (() => {
     const d = document.createElement('div');
     d.id = 'debug-log';
-    d.style = `
-      position:fixed;
-      bottom:0;
-      left:0;
-      right:0;
-      max-height:40%;
-      overflow:auto;
-      background:#000;
-      color:#0f0;
-      font-size:11px;
-      z-index:99999;
-    `;
+    d.style = [
+      'position:fixed',
+      'bottom:0',
+      'left:0',
+      'right:0',
+      'max-height:40%',
+      'overflow:auto',
+      'background:#000',
+      'color:#0f0',
+      'font-size:11px',
+      'z-index:99999',
+    ].join(';');
     document.body.appendChild(d);
     return d;
   })();
 
-  el.innerHTML += `<div>${args.map(a=>JSON.stringify(a)).join(' ')}</div>`;
+  el.insertAdjacentHTML(
+    'beforeend',
+    `<div>${args.map((a) => {
+      try {
+        return JSON.stringify(a);
+      } catch (_) {
+        return String(a);
+      }
+    }).join(' ')}</div>`
+  );
 };
 
 window.addEventListener('error', (e) => {
@@ -54,6 +63,15 @@ const DeckPostApp = (() => {
       }
       window.setTimeout(resolve, 0);
     });
+  }
+
+  function withTimeout_(promise, ms, label) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error(`${label} timeout`)), ms);
+      }),
+    ]);
   }
 
     // ===== 初期ハッシュ遷移 =====
@@ -109,7 +127,7 @@ async function init() {
   debugLog('③ cardMap読み込み前');
 
   try {
-    await window.ensureCardMapLoaded();
+    await withTimeout_(window.ensureCardMapLoaded(), 6000, 'cardMap');
     debugLog('④ cardMap成功', Object.keys(window.cardMap || {}).length);
   } catch (e) {
     debugLog('❌ cardMap失敗', e.message);
