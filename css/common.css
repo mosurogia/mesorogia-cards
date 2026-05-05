@@ -1023,6 +1023,65 @@ button,
     font-size: 1rem;
 }
 
+/* =========================
+   アプリ設定：データ・表示の管理
+========================= */
+
+.account-maintenance-list {
+    display: grid;
+    gap: 10px;
+}
+
+.account-maintenance-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+.account-maintenance-item-danger {
+    border-color: rgba(248, 113, 113, .35);
+    background: linear-gradient(90deg, rgba(254, 242, 242, .9), #fff);
+}
+
+.account-maintenance-text {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.account-maintenance-text strong {
+    color: #111827;
+    font-size: .95rem;
+}
+
+.account-maintenance-text span {
+    color: #4b5563;
+    font-size: .82rem;
+    line-height: 1.5;
+}
+
+.account-maintenance-item .btn {
+    min-width: 130px;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .account-maintenance-item {
+        grid-template-columns: 1fr;
+    }
+
+    .account-maintenance-item .btn {
+        width: 100%;
+    }
+}
+
 .account-section-link {
     display: inline-flex;
     align-items: center;
@@ -1428,7 +1487,8 @@ footer a:hover {
     }
 }
 
-.footer-pwa-install {
+.footer-pwa-install,
+.footer-pwa-repair {
     appearance: none;
     border: 0;
     padding: 0;
@@ -1440,8 +1500,35 @@ footer a:hover {
     border-bottom: 1px dashed rgba(0, 0, 0, .25);
 }
 
-.footer-pwa-install:hover {
+.footer-pwa-repair {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid rgba(239, 68, 68, .45);
+    border-radius: 8px;
+    background: #fff7f7;
+    color: #b42318;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.footer-pwa-install:hover,
+.footer-pwa-repair:hover {
     opacity: .8;
+}
+
+.footer-pwa-repair:hover {
+    background: #feecec;
+    opacity: 1;
+}
+
+.footer-pwa-repair:disabled {
+    cursor: progress;
+    opacity: .65;
 }
 
 .footer-pwa-sep.is-hidden {
@@ -1605,6 +1692,7 @@ footer a:hover {
 }
 
 .footer-pwa-install:focus-visible,
+.footer-pwa-repair:focus-visible,
 .pwa-header-banner button:focus-visible,
 .pwa-install-nudge button:focus-visible,
 .pwa-install-dialog button:focus-visible {
