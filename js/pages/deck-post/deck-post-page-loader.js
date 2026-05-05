@@ -16,38 +16,8 @@
   // =========================
   const BASE = 'js/pages/deck-post/';
 
-  // ローダー段階の失敗もスマホ実機で見えるようにする。
-  window.debugLog = window.debugLog || function debugLog(...args) {
-    const el = document.getElementById('debug-log') || (() => {
-      const d = document.createElement('div');
-      d.id = 'debug-log';
-      d.style = [
-        'position:fixed',
-        'bottom:0',
-        'left:0',
-        'right:0',
-        'max-height:40%',
-        'overflow:auto',
-        'background:#000',
-        'color:#0f0',
-        'font-size:11px',
-        'z-index:99999',
-      ].join(';');
-      document.body.appendChild(d);
-      return d;
-    })();
-
-    el.insertAdjacentHTML(
-      'beforeend',
-      `<div>${args.map((a) => {
-        try {
-          return JSON.stringify(a);
-        } catch (_) {
-          return String(a);
-        }
-      }).join(' ')}</div>`
-    );
-  };
+  // 本番画面にはデバッグログを表示しない。
+  window.debugLog = window.debugLog || function debugLog() {};
 
   function getAssetVersion_() {
     return String(window.MESOROGIA_PWA_CACHE_CONFIG?.version || 'dev').trim() || 'dev';

@@ -4,28 +4,8 @@
  * - 各モジュールの初期化順を管理
 ================================================== */
 
-
-
-  el.insertAdjacentHTML(
-    'beforeend',
-    `<div>${args.map((a) => {
-      try {
-        return JSON.stringify(a);
-      } catch (_) {
-        return String(a);
-      }
-    }).join(' ')}</div>`
-  );
-};
-
-window.addEventListener('error', (e) => {
-  debugLog('❌ JS error', e.message, e.filename, e.lineno);
-});
-
-window.addEventListener('unhandledrejection', (e) => {
-  debugLog('❌ Promise error', e.reason?.message || e.reason);
-});
-
+// 本番画面にはデバッグログを表示しない。
+window.debugLog = window.debugLog || function debugLog() {};
 
 const DeckPostApp = (() => {
   'use strict';
