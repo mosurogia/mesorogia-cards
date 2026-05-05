@@ -155,6 +155,65 @@
     return { ok: reasons.length === 0, reasons };
   }
 
+  function getCampaignSubmitRequirementResult_(camp){
+    const reasons = [];
+
+    const deckResult = checkDeckConditions_(camp);
+    if (!deckResult.ok) {
+      deckResult.reasons.forEach(reason => reasons.push(`デッキ条件：${reason}`));
+    }
+
+    const A = window.Auth;
+    const loggedIn = !!(A?.user && A?.token && A?.verified);
+    if (!loggedIn) reasons.push('ログインを完了してください');
+
+    const xRaw = document.getElementById('auth-x')?.value || '';
+    const x = String(xRaw).trim().replace(/^@+/, '');
+    if (!x) reasons.push('Xアカウントを入力してください');
+
+    if (campaignRequiresGameUserId_(camp)){
+      const gameUserId = readCampaignGameUserId_();
+      if (!isValidGameUserId_(gameUserId)) reasons.push('ゲーム内ユーザーIDを16桁で入力してください');
+    }
+
+    return { ok: reasons.length === 0, reasons };
+  }
+
+  function getActiveCampaignTag_(camp){
+    const active = String(window.__activeCampaignTag || '').trim();
+    if (active) return active;
+
+    const explicit = String(camp?.tag || camp?.campaignTag || '').trim();
+    if (explicit) return explicit;
+
+    return String(camp?.title || '').trim();
+  }
+
+  function isActiveCampaignTagSelected_(camp){
+    const tag = getActiveCampaignTag_(camp);
+    if (!tag) return false;
+    try{
+      const set = window.__dmReadSelectedTags?.() || new Set();
+      return !!(set && set.has && set.has(tag));
+    }catch(_){
+      return false;
+    }
+  }
+
+  function setActiveCampaignTagSelected_(camp, on){
+    const tag = getActiveCampaignTag_(camp);
+    if (!tag) return;
+
+    try{
+      const set = window.__dmReadSelectedTags?.() || new Set();
+      if (on) set.add(tag); else set.delete(tag);
+      window.__dmWriteSelectedTags?.(set);
+    }catch(_){}
+
+    try { window.renderPostSelectTags?.(); } catch(_) {}
+    try { window.updateCampaignBannerEligibility_?.(); } catch(_) {}
+  }
+
   function openCampaignTagHelpModal_(reasons){
     const list = Array.isArray(reasons) ? reasons.filter(Boolean) : [];
     const modal = document.createElement('div');
@@ -574,50 +633,100 @@
   // -----------------------------
   // 4) Modal
   // -----------------------------
-  function openCampaignConfirmModal({ mode, reasons = [], onJoin, onSkip, onProceed }){
+  function openCampaignConfirmModal({ mode, reasons = [], onJoin, onSkip, onProceed, onBack }){
+    document.querySelectorAll('.campaign-confirm-modal').forEach((el) => el.remove());
+
     const modal = document.createElement('div');
     modal.className = 'campaign-confirm-modal';
 
-    const body =
-      mode === 'ok'
-        ? `
+    const body = (() => {
+      if (mode === 'tag-missing') {
+        return `
+          <h3>🎉 キャンペーン開催中！</h3>
+          <p>キャンペーン参加条件を満たしています。</p>
+          <p>参加する場合は対象タグを付けて投稿します。</p>
+        `;
+      }
+
+      if (mode === 'blocked') {
+        return `
+          <h3>⚠ キャンペーン参加条件が未達です</h3>
+          <p>以下の条件を満たしていません：</p>
+          <ul>${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
+          <p>キャンペーンには参加できませんが、通常投稿は可能です。</p>
+        `;
+      }
+
+      if (mode === 'ok') {
+        return `
           <h3>🎉 キャンペーン開催中！</h3>
           <p>このデッキはキャンペーン条件を満たしています。</p>
           <p>キャンペーンに参加して投稿しますか？</p>
-        `
-        : `
-          <h3>⚠ キャンペーン開催中</h3>
-          <p>以下の条件を満たしていません：</p>
-          <ul>${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
-          <p>キャンペーンには参加できませんが、投稿は可能です。</p>
         `;
+      }
+
+      return `
+        <h3>⚠ キャンペーン開催中</h3>
+        <p>以下の条件を満たしていません：</p>
+        <ul>${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
+        <p>キャンペーンには参加できませんが、投稿は可能です。</p>
+      `;
+    })();
+
+    const actions = (() => {
+      if (mode === 'tag-missing') {
+        return `
+          <button type="button" class="primary" data-action="join">参加して投稿</button>
+          <button type="button" class="ghost" data-action="skip">参加せず投稿</button>
+          <button type="button" class="cancel" data-action="cancel">キャンセル</button>
+        `;
+      }
+
+      if (mode === 'blocked') {
+        return `
+          <button type="button" class="primary" data-action="proceed">参加せず投稿</button>
+          <button type="button" class="ghost" data-action="back">参加したいので戻る</button>
+          <button type="button" class="cancel" data-action="cancel">キャンセル</button>
+        `;
+      }
+
+      if (mode === 'ok') {
+        return `
+          <button type="button" class="primary" data-action="join">参加して投稿</button>
+          <button type="button" class="ghost" data-action="skip">参加せず投稿</button>
+          <button type="button" class="cancel" data-action="cancel">キャンセル</button>
+        `;
+      }
+
+      return `
+        <button type="button" class="primary" data-action="proceed">投稿する</button>
+        <button type="button" class="cancel" data-action="cancel">キャンセル</button>
+      `;
+    })();
 
     modal.innerHTML = `
-      <div class="modal-content">
+      <div class="modal-content campaign-confirm-content" role="dialog" aria-modal="true">
         ${body}
         <div class="modal-actions">
-          ${
-            mode === 'ok'
-              ? `
-                <button class="primary">参加して投稿</button>
-                <button class="ghost">参加せず投稿</button>
-              `
-              : `<button class="primary">投稿する</button>`
-          }
-          <button class="cancel">キャンセル</button>
+          ${actions}
         </div>
       </div>
     `;
 
     document.body.appendChild(modal);
 
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+
     modal.querySelectorAll('button').forEach(btn=>{
       btn.onclick = ()=>{
+        const action = String(btn.dataset.action || '').trim();
         modal.remove();
-        if (btn.classList.contains('primary')){
-          mode === 'ok' ? onJoin?.() : onProceed?.();
-        }
-        if (btn.classList.contains('ghost')) onSkip?.();
+        if (action === 'join') onJoin?.();
+        if (action === 'skip') onSkip?.();
+        if (action === 'proceed') onProceed?.();
+        if (action === 'back') onBack?.();
       };
     });
   }
@@ -634,21 +743,32 @@
       return;
     }
 
-    const result = checkCampaignEligibility_(camp);
+    window.__activeCampaign = camp;
 
-    if (result.ok){
+    const result = getCampaignSubmitRequirementResult_(camp);
+
+    if (!result.ok){
       openCampaignConfirmModal({
-        mode: 'ok',
-        onJoin: () => window.submitDeckPost?.(null, { joinCampaign: true, campaign: camp }),
-        onSkip: () => window.submitDeckPost?.(null, { joinCampaign: false, campaign: camp }),
-      });
-    }else{
-      openCampaignConfirmModal({
-        mode: 'ng',
+        mode: 'blocked',
         reasons: result.reasons,
         onProceed: () => window.submitDeckPost?.(null, { joinCampaign: false, campaign: camp }),
       });
+      return;
     }
+
+    if (isActiveCampaignTagSelected_(camp)){
+      window.submitDeckPost?.(null, { joinCampaign: true, campaign: camp });
+      return;
+    }
+
+    openCampaignConfirmModal({
+      mode: 'tag-missing',
+      onJoin: () => {
+        setActiveCampaignTagSelected_(camp, true);
+        window.submitDeckPost?.(null, { joinCampaign: true, campaign: camp });
+      },
+      onSkip: () => window.submitDeckPost?.(null, { joinCampaign: false, campaign: camp }),
+    });
   }
 
   // -----------------------------
