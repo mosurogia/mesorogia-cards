@@ -22,11 +22,45 @@
   /**
    * キャンペーンバナー描画
    */
+  function getCampaignTag_(camp, fallbackTitle) {
+    const explicit = String(camp?.tag || camp?.campaignTag || '').trim();
+    if (explicit) return explicit;
+    return String(fallbackTitle || '').trim();
+  }
+
+  function parseCampaignBoundary_(value, isEnd) {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+
+    const m = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+    if (m) {
+      const y = Number(m[1]);
+      const mo = Number(m[2]) - 1;
+      const d = Number(m[3]);
+      return isEnd
+        ? new Date(y, mo, d, 23, 59, 59, 999)
+        : new Date(y, mo, d, 0, 0, 0, 0);
+    }
+
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return null;
+    return date;
+  }
+
+  function isWithinCampaignPeriod_(camp, now = new Date()) {
+    const start = parseCampaignBoundary_(camp?.startAt, false);
+    const end = parseCampaignBoundary_(camp?.endAt, true);
+    const time = now.getTime();
+    if (start && time < start.getTime()) return false;
+    if (end && time > end.getTime()) return false;
+    return !!(start || end);
+  }
+
   async function renderCampaignBanner() {
-    const box = document.getElementById('event-notice-panel');
-    const titleEl = document.getElementById('event-notice-title');
-    const textEl = document.getElementById('event-notice-text');
-    const rangeEl = document.getElementById('event-notice-range');
+    const box = document.getElementById('campaign-banner');
+    const titleEl = document.getElementById('campaign-banner-title');
+    const textEl = document.getElementById('campaign-banner-text');
+    const rangeEl = document.getElementById('campaign-banner-range');
 
     if (!box || !titleEl || !textEl) return;
 
@@ -37,10 +71,9 @@
       camp = null;
     }
 
-    const isActive =
-      camp &&
-      (camp.isActive === true || String(camp.isActive) === 'true') &&
-      String(camp.campaignId || '');
+    const hasCampaignId = !!(camp && String(camp.campaignId || '').trim());
+    const isActiveByFlag = !!(camp && (camp.isActive === true || String(camp.isActive) === 'true'));
+    const isActive = hasCampaignId && (isActiveByFlag || isWithinCampaignPeriod_(camp));
 
     if (!isActive) {
       setCampaignBannerVisible_(box, false);
@@ -66,7 +99,7 @@
     titleEl.textContent = cleanTitle || 'キャンペーン';
 
     window.__isCampaignRunning = true;
-    window.__activeCampaignTag = cleanTitle || '';
+    window.__activeCampaignTag = getCampaignTag_(camp, cleanTitle);
 
     if (rangeEl) {
       rangeEl.textContent = (!titleHasRange && computedRange) ? computedRange : '';
