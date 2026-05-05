@@ -729,6 +729,64 @@
     background: rgba(239, 68, 68, 0.92);
 }
 
+#post-toast .post-toast-main {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.55;
+}
+
+#post-toast .post-toast-details {
+    display: grid;
+    gap: 5px;
+    margin: 8px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, .25);
+    font-size: .82em;
+    line-height: 1.45;
+}
+
+#post-toast .post-toast-detail-row {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
+}
+
+#post-toast .post-toast-detail-row dt {
+    font-weight: 800;
+    opacity: .95;
+}
+
+#post-toast .post-toast-detail-row dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+#post-toast .post-toast-hint {
+    margin-top: 8px;
+    font-size: .8em;
+    line-height: 1.5;
+    opacity: .88;
+}
+
+#post-toast .post-toast-actions {
+    margin-top: 8px;
+    text-align: right;
+}
+
+#post-toast .post-toast-actions button {
+    min-height: 28px;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
 .dm-toast {
     position: fixed;
     left: 50%;
