@@ -16,6 +16,24 @@
   const escapeHtml = window.escapeHtml_;
   const fmtYmd = window.formatYmd;
 
+  function formatCampaignDate_(value){
+    if (!value) return '';
+    const d = value instanceof Date ? value : new Date(value);
+    if (!d || Number.isNaN(d.getTime())) return '';
+    return typeof fmtYmd === 'function'
+      ? fmtYmd(d)
+      : `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function setCampaignBannerVisible_(box, visible){
+    if (!box) return;
+    if (visible) {
+      box.style.setProperty('display', 'block', 'important');
+    } else {
+      box.style.setProperty('display', 'none');
+    }
+  }
+
   // -----------------------------
   // small utils
   // -----------------------------
@@ -366,16 +384,16 @@
   // 2) Banner + tag sync + eligibility UI
   // -----------------------------
   async function renderDeckmakerCampaignBanner(){
-    const box = document.getElementById('campaign-banner');
-    const titleEl = document.getElementById('campaign-banner-title');
-    const textEl  = document.getElementById('campaign-banner-text');
-    const rangeEl = document.getElementById('campaign-banner-range');
+    const box = document.getElementById('event-notice-panel');
+    const titleEl = document.getElementById('event-notice-title');
+    const textEl  = document.getElementById('event-notice-text');
+    const rangeEl = document.getElementById('event-notice-range');
     if (!box || !titleEl || !textEl) return;
 
     const camp = await fetchActiveCampaignSafe({ ttlMs: 60000 });
 
     if (!isCampaignActive(camp)) {
-      box.style.display = 'none';
+      setCampaignBannerVisible_(box, false);
       window.__activeCampaign = null;
       window.__activeCampaignTag = '';
       window.__activeCampaignRequiresGameUserId = false;
@@ -387,7 +405,11 @@
     const start = camp?.startAt ? new Date(camp.startAt) : null;
     const end   = camp?.endAt   ? new Date(camp.endAt)   : null;
 
-    const computedRange = (start || end) ? `${fmtYmd(start)}〜${fmtYmd(end)}` : '';
+    const startText = formatCampaignDate_(start);
+    const endText = formatCampaignDate_(end);
+    const computedRange = startText && endText
+      ? `${startText}〜${endText}`
+      : (startText || endText);
 
     const titleHasRange =
       /[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]/.test(rawTitle);
@@ -402,7 +424,7 @@
     textEl.textContent =
       'デッキを投稿して、キャンペーンに参加しよう！ 詳しい参加条件や報酬は、詳細をチェック！';
 
-    box.style.display = '';
+    setCampaignBannerVisible_(box, true);
 
     // --- global share (1 campaign assumption) ---
     window.__activeCampaign = camp;
@@ -412,7 +434,7 @@
     //  campaign tag が確定したので、投稿タグUIを再描画（deckmaker-post.js）
     try { window.renderPostSelectTags?.(); } catch(_) {}
 
-    const tagRow  = document.getElementById('campaign-banner-tagrow');
+    const tagRow  = document.getElementById('event-notice-tagrow');
     const tagBtn  = document.getElementById('campaign-tag-toggle');
 
     const getAuthState = ()=>{

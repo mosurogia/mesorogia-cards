@@ -1048,28 +1048,71 @@
   // =====================================================
   // 7) 投稿トースト表示
   // =====================================================
-  function renderPersistToastHtml_(message){
-    const esc = window.escapeHtml_;
-    const safe = esc(message ?? '');
+  function escapeToastHtml_(value) {
+    if (typeof window.escapeHtml_ === 'function') return window.escapeHtml_(value);
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function normalizePostErrorDetails_(details = {}) {
+    const code = details.code || details.error || details.name || '';
+    const reason = details.reason || details.message || '';
+    const status = details.status || '';
+    const statusText = details.statusText || '';
+
+    return { code, reason, status, statusText };
+  }
+
+  function renderPostErrorDetailsHtml_(details) {
+    const d = normalizePostErrorDetails_(details);
+    const rows = [];
+
+    if (d.code) rows.push(['エラーコード', d.code]);
+    if (d.status) {
+      const statusText = d.statusText ? ` ${d.statusText}` : '';
+      rows.push(['HTTP', `${d.status}${statusText}`]);
+    }
+    if (d.reason) rows.push(['失敗原因', d.reason]);
+
+    if (!rows.length) return '';
 
     return `
-      <div>${safe}</div>
-      <div style="margin-top:6px;font-size:0.8em;opacity:0.85">
+      <dl class="post-toast-details">
+        ${rows.map(([label, value]) => `
+          <div class="post-toast-detail-row">
+            <dt>${escapeToastHtml_(label)}</dt>
+            <dd>${escapeToastHtml_(value)}</dd>
+          </div>
+        `).join('')}
+      </dl>
+    `;
+  }
+
+  function renderPersistToastHtml_(message, details = null){
+    const safe = escapeToastHtml_(message ?? '');
+    const detailsHtml = details ? renderPostErrorDetailsHtml_(details) : '';
+
+    return `
+      <div class="post-toast-main">${safe}</div>
+      ${detailsHtml}
+      <div class="post-toast-hint">
         📸 エラーが続く場合は、このメッセージのスクリーンショットをご提出ください。
       </div>
-      <div style="text-align:right;margin-top:8px;">
-        <button id="toast-close-btn" style="
-          background:#fff;color:#333;border:none;border-radius:6px;
-          padding:4px 8px;cursor:pointer;font-size:0.75rem;">閉じる</button>
+      <div class="post-toast-actions">
+        <button id="toast-close-btn" type="button">閉じる</button>
       </div>
     `;
   }
 
-  function showPostToast(message, type = 'success', persist = false) {
+  function showPostToast(message, type = 'success', persist = false, details = null) {
     const box = document.getElementById('post-toast');
     if (!box) return;
 
-    if (persist) box.innerHTML = renderPersistToastHtml_(message);
+    if (persist) box.innerHTML = renderPersistToastHtml_(message, details);
     else box.textContent = String(message ?? '');
 
     box.className = 'post-toast ' + type;
@@ -1626,7 +1669,12 @@
         json = await res.json();
       } catch (_) {
         const txt = await res.text().catch(()=> '');
-        throw new Error(`サーバー応答がJSONではありません（status=${res.status}）\n${txt.slice(0,200)}`);
+        const err = new Error('サーバー応答がJSONではありません。');
+        err.code = 'INVALID_JSON';
+        err.status = res.status;
+        err.statusText = res.statusText;
+        err.reason = txt.slice(0, 200) || '応答本文が空です。';
+        throw err;
       }
 
       if (json.ok){
@@ -1642,17 +1690,29 @@
         openPostSuccessModal({ deckName, postId, campaign: camp });
         window.MesorogiaPwaInstall?.showNudge?.();
       }else{
+        const failureDetails = {
+          code: json.code || json.error || 'POST_FAILED',
+          status: res.status,
+          statusText: res.statusText,
+          reason: json.reason || json.message || json.error || '投稿APIが失敗応答を返しました。',
+        };
+
         if (json.error === 'too_many_posts'){
-          showPostToast('短時間に連続して投稿することはできません。少し時間をおいて再度お試しください。', 'error');
+          showPostToast('短時間に連続して投稿することはできません。少し時間をおいて再度お試しください。', 'error', true, failureDetails);
         }else if (json.error === 'dup_post'){
-          showPostToast('同じ内容の投稿を二重送信しそうだったのでブロックしました。', 'info');
+          showPostToast('同じ内容の投稿を二重送信しそうだったのでブロックしました。', 'info', true, failureDetails);
         }else{
-          showPostToast(`投稿失敗：${json.error || '不明なエラー'}`, 'error', true);
+          showPostToast(`投稿失敗：${json.error || '不明なエラー'}`, 'error', true, failureDetails);
         }
       }
     }catch(err){
       console.error(err);
-      showPostToast('通信エラーが発生しました', 'error', true);
+      showPostToast('通信エラーが発生しました', 'error', true, {
+        code: err?.code || err?.name || 'NETWORK_ERROR',
+        status: err?.status || '',
+        statusText: err?.statusText || '',
+        reason: err?.reason || err?.message || '投稿APIへの通信に失敗しました。',
+      });
     }finally{
       if (btn){
         btn.disabled = false;

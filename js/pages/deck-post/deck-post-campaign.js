@@ -7,6 +7,15 @@
 (function () {
   'use strict';
 
+  function setCampaignBannerVisible_(box, visible) {
+    if (!box) return;
+    if (visible) {
+      box.style.setProperty('display', 'block', 'important');
+    } else {
+      box.style.setProperty('display', 'none');
+    }
+  }
+
   // =========================
   // 0) バナー描画
   // =========================
@@ -14,10 +23,10 @@
    * キャンペーンバナー描画
    */
   async function renderCampaignBanner() {
-    const box = document.getElementById('campaign-banner');
-    const titleEl = document.getElementById('campaign-banner-title');
-    const textEl = document.getElementById('campaign-banner-text');
-    const rangeEl = document.getElementById('campaign-banner-range');
+    const box = document.getElementById('event-notice-panel');
+    const titleEl = document.getElementById('event-notice-title');
+    const textEl = document.getElementById('event-notice-text');
+    const rangeEl = document.getElementById('event-notice-range');
 
     if (!box || !titleEl || !textEl) return;
 
@@ -34,7 +43,7 @@
       String(camp.campaignId || '');
 
     if (!isActive) {
-      box.style.display = 'none';
+      setCampaignBannerVisible_(box, false);
       window.__isCampaignRunning = false;
       window.__activeCampaignTag = '';
       return;
@@ -66,7 +75,7 @@
     textEl.textContent =
       'デッキを投稿して、キャンペーンに参加しよう！ 詳しい参加条件や報酬は、詳細をチェック！';
 
-    box.style.display = '';
+    setCampaignBannerVisible_(box, true);
   }
 
   // =========================
