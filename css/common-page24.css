@@ -852,10 +852,73 @@
     margin-top: 8px;
 }
 
-/* disabledでも“chipらしさ”を維持しつつ押せない感 */
-#campaign-tag-toggle:disabled {
+/* 条件不足時も押して案内を出せるように、見た目だけ無効状態にする */
+#campaign-tag-toggle:disabled,
+#campaign-tag-toggle.is-disabled {
     opacity: .6;
     cursor: not-allowed;
+}
+
+/* キャンペーンタグ条件案内モーダル */
+.campaign-tag-help-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 5200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(15, 23, 42, .55);
+}
+
+.campaign-tag-help-content {
+    width: min(420px, 94vw);
+    max-height: 86vh;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, .24);
+}
+
+.campaign-tag-help-content h3 {
+    margin: 0 0 10px;
+    color: #111827;
+    font-size: 1.1rem;
+}
+
+.campaign-tag-help-content p {
+    margin: 0 0 10px;
+    color: #374151;
+    line-height: 1.55;
+}
+
+.campaign-tag-help-list {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0 14px;
+    padding-left: 1.25rem;
+    color: #7f1d1d;
+    font-weight: 700;
+}
+
+.campaign-tag-help-content .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.campaign-tag-help-content .primary {
+    min-height: 38px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #ff9040, #ff6a3d);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.campaign-tag-help-content .primary:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, .75);
+    outline-offset: 2px;
 }
 
 
