@@ -30,7 +30,9 @@
   }
 
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function (error) {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function (registration) {
+      registration.update().catch(function () {});
+    }).catch(function (error) {
       console.warn('Service Workerの登録に失敗しました。', error);
     });
   });
