@@ -1339,7 +1339,16 @@ function rebuildFilteredItems(){
     if (document.documentElement.dataset.deckPostQuickFilterWired === '1') return;
     document.documentElement.dataset.deckPostQuickFilterWired = '1';
 
-    document.addEventListener('click', (e) => {
+    async function ensureAllListForQuickFilter_() {
+      if (window.__DeckPostState?.list?.hasAllItems) return;
+      try {
+        await window.DeckPostList?.fetchAllList?.();
+      } catch (err) {
+        console.warn('quick filter fetchAllList failed:', err);
+      }
+    }
+
+    document.addEventListener('click', async (e) => {
       // ===== ユーザータグ🔎：そのタグで絞り込み（最優先で奪う）=====
       const ut = e.target.closest('.btn-user-tag-search');
       if (ut) {
@@ -1357,7 +1366,8 @@ function rebuildFilteredItems(){
 
           // 他の条件は維持したまま、即時反映
           window.DeckPostFilter?.updateActiveChipsBar?.();
-          window.DeckPostList?.applySortAndRerenderList?.(false);
+          await ensureAllListForQuickFilter_();
+          await window.DeckPostList?.applySortAndRerenderList?.(false);
         }
         return;
       }
@@ -1387,7 +1397,8 @@ function rebuildFilteredItems(){
         window.PostFilterDraft.selectedPosterLabel = label;
 
         window.DeckPostFilter?.updateActiveChipsBar?.();
-        window.DeckPostList?.applySortAndRerenderList?.(false);
+        await ensureAllListForQuickFilter_();
+        await window.DeckPostList?.applySortAndRerenderList?.(false);
         return;
       }
     }, true);

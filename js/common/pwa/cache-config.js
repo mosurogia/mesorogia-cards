@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-05-05-003',
-    staticCacheName: 'mesorogia-static-2026-05-05-003',
-    runtimeCacheName: 'mesorogia-runtime-2026-05-05-003',
+    version: '2026-05-05-006',
+    staticCacheName: 'mesorogia-static-2026-05-05-006',
+    runtimeCacheName: 'mesorogia-runtime-2026-05-05-006',
     appShell: [
       './cards.html',
       './deckmaker.html',
@@ -100,7 +100,6 @@
     ],
     offlineFallbackPage: './deckmaker.html',
     cacheFirstExtensions: [
-      '.css',
       '.png',
       '.jpg',
       '.jpeg',
@@ -112,6 +111,7 @@
     ],
     networkFirstExtensions: [
       '.html',
+      '.css',
       '.js',
       '.json'
     ]

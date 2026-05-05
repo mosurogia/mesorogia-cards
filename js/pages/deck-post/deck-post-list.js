@@ -22,6 +22,21 @@
   }
 
   /**
+   * Xアカウントをリンク用のユーザーIDへ正規化する
+   */
+  function normalizePosterXUser_(value) {
+    if (typeof window.normX_ === 'function') return window.normX_(value);
+
+    return String(value || '')
+      .trim()
+      .replace(/^https?:\/\/(www\.)?x\.com\//i, '')
+      .replace(/^https?:\/\/(www\.)?twitter\.com\//i, '')
+      .replace(/^@+/, '')
+      .replace(/[\/?#].*$/, '')
+      .toLowerCase();
+  }
+
+  /**
    * いいねボタンの中身を作る
    */
   function buildLikeButtonContent_(liked, likeCount) {
@@ -49,14 +64,14 @@
 
     const state = getDeckPostState_();
     const ready = !!state?.list?.hasAllItems;
-    const loading = !ready;
+    const loading = !ready && !!allListFetchPromise_;
 
-    btn.disabled = !ready;
+    btn.disabled = loading;
     btn.dataset.loading = loading ? '1' : '0';
-    btn.textContent = ready ? 'フィルター' : 'フィルター準備中…';
+    btn.textContent = loading ? 'フィルター準備中…' : 'フィルター';
     btn.title = ready
       ? '全投稿を対象にフィルターできます'
-      : '全投稿の読み込み完了後に使えます';
+      : 'クリックすると全投稿を読み込んでから開きます';
     btn.setAttribute('aria-busy', loading ? 'true' : 'false');
   }
 
@@ -275,9 +290,7 @@
 
     const posterXRaw = String(item.posterX || '').trim();
     const posterXLabel = posterXRaw;
-    const posterXUser = posterXRaw.startsWith('@')
-      ? posterXRaw.slice(1)
-      : posterXRaw;
+    const posterXUser = normalizePosterXUser_(posterXRaw);
 
     const likeCount = Number(item.likeCount || 0);
     const liked = !!item.liked;
@@ -388,9 +401,7 @@
 
     const posterXRaw = String(item.posterX || '').trim();
     const posterXLabel = posterXRaw;
-    const posterXUser = posterXRaw.startsWith('@')
-      ? posterXRaw.slice(1)
-      : posterXRaw;
+    const posterXUser = normalizePosterXUser_(posterXRaw);
 
     const likeCount = Number(item.likeCount || 0);
     const liked = !!item.liked;
@@ -1187,6 +1198,7 @@ document.addEventListener('click', async (e) => {
       allListFetchPromise_ = null;
       updateFilterReadyState_();
     });
+    updateFilterReadyState_();
 
     return allListFetchPromise_;
   }

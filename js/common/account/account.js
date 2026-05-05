@@ -219,14 +219,33 @@
 
             <section class="account-data-section account-offline-card-section" id="account-section-offline-cards" aria-labelledby="account-offline-card-title">
             <div class="account-section-head">
-                <h4 id="account-offline-card-title">カードデータ保存</h4>
-                <span class="account-section-status" id="offline-card-save-status">未保存</span>
+                <h4 id="account-offline-card-title">データ・表示の管理</h4>
+                <span class="account-section-status" id="offline-card-save-status">確認用</span>
             </div>
-            <p class="account-offline-card-note">カードデータと全カード画像をこの端末に保存します。画像込みのため通信量が多くなります。</p>
-            <div class="account-section-actions account-offline-card-actions">
-                <button type="button" class="btn ghost" id="offline-card-save-btn" data-offline-cards-save>カードデータを保存</button>
-                <span class="account-offline-card-progress" id="offline-card-save-progress" aria-live="polite"></span>
+
+            <div class="account-maintenance-list">
+                <div class="account-maintenance-item">
+                    <div class="account-maintenance-text">
+                        <strong>オフライン用データ</strong>
+                        <span>カード画像などをこの端末に保存します。通信量は多めです。</span>
+                    </div>
+                    <button type="button" class="btn ghost" id="offline-card-save-btn" data-offline-cards-save>
+                        カードデータを保存
+                    </button>
+                </div>
+
+                <div class="account-maintenance-item account-maintenance-item-danger">
+                    <div class="account-maintenance-text">
+                        <strong>表示の不具合修復</strong>
+                        <span>古いキャッシュを削除して、最新版を読み込み直します。</span>
+                    </div>
+                    <button type="button" class="btn danger" id="pwa-cache-repair-btn" data-pwa-cache-repair>
+                        表示を修復
+                    </button>
+                </div>
             </div>
+
+            <span class="account-offline-card-progress" id="offline-card-save-progress" aria-live="polite"></span>
             <p class="account-offline-card-saved-at" id="offline-card-save-date" hidden></p>
             <p class="account-offline-card-error" id="offline-card-save-error" hidden></p>
             </section>

@@ -261,6 +261,29 @@
     showInstruction_(isIos_() ? 'ios' : 'manual');
   }
 
+  function runRepairReload_(button) {
+    const prevText = button?.textContent || '';
+    if (button) {
+      button.disabled = true;
+      button.textContent = '再読み込み中...';
+    }
+
+    const task = window.MesorogiaPwaMaintenance?.repairAndReload?.();
+    if (task && typeof task.catch === 'function') {
+      task.catch((error) => {
+        console.error('キャッシュ修復に失敗しました。', error);
+        if (button) {
+          button.disabled = false;
+          button.textContent = prevText || '不具合解消';
+        }
+        window.location.reload();
+      });
+      return;
+    }
+
+    window.location.reload();
+  }
+
   function ensureHeaderBanner_() {
     if (headerBannerEl) return headerBannerEl;
 
@@ -374,6 +397,18 @@
     button.addEventListener('click', runInstallPrompt_);
 
     footerLeft.append(sep, button);
+
+    const repairSep = document.createElement('span');
+    repairSep.className = 'footer-sep footer-pwa-repair-sep';
+    repairSep.textContent = '・';
+
+    const repairButton = document.createElement('button');
+    repairButton.type = 'button';
+    repairButton.className = 'footer-link footer-pwa-repair js-pwa-repair-footer';
+    repairButton.textContent = '表示不具合解消ボタン';
+    repairButton.addEventListener('click', () => runRepairReload_(repairButton));
+
+    footerLeft.append(repairSep, repairButton);
     refreshFooterButton_();
   }
 

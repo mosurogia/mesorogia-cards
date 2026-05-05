@@ -26,6 +26,21 @@
     return s ? s.padStart(5, '0').slice(0, 5) : '';
   }
 
+  /**
+   * Xアカウントをリンク用のユーザーIDへ正規化する
+   */
+  function normalizePosterXUser_(value) {
+    if (typeof window.normX_ === 'function') return window.normX_(value);
+
+    return String(value || '')
+      .trim()
+      .replace(/^https?:\/\/(www\.)?x\.com\//i, '')
+      .replace(/^https?:\/\/(www\.)?twitter\.com\//i, '')
+      .replace(/^@+/, '')
+      .replace(/[\/?#].*$/, '')
+      .toLowerCase();
+  }
+
   function cardImageSrc_(cardOrCd) {
     if (typeof window.getCardImageSrc === 'function') return window.getCardImageSrc(cardOrCd);
     const cd = normCd5_(typeof cardOrCd === 'object' ? (cardOrCd?.cd || cardOrCd?.id) : cardOrCd);
@@ -2031,7 +2046,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
   const tagsUser = tagChipsUser_(item.tagsUser);
 
   const posterXRaw = String(item.posterX || '').trim();
-  const posterXUser = posterXRaw.startsWith('@') ? posterXRaw.slice(1) : posterXRaw;
+  const posterXUser = normalizePosterXUser_(posterXRaw);
   const posterXHtml = posterXUser ? `
     <a class="meta-x"
       href="https://x.com/${encodeURIComponent(posterXUser)}"

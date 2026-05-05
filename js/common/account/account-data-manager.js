@@ -905,6 +905,30 @@
     }
   }
 
+  async function repairPwaCache_(button) {
+    const prevText = button?.textContent || '';
+    if (button) {
+      button.disabled = true;
+      button.textContent = '再読み込み中...';
+    }
+
+    try {
+      if (window.MesorogiaPwaMaintenance?.repairAndReload) {
+        await window.MesorogiaPwaMaintenance.repairAndReload();
+        return;
+      }
+
+      window.location.reload();
+    } catch (err) {
+      console.error('キャッシュ修復に失敗しました。', err);
+      if (button) {
+        button.disabled = false;
+        button.textContent = prevText || '不具合解消';
+      }
+      alert('再読み込みに失敗しました。ブラウザの更新ボタンでもう一度読み込み直してください。');
+    }
+  }
+
   function bindOnce_() {
     if (bound) return;
     bound = true;
@@ -918,6 +942,13 @@
       if (offlineSave) {
         ev.preventDefault();
         saveOfflineCards_(offlineSave);
+        return;
+      }
+
+      const cacheRepair = ev.target.closest?.('[data-pwa-cache-repair]');
+      if (cacheRepair) {
+        ev.preventDefault();
+        repairPwaCache_(cacheRepair);
         return;
       }
 
