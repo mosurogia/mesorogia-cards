@@ -858,8 +858,10 @@
     // 投稿者名
     try {
       const nameEl = document.getElementById('poster-name');
-      const restoredName = (typeof data.poster === 'string') ? data.poster : (data.poster?.name || '');
-      if (nameEl) nameEl.value = restoredName || '';
+      if (nameEl && Object.prototype.hasOwnProperty.call(data, 'poster')) {
+        const restoredName = (typeof data.poster === 'string') ? data.poster : (data.poster?.name || '');
+        nameEl.value = restoredName || '';
+      }
     } catch(_) {}
 
     // 貼り付けコード
@@ -977,6 +979,7 @@
   // - saveAutosaveNow / clearAutosave を提供
   // =========================
   const AUTOSAVE_KEY = 'deck_autosave_v1';
+  const POST_DRAFT_KEY = 'deckmaker_post_draft_v1';
 
   let __autosaveDirty = false;       // 変更が起きたときだけ true
   let __autosaveJustLoaded = true;   // 初期描画直後のガード
@@ -1092,6 +1095,39 @@
     }
 
     return payload;
+  }
+
+  function buildPostDraftPayload_() {
+    const payload = buildAutosavePayload_();
+    delete payload.poster;
+    payload.savedAt = new Date().toISOString();
+    payload.version = 1;
+    return payload;
+  }
+
+  function readPostDraftMeta_() {
+    try {
+      const raw = localStorage.getItem(POST_DRAFT_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return data && typeof data === 'object' ? data : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function savePostDraft_() {
+    const payload = buildPostDraftPayload_();
+    localStorage.setItem(POST_DRAFT_KEY, JSON.stringify(payload));
+    return payload;
+  }
+
+  function restorePostDraft_() {
+    const data = readPostDraftMeta_();
+    if (!data) return null;
+    loadAutosave_(data);
+    try { scheduleAutosave(); } catch (_) {}
+    return data;
   }
 
   function saveAutosaveNow() {
@@ -1374,6 +1410,9 @@
   window.withDeckBarScrollKept = withDeckBarScrollKept;
   window.scheduleAutosave = scheduleAutosave;
   window.maybeRestoreFromStorage = maybeRestoreFromStorage;
+  window.saveDeckmakerPostDraft = window.saveDeckmakerPostDraft || savePostDraft_;
+  window.restoreDeckmakerPostDraft = window.restoreDeckmakerPostDraft || restorePostDraft_;
+  window.readDeckmakerPostDraft = window.readDeckmakerPostDraft || readPostDraftMeta_;
 
   window.setDeckState = window.setDeckState || setDeckState;
   window.resetDeckState = window.resetDeckState || resetDeckState;

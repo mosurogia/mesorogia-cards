@@ -717,6 +717,7 @@
     color: #fff;
     font-weight: 600;
     font-size: 14px;
+    white-space: pre-wrap;
     box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
 }
 
@@ -725,7 +726,8 @@
     background: rgba(16, 185, 129, 0.92);
 }
 
-#post-toast.post-toast.error {
+#post-toast.post-toast.error,
+#post-toast.post-toast.danger {
     background: rgba(239, 68, 68, 0.92);
 }
 
@@ -1033,6 +1035,13 @@
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+}
+
+#deck-layout .deck-list-menu-panel.is-floating {
+    position: fixed;
+    top: auto;
+    right: auto;
+    z-index: 3000;
 }
 
 #deck-layout .deck-list-menu-panel[hidden] {
@@ -3593,6 +3602,96 @@ font-size: .8rem;
     pointer-events: none;
 }
 
+.post-submit-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.post-submit-wrap[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 10px);
+    z-index: var(--z-tooltip, 4600);
+    width: max-content;
+    max-width: min(78vw, 320px);
+    padding: 9px 11px;
+    border-radius: 8px;
+    background: rgba(17, 24, 39, .96);
+    color: #fff;
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1.45;
+    white-space: pre-line;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .22);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+    pointer-events: none;
+}
+
+.post-submit-wrap[data-tooltip]::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: calc(100% + 4px);
+    z-index: var(--z-tooltip, 4600);
+    border: 6px solid transparent;
+    border-top-color: rgba(17, 24, 39, .96);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .16s ease, visibility .16s ease;
+    pointer-events: none;
+}
+
+.post-submit-wrap:hover::before,
+.post-submit-wrap:hover::after,
+.post-submit-wrap:focus-within::before,
+.post-submit-wrap:focus-within::after,
+.post-submit-wrap.is-tooltip-show::before,
+.post-submit-wrap.is-tooltip-show::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.post-submit-tooltip {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .post-submit-wrap[data-tooltip]::before {
+        right: 50%;
+        max-width: min(86vw, 300px);
+        transform: translate(50%, 4px);
+        font-size: .78rem;
+    }
+
+    .post-submit-wrap[data-tooltip]::after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .post-submit-wrap:hover::before,
+    .post-submit-wrap:focus-within::before,
+    .post-submit-wrap.is-tooltip-show::before {
+        transform: translate(50%, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-submit-wrap[data-tooltip]::before,
+    .post-submit-wrap[data-tooltip]::after {
+        transition: none;
+    }
+}
+
 
 /*デッキ投稿タブボタン（水色系）*/
 .post-actions button {
@@ -3606,6 +3705,72 @@ font-size: .8rem;
 }
 .post-actions button:hover {
     box-shadow: 0 3px 8px rgba(104, 166, 255, 0.35);
+}
+
+.post-draft-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.post-draft-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    min-width: 190px;
+    padding: 8px;
+    border: 1px solid rgba(104, 166, 255, 0.35);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+.post-draft-menu.is-floating {
+    position: fixed;
+    top: auto;
+    right: auto;
+    z-index: 3000;
+}
+
+.post-draft-status {
+    padding: 4px 6px 8px;
+    color: #334155;
+    font-size: .85rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.post-actions .post-draft-menu button {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 6px;
+    color: #1e3a8a;
+    background: #eff6ff;
+    box-shadow: none;
+}
+
+.post-actions .post-draft-menu button:hover {
+    background: #dbeafe;
+    box-shadow: none;
+}
+
+.post-actions .post-draft-menu button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .post-draft-wrap {
+        display: block;
+        width: 100%;
+    }
+
+    .post-draft-menu {
+        left: 0;
+        right: 0;
+        min-width: 0;
+    }
 }
 
 .post-status {

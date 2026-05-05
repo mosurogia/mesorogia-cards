@@ -880,8 +880,21 @@
 
                 <div class="post-actions">
                     <button type="button" id="post-open-imagegen">画像生成</button>
-                    <button type="button" id="post-reset">投稿リセット</button>
-                    <button id="post-submit" type="submit">投稿</button>
+                    <div class="post-draft-wrap">
+                        <button type="button" id="post-draft-toggle" aria-expanded="false" aria-controls="post-draft-menu">下書き ☰</button>
+                        <div id="post-draft-menu" class="post-draft-menu" hidden>
+                            <div id="post-draft-status" class="post-draft-status">保存データ：なし</div>
+                            <button type="button" id="post-draft-save">下書き保存</button>
+                            <button type="button" id="post-draft-restore">下書きを復元</button>
+                            <button type="button" id="post-reset">入力内容を削除</button>
+                        </div>
+                    </div>
+                    <span class="post-submit-wrap" id="post-submit-wrap" data-tooltip="投稿するには投稿同意にチェックしてください。">
+                        <button id="post-submit" type="submit" aria-describedby="post-submit-tooltip">投稿</button>
+                        <span id="post-submit-tooltip" class="post-submit-tooltip" role="tooltip">
+                            投稿するには投稿同意にチェックしてください。
+                        </span>
+                    </span>
                 </div>
 
 

@@ -975,15 +975,26 @@
   function bindMinimalAgreeCheck(){
     const agree  = document.getElementById('post-agree');
     const submit = document.getElementById('post-submit');
+    const wrap = document.getElementById('post-submit-wrap');
+    const form = document.getElementById('deck-post-form');
     if (!agree || !submit) return;
 
     const sync = () => {
       const ok = !!agree.checked;
       submit.disabled = !ok;
       submit.classList.toggle('is-disabled', !ok);
+      updatePostSubmitGuidance_();
     };
 
     agree.addEventListener('change', sync);
+    form?.addEventListener('input', sync);
+    form?.addEventListener('change', sync);
+    wrap?.addEventListener('mouseenter', updatePostSubmitGuidance_);
+    wrap?.addEventListener('focusin', updatePostSubmitGuidance_);
+    wrap?.addEventListener('touchstart', () => {
+      updatePostSubmitGuidance_();
+      if (submit.disabled) showPostSubmitTooltipOnce_();
+    }, { passive: true });
     sync();
   }
 
@@ -991,11 +1002,10 @@
   // 5) リセット
   // =====================================================
   function resetDeckPostForm(){
-    const ok = window.confirm('投稿フォームの内容をすべて初期化します。\nよろしいですか？');
+    const ok = window.confirm('入力内容を削除します。\n投稿者名とXアカウントは残します。\nよろしいですか？');
     if (!ok) return;
 
-    const nameInput = document.getElementById('post-deck-name');
-    if (nameInput) nameInput.value = '';
+    window.writeDeckNameInput?.('');
 
     writePostNote('');
 
@@ -1003,6 +1013,7 @@
     const notesHidden = document.getElementById('post-card-notes-hidden');
     if (notesWrap)   notesWrap.innerHTML = '';
     if (notesHidden) notesHidden.value = '[]';
+    window.writeCardNotes?.([]);
 
     try { SelectTags.clear(); } catch (_) {}
 
@@ -1030,6 +1041,109 @@
 
     window.refreshPostSummary?.();
     window.scheduleAutosave?.();
+    updatePostSubmitGuidance_();
+  }
+
+  function formatDraftSavedAt_(value) {
+    const d = new Date(value || '');
+    if (Number.isNaN(d.getTime())) return 'なし';
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}/${m}/${day}`;
+  }
+
+  function setupPostDraftMenu_() {
+    const wrap = document.querySelector('.post-draft-wrap');
+    const toggle = document.getElementById('post-draft-toggle');
+    const menu = document.getElementById('post-draft-menu');
+    const status = document.getElementById('post-draft-status');
+    const saveBtn = document.getElementById('post-draft-save');
+    const restoreBtn = document.getElementById('post-draft-restore');
+    if (!wrap || !toggle || !menu) return;
+
+    function getDraft_() {
+      try { return window.readDeckmakerPostDraft?.() || null; } catch (_) { return null; }
+    }
+
+    function refreshStatus_() {
+      const draft = getDraft_();
+      const savedAt = draft?.savedAt || draft?.date || '';
+      const hasDraft = !!draft;
+      if (status) status.textContent = `保存データ：${hasDraft ? formatDraftSavedAt_(savedAt) : 'なし'}`;
+      if (restoreBtn) restoreBtn.disabled = !hasDraft;
+    }
+
+    function setOpen_(open) {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menu.classList.toggle('is-floating', open);
+      if (open) {
+        refreshStatus_();
+        positionDraftMenu_();
+      } else {
+        menu.style.left = '';
+        menu.style.top = '';
+      }
+    }
+
+    function positionDraftMenu_() {
+      if (menu.hidden) return;
+      const rect = toggle.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+      const margin = 8;
+      const width = menuRect.width || 190;
+      const height = menuRect.height || 0;
+      const left = Math.min(
+        Math.max(margin, rect.right - width),
+        Math.max(margin, window.innerWidth - width - margin)
+      );
+      const bottomTop = rect.bottom + margin;
+      const topTop = rect.top - height - margin;
+      const fitsBelow = bottomTop + height <= window.innerHeight - margin;
+      const top = fitsBelow ? bottomTop : Math.max(margin, topTop);
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    }
+
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      setOpen_(menu.hidden);
+    });
+
+    saveBtn?.addEventListener('click', () => {
+      try {
+        window.saveDeckmakerPostDraft?.();
+        refreshStatus_();
+        alert('下書きを保存しました。');
+      } catch (_) {
+        alert('下書き保存に失敗しました。');
+      }
+    });
+
+    restoreBtn?.addEventListener('click', () => {
+      if (!getDraft_()) {
+        refreshStatus_();
+        alert('保存された下書きがありません。');
+        return;
+      }
+      const ok = window.confirm('保存された下書きを復元します。\n現在のデッキリストと投稿内容は上書きされます。\nよろしいですか？');
+      if (!ok) return;
+      window.restoreDeckmakerPostDraft?.();
+      window.refreshPostSummary?.();
+      refreshStatus_();
+      setOpen_(false);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (menu.hidden || wrap.contains(e.target)) return;
+      setOpen_(false);
+    });
+
+    window.addEventListener('resize', positionDraftMenu_);
+    window.addEventListener('scroll', () => setOpen_(false), true);
+
+    refreshStatus_();
   }
 
   // =====================================================
@@ -1128,6 +1242,139 @@
 
     clearTimeout(window._postToastTimer);
     window._postToastTimer = setTimeout(() => { box.style.display = 'none'; }, 3500);
+  }
+
+  function getPostDeckCount_(){
+    if (typeof window.getDeckCount === 'function') return window.getDeckCount() | 0;
+    const d = window.deck || {};
+    return Object.values(d).reduce((a, v) => a + (v | 0), 0);
+  }
+
+  function getPostFieldLabel_(el){
+    const id = el?.id || '';
+    const map = {
+      'post-deck-name': 'デッキ名',
+      'post-note': 'デッキ解説',
+      'auth-display-name': '投稿者名',
+      'post-rep-validator': 'メインカード',
+      'post-cardnote-validator': 'カード解説',
+      'post-agree': '投稿同意',
+    };
+    if (map[id]) return map[id];
+
+    const row = el?.closest?.('.info-row');
+    const labelText = row?.querySelector?.('.info-label')?.textContent?.replace(/\s+/g, ' ').trim();
+    if (labelText) return labelText;
+
+    return el?.getAttribute?.('aria-label') || el?.name || '入力項目';
+  }
+
+  function getPostInvalidControls_(form){
+    if (!form) return [];
+    return Array.from(form.querySelectorAll('input, textarea, select'))
+      .filter(el => !el.disabled && typeof el.checkValidity === 'function' && !el.checkValidity())
+      .map(el => ({
+        el,
+        label: getPostFieldLabel_(el),
+        message: el.validationMessage || '入力してください',
+      }));
+  }
+
+  function getPostSubmitGuidanceItems_(){
+    const items = [];
+    const deckName = document.getElementById('post-deck-name')?.value?.trim() || '';
+    const note = document.getElementById('post-note')?.value?.trim() || '';
+    const posterName = document.getElementById('auth-display-name')?.value?.trim() || '';
+    const deckCount = getPostDeckCount_();
+
+    if (!document.getElementById('post-agree')?.checked) items.push('投稿同意にチェック');
+    if (!deckName) items.push('デッキ名を入力');
+    if (deckCount < 30 || deckCount > 40) items.push(`デッキ枚数を30〜40枚に調整（現在${deckCount}枚）`);
+    if (!window.representativeCd) items.push('メインカードを選択');
+    if (!note) items.push('デッキ解説を入力');
+    if (!posterName) items.push('投稿者名を入力');
+    if (hasIncompleteCardNotes_()) items.push('カード解説の未入力行を確認');
+
+    return items;
+  }
+
+  function hasIncompleteCardNotes_(){
+    const list = window.CardNotes?.getList?.() || [];
+    return list.some(r => {
+      const cd = String(r.cd || '').trim();
+      const text = String(r.text || '').trim();
+
+      if (!cd && !text) return false;
+      return !!(cd && !text);
+    });
+  }
+
+  function clearPostAuxiliaryValidity_(){
+    document.getElementById('post-rep-validator')?.setCustomValidity?.('');
+    document.getElementById('post-cardnote-validator')?.setCustomValidity?.('');
+  }
+
+  function hasPostPreValidationIssue_(){
+    clearPostAuxiliaryValidity_();
+    const form = document.getElementById('deck-post-form');
+    if (form && !form.checkValidity()) return true;
+    if ((window.validateDeckBeforePost?.() || []).length) return true;
+    if (!window.representativeCd) return true;
+    if (hasIncompleteCardNotes_()) return true;
+    return false;
+  }
+
+  function updatePostSubmitGuidance_(){
+    const wrap = document.getElementById('post-submit-wrap');
+    const tip = document.getElementById('post-submit-tooltip');
+    const btn = document.getElementById('post-submit');
+    if (!wrap) return;
+
+    const items = getPostSubmitGuidanceItems_();
+    const message = items.length
+      ? `投稿前に確認してください。\n・${items.slice(0, 5).join('\n・')}`
+      : '入力内容を確認して投稿できます。';
+
+    wrap.dataset.tooltip = message;
+    if (tip) tip.textContent = message;
+    if (btn) btn.setAttribute('aria-label', message.replace(/\n/g, ' '));
+  }
+
+  function showPostSubmitTooltipOnce_(){
+    const wrap = document.getElementById('post-submit-wrap');
+    if (!wrap) return;
+    wrap.classList.add('is-tooltip-show');
+    clearTimeout(wrap.__postTooltipTimer);
+    wrap.__postTooltipTimer = setTimeout(() => {
+      wrap.classList.remove('is-tooltip-show');
+    }, 2600);
+  }
+
+  function scrollToPostField_(el){
+    if (!el) return;
+    const target = el.closest?.('.info-row') || el;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    try {
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    } catch (_) {
+      target.scrollIntoView();
+    }
+
+    if (typeof el.focus === 'function' && el.getAttribute('aria-hidden') !== 'true') {
+      setTimeout(() => el.focus({ preventScroll: true }), reduce ? 0 : 280);
+    }
+  }
+
+  function showPostValidationNotice_(items){
+    const list = (items || []).map(item => {
+      if (typeof item === 'string') return item;
+      const label = item?.label || getPostFieldLabel_(item?.el);
+      return `${label}: ${item?.message || '入力してください'}`;
+    });
+    const message = list.length
+      ? `投稿前に入力内容を確認してください。\n${list.map(v => `・${v}`).join('\n')}`
+      : '投稿前に入力内容を確認してください。';
+    showPostToast(message, 'danger');
   }
 
   // =====================================================
@@ -1497,6 +1744,9 @@
 
     // ✅ deckmaker-campaign.js がいるならそっちに委譲（確認モーダル付き）
     if (window.CampaignUI && typeof window.CampaignUI.onClickPostButton === 'function'){
+      if (hasPostPreValidationIssue_()) {
+        return submitDeckPost(e, { joinCampaign: false, campaign: null });
+      }
       await window.CampaignUI.onClickPostButton();
       return false;
     }
@@ -1518,7 +1768,13 @@
     isPostingDeck = true;
 
     const form = document.getElementById('deck-post-form');
-    if (form && !form.reportValidity()){
+    clearPostAuxiliaryValidity_();
+    if (form && !form.checkValidity()){
+      const invalidItems = getPostInvalidControls_(form);
+      showPostValidationNotice_(invalidItems);
+      const firstInvalid = invalidItems[0]?.el;
+      scrollToPostField_(firstInvalid);
+      setTimeout(() => firstInvalid?.reportValidity?.(), 320);
       isPostingDeck = false;
       return false;
     }
@@ -1526,7 +1782,16 @@
     // 投稿前チェック（page2互換）
     const msgs = window.validateDeckBeforePost?.() || [];
     if (msgs.length){
-      showPostToast(msgs.join('\n'), 'danger', true);
+      showPostValidationNotice_(msgs);
+      const firstMsg = String(msgs[0] || '');
+      if (firstMsg.includes('枚数')) {
+        scrollToPostField_(document.getElementById('post-deck-count'));
+      } else if (firstMsg.includes('デッキ名')) {
+        scrollToPostField_(document.getElementById('post-deck-name'));
+      } else if (firstMsg.includes('同意')) {
+        scrollToPostField_(document.getElementById('post-agree'));
+        showPostSubmitTooltipOnce_();
+      }
       isPostingDeck = false;
       return false;
     }
@@ -1555,7 +1820,9 @@
       const hasRep = !!window.representativeCd;
       if (!hasRep){
         repValidator.setCustomValidity('メインカードを選択してください');
-        repValidator.reportValidity();
+        showPostValidationNotice_([{ el: repValidator, label: 'メインカード', message: 'カード名をタップして選択してください' }]);
+        scrollToPostField_(document.getElementById('post-representative') || repValidator);
+        setTimeout(() => repValidator.reportValidity(), 320);
         isPostingDeck = false;
         return false;
       }
@@ -1565,24 +1832,11 @@
     const cardnoteValidator = document.getElementById('post-cardnote-validator');
     if (cardnoteValidator){
       cardnoteValidator.setCustomValidity('');
-      const list = window.CardNotes?.getList?.() || [];
-
-      const hasIncomplete = list.some(r => {
-        const cd = String(r.cd || '').trim();
-        const text = String(r.text || '').trim();
-
-        // 完全空行は無視
-        if (!cd && !text) return false;
-
-        // cdあるのにtext無い → NG
-        if (cd && !text) return true;
-
-        return false;
-      });
-
-      if (hasIncomplete){
+      if (hasIncompleteCardNotes_()){
         cardnoteValidator.setCustomValidity('カード解説が未入力の行があります');
-        cardnoteValidator.reportValidity();
+        showPostValidationNotice_([{ el: cardnoteValidator, label: 'カード解説', message: 'カードを選んだ行の解説を入力してください' }]);
+        scrollToPostField_(document.getElementById('post-card-notes') || cardnoteValidator);
+        setTimeout(() => cardnoteValidator.reportValidity(), 320);
         isPostingDeck = false;
         return false;
       }
@@ -1863,6 +2117,7 @@
   // =====================================================
   function initPost(){
     bindMinimalAgreeCheck();
+    setupPostDraftMenu_();
 
     const resetBtn = document.getElementById('post-reset');
     if (resetBtn) resetBtn.addEventListener('click', resetDeckPostForm);

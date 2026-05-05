@@ -405,11 +405,34 @@
 
     const closeMenu = () => {
       panel.hidden = true;
+      panel.classList.remove('is-floating');
+      panel.style.left = '';
+      panel.style.top = '';
       toggle.setAttribute('aria-expanded', 'false');
+    };
+    const positionMenu = () => {
+      if (panel.hidden) return;
+      const rect = toggle.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const margin = 8;
+      const width = panelRect.width || 132;
+      const height = panelRect.height || 0;
+      const left = Math.min(
+        Math.max(margin, rect.right - width),
+        Math.max(margin, window.innerWidth - width - margin)
+      );
+      const bottomTop = rect.bottom + margin;
+      const topTop = rect.top - height - margin;
+      const fitsBelow = bottomTop + height <= window.innerHeight - margin;
+      const top = fitsBelow ? bottomTop : Math.max(margin, topTop);
+      panel.style.left = `${left}px`;
+      panel.style.top = `${top}px`;
     };
     const openMenu = () => {
       panel.hidden = false;
+      panel.classList.add('is-floating');
       toggle.setAttribute('aria-expanded', 'true');
+      positionMenu();
     };
     const toggleMenu = () => {
       if (panel.hidden) openMenu();
@@ -456,6 +479,9 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMenu();
     });
+
+    window.addEventListener('resize', positionMenu);
+    window.addEventListener('scroll', closeMenu, true);
   }
 
   // =========================
