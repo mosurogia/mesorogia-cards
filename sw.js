@@ -1,4 +1,6 @@
-importScripts('./js/common/pwa/cache-config.js');
+// Service Worker本体の差分で更新検知させ、設定ファイルも確実に最新版を読む。
+var SW_BUILD_VERSION = '2026-05-05-004';
+importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
 var staticCacheName = config.staticCacheName;
