@@ -8,7 +8,7 @@
     <meta name="google-site-verification" content="5NzYWNH5_YUg0dUV2iCzg_bSo7M1lLJi6IzOeF2dGXM" />
     <link rel="icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="img/appicon_1024.webp">
-    <link rel="manifest" href="manifest.webmanifest?v=2026-05-05-004">
+    <link rel="manifest" href="manifest.webmanifest?v=2026-05-05-007">
     <meta name="theme-color" content="#111827">
 
     <!-- ===== タイトル ===== -->
@@ -33,11 +33,11 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-05-004">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-004">
-    <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-004">
-    <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-004">
-    <link rel="stylesheet" href="css/page2.css?v=2026-05-05-004">
+    <link rel="stylesheet" href="css/common.css?v=2026-05-05-007">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-007">
+    <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
+    <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
+    <link rel="stylesheet" href="css/page2.css?v=2026-05-05-007">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -800,22 +800,22 @@
             </div>
 
             <!-- キャンペーン告知（投稿ボタン上：開催中のみ表示） -->
-            <div id="campaign-banner" class="campaign-banner" style="display:none;">
+            <div id="event-notice-panel" class="event-notice-panel" style="display:none;">
                 <!-- ① 上段：🎉 + キャンペーン名 + 期間 -->
-                <div class="campaign-banner-title-row">
-                    <span class="campaign-banner-emoji" aria-hidden="true">🎉</span>
-                    <span class="campaign-banner-title" id="campaign-banner-title">キャンペーン</span>
-                    <span class="campaign-banner-range" id="campaign-banner-range"></span>
+                <div class="event-notice-title-row">
+                    <span class="event-notice-emoji" aria-hidden="true">🎉</span>
+                    <span class="event-notice-title" id="event-notice-title">キャンペーン</span>
+                    <span class="event-notice-range" id="event-notice-range"></span>
                 </div>
 
                 <!-- ② 下段：宣伝文 + 詳細ボタン（スマホでも横並び固定） -->
-                <div class="campaign-banner-cta-row">
-                    <div class="campaign-banner-desc" id="campaign-banner-text">
+                <div class="event-notice-cta-row">
+                    <div class="event-notice-desc" id="event-notice-text">
                         デッキを投稿して、キャンペーンに参加しよう！<span class="sp-break"></span>
                         <strong>詳しい参加条件や報酬は、詳細をチェック！</strong>
                     </div>
 
-                    <button type="button" class="campaign-btn campaign-banner-btn" data-open="campaignDetailModal">
+                    <button type="button" class="event-notice-action event-notice-btn" data-open="campaignDetailModal">
                         詳細 ▶
                     </button>
                 </div>
@@ -871,7 +871,7 @@
                     <p id="campaign-tag-help" class="campaign-tag-help">
                         デッキ条件、ログイン、Xアカウント、必要なID入力が完了すると、下の対象タグを選択できます。
                     </p>
-                    <div id="campaign-banner-tagrow" class="tag-chips campaign-tagrow" style="display:none;">
+                    <div id="event-notice-tagrow" class="tag-chips campaign-tagrow" style="display:none;">
                         <button type="button" id="campaign-tag-toggle" class="chip" aria-pressed="false">
                             （対象タグ）
                         </button>
@@ -1216,55 +1216,55 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/core/defs.js?v=2026-05-05-004"></script>
-<script src="js/common/core/card-core.js?v=2026-05-05-004"></script>
-<script src="js/common/core/app-helpers.js?v=2026-05-05-004"></script>
-<script src="js/common/core/card-sort.js?v=2026-05-05-004"></script>
+<script src="js/common/core/defs.js?v=2026-05-05-007"></script>
+<script src="js/common/core/card-core.js?v=2026-05-05-007"></script>
+<script src="js/common/core/app-helpers.js?v=2026-05-05-007"></script>
+<script src="js/common/core/card-sort.js?v=2026-05-05-007"></script>
 
 <!-- データストレージ -->
-<script src="js/common/storage/owned.js?v=2026-05-05-004"></script>
-<script src="js/common/storage/card-groups.js?v=2026-05-05-004"></script>
+<script src="js/common/storage/owned.js?v=2026-05-05-007"></script>
+<script src="js/common/storage/card-groups.js?v=2026-05-05-007"></script>
 
 <!-- アカウント関係 -->
-<script src="js/common/account/auth-core.js?v=2026-05-05-004"></script>
-<script src="js/common/account/auth-ui.js?v=2026-05-05-004"></script>
-<script src="js/common/account/account.js?v=2026-05-05-004"></script>
-<script src="js/common/account/account-app-data-sync.js?v=2026-05-05-004"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-05-004"></script>
-<script src="js/common/pwa/offline-cards.js?v=2026-05-05-004"></script>
-<script src="js/common/account/account-data-manager.js?v=2026-05-05-004"></script>
-<script src="js/common/account/account-match-results.js?v=2026-05-05-004"></script>
-<script src="js/common/account/header-auth.js?v=2026-05-05-004"></script>
+<script src="js/common/account/auth-core.js?v=2026-05-05-007"></script>
+<script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
+<script src="js/common/account/account.js?v=2026-05-05-007"></script>
+<script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-05-007"></script>
+<script src="js/common/pwa/offline-cards.js?v=2026-05-05-007"></script>
+<script src="js/common/account/account-data-manager.js?v=2026-05-05-007"></script>
+<script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
+<script src="js/common/account/header-auth.js?v=2026-05-05-007"></script>
 
 <!-- UI -->
-<script src="js/common/ui/tabs.js?v=2026-05-05-004"></script>
+<script src="js/common/ui/tabs.js?v=2026-05-05-007"></script>
 
 <!-- カード共通 -->
-<script src="js/common/card/cardGrid.js?v=2026-05-05-004"></script>
-<script src="js/common/card/card-detail.js?v=2026-05-05-004"></script>
-<script src="js/common/card/card-image-viewer.js?v=2026-05-05-004"></script>
-<script src="js/common/card/card-pick-modal.js?v=2026-05-05-004"></script>
+<script src="js/common/card/cardGrid.js?v=2026-05-05-007"></script>
+<script src="js/common/card/card-detail.js?v=2026-05-05-007"></script>
+<script src="js/common/card/card-image-viewer.js?v=2026-05-05-007"></script>
+<script src="js/common/card/card-pick-modal.js?v=2026-05-05-007"></script>
 
-<script src="js/common/filter/keyword-filter.js?v=2026-05-05-004"></script>
-<script src="js/common/filter/chip-bar.js?v=2026-05-05-004"></script>
-<script src="js/common/card/cardFilter.js?v=2026-05-05-004"></script>
+<script src="js/common/filter/keyword-filter.js?v=2026-05-05-007"></script>
+<script src="js/common/filter/chip-bar.js?v=2026-05-05-007"></script>
+<script src="js/common/card/cardFilter.js?v=2026-05-05-007"></script>
 
 
 <!-- デッキ保存 -->
-<script src="js/common/storage/deck-saved-store.js?v=2026-05-05-004"></script>
-<script src="js/common/ui/deck-saved-ui.js?v=2026-05-05-004"></script>
+<script src="js/common/storage/deck-saved-store.js?v=2026-05-05-007"></script>
+<script src="js/common/ui/deck-saved-ui.js?v=2026-05-05-007"></script>
 
 <!-- 画像生成 -->
-<script src="js/common/deck/deck-peek.js?v=2026-05-05-004"></script>
-<script src="js/common/deck/image-export.js?v=2026-05-05-004"></script>
-<script src="js/common/deck/deck-analysis.js?v=2026-05-05-004"></script>
-<script src="js/common/deck/deck-note-presets.js?v=2026-05-05-004"></script>
-<script defer src="js/common/deck/screenshot-panel.js?v=2026-05-05-004"></script>
+<script src="js/common/deck/deck-peek.js?v=2026-05-05-007"></script>
+<script src="js/common/deck/image-export.js?v=2026-05-05-007"></script>
+<script src="js/common/deck/deck-analysis.js?v=2026-05-05-007"></script>
+<script src="js/common/deck/deck-note-presets.js?v=2026-05-05-007"></script>
+<script defer src="js/common/deck/screenshot-panel.js?v=2026-05-05-007"></script>
 
 <!-- デッキメーカーページ専用 -->
-<script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-05-05-004"></script>
-<script src="js/common/pwa/install-ui.js?v=2026-05-05-004"></script>
-<script src="js/common/pwa/register.js?v=2026-05-05-004"></script>
+<script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-05-05-007"></script>
+<script src="js/common/pwa/install-ui.js?v=2026-05-05-007"></script>
+<script src="js/common/pwa/register.js?v=2026-05-05-007"></script>
 
 </body>
 </html>
