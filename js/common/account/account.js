@@ -421,7 +421,7 @@
 
             // 開催期間（バナー表示を優先）
             const $range = document.getElementById('campaignDetailRange');
-            const $srcRange = document.getElementById('campaign-banner-range');
+            const $srcRange = document.getElementById('event-notice-range');
             if ($range) {
                 const t = ($srcRange?.textContent || '').trim();
                 $range.textContent = t || '（日程はバナー表示に合わせて運用）';
@@ -429,14 +429,14 @@
 
             // キャンペーン名（バナー表示を優先）
             const $name = document.getElementById('campaignDetailNameInline');
-            const $srcName = document.getElementById('campaign-banner-title');
+            const $srcName = document.getElementById('event-notice-title');
             if ($name) {
                 const n = ($srcName?.textContent || '').trim();
                 $name.textContent = n || 'キャンペーン';
             }
 
             // 対象タグ（とりあえずバナーのタイトルを1個タグとして入れる運用）
-            const n = (document.getElementById('campaign-banner-title')?.textContent || '').trim();
+            const n = (document.getElementById('event-notice-title')?.textContent || '').trim();
             if (n && window.setCampaignDetailTags) window.setCampaignDetailTags([n]);
             }
         });
