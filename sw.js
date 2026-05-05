@@ -1,5 +1,4 @@
-// Service Worker本体の差分で更新検知させ、設定ファイルも確実に最新版を読む。
-var SW_BUILD_VERSION = '2026-05-05-004';
+var SW_BUILD_VERSION = '2026-05-06-002';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
@@ -23,6 +22,28 @@ self.addEventListener('install', function (event) {
   );
   self.skipWaiting();
 });
+
+function reloadControlledClients() {
+  return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
+    return Promise.all(
+      clientList.map(function (client) {
+        if (!client.url || typeof client.navigate !== 'function') {
+          return Promise.resolve();
+        }
+
+        try {
+          var url = new URL(client.url);
+          url.searchParams.set('sw_refresh', SW_BUILD_VERSION);
+          return client.navigate(url.toString()).catch(function () {
+            return undefined;
+          });
+        } catch (_) {
+          return Promise.resolve();
+        }
+      })
+    );
+  });
+}
 
 self.addEventListener('activate', function (event) {
   if (isLocalDev) {
@@ -55,6 +76,8 @@ self.addEventListener('activate', function (event) {
       );
     }).then(function () {
       return self.clients.claim();
+    }).then(function () {
+      return reloadControlledClients();
     })
   );
 });
@@ -80,7 +103,7 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (event.request.mode === 'navigate') {
-    event.respondWith(networkFirst(event.request, true));
+    event.respondWith(networkOnly(event.request));
     return;
   }
 
@@ -88,7 +111,17 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  if (shouldUseCardNetworkFirst(requestUrl)) {
+  if (shouldUseNetworkOnly(requestUrl)) {
+    event.respondWith(networkOnly(event.request));
+    return;
+  }
+
+  if (isCardImage(requestUrl)) {
+    event.respondWith(staleWhileRevalidate(event.request));
+    return;
+  }
+
+  if (isCardDataJson(requestUrl)) {
     event.respondWith(networkFirst(event.request, false));
     return;
   }
@@ -112,8 +145,8 @@ function shouldUseCacheFirst(url) {
   });
 }
 
-function shouldUseCardNetworkFirst(url) {
-  return isCardDataJson(url) || isCardImage(url);
+function shouldUseNetworkOnly(url) {
+  return /\.(?:html|css|js)$/.test(url.pathname);
 }
 
 function isCardDataJson(url) {
@@ -130,6 +163,10 @@ function shouldUseNetworkFirst(url) {
   });
 }
 
+function networkOnly(request) {
+  return fetch(new Request(request, { cache: 'reload' }));
+}
+
 function cacheFirst(request) {
   return caches.match(request).then(function (cachedResponse) {
     if (cachedResponse) {
@@ -139,6 +176,18 @@ function cacheFirst(request) {
     return fetch(request).then(function (networkResponse) {
       return putRuntimeCache(request, networkResponse);
     });
+  });
+}
+
+function staleWhileRevalidate(request) {
+  var fetchPromise = fetch(request).then(function (networkResponse) {
+    return putRuntimeCache(request, networkResponse);
+  }).catch(function () {
+    return undefined;
+  });
+
+  return caches.match(request).then(function (cachedResponse) {
+    return cachedResponse || fetchPromise;
   });
 }
 

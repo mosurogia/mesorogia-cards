@@ -1242,6 +1242,26 @@ button,
     line-height: 1.6;
 }
 
+.account-offline-card-status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+}
+
+.account-offline-card-saved-wrap {
+    display: inline-flex;
+    flex: 1 1 220px;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    gap: 8px;
+}
+
+.account-offline-card-saved-wrap[hidden] {
+    display: none;
+}
+
 .account-offline-card-note,
 .account-offline-card-saved-at {
     color: #374151;
@@ -1249,11 +1269,47 @@ button,
 }
 
 .account-offline-card-progress {
-    min-width: 0;
+    flex: 0 1 auto;
+    min-width: min(100%, 9em);
     color: #374151;
     font-size: 0.86rem;
     font-weight: 700;
     overflow-wrap: anywhere;
+}
+
+.account-offline-card-saved-at {
+    min-width: 0;
+    text-align: right;
+}
+
+.account-offline-card-delete {
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #374151;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.account-offline-card-delete:hover {
+    border-color: #fca5a5;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.account-offline-card-delete:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 2px;
+}
+
+.account-offline-card-delete:disabled {
+    cursor: wait;
+    opacity: 0.6;
 }
 
 #offline-card-save-status {
