@@ -271,10 +271,10 @@
     const task = window.MesorogiaPwaMaintenance?.repairAndReload?.();
     if (task && typeof task.catch === 'function') {
       task.catch((error) => {
-        console.error('キャッシュ修復に失敗しました。', error);
+        console.error('再読み込み処理に失敗しました。', error);
         if (button) {
           button.disabled = false;
-          button.textContent = prevText || '不具合解消';
+          button.textContent = prevText || '再読み込み';
         }
         window.location.reload();
       });
@@ -405,7 +405,7 @@
     const repairButton = document.createElement('button');
     repairButton.type = 'button';
     repairButton.className = 'footer-link footer-pwa-repair js-pwa-repair-footer';
-    repairButton.textContent = '表示不具合解消ボタン';
+    repairButton.textContent = '再読み込み';
     repairButton.addEventListener('click', () => runRepairReload_(repairButton));
 
     footerLeft.append(repairSep, repairButton);

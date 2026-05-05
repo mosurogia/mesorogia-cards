@@ -234,19 +234,16 @@
                     </button>
                 </div>
 
-                <div class="account-maintenance-item account-maintenance-item-danger">
-                    <div class="account-maintenance-text">
-                        <strong>表示の不具合修復</strong>
-                        <span>古いキャッシュを削除して、最新版を読み込み直します。</span>
-                    </div>
-                    <button type="button" class="btn danger" id="pwa-cache-repair-btn" data-pwa-cache-repair>
-                        表示を修復
-                    </button>
-                </div>
             </div>
 
-            <span class="account-offline-card-progress" id="offline-card-save-progress" aria-live="polite"></span>
-            <p class="account-offline-card-saved-at" id="offline-card-save-date" hidden></p>
+            <div class="account-offline-card-status-row">
+                <span class="account-offline-card-progress" id="offline-card-save-progress" aria-live="polite"></span>
+                <span class="account-offline-card-saved-wrap" id="offline-card-save-date-wrap" hidden>
+                    <span class="account-offline-card-saved-at" id="offline-card-save-date"></span>
+                    <button type="button" class="account-offline-card-delete" id="offline-card-clear-btn"
+                        data-offline-cards-clear aria-label="保存済みカード画像を削除" title="保存済みカード画像を削除">🗑</button>
+                </span>
+            </div>
             <p class="account-offline-card-error" id="offline-card-save-error" hidden></p>
             </section>
 

@@ -21,6 +21,11 @@
     return cacheName === config.staticCacheName || cacheName === config.runtimeCacheName;
   }
 
+  function isRuntimeCache_(cacheName) {
+    return String(cacheName || '').indexOf('mesorogia-runtime-') === 0 ||
+      cacheName === LEGACY_OFFLINE_CACHE_NAME;
+  }
+
   function deleteCaches_(opts) {
     opts = opts || {};
     if (!window.caches || typeof window.caches.keys !== 'function') {
@@ -29,6 +34,10 @@
 
     return window.caches.keys().then(function (cacheNames) {
       var targets = cacheNames.filter(function (cacheName) {
+        if (opts.keepRuntime && isRuntimeCache_(cacheName)) {
+          return false;
+        }
+
         if (opts.all) {
           return isMesorogiaCache_(cacheName) || cacheName === LEGACY_OFFLINE_CACHE_NAME;
         }
@@ -72,7 +81,7 @@
       localStorage.setItem(markerKey, String(Date.now()));
     } catch (_) {}
 
-    return deleteCaches_({ all: !!opts.all }).then(function () {
+    return deleteCaches_({ all: !!opts.all, keepRuntime: !!opts.keepRuntime }).then(function () {
       if (opts.unregister) {
         return unregisterServiceWorkers_();
       }
@@ -112,7 +121,7 @@
 
   window.MesorogiaPwaMaintenance = {
     repairAndReload: function () {
-      return repairAndReload_({ all: true, unregister: true });
+      return repairAndReload_({ all: true, unregister: true, keepRuntime: true });
     },
     clearOldCaches: function () {
       return deleteCaches_({ all: false });

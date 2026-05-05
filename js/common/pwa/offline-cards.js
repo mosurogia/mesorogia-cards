@@ -42,6 +42,13 @@
     return next;
   }
 
+  function clearStatus_() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (_) {}
+    dispatchProgress_({});
+  }
+
   function dispatchProgress_(detail) {
     window.dispatchEvent(new CustomEvent('offline-cards:progress', { detail }));
   }
@@ -136,7 +143,24 @@
     return status;
   }
 
+  async function clear_() {
+    if (!window.caches) {
+      clearStatus_();
+      return {};
+    }
+
+    const status = readStatus_();
+    const cacheNames = [getCacheName_(), status.cacheName, DEFAULT_CACHE_NAME]
+      .filter(Boolean)
+      .filter((cacheName, index, list) => list.indexOf(cacheName) === index);
+
+    await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName).catch(() => false)));
+    clearStatus_();
+    return {};
+  }
+
   window.MesorogiaOfflineCards = {
+    clear: clear_,
     save: save_,
     getStatus: readStatus_,
   };

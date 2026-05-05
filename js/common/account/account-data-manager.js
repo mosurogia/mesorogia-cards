@@ -831,15 +831,18 @@
 
     const progress = document.getElementById('offline-card-save-progress');
     const savedAt = document.getElementById('offline-card-save-date');
+    const savedAtWrap = document.getElementById('offline-card-save-date-wrap');
     const button = document.getElementById('offline-card-save-btn');
+    const clearButton = document.getElementById('offline-card-clear-btn');
 
     setOfflineCardError_('');
     if (button) button.disabled = state === 'saving';
+    if (clearButton) clearButton.disabled = state === 'saving';
 
     if (state === 'saving') {
       setStatus_('offline-card-save-status', total ? `保存中 ${savedCount}/${total}` : '保存中');
       if (progress) progress.textContent = total ? `${savedCount}/${total}件を保存中` : '保存準備中';
-      setHidden_('offline-card-save-date', true);
+      if (savedAtWrap) savedAtWrap.hidden = true;
       return;
     }
 
@@ -852,8 +855,8 @@
       }
       if (savedAt) {
         savedAt.textContent = savedAtText ? `最終保存日: ${savedAtText}` : '';
-        savedAt.hidden = !savedAtText;
       }
+      if (savedAtWrap) savedAtWrap.hidden = !savedAtText;
       if (failedCount > 0) {
         setOfflineCardError_('一部の画像を保存できませんでした。通信状態を確認してもう一度保存してください。');
       }
@@ -863,14 +866,14 @@
     if (state === 'failed') {
       setStatus_('offline-card-save-status', '保存失敗');
       if (progress) progress.textContent = savedCount ? `${savedCount}件保存済み` : '';
-      setHidden_('offline-card-save-date', true);
+      if (savedAtWrap) savedAtWrap.hidden = true;
       setOfflineCardError_(status.error || 'カードデータを保存できませんでした。通信状態を確認してください。');
       return;
     }
 
     setStatus_('offline-card-save-status', '未保存');
     if (progress) progress.textContent = '';
-    setHidden_('offline-card-save-date', true);
+    if (savedAtWrap) savedAtWrap.hidden = true;
   }
 
   function refreshOfflineCards_() {
@@ -905,6 +908,34 @@
     }
   }
 
+  async function clearOfflineCards_(button) {
+    if (!window.MesorogiaOfflineCards?.clear) {
+      setOfflineCardError_('保存済みカード画像を削除できませんでした。ページを再読み込みしてください。');
+      return;
+    }
+
+    const ok = confirm('保存済みのカード画像を削除しますか？\n削除後もオンライン時は通常どおり画像を表示できます。');
+    if (!ok) return;
+
+    const prevText = button?.textContent || '';
+    if (button) {
+      button.disabled = true;
+      button.textContent = '...';
+    }
+
+    try {
+      await window.MesorogiaOfflineCards.clear();
+      renderOfflineCardStatus_({});
+    } catch (err) {
+      setOfflineCardError_(err?.message || '保存済みカード画像を削除できませんでした。');
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = prevText || '🗑';
+      }
+    }
+  }
+
   async function repairPwaCache_(button) {
     const prevText = button?.textContent || '';
     if (button) {
@@ -920,10 +951,10 @@
 
       window.location.reload();
     } catch (err) {
-      console.error('キャッシュ修復に失敗しました。', err);
+      console.error('再読み込み処理に失敗しました。', err);
       if (button) {
         button.disabled = false;
-        button.textContent = prevText || '不具合解消';
+        button.textContent = prevText || '再読み込み';
       }
       alert('再読み込みに失敗しました。ブラウザの更新ボタンでもう一度読み込み直してください。');
     }
@@ -949,6 +980,13 @@
       if (cacheRepair) {
         ev.preventDefault();
         repairPwaCache_(cacheRepair);
+        return;
+      }
+
+      const offlineClear = ev.target.closest?.('[data-offline-cards-clear]');
+      if (offlineClear) {
+        ev.preventDefault();
+        clearOfflineCards_(offlineClear);
         return;
       }
 
