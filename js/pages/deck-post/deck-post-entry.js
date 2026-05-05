@@ -4,6 +4,39 @@
  * - 各モジュールの初期化順を管理
 ================================================== */
 
+// ★ここに追加（ファイル最上部でOK）
+window.debugLog = function(...args){
+  const el = document.getElementById('debug-log') || (() => {
+    const d = document.createElement('div');
+    d.id = 'debug-log';
+    d.style = `
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      max-height:40%;
+      overflow:auto;
+      background:#000;
+      color:#0f0;
+      font-size:11px;
+      z-index:99999;
+    `;
+    document.body.appendChild(d);
+    return d;
+  })();
+
+  el.innerHTML += `<div>${args.map(a=>JSON.stringify(a)).join(' ')}</div>`;
+};
+
+window.addEventListener('error', (e) => {
+  debugLog('❌ JS error', e.message, e.filename, e.lineno);
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  debugLog('❌ Promise error', e.reason?.message || e.reason);
+});
+
+
 const DeckPostApp = (() => {
   'use strict';
 
@@ -47,53 +80,73 @@ const DeckPostApp = (() => {
   }
 
   // ===== 初期化 =====
-  async function init() {
-    if (initialized) return;
+async function init() {
+  debugLog('① init開始');
 
-    // state は deck-post-state.js で管理する（後ロード対応）
-    state = window.DeckPostState?.getState?.() || window.__DeckPostState || null;
-    if (!state) {
-      console.error('DeckPostState is not ready');
-      window.DeckPostList?.showListStatusMessage?.('error', '初期化に失敗しました（state未ロード）');
-      return;
-    }
-
-    // ① カードマスタ読み込み（デッキリスト・カード解説で使う）
-    try {
-      window.DeckPostList?.showListStatusMessage?.('loading', '投稿一覧を読み込み中です…(5秒ほどかかります)');
-    } catch (e) {}
-
-    await waitForPaint_();
-
-    try {
-      await window.ensureCardMapLoaded();
-      console.log('cardMap loaded, size =', Object.keys(window.cardMap || {}).length);
-    } catch (e) {
-      console.error('カードマスタ読み込みに失敗しました', e);
-    }
-
-    // ② トークン
-    window.DeckPostState?.setToken?.(
-      window.DeckPostApi?.resolveToken?.() || ''
-    );
-
-    // ログイン状態初期反映（ID表示だけ & マイ投稿表示中なら読み込み）
-    window.DeckPostList?.handleAuthChanged?.();
-
-    // ③ 一覧ページ初期化
-    await window.DeckPostList?.init?.();
-
-    // ④ 詳細UI初期化
-    window.DeckPostDetail?.init?.();
-
-    // ⑤ キャンペーンUI初期化
-    window.DeckPostCampaign?.init?.();
-
-    // ⑥ URLが deck-post.html#mine ならマイ投稿を開く
-    await openInitialHashPage_();
-
-    initialized = true;
+  if (initialized) {
+    debugLog('init済みなので中断');
+    return;
   }
+
+  state = window.DeckPostState?.getState?.() || window.__DeckPostState || null;
+  debugLog('② state取得', !!state);
+
+  if (!state) {
+    debugLog('❌ state未ロード');
+    console.error('DeckPostState is not ready');
+    window.DeckPostList?.showListStatusMessage?.('error', '初期化に失敗しました（state未ロード）');
+    return;
+  }
+
+  try {
+    window.DeckPostList?.showListStatusMessage?.('loading', '投稿一覧を読み込み中です…(5秒ほどかかります)');
+  } catch (e) {
+    debugLog('status表示エラー', e.message);
+  }
+
+  await waitForPaint_();
+
+  debugLog('③ cardMap読み込み前');
+
+  try {
+    await window.ensureCardMapLoaded();
+    debugLog('④ cardMap成功', Object.keys(window.cardMap || {}).length);
+  } catch (e) {
+    debugLog('❌ cardMap失敗', e.message);
+    console.error('カードマスタ読み込みに失敗しました', e);
+  }
+
+  debugLog('⑤ token設定前');
+
+  window.DeckPostState?.setToken?.(
+    window.DeckPostApi?.resolveToken?.() || ''
+  );
+
+  debugLog('⑥ handleAuthChanged前');
+  window.DeckPostList?.handleAuthChanged?.();
+
+  debugLog('⑦ list init前');
+
+  try {
+    await window.DeckPostList?.init?.();
+    debugLog('⑧ list init成功');
+  } catch (e) {
+    debugLog('❌ list init失敗', e.message);
+    console.error(e);
+  }
+
+  debugLog('⑨ detail init前');
+  window.DeckPostDetail?.init?.();
+
+  debugLog('⑩ campaign init前');
+  window.DeckPostCampaign?.init?.();
+
+  debugLog('⑪ hash処理前');
+  await openInitialHashPage_();
+
+  initialized = true;
+  debugLog('✅ init完了');
+}
 
   // loader の ready を起点に初期化（後ロードJSでも確実）
   if (typeof window.onDeckPostReady === 'function') {

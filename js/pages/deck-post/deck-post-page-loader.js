@@ -16,6 +16,10 @@
   // =========================
   const BASE = 'js/pages/deck-post/';
 
+  function getAssetVersion_() {
+    return String(window.MESOROGIA_PWA_CACHE_CONFIG?.version || 'dev').trim() || 'dev';
+  }
+
   /**
    * ✅ ロードするファイル（依存順）
    * - いまは「移植JSは後から」なので、コメントだけにしてあります
@@ -58,7 +62,7 @@
     }
 
     const s = document.createElement('script');
-    s.src = BASE + file;
+    s.src = `${BASE}${file}?v=${encodeURIComponent(getAssetVersion_())}`;
     s.async = false;
 
     s.onload = () => loadSeq_(files, i + 1, done);

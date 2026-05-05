@@ -38,6 +38,79 @@
     return `if(!this.dataset.normalFallback){this.dataset.normalFallback=1;this.src='${normal}';}else{this.onerror=null;this.src='img/00000.webp';}`;
   }
 
+  function parseJsonObject_(value) {
+    if (!value) return null;
+    if (typeof value === 'object' && !Array.isArray(value)) return value;
+    if (typeof value !== 'string') return null;
+
+    const raw = value.trim();
+    if (!raw) return null;
+
+    try {
+      const parsed = JSON.parse(raw);
+      return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function parseJsonArray_(value) {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== 'string') return [];
+
+    const raw = value.trim();
+    if (!raw) return [];
+
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function normalizeCardNotes_(value) {
+    return parseJsonArray_(value)
+      .map((row) => ({
+        cd: String(row?.cd || row?.id || row?.cardId || ''),
+        text: String(row?.text || row?.note || row?.comment || ''),
+      }))
+      .filter((row) => row.cd || row.text);
+  }
+
+  function decodeDeckCodeObject_(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+
+    try {
+      const json = decodeURIComponent(escape(atob(raw)));
+      return parseJsonObject_(json);
+    } catch (_) {
+      try {
+        return parseJsonObject_(atob(raw));
+      } catch (_) {
+        return null;
+      }
+    }
+  }
+
+  function parseCodeNormObject_(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+
+    const deck = {};
+    raw.split(',').forEach((part) => {
+      const m = String(part || '').trim().match(/^(\d{1,5})\s*x\s*(\d+)$/i);
+      if (!m) return;
+
+      const cd = normCd5_(m[1]);
+      const count = Number(m[2] || 0) || 0;
+      if (cd && count > 0) deck[cd] = (deck[cd] || 0) + count;
+    });
+
+    return Object.keys(deck).length ? deck : null;
+  }
+
   /**
    * 改行 → <br>
    */
@@ -220,10 +293,10 @@
     if (Array.isArray(item?.cards) && item.cards.length) {
       deck = {};
       for (const c of item.cards) {
-        const cd = String(c?.cd || '').trim();
+        const cd = String(c?.cd || c?.id || c?.cardId || c?.code || '').trim();
         if (!cd) continue;
 
-        const n = Number(c?.count || 0) || 0;
+        const n = Number(c?.count ?? c?.num ?? c?.n ?? 1) || 0;
         if (n <= 0) continue;
 
         deck[cd] = (deck[cd] || 0) + n;
@@ -260,6 +333,27 @@
     }
 
     // ---- cdキーを必ず5桁に正規化（repCd照合ズレ防止）----
+    if (!deck) {
+      const obj =
+        parseJsonObject_(item?.cardsJSON) ||
+        parseJsonObject_(item?.deck) ||
+        decodeDeckCodeObject_(item?.code || item?.deckCode) ||
+        parseCodeNormObject_(item?.codeNorm);
+
+      if (obj) {
+        deck = {};
+        for (const [cd, nRaw] of Object.entries(obj)) {
+          const key = String(cd || '').trim();
+          if (!key) continue;
+
+          const n = Number(nRaw || 0) || 0;
+          if (n <= 0) continue;
+
+          deck[key] = (deck[key] || 0) + n;
+        }
+      }
+    }
+
     if (deck && typeof deck === 'object') {
       const norm = {};
       for (const [cd, n] of Object.entries(deck)) {
@@ -456,7 +550,8 @@
       const cd5 = normCd5_(cd);
       const card = cardMap[cd5] || {};
       const name = card.name || cd5;
-      const src = cardImageSrc_(card);
+      const cardForImage = card.cd ? card : { ...card, cd: cd5 };
+      const src = cardImageSrc_(cardForImage);
 
       const packName = card.pack_name || card.packName || '';
       const en = packNameEn_(packName);
@@ -468,7 +563,7 @@
 
       return `
         <div class="deck-entry" data-cd="${cd5}"${packAttr}${rarityAttr} role="button" tabindex="0">
-          <img src="${src}" alt="${escHtml_(name)}" loading="lazy" onerror="${cardImageErrorAttr_(card)}">
+          <img src="${src}" alt="${escHtml_(name)}" loading="lazy" onerror="${cardImageErrorAttr_(cardForImage)}">
           <div class="count-badge">x${n}</div>
         </div>
       `;
@@ -1039,9 +1134,8 @@
     if (!Object.prototype.hasOwnProperty.call(next, 'deckNote')) {
       next.deckNote = String(next.comment || base.comment || '');
     }
-    if (!Array.isArray(next.cardNotes)) {
-      next.cardNotes = Array.isArray(base.cardNotes) ? base.cardNotes : [];
-    }
+    next.cardNotes = normalizeCardNotes_(next.cardNotes);
+    if (!next.cardNotes.length) next.cardNotes = normalizeCardNotes_(base.cardNotes);
     return next;
   }
 
@@ -1850,10 +1944,7 @@
 
   // カード解説HTML
   function buildCardNotesHtml(item) {
-    const srcList = Array.isArray(item?.cardNotes) ? item.cardNotes : [];
-    const list = srcList
-      .map((r) => ({ cd: String(r?.cd || ''), text: String(r?.text || '') }))
-      .filter((r) => r.cd || r.text);
+    const list = normalizeCardNotes_(item?.cardNotes);
 
     if (!list.length) {
       return `<div class="post-cardnotes-empty">投稿者によるカード解説はまだ登録されていません。</div>`;
@@ -1926,6 +2017,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
   const bg = raceBg(item.races);
 
   const postId = String(item?.postId || '').trim();
+  item.cardNotes = normalizeCardNotes_(item.cardNotes);
 
   // ✅ deck-post-detail.js 側の安全版
   const manageBoxHtml = canEdit

@@ -17,6 +17,10 @@
   const FETCH_LIMIT = 100;
   let allListFetchPromise_ = null;
 
+  function wait_(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   /**
    * いいねボタンの中身を作る
    */
@@ -1128,14 +1132,32 @@ document.addEventListener('click', async (e) => {
       let total = 0;
 
       while (true) {
-        const res = await window.DeckPostApi.apiList({
-          limit,
-          offset,
-          mine: false,
+        window.debugLog?.('F1 fetchAllList', { offset, limit });
+        let res = null;
+        try {
+          res = await window.DeckPostApi.apiList({
+            limit,
+            offset,
+            mine: false,
+          });
+        } catch (e) {
+          window.debugLog?.('❌ fetchAllList api error', e?.message || e);
+          console.warn('fetchAllList api error:', e);
+          return Array.isArray(state?.list?.items) ? state.list.items : [];
+        }
+
+        window.debugLog?.('F2 fetchAllList result', {
+          ok: res?.ok,
+          error: res?.error,
+          items: Array.isArray(res?.items) ? res.items.length : 'not array',
+          total: res?.total,
+          nextOffset: res?.nextOffset,
         });
 
         if (!res || !res.ok) {
-          throw new Error((res && res.error) || 'list fetch failed');
+          window.debugLog?.('❌ fetchAllList failed', res);
+          console.warn('fetchAllList failed:', res);
+          return Array.isArray(state?.list?.items) ? state.list.items : [];
         }
 
         const items = Array.isArray(res.items) ? res.items : [];
@@ -1150,6 +1172,7 @@ document.addEventListener('click', async (e) => {
           break;
         }
         offset = nextOffset;
+        await wait_(200);
       }
 
       state.list.allItems = all;
@@ -1219,13 +1242,9 @@ document.addEventListener('click', async (e) => {
   async function applySortAndRerenderList(resetToFirstPage = false) {
     const state = getDeckPostState_();
 
-    // 全件取得されていない場合は取得する
+    // 全件未取得でも並び替え時には追加取得しない。スマホでの連続API失敗を避ける。
     if (!state?.list?.hasAllItems) {
-      window.DeckPostList?.showListStatusMessage?.(
-        'loading',
-        '全投稿を読み込み中です…'
-      );
-      await fetchAllList();
+      window.debugLog?.('S1 applySort without fetchAllList');
     }
 
     // フィルター・並び替えを再計算
@@ -1844,21 +1863,48 @@ document.addEventListener('click', async (e) => {
     // =========================
     try {
       state.list.loading = true;
+      const shouldLoadAllInitially = shouldLoadAllItemsInitially_();
+      window.debugLog?.('L0 list init branch', {
+        shouldLoadAllInitially,
+        search: window.location.search || '',
+        hasAllItems: !!state?.list?.hasAllItems,
+        items: Array.isArray(state?.list?.items) ? state.list.items.length : 'not array',
+      });
       window.DeckPostList?.showListStatusMessage?.(
         'loading',
         '投稿一覧を読み込み中です…(5秒ほどかかります)'
       );
 
-      if (shouldLoadAllItemsInitially_()) {
+      if (shouldLoadAllInitially) {
+        window.debugLog?.('L0A shared url fetchAllList前');
         await window.DeckPostList?.fetchAllList?.();
+        window.debugLog?.('L0B shared url fetchAllList後', {
+          hasAllItems: !!state?.list?.hasAllItems,
+          items: Array.isArray(state?.list?.items) ? state.list.items.length : 'not array',
+        });
         window.DeckPostFilter?.applySharedPostFromUrl?.();
         window.DeckPostFilter?.rebuildFilteredItems?.();
       } else {
-        const res = await window.DeckPostApi.apiList({
-          limit: PAGE_LIMIT,
-          offset: 0,
-          mine: false,
-        });
+debugLog('L1 初回apiList前');
+
+const res = await window.DeckPostApi.apiList({
+  limit: PAGE_LIMIT,
+  offset: 0,
+  mine: false,
+});
+
+debugLog('L2 初回apiList結果', {
+  ok: res?.ok,
+  error: res?.error,
+  items: Array.isArray(res?.items) ? res.items.length : 'not array',
+  total: res?.total,
+  nextOffset: res?.nextOffset
+});
+
+if (!res || !res.ok) {
+  debugLog('❌ 初回apiList失敗', res);
+  throw new Error((res && res.error) || 'initial list fetch failed');
+}
 
         if (!res || !res.ok) {
           throw new Error((res && res.error) || 'initial list fetch failed');
@@ -1880,15 +1926,17 @@ document.addEventListener('click', async (e) => {
       }
 
       prefetchMineItems_().catch(() => {});
-      prefetchAllListInBackground_();
+      // スマホ/タブレットでGAS連続取得が不安定なため、初期表示時の全件先読みは停止する。
+      // prefetchAllListInBackground_();
       await window.DeckPostList?.loadListPage?.(1);
-    } catch (e) {
-      console.error('初期一覧取得に失敗しました', e);
-      window.DeckPostList?.showListStatusMessage?.(
-        'error',
-        '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
-      );
-    } finally {
+} catch (e) {
+  debugLog('❌ 初期一覧取得catch', e.message);
+  console.error('初期一覧取得に失敗しました', e);
+  window.DeckPostList?.showListStatusMessage?.(
+    'error',
+    '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+  );
+}finally {
       state.list.loading = false;
     }
 
