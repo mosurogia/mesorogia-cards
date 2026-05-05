@@ -926,6 +926,128 @@
    キャンペーン詳細モーダル
    ※詳細モーダルを使うなら残す（使わないなら丸ごと削除OK）
 ========================= */
+/* キャンペーン投稿確認モーダル */
+.campaign-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 5300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 20px;
+    background: rgba(15, 23, 42, .58);
+}
+
+.campaign-confirm-content {
+    box-sizing: border-box;
+    width: min(460px, 94vw);
+    max-height: min(86vh, 520px);
+    margin: 0;
+    padding: 22px;
+    overflow-y: auto;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 20px 54px rgba(15, 23, 42, .26);
+}
+
+.campaign-confirm-content h3 {
+    margin: 0 0 12px;
+    color: #111827;
+    font-size: 1.18rem;
+    line-height: 1.35;
+}
+
+.campaign-confirm-content p {
+    margin: 0 0 12px;
+    color: #374151;
+    line-height: 1.65;
+}
+
+.campaign-confirm-content ul {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding-left: 1.25rem;
+    color: #7f1d1d;
+    font-weight: 700;
+}
+
+.campaign-confirm-content .modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.campaign-confirm-content button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #374151;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.campaign-confirm-content button:hover {
+    background: #f9fafb;
+}
+
+.campaign-confirm-content .primary {
+    border-color: transparent;
+    background: #16a34a;
+    color: #fff;
+}
+
+.campaign-confirm-content .primary:hover {
+    background: #15803d;
+}
+
+.campaign-confirm-content .ghost {
+    border-color: #93c5fd;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.campaign-confirm-content .ghost:hover {
+    background: #dbeafe;
+}
+
+.campaign-confirm-content .cancel {
+    border-color: #e5e7eb;
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.campaign-confirm-content button:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, .75);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .campaign-confirm-modal {
+        align-items: flex-end;
+        padding: 12px;
+    }
+
+    .campaign-confirm-content {
+        width: 100%;
+        max-height: 88vh;
+        padding: 18px;
+    }
+
+    .campaign-confirm-content .modal-actions {
+        justify-content: stretch;
+    }
+
+    .campaign-confirm-content button {
+        flex: 1 1 100%;
+    }
+}
+
 .campaign-modal {
     width: min(760px, 94vw);
     max-height: 88vh;
