@@ -685,18 +685,70 @@
     return isSp ? buildCardSp(item, opts) : buildCardPc(item, opts);
   }
 
+  function createListFetchError_(message, response = null) {
+    const err = new Error(message || response?.error || 'list fetch failed');
+    err.apiResponse = response || null;
+    return err;
+  }
+
+  function getListErrorDetails_(error, fallbackCode = 'LIST_FETCH_FAILED') {
+    const response = error?.apiResponse || null;
+    const code = response?.code || response?.error || error?.code || fallbackCode;
+    const reason = response?.reason || error?.reason || error?.message || '投稿一覧APIの呼び出しに失敗しました。';
+    const status = response?.status || error?.status || '';
+    const statusText = response?.statusText || error?.statusText || '';
+
+    return {
+      code,
+      reason,
+      status,
+      statusText,
+      message: error?.message || '',
+    };
+  }
+
+  function buildListErrorDetailsHtml_(details) {
+    if (!details) return '';
+
+    const rows = [];
+    if (details.code) rows.push(['エラーコード', details.code]);
+    if (details.status) {
+      const statusText = details.statusText ? ` ${details.statusText}` : '';
+      rows.push(['HTTPステータス', `${details.status}${statusText}`]);
+    }
+    if (details.reason) rows.push(['失敗原因', details.reason]);
+    if (details.message && details.message !== details.reason) rows.push(['詳細', details.message]);
+
+    if (!rows.length) return '';
+
+    return `
+      <dl class="post-list-error-details">
+        ${rows.map(([label, value]) => `
+          <div class="post-list-error-row">
+            <dt>${escapeHtml(label)}</dt>
+            <dd>${escapeHtml(value)}</dd>
+          </div>
+        `).join('')}
+      </dl>
+    `;
+  }
+
   /**
    * 一覧ステータスメッセージ表示
    */
-  function showListStatusMessage(type, text) {
+  function showListStatusMessage(type, text, details = null) {
     const listEl = document.getElementById('postList');
     if (!listEl) return;
 
     const baseClass = 'post-list-message';
     const errorClass = (type === 'error') ? ' post-list-message--error' : '';
+    const detailsHtml = (type === 'error') ? buildListErrorDetailsHtml_(details) : '';
 
     listEl.innerHTML =
-      `<div class="${baseClass}${errorClass}">${escapeHtml(text)}</div>`;
+      `<div class="${baseClass}${errorClass}">
+        <div>${escapeHtml(text)}</div>
+        ${detailsHtml}
+      </div>`;
   }
 
   /**
@@ -1154,7 +1206,7 @@ document.addEventListener('click', async (e) => {
         } catch (e) {
           window.debugLog?.('❌ fetchAllList api error', e?.message || e);
           console.warn('fetchAllList api error:', e);
-          return Array.isArray(state?.list?.items) ? state.list.items : [];
+          throw createListFetchError_(e?.message || 'list fetch failed');
         }
 
         window.debugLog?.('F2 fetchAllList result', {
@@ -1168,7 +1220,7 @@ document.addEventListener('click', async (e) => {
         if (!res || !res.ok) {
           window.debugLog?.('❌ fetchAllList failed', res);
           console.warn('fetchAllList failed:', res);
-          return Array.isArray(state?.list?.items) ? state.list.items : [];
+          throw createListFetchError_((res && res.error) || 'list fetch failed', res);
         }
 
         const items = Array.isArray(res.items) ? res.items : [];
@@ -1231,7 +1283,7 @@ document.addEventListener('click', async (e) => {
     });
 
     if (!res || !res.ok) {
-      throw new Error((res && res.error) || 'list page fetch failed');
+      throw createListFetchError_((res && res.error) || 'list page fetch failed', res);
     }
 
     const items = Array.isArray(res.items) ? res.items : [];
@@ -1336,6 +1388,8 @@ document.addEventListener('click', async (e) => {
         showListStatusMessage(
           'error',
           '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+          ,
+          getListErrorDetails_(e, 'LIST_ALL_FETCH_FAILED')
         );
         return;
       }
@@ -1349,6 +1403,8 @@ document.addEventListener('click', async (e) => {
         showListStatusMessage(
           'error',
           '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+          ,
+          getListErrorDetails_(e, 'LIST_PAGE_FETCH_FAILED')
         );
         return;
       }
@@ -1915,7 +1971,7 @@ document.addEventListener('click', async (e) => {
 
         if (!res || !res.ok) {
           window.debugLog?.('❌ 初回apiList失敗', res);
-          throw new Error((res && res.error) || 'initial list fetch failed');
+          throw createListFetchError_((res && res.error) || 'initial list fetch failed', res);
         }
 
         const items = Array.isArray(res.items) ? res.items : [];
@@ -1943,6 +1999,8 @@ document.addEventListener('click', async (e) => {
       window.DeckPostList?.showListStatusMessage?.(
         'error',
         '投稿一覧の読み込みに失敗しました。ページを再読み込みしてください。'
+        ,
+        getListErrorDetails_(e, 'INITIAL_LIST_FETCH_FAILED')
       );
     } finally {
       state.list.loading = false;

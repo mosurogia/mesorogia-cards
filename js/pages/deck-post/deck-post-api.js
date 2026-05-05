@@ -138,6 +138,7 @@
 
   async function fetchJsonWithJsonpFallback_(url) {
     let requestUrl = null;
+    let lastError = null;
     try {
       requestUrl = new URL(url);
     } catch (_) {}
@@ -145,8 +146,11 @@
     if (requestUrl && requestUrl.hostname === 'script.google.com') {
       try {
         return await jsonpRequest(url);
-      } catch (_) {
-        return null;
+      } catch (e) {
+        const err = new Error(e?.message || 'JSONP request failed');
+        err.code = 'JSONP_FAILED';
+        err.reason = 'JSONPでAPI応答を取得できませんでした。';
+        throw err;
       }
     }
 
@@ -161,13 +165,37 @@
       if (res.ok) {
         const data = await res.json().catch(() => null);
         if (data) return data;
+        lastError = {
+          code: 'INVALID_JSON',
+          reason: 'APIの応答をJSONとして読み取れませんでした。',
+          status: res.status,
+          statusText: res.statusText,
+        };
+      } else {
+        lastError = {
+          code: `HTTP_${res.status}`,
+          reason: 'APIがエラーステータスを返しました。',
+          status: res.status,
+          statusText: res.statusText,
+        };
       }
-    } catch (_) {}
+    } catch (e) {
+      lastError = {
+        code: 'FETCH_FAILED',
+        reason: 'fetchでAPIへ接続できませんでした。',
+        message: e?.message || '',
+      };
+    }
 
     try {
       return await jsonpRequest(url);
-    } catch (_) {
-      return null;
+    } catch (e) {
+      const err = new Error(e?.message || lastError?.message || 'list request failed');
+      err.code = lastError?.code || 'JSONP_FAILED';
+      err.reason = lastError?.reason || 'JSONPでAPI応答を取得できませんでした。';
+      err.status = lastError?.status;
+      err.statusText = lastError?.statusText;
+      throw err;
     }
   }
 
@@ -191,13 +219,38 @@
     if (tk) qs.set('token', String(tk));
 
     const url = `${GAS_BASE}?${qs.toString()}`;
-    const data = await fetchJsonWithJsonpFallback_(url);
+    let data = null;
+    try {
+      data = await fetchJsonWithJsonpFallback_(url);
+    } catch (e) {
+      return {
+        ok: false,
+        error: e?.code || 'list failed',
+        code: e?.code || 'LIST_REQUEST_FAILED',
+        reason: e?.reason || e?.message || '投稿一覧APIの呼び出しに失敗しました。',
+        status: e?.status,
+        statusText: e?.statusText,
+      };
+    }
+
+    if (data && data.ok === false) {
+      return {
+        ...data,
+        code: data.code || data.error || 'LIST_API_ERROR',
+        reason: data.reason || data.message || data.error || '投稿一覧APIが失敗応答を返しました。',
+      };
+    }
 
     if (data && (Array.isArray(data.items) || data.ok !== undefined || data.error)) {
       return data;
     }
 
-    return { ok: false, error: 'list failed' };
+    return {
+      ok: false,
+      error: 'list failed',
+      code: 'INVALID_LIST_RESPONSE',
+      reason: '投稿一覧APIの応答形式が想定と異なります。',
+    };
   }
 
   // =========================
@@ -210,7 +263,7 @@
     qs.set('mode', 'campaignTags');
 
     const url = `${GAS_BASE}?${qs.toString()}`;
-    const data = await fetchJsonWithJsonpFallback_(url);
+    const data = await fetchJsonWithJsonpFallback_(url).catch(() => null);
 
     return data || { ok: false, error: 'campaignTags failed' };
   }
@@ -231,7 +284,7 @@
     if (tk) qs.set('token', String(tk));
 
     const url = `${GAS_BASE}?${qs.toString()}`;
-    const data = await fetchJsonWithJsonpFallback_(url);
+    const data = await fetchJsonWithJsonpFallback_(url).catch(() => null);
 
     return data || { ok: false, error: 'get failed' };
   }
