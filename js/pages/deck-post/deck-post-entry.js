@@ -4,26 +4,7 @@
  * - 各モジュールの初期化順を管理
 ================================================== */
 
-// ローダーを経由しない古いキャッシュでも最低限ログを出せるようにする。
-window.debugLog = window.debugLog || function debugLog(...args) {
-  const el = document.getElementById('debug-log') || (() => {
-    const d = document.createElement('div');
-    d.id = 'debug-log';
-    d.style = [
-      'position:fixed',
-      'bottom:0',
-      'left:0',
-      'right:0',
-      'max-height:40%',
-      'overflow:auto',
-      'background:#000',
-      'color:#0f0',
-      'font-size:11px',
-      'z-index:99999',
-    ].join(';');
-    document.body.appendChild(d);
-    return d;
-  })();
+
 
   el.insertAdjacentHTML(
     'beforeend',
