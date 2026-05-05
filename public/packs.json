@@ -1,50 +1,50 @@
 {
   "packs": [
     {
-      "en": "Awakeing The Oracle",
-      "jp": "「神託者の覚醒」",
-      "slug": "awakeing-the-oracle",
-      "key": "awakeing-the-oracle",
-      "selector": "#pack-awakeing-the-oracle"
+      "en": "Awakening The Oracle",
+      "jp": "神託者の覚醒",
+      "slug": "awakening-the-oracle",
+      "key": "awakening-the-oracle",
+      "selector": "#pack-awakening-the-oracle"
     },
     {
       "en": "Beyond the Sanctuary",
-      "jp": "「聖域の先へ」",
+      "jp": "聖域の先へ",
       "slug": "beyond-the-sanctuary",
       "key": "beyond-the-sanctuary",
       "selector": "#pack-beyond-the-sanctuary"
     },
     {
       "en": "Creeping Souls",
-      "jp": "「忍び寄る魂達」",
+      "jp": "忍び寄る魂達",
       "slug": "creeping-souls",
       "key": "creeping-souls",
       "selector": "#pack-creeping-souls"
     },
     {
       "en": "Drawn Sword",
-      "jp": "「引き抜かれた剣」",
+      "jp": "引き抜かれた剣",
       "slug": "drawn-sword",
       "key": "drawn-sword",
       "selector": "#pack-drawn-sword"
     },
     {
       "en": "Ensemble of Slience",
-      "jp": "「無音の合唱曲」",
+      "jp": "無音の合唱曲",
       "slug": "ensemble-of-slience",
       "key": "ensemble-of-slience",
       "selector": "#pack-ensemble-of-slience"
     },
     {
       "en": "Fallen Fate",
-      "jp": "「堕ちた宿命」",
+      "jp": "堕ちた宿命",
       "slug": "fallen-fate",
       "key": "fallen-fate",
       "selector": "#pack-fallen-fate"
     },
     {
       "en": "Glory of the Gods",
-      "jp": "「神々の栄光」",
+      "jp": "神々の栄光",
       "slug": "glory-of-the-gods",
       "key": "glory-of-the-gods",
       "selector": "#pack-glory-of-the-gods"
@@ -65,7 +65,7 @@
     }
   ],
   "order": [
-    "Awakeing The Oracle",
+    "Awakening The Oracle",
     "Beyond the Sanctuary",
     "Creeping Souls",
     "Drawn Sword",

@@ -3,7 +3,7 @@
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10001,
     "link":false,
     "link_cd":10001,
@@ -34,13 +34,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10002,
     "link":false,
     "link_cd":10002,
@@ -71,13 +74,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10003,
     "link":false,
     "link_cd":10003,
@@ -108,13 +114,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-10-21",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10004,
     "link":false,
     "link_cd":10004,
@@ -145,13 +154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10005,
     "link":false,
     "link_cd":10005,
@@ -182,13 +194,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10006,
     "link":false,
     "link_cd":10006,
@@ -219,13 +234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10007,
     "link":false,
     "link_cd":10007,
@@ -256,13 +274,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10008,
     "link":false,
     "link_cd":10008,
@@ -293,13 +314,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10009,
     "link":false,
     "link_cd":10009,
@@ -330,13 +354,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10010,
     "link":false,
     "link_cd":10010,
@@ -367,13 +394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10011,
     "link":false,
     "link_cd":10011,
@@ -404,13 +434,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10012,
     "link":false,
     "link_cd":10012,
@@ -441,13 +474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10013,
     "link":false,
     "link_cd":10013,
@@ -478,13 +514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10014,
     "link":false,
     "link_cd":10014,
@@ -515,13 +554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10015,
     "link":false,
     "link_cd":10015,
@@ -552,13 +594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10016,
     "link":false,
     "link_cd":10016,
@@ -589,13 +634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10017,
     "link":false,
     "link_cd":10017,
@@ -626,13 +674,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10019,
     "link":false,
     "link_cd":10019,
@@ -663,13 +714,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10020,
     "link":false,
     "link_cd":10020,
@@ -700,13 +754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10021,
     "link":false,
     "link_cd":10021,
@@ -737,13 +794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10022,
     "link":false,
     "link_cd":10022,
@@ -774,13 +834,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10023,
     "link":false,
     "link_cd":10023,
@@ -811,13 +874,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10024,
     "link":false,
     "link_cd":10024,
@@ -848,13 +914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10025,
     "link":false,
     "link_cd":10025,
@@ -885,13 +954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10026,
     "link":false,
     "link_cd":10026,
@@ -922,13 +994,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10027,
     "link":true,
     "link_cd":10027,
@@ -959,13 +1034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10028,
     "link":false,
     "link_cd":10028,
@@ -996,13 +1074,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10029,
     "link":false,
     "link_cd":10029,
@@ -1033,13 +1114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10030,
     "link":false,
     "link_cd":10030,
@@ -1070,13 +1154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10031,
     "link":false,
     "link_cd":10031,
@@ -1107,7 +1194,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10031.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -1144,7 +1234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -1181,7 +1274,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -1218,7 +1314,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -1255,7 +1354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -1292,7 +1394,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -1329,7 +1434,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -1366,7 +1474,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -1403,7 +1514,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -1440,7 +1554,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -1477,7 +1594,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":5,
@@ -1514,7 +1634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1551,7 +1674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1588,7 +1714,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1625,7 +1754,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1662,7 +1794,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1699,7 +1834,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1736,7 +1874,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10306.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -1773,7 +1914,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10307.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1810,7 +1954,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10308.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1847,7 +1994,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10309.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1884,7 +2034,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10310.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1921,7 +2074,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10311.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1958,7 +2114,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10312.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -1995,7 +2154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10313.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2032,7 +2194,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2069,7 +2234,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2106,7 +2274,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2143,7 +2314,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2180,7 +2354,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2217,7 +2394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10406.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2254,7 +2434,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10407.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2291,7 +2474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10408.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2328,7 +2514,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10409.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2365,7 +2554,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10410.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2402,7 +2594,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10411.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2439,7 +2634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10412.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -2476,7 +2674,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10413.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2513,7 +2714,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2550,7 +2754,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2587,7 +2794,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2624,7 +2834,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2661,7 +2874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -2698,7 +2914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10506.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2735,7 +2954,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2772,7 +2994,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2809,7 +3034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2846,7 +3074,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2883,7 +3114,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -2920,13 +3154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/10606.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20001,
     "link":false,
     "link_cd":20001,
@@ -2957,13 +3194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20002,
     "link":false,
     "link_cd":20002,
@@ -2994,13 +3234,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20003,
     "link":false,
     "link_cd":20003,
@@ -3031,13 +3274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20004,
     "link":false,
     "link_cd":20004,
@@ -3068,13 +3314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20005,
     "link":false,
     "link_cd":20005,
@@ -3105,13 +3354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20006,
     "link":false,
     "link_cd":20006,
@@ -3142,13 +3394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20007,
     "link":false,
     "link_cd":20007,
@@ -3179,13 +3434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20008,
     "link":false,
     "link_cd":20008,
@@ -3216,13 +3474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20009,
     "link":false,
     "link_cd":20009,
@@ -3253,13 +3514,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20010,
     "link":false,
     "link_cd":20010,
@@ -3290,13 +3554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20011,
     "link":false,
     "link_cd":20011,
@@ -3327,13 +3594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20012,
     "link":false,
     "link_cd":20012,
@@ -3364,13 +3634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20013,
     "link":false,
     "link_cd":20013,
@@ -3401,13 +3674,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20014,
     "link":false,
     "link_cd":20014,
@@ -3438,13 +3714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-12-16",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20015,
     "link":false,
     "link_cd":20015,
@@ -3475,13 +3754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20016,
     "link":false,
     "link_cd":20016,
@@ -3512,13 +3794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20017,
     "link":true,
     "link_cd":20017,
@@ -3549,13 +3834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20018,
     "link":false,
     "link_cd":20018,
@@ -3586,13 +3874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20019,
     "link":false,
     "link_cd":20019,
@@ -3623,13 +3914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20020,
     "link":false,
     "link_cd":20020,
@@ -3660,13 +3954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20021,
     "link":false,
     "link_cd":20021,
@@ -3697,13 +3994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20022,
     "link":false,
     "link_cd":20022,
@@ -3734,13 +4034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20023,
     "link":false,
     "link_cd":20023,
@@ -3771,13 +4074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20024,
     "link":false,
     "link_cd":20024,
@@ -3808,13 +4114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20025,
     "link":false,
     "link_cd":20025,
@@ -3845,13 +4154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20026,
     "link":false,
     "link_cd":20026,
@@ -3882,13 +4194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20027,
     "link":false,
     "link_cd":20027,
@@ -3919,13 +4234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20028,
     "link":false,
     "link_cd":20028,
@@ -3956,13 +4274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20029,
     "link":false,
     "link_cd":20029,
@@ -3993,13 +4314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20030,
     "link":false,
     "link_cd":20030,
@@ -4030,7 +4354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -4067,7 +4394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -4104,7 +4434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -4141,7 +4474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -4178,7 +4514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -4215,7 +4554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4252,7 +4594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20106.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4289,7 +4634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4326,7 +4674,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4363,7 +4714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4400,7 +4754,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4437,7 +4794,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4474,7 +4834,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4511,7 +4874,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20207.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4548,7 +4914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20208.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4585,7 +4954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20209.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4622,7 +4994,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20210.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4659,7 +5034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20211.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4696,7 +5074,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20212.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -4733,7 +5114,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20213.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -4770,7 +5154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -4807,7 +5194,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -4844,7 +5234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -4881,7 +5274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -4918,7 +5314,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -4955,7 +5354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -4992,7 +5394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -5029,7 +5434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -5066,7 +5474,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -5103,7 +5514,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -5140,7 +5554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20406.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5177,7 +5594,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5214,7 +5634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5251,7 +5674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5288,7 +5714,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5325,7 +5754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5362,7 +5794,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20506.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5399,7 +5834,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20507.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5436,7 +5874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20508.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5473,7 +5914,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20509.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5510,7 +5954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20510.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5547,7 +5994,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20511.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5584,7 +6034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20512.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -5621,7 +6074,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20513.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5658,7 +6114,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5695,7 +6154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5732,7 +6194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5769,7 +6234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5806,7 +6274,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -5843,13 +6314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/20606.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30001,
     "link":false,
     "link_cd":30001,
@@ -5880,13 +6354,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30002,
     "link":false,
     "link_cd":30002,
@@ -5917,13 +6394,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30003,
     "link":false,
     "link_cd":30003,
@@ -5954,13 +6434,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30004,
     "link":false,
     "link_cd":30004,
@@ -5991,13 +6474,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30005,
     "link":false,
     "link_cd":30005,
@@ -6028,13 +6514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30006,
     "link":false,
     "link_cd":30006,
@@ -6065,13 +6554,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30007,
     "link":false,
     "link_cd":30007,
@@ -6102,13 +6594,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30008,
     "link":false,
     "link_cd":30008,
@@ -6139,13 +6634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30009,
     "link":false,
     "link_cd":30009,
@@ -6176,13 +6674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30010,
     "link":false,
     "link_cd":30010,
@@ -6213,13 +6714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30011,
     "link":false,
     "link_cd":30011,
@@ -6250,13 +6754,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30012,
     "link":false,
     "link_cd":30012,
@@ -6287,13 +6794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30013,
     "link":false,
     "link_cd":30013,
@@ -6324,13 +6834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30014,
     "link":false,
     "link_cd":30014,
@@ -6361,13 +6874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30015,
     "link":false,
     "link_cd":30015,
@@ -6398,13 +6914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30016,
     "link":false,
     "link_cd":30016,
@@ -6435,13 +6954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30017,
     "link":false,
     "link_cd":30017,
@@ -6472,13 +6994,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30018,
     "link":false,
     "link_cd":30018,
@@ -6509,13 +7034,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30019,
     "link":false,
     "link_cd":30019,
@@ -6546,13 +7074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30020,
     "link":false,
     "link_cd":30020,
@@ -6583,13 +7114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30021,
     "link":false,
     "link_cd":30021,
@@ -6620,13 +7154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30022,
     "link":false,
     "link_cd":30022,
@@ -6657,13 +7194,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30023,
     "link":false,
     "link_cd":30023,
@@ -6694,13 +7234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30024,
     "link":true,
     "link_cd":30024,
@@ -6731,13 +7274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30025,
     "link":false,
     "link_cd":30025,
@@ -6768,13 +7314,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30026,
     "link":false,
     "link_cd":30026,
@@ -6805,13 +7354,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30027,
     "link":false,
     "link_cd":30027,
@@ -6842,13 +7394,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30028,
     "link":false,
     "link_cd":30028,
@@ -6879,13 +7434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30029,
     "link":false,
     "link_cd":30029,
@@ -6916,13 +7474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30030,
     "link":false,
     "link_cd":30030,
@@ -6953,7 +7514,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -6990,7 +7554,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7027,7 +7594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7064,7 +7634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7101,7 +7674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7138,7 +7714,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7175,7 +7754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30106.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7212,7 +7794,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30107.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7249,7 +7834,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30108.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7286,7 +7874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30109.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7323,7 +7914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30110.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7360,7 +7954,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30111.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7397,7 +7994,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30112.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7434,7 +8034,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30113.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -7471,7 +8074,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -7508,7 +8114,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -7545,7 +8154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -7582,7 +8194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -7619,7 +8234,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":5,
@@ -7656,7 +8274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30214.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -7693,7 +8314,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -7730,7 +8354,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -7767,7 +8394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -7804,7 +8434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -7841,7 +8474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -7878,7 +8514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -7915,7 +8554,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -7952,7 +8594,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -7989,7 +8634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8026,7 +8674,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8063,7 +8714,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30406.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8100,7 +8754,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30407.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8137,7 +8794,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30408.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8174,7 +8834,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30409.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8211,7 +8874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30410.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8248,7 +8914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30411.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8285,7 +8954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30412.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -8322,7 +8994,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30413.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8359,7 +9034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8396,7 +9074,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8433,7 +9114,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8470,7 +9154,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8507,7 +9194,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -8544,7 +9234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30506.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8581,7 +9274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8618,7 +9314,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8655,7 +9354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8692,7 +9394,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8729,7 +9434,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8766,7 +9474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30606.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8803,7 +9514,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30607.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8840,7 +9554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30608.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8877,7 +9594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30609.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8914,7 +9634,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30610.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8951,7 +9674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30611.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -8988,7 +9714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30612.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -9025,13 +9754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/30613.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40001,
     "link":false,
     "link_cd":40001,
@@ -9062,13 +9794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40002,
     "link":false,
     "link_cd":40002,
@@ -9099,13 +9834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40003,
     "link":false,
     "link_cd":40003,
@@ -9136,13 +9874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40004,
     "link":false,
     "link_cd":40004,
@@ -9173,13 +9914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40005,
     "link":false,
     "link_cd":40005,
@@ -9210,13 +9954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40006,
     "link":false,
     "link_cd":40006,
@@ -9247,13 +9994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40007,
     "link":false,
     "link_cd":40007,
@@ -9284,13 +10034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40008,
     "link":false,
     "link_cd":40008,
@@ -9321,13 +10074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40009,
     "link":false,
     "link_cd":40009,
@@ -9358,13 +10114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
     "is_latest":true,
     "updated_at":"2026-03-11",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40010,
     "link":false,
     "link_cd":40010,
@@ -9395,13 +10154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40011,
     "link":false,
     "link_cd":40011,
@@ -9432,13 +10194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40012,
     "link":false,
     "link_cd":40012,
@@ -9469,13 +10234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40013,
     "link":false,
     "link_cd":40013,
@@ -9506,13 +10274,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40014,
     "link":false,
     "link_cd":40014,
@@ -9543,13 +10314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40015,
     "link":false,
     "link_cd":40015,
@@ -9580,13 +10354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
     "is_latest":true,
     "updated_at":"2025-07-16",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40016,
     "link":false,
     "link_cd":40016,
@@ -9617,13 +10394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40017,
     "link":false,
     "link_cd":40017,
@@ -9654,13 +10434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40018,
     "link":false,
     "link_cd":40018,
@@ -9691,13 +10474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40019,
     "link":false,
     "link_cd":40019,
@@ -9728,13 +10514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40020,
     "link":true,
     "link_cd":40020,
@@ -9765,13 +10554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40021,
     "link":false,
     "link_cd":40021,
@@ -9802,13 +10594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40022,
     "link":false,
     "link_cd":40022,
@@ -9839,13 +10634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40023,
     "link":false,
     "link_cd":40023,
@@ -9876,13 +10674,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40024,
     "link":false,
     "link_cd":40024,
@@ -9913,13 +10714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40025,
     "link":false,
     "link_cd":40025,
@@ -9950,13 +10754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40026,
     "link":false,
     "link_cd":40026,
@@ -9987,13 +10794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40027,
     "link":false,
     "link_cd":40027,
@@ -10024,13 +10834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40028,
     "link":false,
     "link_cd":40028,
@@ -10061,13 +10874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40029,
     "link":false,
     "link_cd":40029,
@@ -10098,13 +10914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40030,
     "link":false,
     "link_cd":40030,
@@ -10135,7 +10954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":4,
@@ -10172,7 +10994,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10209,7 +11034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10246,7 +11074,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10283,7 +11114,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10320,7 +11154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10357,7 +11194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40106.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -10394,7 +11234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40107.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10431,7 +11274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40108.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10468,7 +11314,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40109.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -10505,7 +11354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40110.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10542,7 +11394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40111.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10579,7 +11434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40112.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -10616,7 +11474,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40113.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -10653,7 +11514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -10690,7 +11554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -10727,7 +11594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -10764,7 +11634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -10801,7 +11674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":5,
@@ -10838,7 +11714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -10875,7 +11754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -10912,7 +11794,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -10949,7 +11834,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -10986,7 +11874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11023,7 +11914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11060,7 +11954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40306.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11097,7 +11994,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40307.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11134,7 +12034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40308.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11171,7 +12074,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40309.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11208,7 +12114,10 @@
     "power_effect":"DOWN",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40310.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11245,7 +12154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40311.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11282,7 +12194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40312.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -11319,7 +12234,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40313.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11356,7 +12274,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11393,7 +12314,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11430,7 +12354,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11467,7 +12394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11504,7 +12434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -11541,7 +12474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":true,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40406.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11578,7 +12514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11615,7 +12554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11652,7 +12594,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11689,7 +12634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11726,7 +12674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -11763,7 +12714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40506.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11800,7 +12754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11837,7 +12794,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11874,7 +12834,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11911,7 +12874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11948,7 +12914,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -11985,7 +12954,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40606.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12022,7 +12994,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40607.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12059,7 +13034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40608.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12096,7 +13074,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40609.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12133,7 +13114,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40610.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12170,7 +13154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40611.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12207,7 +13194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40612.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -12244,13 +13234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/40613.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50001,
     "link":false,
     "link_cd":50001,
@@ -12281,13 +13274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50002,
     "link":false,
     "link_cd":50002,
@@ -12318,13 +13314,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50003,
     "link":false,
     "link_cd":50003,
@@ -12355,13 +13354,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50004,
     "link":false,
     "link_cd":50004,
@@ -12392,13 +13394,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50005,
     "link":false,
     "link_cd":50005,
@@ -12429,13 +13434,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50006,
     "link":false,
     "link_cd":50006,
@@ -12466,13 +13474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50007,
     "link":false,
     "link_cd":50007,
@@ -12503,13 +13514,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50008,
     "link":false,
     "link_cd":50008,
@@ -12540,13 +13554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50009,
     "link":false,
     "link_cd":50009,
@@ -12577,13 +13594,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50010,
     "link":false,
     "link_cd":50010,
@@ -12614,13 +13634,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50011,
     "link":false,
     "link_cd":50011,
@@ -12651,13 +13674,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50012,
     "link":false,
     "link_cd":50012,
@@ -12688,13 +13714,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50013,
     "link":false,
     "link_cd":50013,
@@ -12725,13 +13754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50014,
     "link":false,
     "link_cd":50014,
@@ -12762,13 +13794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50015,
     "link":false,
     "link_cd":50015,
@@ -12799,13 +13834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50016,
     "link":false,
     "link_cd":50016,
@@ -12836,13 +13874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50017,
     "link":false,
     "link_cd":50017,
@@ -12873,13 +13914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
     "is_latest":true,
     "updated_at":"2025-07-16",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50018,
     "link":true,
     "link_cd":50018,
@@ -12910,13 +13954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50019,
     "link":false,
     "link_cd":50019,
@@ -12947,13 +13994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50020,
     "link":false,
     "link_cd":50020,
@@ -12984,13 +14034,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50020.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50021,
     "link":false,
     "link_cd":50021,
@@ -13021,13 +14074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50022,
     "link":false,
     "link_cd":50022,
@@ -13058,13 +14114,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50022.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50023,
     "link":false,
     "link_cd":50023,
@@ -13095,13 +14154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50024,
     "link":false,
     "link_cd":50024,
@@ -13132,13 +14194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50025,
     "link":false,
     "link_cd":50025,
@@ -13169,13 +14234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50026,
     "link":false,
     "link_cd":50026,
@@ -13206,13 +14274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50027,
     "link":false,
     "link_cd":50027,
@@ -13243,13 +14314,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50028,
     "link":false,
     "link_cd":50028,
@@ -13280,13 +14354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50029,
     "link":false,
     "link_cd":50029,
@@ -13317,13 +14394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50030,
     "link":false,
     "link_cd":50030,
@@ -13354,13 +14434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50031,
     "link":false,
     "link_cd":50031,
@@ -13391,7 +14474,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50031.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -13428,7 +14514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -13465,7 +14554,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -13502,7 +14594,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -13539,7 +14634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -13576,7 +14674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13613,7 +14714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13650,7 +14754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13687,7 +14794,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":5,
@@ -13724,7 +14834,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13761,7 +14874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13798,7 +14914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13835,7 +14954,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50207.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13872,7 +14994,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50208.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13909,7 +15034,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50209.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13946,7 +15074,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50210.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -13983,7 +15114,10 @@
     "power_effect":"",
     "mana_effect":"BOTH",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50211.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -14020,7 +15154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50212.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -14057,7 +15194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50213.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":5,
@@ -14094,7 +15234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50214.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -14131,7 +15274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -14168,7 +15314,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -14205,7 +15354,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -14242,7 +15394,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -14279,7 +15434,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14316,7 +15474,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14353,7 +15514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14390,7 +15554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14427,7 +15594,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14464,7 +15634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -14501,7 +15674,10 @@
     "power_effect":"UP",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50406.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14538,7 +15714,10 @@
     "power_effect":"STEAL",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14575,7 +15754,10 @@
     "power_effect":"STEAL",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14612,7 +15794,10 @@
     "power_effect":"BOTH",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -14649,7 +15834,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14686,7 +15874,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14723,7 +15914,10 @@
     "power_effect":"STEAL",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50506.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14760,7 +15954,10 @@
     "power_effect":"STEAL",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50507.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14797,7 +15994,10 @@
     "power_effect":"",
     "mana_effect":"STEAL",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50508.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14834,7 +16034,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50509.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14871,7 +16074,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50510.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14908,7 +16114,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50511.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14945,7 +16154,10 @@
     "power_effect":"",
     "mana_effect":"STEAL",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50512.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -14982,7 +16194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50513.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15019,7 +16234,10 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15056,7 +16274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15093,7 +16314,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15130,7 +16354,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15167,7 +16394,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -15204,13 +16434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/50606.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80001,
     "link":false,
     "link_cd":80001,
@@ -15241,13 +16474,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80002,
     "link":false,
     "link_cd":80002,
@@ -15278,13 +16514,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80003,
     "link":false,
     "link_cd":80003,
@@ -15315,13 +16554,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80005,
     "link":false,
     "link_cd":80005,
@@ -15352,13 +16594,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80006,
     "link":false,
     "link_cd":80006,
@@ -15389,13 +16634,16 @@
     "power_effect":"",
     "mana_effect":"BOTH",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80007,
     "link":false,
     "link_cd":80007,
@@ -15426,13 +16674,16 @@
     "power_effect":"",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80008,
     "link":false,
     "link_cd":80008,
@@ -15463,13 +16714,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80009,
     "link":false,
     "link_cd":80009,
@@ -15500,13 +16754,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80010,
     "link":false,
     "link_cd":80010,
@@ -15537,13 +16794,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80011,
     "link":false,
     "link_cd":80011,
@@ -15574,13 +16834,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80012,
     "link":false,
     "link_cd":80012,
@@ -15611,13 +16874,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80013,
     "link":false,
     "link_cd":80013,
@@ -15648,13 +16914,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80015,
     "link":false,
     "link_cd":80015,
@@ -15685,13 +16954,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80016,
     "link":false,
     "link_cd":80016,
@@ -15722,13 +16994,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80016.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80017,
     "link":false,
     "link_cd":80017,
@@ -15759,13 +17034,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80017.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80018,
     "link":false,
     "link_cd":80018,
@@ -15796,13 +17074,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80018.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80019,
     "link":false,
     "link_cd":80019,
@@ -15833,13 +17114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80021,
     "link":false,
     "link_cd":80021,
@@ -15870,13 +17154,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80021.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80023,
     "link":false,
     "link_cd":80023,
@@ -15907,13 +17194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80023.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80024,
     "link":false,
     "link_cd":80024,
@@ -15944,13 +17234,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80024.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80025,
     "link":false,
     "link_cd":80025,
@@ -15981,13 +17274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80025.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80026,
     "link":false,
     "link_cd":80026,
@@ -16018,13 +17314,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80026.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80027,
     "link":false,
     "link_cd":80027,
@@ -16055,13 +17354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80027.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80028,
     "link":false,
     "link_cd":80028,
@@ -16092,13 +17394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80028.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80029,
     "link":false,
     "link_cd":80029,
@@ -16129,13 +17434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80029.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80030,
     "link":false,
     "link_cd":80030,
@@ -16166,7 +17474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80030.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16203,7 +17514,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16240,7 +17554,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80102.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16277,7 +17594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80103.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16314,7 +17634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80104.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16351,7 +17674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80105.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":4,
@@ -16388,7 +17714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80106.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16425,7 +17754,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80107.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -16462,7 +17794,10 @@
     "power_effect":"",
     "mana_effect":"STEAL",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80108.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16499,7 +17834,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16536,7 +17874,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80202.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16573,7 +17914,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80203.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16610,7 +17954,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80204.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16647,7 +17994,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80205.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16684,7 +18034,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16721,7 +18074,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80207.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -16758,7 +18114,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80208.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -16795,7 +18154,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -16832,7 +18194,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80302.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -16869,7 +18234,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80303.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -16906,7 +18274,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80304.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -16943,7 +18314,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80305.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -16980,7 +18354,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80306.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -17017,7 +18394,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80307.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -17054,7 +18434,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80308.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17091,7 +18474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80309.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17128,7 +18514,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17165,7 +18554,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80402.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17202,7 +18594,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80403.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17239,7 +18634,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80404.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -17276,7 +18674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80405.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -17313,7 +18714,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -17350,7 +18754,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80502.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -17387,7 +18794,10 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80503.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -17424,7 +18834,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80504.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -17461,7 +18874,10 @@
     "power_effect":"UP",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80505.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -17498,7 +18914,10 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -17535,7 +18954,10 @@
     "power_effect":"UP",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80602.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -17572,7 +18994,10 @@
     "power_effect":"DOWN",
     "mana_effect":"DOWN",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80603.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -17609,7 +19034,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80604.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -17646,13 +19074,16 @@
     "power_effect":"DOWN",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/80605.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90001,
     "link":false,
     "link_cd":90001,
@@ -17683,13 +19114,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90002,
     "link":false,
     "link_cd":90002,
@@ -17720,13 +19154,16 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90003,
     "link":false,
     "link_cd":90003,
@@ -17757,13 +19194,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90004,
     "link":false,
     "link_cd":90004,
@@ -17794,13 +19234,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90005,
     "link":false,
     "link_cd":90005,
@@ -17831,13 +19274,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90006,
     "link":false,
     "link_cd":90006,
@@ -17868,13 +19314,16 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90007,
     "link":false,
     "link_cd":90007,
@@ -17905,13 +19354,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90008,
     "link":false,
     "link_cd":90008,
@@ -17942,13 +19394,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90009,
     "link":false,
     "link_cd":90009,
@@ -17979,13 +19434,16 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
-    "pack_name":"Awakeing The Oracle「神託者の覚醒」",
+    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":90011,
     "link":false,
     "link_cd":90011,
@@ -18016,7 +19474,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -18053,7 +19514,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -18090,7 +19554,10 @@
     "power_effect":"",
     "mana_effect":"UP",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90201.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -18127,7 +19594,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90301.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":7,
@@ -18164,7 +19634,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90401.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":8,
@@ -18201,7 +19674,10 @@
     "power_effect":"",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90501.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":9,
@@ -18238,6 +19714,9 @@
     "power_effect":"UP",
     "mana_effect":"",
     "CHECK":false,
-    "cv_id":0
+    "cv_id":0,
+    "image_path":"img\/90601.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   }
 ]
