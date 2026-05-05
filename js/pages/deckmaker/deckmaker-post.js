@@ -912,6 +912,7 @@
         if (selected.has(label)) chip.classList.add('active');
 
         chip.addEventListener('click', () => {
+          if (window.handleCampaignTagAttempt_?.(label) === false) return;
           const now = readSet_(); // 常に最新
           const on = chip.classList.toggle('active');
           if (on) now.add(label);

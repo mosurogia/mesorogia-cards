@@ -131,6 +131,80 @@
     return conditions.map(formatDeckConditionLabel_).join(' / ');
   }
 
+  function getCampaignTagRequirementResult_(camp){
+    const reasons = [];
+
+    const deckResult = checkDeckConditions_(camp);
+    if (!deckResult.ok) {
+      deckResult.reasons.forEach(reason => reasons.push(`デッキ条件：${reason}`));
+    }
+
+    const A = window.Auth;
+    const loggedIn = !!(A?.user && A?.token && A?.verified);
+    if (!loggedIn) reasons.push('ログインを完了してください');
+
+    const xRaw = document.getElementById('auth-x')?.value || '';
+    const x = String(xRaw).trim().replace(/^@+/, '');
+    if (!x) reasons.push('Xアカウントを入力してください');
+
+    if (campaignRequiresGameUserId_(camp)){
+      const gameUserId = readCampaignGameUserId_();
+      if (!isValidGameUserId_(gameUserId)) reasons.push('ゲーム内ユーザーIDを16桁で入力してください');
+    }
+
+    return { ok: reasons.length === 0, reasons };
+  }
+
+  function openCampaignTagHelpModal_(reasons){
+    const list = Array.isArray(reasons) ? reasons.filter(Boolean) : [];
+    const modal = document.createElement('div');
+    modal.className = 'campaign-tag-help-modal';
+    modal.innerHTML = `
+      <div class="modal-content campaign-tag-help-content" role="dialog" aria-modal="true" aria-labelledby="campaignTagHelpTitle">
+        <h3 id="campaignTagHelpTitle">キャンペーンタグはまだ追加できません</h3>
+        <p>下の条件を満たすことでタグを追加できます。</p>
+        ${
+          list.length
+            ? `<ul class="campaign-tag-help-list">${list.map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>`
+            : '<p>条件の再判定を行ってから、もう一度タグをタップしてください。</p>'
+        }
+        <div class="modal-actions">
+          <button type="button" class="primary" data-close-campaign-tag-help>閉じる</button>
+        </div>
+      </div>
+    `;
+
+    let keyHandler = null;
+    const close = () => {
+      if (keyHandler) document.removeEventListener('keydown', keyHandler);
+      modal.remove();
+    };
+    modal.addEventListener('click', (e)=>{
+      if (e.target === modal || e.target.closest('[data-close-campaign-tag-help]')) close();
+    });
+    keyHandler = function onKeyDown(e){
+      if (e.key !== 'Escape') return;
+      close();
+    };
+    document.addEventListener('keydown', keyHandler);
+
+    document.body.appendChild(modal);
+    modal.querySelector('button')?.focus?.();
+  }
+
+  function handleCampaignTagAttempt_(label){
+    const tag = String(window.__activeCampaignTag || '').trim();
+    if (!tag || String(label || '').trim() !== tag) return true;
+
+    const camp = window.__activeCampaign;
+    const result = getCampaignTagRequirementResult_(camp);
+    if (result.ok) return true;
+
+    try { window.updateCampaignBannerEligibility_?.(); } catch(_) {}
+    openCampaignTagHelpModal_(result.reasons);
+    return false;
+  }
+
   function normalizeGameUserId_(value){
     return String(value || '')
       .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
@@ -351,12 +425,7 @@
       }
     };
 
-    const canSelectCampaignTag = ()=>{
-      const st = getAuthState();
-      const hasGameUserId = !needsGameUserId || isValidGameUserId_(readCampaignGameUserId_());
-      const deckOk = checkDeckConditions_(camp).ok;
-      return !!(st.loggedIn && st.hasX && hasGameUserId && deckOk);
-    };
+    const canSelectCampaignTag = ()=> getCampaignTagRequirementResult_(camp).ok;
 
     const setCampaignTagSelected = (on)=>{
       const tag = campTag();
@@ -390,7 +459,9 @@
       if (!tagRow || !tagBtn) return;
       tagRow.style.display = '';
       tagBtn.textContent = campTag() || 'キャンペーン';
-      tagBtn.disabled = !canSelect;
+      tagBtn.disabled = false;
+      tagBtn.classList.toggle('is-disabled', !canSelect);
+      tagBtn.setAttribute('aria-disabled', String(!canSelect));
       tagBtn.title = canSelect
         ? ''
         : requirementText;
@@ -430,7 +501,10 @@
 
     if (tagRow && tagBtn){
       tagBtn.onclick = ()=>{
-        if (!canSelectCampaignTag()) return;
+        if (!canSelectCampaignTag()) {
+          openCampaignTagHelpModal_(getCampaignTagRequirementResult_(camp).reasons);
+          return;
+        }
         const next = !isCampaignTagSelected();
         setCampaignTagSelected(next);
       };
@@ -628,6 +702,9 @@
     renderDeckmakerCampaignMiniNotice,
     renderDeckmakerCampaignBanner,
     checkCampaignEligibility_,
+    getCampaignTagRequirementResult_,
+    openCampaignTagHelpModal_,
+    handleCampaignTagAttempt_,
     openCampaignConfirmModal,
     onClickPostButton,
     readCampaignGameUserId_,
@@ -637,6 +714,7 @@
 
   // 互換（必要なら）
   window.checkCampaignEligibility_ ??= checkCampaignEligibility_;
+  window.handleCampaignTagAttempt_ ??= handleCampaignTagAttempt_;
   window.openCampaignConfirmModal ??= openCampaignConfirmModal;
   window.onClickPostButton        ??= onClickPostButton;
 
