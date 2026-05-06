@@ -89,6 +89,15 @@ body {
     flex-wrap: wrap;
     gap: 6px;
     padding-left: 3px;
+    align-items: center;
+}
+
+.list-load-progress {
+    margin-left: auto;
+    color: #4b5563;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    white-space: nowrap;
 }
 
 /* 並び替え・フィルターボタン共通 */
@@ -122,6 +131,14 @@ body {
     border-top-color: #2563eb;
     border-radius: 50%;
     animation: deck-post-filter-spin .8s linear infinite;
+}
+
+@media (max-width: 768px) {
+    .list-load-progress {
+        flex-basis: 100%;
+        margin-left: 0;
+        text-align: right;
+    }
 }
 
 @keyframes deck-post-filter-spin {
@@ -434,6 +451,10 @@ body {
     margin: 10px 0 24px;
 }
 
+body.is-pwa-standalone .list-footer--bottom {
+    margin-bottom: var(--app-bottom-nav-offset, 65px);
+}
+
 /* 件数＋ページング行（投稿一覧用フッター） */
 .list-footer {
     display: flex;
@@ -536,6 +557,13 @@ body {
     text-align: center;
     font-size: .9rem;
     color: #6b7280;
+}
+
+.post-list-loading-progress {
+    margin-top: 8px;
+    color: #374151;
+    font-size: .86rem;
+    font-weight: 700;
 }
 
 .post-list-message--error {
@@ -899,6 +927,12 @@ body {
     flex: 1 1 0;
 }
 
+/* スマホ詳細ボタンの読み込み中表示 */
+.sp-actions .btn-detail[data-loading="1"] {
+    cursor: wait;
+    opacity: .82;
+}
+
 /*=======================
   X.スマホ用 デッキホバー表示
 ========================*/
@@ -1194,6 +1228,63 @@ body {
         color: #111827;
         text-decoration: underline;
         text-decoration-style: dashed;
+    }
+
+    /* 右カラム詳細の読み込み中表示 */
+    .post-detail-loading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 14px;
+        margin-top: 4px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        color: #1f2937;
+        font-size: .9rem;
+    }
+
+    .post-detail-loading--error {
+        border-color: #fecaca;
+        background: #fef2f2;
+    }
+
+    .post-detail-loading-spinner {
+        width: 22px;
+        height: 22px;
+        flex: 0 0 auto;
+        border: 3px solid rgba(37, 99, 235, .18);
+        border-top-color: #2563eb;
+        border-radius: 50%;
+        animation: deck-post-detail-loading-spin .8s linear infinite;
+    }
+
+    .post-detail-loading-text {
+        min-width: 0;
+    }
+
+    .post-detail-loading-title {
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .post-detail-loading-sub {
+        overflow: hidden;
+        color: #64748b;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @keyframes deck-post-detail-loading-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .post-detail-loading-spinner {
+            animation: none;
+        }
     }
 }
 
@@ -1717,8 +1808,27 @@ body {
 }
 
 .post-detail-chartcanvas {
+    position: relative;
     height: 140px;
     /* Chart.js は親の高さが必要 */
+}
+
+.post-detail-chart-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    min-height: 100%;
+    border-radius: 8px;
+    background: rgba(249, 250, 251, .88);
+    color: #6b7280;
+    font-size: .86rem;
+    font-weight: 700;
+}
+
+.post-detail-chartcanvas:not(.is-chart-loading) .post-detail-chart-loading {
+    display: none;
 }
 
 .post-detail-chartcanvas canvas {
