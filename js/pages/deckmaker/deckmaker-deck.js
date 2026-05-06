@@ -832,13 +832,24 @@
     try { localStorage.removeItem('deck_autosave_v1'); } catch (_) {}
   }
 
+  function normalizeRestoreData_(data) {
+    if (!data || typeof data !== 'object') return null;
+    const cardCounts =
+      (data.cardCounts && typeof data.cardCounts === 'object') ? data.cardCounts :
+      (data.cards && typeof data.cards === 'object' && !Array.isArray(data.cards)) ? data.cards :
+      null;
+    if (!cardCounts) return null;
+    return { ...data, cardCounts };
+  }
+
   function loadAutosave_(data) {
-    if (!data || !data.cardCounts) return;
+    const restoreData = normalizeRestoreData_(data);
+    if (!restoreData) return false;
 
     // deck 入れ替え（参照維持 + cd5正規化）
     Object.keys(deck).forEach(k => delete deck[k]);
 
-    const src = (data.cardCounts && typeof data.cardCounts === 'object') ? data.cardCounts : {};
+    const src = restoreData.cardCounts;
     for (const [cdRaw, nRaw] of Object.entries(src)) {
       const n = Number(nRaw) || 0;
       if (n <= 0) continue;
@@ -847,26 +858,26 @@
     }
 
     // 代表カード
-    const rep = data.m ? normCd5(data.m) : (data.representativeCd ? normCd5(data.representativeCd) : null);
+    const rep = restoreData.m ? normCd5(restoreData.m) : (restoreData.representativeCd ? normCd5(restoreData.representativeCd) : null);
     representativeCd = (rep && deck[rep]) ? rep : null;
     window.representativeCd = representativeCd;
 
     // 入力復元
-    window.writeDeckNameInput?.(data.name || '');
-    window.writePostNote?.(data.note || '');
+    window.writeDeckNameInput?.(restoreData.name || '');
+    window.writePostNote?.(restoreData.note || '');
 
     // 投稿者名
     try {
       const nameEl = document.getElementById('poster-name');
-      if (nameEl && Object.prototype.hasOwnProperty.call(data, 'poster')) {
-        const restoredName = (typeof data.poster === 'string') ? data.poster : (data.poster?.name || '');
+      if (nameEl && Object.prototype.hasOwnProperty.call(restoreData, 'poster')) {
+        const restoredName = (typeof restoreData.poster === 'string') ? restoreData.poster : (restoreData.poster?.name || '');
         nameEl.value = restoredName || '';
       }
     } catch(_) {}
 
     // 貼り付けコード
     try {
-      const v = String(data.shareCode || '');
+      const v = String(restoreData.shareCode || '');
       window.writePastedDeckCode?.(v);
 
       const shareEl = document.getElementById('post-share-code');
@@ -875,13 +886,13 @@
 
     // selectTags / userTags / cardNotes は「存在するAPIがあれば」復元
     try {
-      if (Array.isArray(data.selectTags)) {
+      if (Array.isArray(restoreData.selectTags)) {
         // ✅ deckmaker-post.js の正規API（Set/ArrayどっちでもOK）
         if (typeof window.__dmWriteSelectedTags === 'function') {
-          window.__dmWriteSelectedTags(data.selectTags);
+          window.__dmWriteSelectedTags(restoreData.selectTags);
         } else if (typeof window.writeSelectedTags === 'function') {
           // 旧互換が残ってる環境用
-          window.writeSelectedTags(data.selectTags);
+          window.writeSelectedTags(restoreData.selectTags);
         }
         // UI再描画（存在すれば）
         window.renderPostSelectTags?.();
@@ -890,18 +901,18 @@
     } catch(_) {}
 
     try {
-      if (Array.isArray(data.userTags) && typeof window.writeUserTags === 'function') {
-        window.writeUserTags(data.userTags);
+      if (Array.isArray(restoreData.userTags) && typeof window.writeUserTags === 'function') {
+        window.writeUserTags(restoreData.userTags);
       }
     } catch(_) {}
 
     try {
-      if (data.cardNotes != null) {
+      if (restoreData.cardNotes != null) {
         // 既存の CardNotes モジュールがあるならそれを使う
         if (window.CardNotes?.replace) {
-          window.CardNotes.replace(Array.isArray(data.cardNotes) ? data.cardNotes : []);
+          window.CardNotes.replace(Array.isArray(restoreData.cardNotes) ? restoreData.cardNotes : []);
         } else if (typeof window.writeCardNotes === 'function') {
-          window.writeCardNotes(Array.isArray(data.cardNotes) ? data.cardNotes : []);
+          window.writeCardNotes(Array.isArray(restoreData.cardNotes) ? restoreData.cardNotes : []);
         }
       }
     } catch(_) {}
@@ -915,6 +926,7 @@
     window.updateDeckSummaryDisplay?.();
     window.updateExchangeSummary?.();
     window.updateRepresentativeHighlight?.();
+    return true;
   }
 
   function resetDeckState() {
@@ -1125,7 +1137,7 @@
   function restorePostDraft_() {
     const data = readPostDraftMeta_();
     if (!data) return null;
-    loadAutosave_(data);
+    if (!loadAutosave_(data)) return null;
     try { scheduleAutosave(); } catch (_) {}
     return data;
   }
@@ -1413,6 +1425,7 @@
   window.saveDeckmakerPostDraft = window.saveDeckmakerPostDraft || savePostDraft_;
   window.restoreDeckmakerPostDraft = window.restoreDeckmakerPostDraft || restorePostDraft_;
   window.readDeckmakerPostDraft = window.readDeckmakerPostDraft || readPostDraftMeta_;
+  window.canRestoreDeckmakerData = window.canRestoreDeckmakerData || ((data) => !!normalizeRestoreData_(data));
 
   window.setDeckState = window.setDeckState || setDeckState;
   window.resetDeckState = window.resetDeckState || resetDeckState;

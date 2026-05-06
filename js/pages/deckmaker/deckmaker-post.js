@@ -1066,10 +1066,19 @@
       try { return window.readDeckmakerPostDraft?.() || null; } catch (_) { return null; }
     }
 
+    function canRestoreDraft_(draft) {
+      if (!draft) return false;
+      if (typeof window.canRestoreDeckmakerData === 'function') return window.canRestoreDeckmakerData(draft);
+      return !!(
+        (draft.cardCounts && typeof draft.cardCounts === 'object') ||
+        (draft.cards && typeof draft.cards === 'object' && !Array.isArray(draft.cards))
+      );
+    }
+
     function refreshStatus_() {
       const draft = getDraft_();
       const savedAt = draft?.savedAt || draft?.date || '';
-      const hasDraft = !!draft;
+      const hasDraft = canRestoreDraft_(draft);
       if (status) status.textContent = `保存データ：${hasDraft ? formatDraftSavedAt_(savedAt) : 'なし'}`;
       if (restoreBtn) restoreBtn.disabled = !hasDraft;
     }
@@ -1122,14 +1131,20 @@
     });
 
     restoreBtn?.addEventListener('click', () => {
-      if (!getDraft_()) {
+      const draft = getDraft_();
+      if (!canRestoreDraft_(draft)) {
         refreshStatus_();
         alert('保存された下書きがありません。');
         return;
       }
       const ok = window.confirm('保存された下書きを復元します。\n現在のデッキリストと投稿内容は上書きされます。\nよろしいですか？');
       if (!ok) return;
-      window.restoreDeckmakerPostDraft?.();
+      const restored = window.restoreDeckmakerPostDraft?.();
+      if (!restored) {
+        refreshStatus_();
+        alert('下書きデータを復元できませんでした。もう一度保存し直してください。');
+        return;
+      }
       window.refreshPostSummary?.();
       refreshStatus_();
       setOpen_(false);
