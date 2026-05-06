@@ -1718,10 +1718,11 @@ function rebuildFilteredItems(){
     if (openBtn && !openBtn.dataset.wiredFilterOpen) {
       openBtn.dataset.wiredFilterOpen = '1';
       openBtn.addEventListener('click', async () => {
-        if (!window.__DeckPostState?.list?.hasAllItems) {
-          try {
-            await window.DeckPostList?.fetchAllList?.();
-          } catch (_) {}
+        const filterReady = !!window.__DeckPostState?.list?.hasAllItems || openBtn.dataset.ready === '1';
+        if (!filterReady) {
+          window.DeckPostList?.startSlowBackgroundListFetch?.();
+          window.showActionToast?.('フィルター準備中です。全投稿の読み込み完了後に開けます。');
+          return;
         }
 
         syncDraftFromApplied_();

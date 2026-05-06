@@ -15,10 +15,164 @@
 
   // 一覧データをまとめて取得するときの1リクエスト上限
   const FETCH_LIMIT = 100;
+  const BACKGROUND_FETCH_DELAY_MS = 2500;
+  const BACKGROUND_MAX_ERROR_COUNT = 3;
   let allListFetchPromise_ = null;
+  let backgroundListController_ = null;
+  let currentPageDetailPrefetchController_ = null;
+  let listProgressEl_ = null;
+  let listBackgroundChain_ = Promise.resolve();
+  let lastBackgroundRequestAt_ = 0;
 
   function wait_(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function isBackgroundStopped_(controller) {
+    return !controller || controller.stopped || document.hidden;
+  }
+
+  async function waitBackgroundInterval_(controller, ms = BACKGROUND_FETCH_DELAY_MS) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < ms) {
+      if (isBackgroundStopped_(controller)) return false;
+      await wait_(Math.min(250, ms - (Date.now() - startedAt)));
+    }
+    return !isBackgroundStopped_(controller);
+  }
+
+  function enqueueBackgroundListRequest_(task) {
+    const run = listBackgroundChain_.catch(() => {}).then(async () => {
+      const elapsed = Date.now() - lastBackgroundRequestAt_;
+      if (lastBackgroundRequestAt_ && elapsed < BACKGROUND_FETCH_DELAY_MS) {
+        await wait_(BACKGROUND_FETCH_DELAY_MS - elapsed);
+      }
+      const result = await task();
+      lastBackgroundRequestAt_ = Date.now();
+      return result;
+    });
+    listBackgroundChain_ = run.catch(() => {});
+    return run;
+  }
+
+  function ensureListLoadProgressEl_() {
+    if (listProgressEl_?.isConnected) return listProgressEl_;
+
+    const wrap = document.querySelector('.list-controls-filter');
+    if (!wrap) return null;
+
+    listProgressEl_ = document.getElementById('listLoadProgress');
+    if (!listProgressEl_) {
+      listProgressEl_ = document.createElement('div');
+      listProgressEl_.id = 'listLoadProgress';
+      listProgressEl_.className = 'list-load-progress';
+      listProgressEl_.setAttribute('role', 'status');
+      listProgressEl_.setAttribute('aria-live', 'polite');
+      wrap.appendChild(listProgressEl_);
+    }
+    return listProgressEl_;
+  }
+
+  function updateListLoadProgress_(label = '') {
+    const state = getDeckPostState_();
+    const el = ensureListLoadProgressEl_();
+    if (!el) return;
+
+    const loaded = Number(state?.list?.allItems?.length || state?.list?.items?.length || 0);
+    const total = Number(state?.list?.total || loaded || 0);
+    const hasCompleteAllItems = total > 0 && loaded >= total;
+    if (hasCompleteAllItems && state?.list && !state.list.hasAllItems) {
+      state.list.hasAllItems = true;
+
+      // フィルター中は検索結果を壊さない
+      if (!hasActivePostFilter_() && Array.isArray(state.list.allItems) && state.list.allItems.length) {
+        state.list.filteredItems = state.list.allItems;
+      }
+    }
+
+    if (label) {
+      el.textContent = label;
+    } else if (state?.list?.hasAllItems || hasCompleteAllItems) {
+      el.textContent = `全投稿読込済み ${loaded} / ${total}`;
+    } else if (backgroundListController_?.stopped) {
+      el.textContent = '裏読み停止中';
+    } else {
+      el.textContent = `検索準備 ${loaded} / ${total}`;
+    }
+
+    el.hidden = false;
+  }
+
+  function hasCompleteAllItems_() {
+    const state = getDeckPostState_();
+    const allItems = Array.isArray(state?.list?.allItems) ? state.list.allItems : [];
+    const total = Number(state?.list?.total || 0);
+    return total > 0 && allItems.length >= total;
+  }
+
+  function normalizeCompleteAllItemsState_() {
+    const state = getDeckPostState_();
+    if (!state?.list || !hasCompleteAllItems_()) return false;
+
+    state.list.hasAllItems = true;
+
+    // フィルター中は filteredItems を allItems で上書きしない
+    if (hasActivePostFilter_()) {
+      return true;
+    }
+
+    state.list.filteredItems = Array.isArray(state.list.allItems) ? state.list.allItems : [];
+    state.list.items = state.list.filteredItems;
+    state.list.total = state.list.filteredItems.length;
+    state.list.totalPages = Math.max(1, Math.ceil(Math.max(state.list.total, 0) / PAGE_LIMIT));
+    return true;
+  }
+
+  function getPageLoadProgress_(page) {
+    const state = getDeckPostState_();
+    const p = Math.max(Number(page || 1), 1);
+    const total = Number(state?.list?.total || 0);
+    const allItems = Array.isArray(state?.list?.allItems) ? state.list.allItems : [];
+    const start = (p - 1) * PAGE_LIMIT;
+    const expected = total > 0
+      ? Math.max(0, Math.min(PAGE_LIMIT, total - start))
+      : PAGE_LIMIT;
+    const loaded = Math.max(0, Math.min(expected, allItems.length - start));
+
+    return { loaded, expected };
+  }
+
+  function getLoadedPageItems_(page) {
+    const state = getDeckPostState_();
+    const p = Math.max(Number(page || 1), 1);
+    const allItems = Array.isArray(state?.list?.allItems) ? state.list.allItems : [];
+    const start = (p - 1) * PAGE_LIMIT;
+    const progress = getPageLoadProgress_(p);
+
+    if (progress.expected <= 0 || progress.loaded < progress.expected) return null;
+    return allItems.slice(start, start + progress.expected);
+  }
+
+  function mergeListItemsDedup_(items) {
+    const state = getDeckPostState_();
+    const incoming = Array.isArray(items) ? items : [];
+    state.list.allItems = Array.isArray(state.list.allItems) ? state.list.allItems : [];
+
+    const seen = new Set(
+      state.list.allItems
+        .map((it) => String(it?.postId || '').trim())
+        .filter(Boolean)
+    );
+
+    let added = 0;
+    for (const item of incoming) {
+      const postId = String(item?.postId || '').trim();
+      if (!postId || seen.has(postId)) continue;
+      seen.add(postId);
+      state.list.allItems.push(item);
+      added += 1;
+    }
+    return added;
   }
 
   /**
@@ -63,16 +217,18 @@
     if (!btn) return;
 
     const state = getDeckPostState_();
-    const ready = !!state?.list?.hasAllItems;
+    const ready = !!state?.list?.hasAllItems || normalizeCompleteAllItemsState_();
     const loading = !ready && !!allListFetchPromise_;
 
-    btn.disabled = loading;
+    btn.disabled = false;
+    btn.dataset.ready = ready ? '1' : '0';
     btn.dataset.loading = loading ? '1' : '0';
-    btn.textContent = loading ? 'フィルター準備中…' : 'フィルター';
+    btn.textContent = ready ? 'フィルター' : 'フィルター準備中';
     btn.title = ready
       ? '全投稿を対象にフィルターできます'
-      : 'クリックすると全投稿を読み込んでから開きます';
+      : '全投稿の読み込みが完了するとフィルターを開けます';
     btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+    updateListLoadProgress_();
   }
 
   /**
@@ -380,6 +536,79 @@
     const bg = D.raceBg?.(item.races) || '';
     const oldGod = D.getOldGodNameFromItem?.(item) || '';
 
+    if (opts.deferDetail && !isMine) {
+      const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
+      const tagsUser = window.DeckPostFilter?.tagChipsUser?.(item.tagsUser) || '';
+      const posterXRaw = String(item.posterX || '').trim();
+      const posterXLabel = posterXRaw;
+      const posterXUser = normalizePosterXUser_(posterXRaw);
+      const likeCount = Number(item.likeCount || 0);
+      const liked = !!item.liked;
+      const favClass = liked ? ' active' : '';
+      const favContent = buildLikeButtonContent_(liked, likeCount);
+      const shareBtnHtml =
+        `<button type="button" class="btn-post-share" data-postid="${escapeHtml(item.postId || '')}" aria-label="共有リンクをコピー">🔗</button>`;
+
+      return window.createElementFromHTML(`
+        <article class="post-card post-card--sp" data-postid="${escapeHtml(item.postId || '')}" data-list-mode="${escapeHtml(listMode)}" style="${bg ? `--race-bg:${bg};` : ''}">
+          <div class="sp-head">
+            <div class="sp-head-left">
+              ${detail().cardThumb?.(item.repImg, item.title) || ''}
+            </div>
+
+            <div class="sp-head-right">
+              <div class="post-card-title">
+                ${escapeHtml(item.title || '(無題)')}
+              </div>
+
+              <div class="sp-meta">
+                <div class="meta-name">
+                  ${escapeHtml(item.posterName || item.username || '')}
+                  ${(item.posterName || item.username) ? `
+                    <button type="button"
+                      class="btn-filter-poster"
+                      data-poster="${escapeHtml(item.posterName || item.username || '')}"
+                      data-poster-key="${escapeHtml(window.posterKeyFromItem_?.(item) || '')}"
+                      aria-label="この投稿者で絞り込む">🔎</button>
+                  ` : ''}
+                </div>
+
+                ${posterXUser ? `
+                  <a class="sp-meta-x"
+                    href="https://x.com/${encodeURIComponent(posterXUser)}"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    ${escapeHtml(posterXLabel)}
+                  </a>
+                ` : ''}
+
+                <div class="sp-meta-date">
+                  ${window.fmtPostDates_?.(item) || ''}
+                </div>
+              </div>
+
+              <div class="post-head-actions">
+                ${shareBtnHtml}
+                <button class="fav-btn ${favClass}" type="button" aria-label="お気に入り">${favContent}</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="post-tags-wrap">
+            <div class="post-tags post-tags-main">${tagsMain}</div>
+            <div class="post-tags post-tags-user">${tagsUser}</div>
+          </div>
+
+          <div class="post-actions sp-actions">
+            <button type="button" class="btn-detail">詳細</button>
+            <button type="button" class="btn-add-compare">比較に追加</button>
+          </div>
+
+          <div class="post-detail" hidden data-lazy-detail="1"></div>
+        </article>
+      `);
+    }
+
     const deckNote = item.deckNote || item.comment || '';
     const deckNoteHtml = D.buildDeckNoteHtml?.(deckNote) || '';
 
@@ -608,6 +837,7 @@
                   <div class="post-detail-chartchips" id="cost-summary-${escapeHtml(spPaneId)}"></div>
                 </div>
                 <div class="post-detail-chartcanvas">
+                  <div class="post-detail-chart-loading" role="status" aria-live="polite">グラフ生成中…</div>
                   <canvas id="costChart-${escapeHtml(spPaneId)}"></canvas>
                 </div>
               </div>
@@ -618,6 +848,7 @@
                   <div class="post-detail-chartchips" id="power-summary-${escapeHtml(spPaneId)}"></div>
                 </div>
                 <div class="post-detail-chartcanvas">
+                  <div class="post-detail-chart-loading" role="status" aria-live="polite">グラフ生成中…</div>
                   <canvas id="powerChart-${escapeHtml(spPaneId)}"></canvas>
                 </div>
               </div>
@@ -682,7 +913,50 @@
    */
   function oneCard(item, opts = {}) {
     const isSp = window.matchMedia('(max-width: 1023px)').matches;
-    return isSp ? buildCardSp(item, opts) : buildCardPc(item, opts);
+    const spOpts = {
+      ...opts,
+      deferDetail: opts.deferDetail ?? ((opts.mode || 'list') === 'list'),
+    };
+    return isSp ? buildCardSp(item, spOpts) : buildCardPc(item, opts);
+  }
+
+  function scheduleVisibleSpDetailWarmup_() {
+    if (!window.matchMedia('(max-width: 1023px)').matches) return;
+
+    const cards = Array.from(document.querySelectorAll('#postList .post-card--sp'))
+      .filter((card) => card.querySelector('.post-detail[data-lazy-detail="1"]'))
+      .slice(0, PAGE_LIMIT);
+    if (!cards.length) return;
+
+    const run = (deadline = null) => {
+      const startedAt = Date.now();
+      while (cards.length) {
+        if (deadline?.timeRemaining && deadline.timeRemaining() < 8) break;
+        if (!deadline && Date.now() - startedAt > 24) break;
+
+        const card = cards.shift();
+        const postId = String(card?.dataset?.postid || '').trim();
+        const item = postId ? findPostItemById(postId) : null;
+        const replacement = item && buildCardSp(item, {
+          mode: card.dataset.listMode || 'list',
+          deferDetail: false,
+        });
+        if (replacement && card.isConnected) card.replaceWith(replacement);
+      }
+
+      if (!cards.length) return;
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(run, { timeout: 1200 });
+      } else {
+        window.setTimeout(() => run(), 80);
+      }
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(run, { timeout: 1200 });
+    } else {
+      window.setTimeout(() => run(), 120);
+    }
   }
 
   function createListFetchError_(message, response = null) {
@@ -733,6 +1007,19 @@
     `;
   }
 
+  function buildListLoadingDetailsHtml_(details) {
+    const progress = details?.progress || null;
+    if (!progress) return '';
+
+    const loaded = Number(progress.loaded || 0);
+    const expected = Number(progress.expected || PAGE_LIMIT);
+    return `
+      <div class="post-list-loading-progress">
+        ${escapeHtml(`${loaded} / ${expected}`)}
+      </div>
+    `;
+  }
+
   /**
    * 一覧ステータスメッセージ表示
    */
@@ -742,7 +1029,9 @@
 
     const baseClass = 'post-list-message';
     const errorClass = (type === 'error') ? ' post-list-message--error' : '';
-    const detailsHtml = (type === 'error') ? buildListErrorDetailsHtml_(details) : '';
+    const detailsHtml = (type === 'error')
+      ? buildListErrorDetailsHtml_(details)
+      : buildListLoadingDetailsHtml_(details);
 
     listEl.innerHTML =
       `<div class="${baseClass}${errorClass}">
@@ -1191,22 +1480,46 @@ document.addEventListener('click', async (e) => {
     allListFetchPromise_ = (async () => {
       const limit = FETCH_LIMIT;
       let offset = 0;
-      let all = [];
-      let total = 0;
+      let total = Number(state?.list?.total || 0);
+      let errorCount = 0;
+      let completed = false;
+
+      if (Array.isArray(state?.list?.items) && state.list.items.length) {
+        mergeListItemsDedup_(state.list.items);
+      }
+      if (!backgroundListController_ || backgroundListController_.stopped) {
+        backgroundListController_ = { stopped: false, reason: '', startedAt: Date.now() };
+      }
+      updateListLoadProgress_();
 
       while (true) {
+        if (offset > 0) {
+          const okToContinue = await waitBackgroundInterval_(backgroundListController_, BACKGROUND_FETCH_DELAY_MS);
+          if (!okToContinue) break;
+        }
+
+        if (total && state.list.allItems.length >= total) {
+          completed = true;
+          break;
+        }
         window.debugLog?.('F1 fetchAllList', { offset, limit });
         let res = null;
         try {
-          res = await window.DeckPostApi.apiList({
+          res = await enqueueBackgroundListRequest_(() => window.DeckPostApi.apiList({
             limit,
             offset,
             mine: false,
-          });
+            sort: 'new',
+          }));
         } catch (e) {
           window.debugLog?.('❌ fetchAllList api error', e?.message || e);
           console.warn('fetchAllList api error:', e);
-          throw createListFetchError_(e?.message || 'list fetch failed');
+          errorCount += 1;
+          if (errorCount >= BACKGROUND_MAX_ERROR_COUNT) {
+            stopSlowBackgroundListFetch_('裏読み停止中');
+            throw createListFetchError_(e?.message || 'list fetch failed');
+          }
+          continue;
         }
 
         window.debugLog?.('F2 fetchAllList result', {
@@ -1220,32 +1533,52 @@ document.addEventListener('click', async (e) => {
         if (!res || !res.ok) {
           window.debugLog?.('❌ fetchAllList failed', res);
           console.warn('fetchAllList failed:', res);
-          throw createListFetchError_((res && res.error) || 'list fetch failed', res);
+          errorCount += 1;
+          if (errorCount >= BACKGROUND_MAX_ERROR_COUNT) {
+            stopSlowBackgroundListFetch_('裏読み停止中');
+            throw createListFetchError_((res && res.error) || 'list fetch failed', res);
+          }
+          continue;
         }
 
         const items = Array.isArray(res.items) ? res.items : [];
-        all.push(...items);
+        mergeListItemsDedup_(items);
+        errorCount = 0;
 
         if (typeof res.total === 'number') {
           total = res.total;
         }
 
         const nextOffset = (res.nextOffset ?? null);
+        offset = nextOffset ?? (offset + items.length);
+        state.list.total = total || state.list.total || state.list.allItems.length;
+        updateListLoadProgress_();
+
         if (nextOffset === null || items.length === 0) {
+          completed = true;
           break;
         }
-        offset = nextOffset;
-        await wait_(200);
+        if (total && state.list.allItems.length >= total) {
+          completed = true;
+          break;
+        }
       }
 
-      state.list.allItems = all;
-      state.list.items = all;
-      state.list.filteredItems = all;
-      state.list.total = total || all.length;
-      state.list.hasAllItems = true;
-      state.list.pageCache = {};
+      if (!completed) {
+        updateListLoadProgress_('裏読み停止中');
+        return state.list.allItems;
+      }
 
-      return all;
+      if (shouldUseAllItemsForList_()) {
+        state.list.items = state.list.allItems;
+      }
+      state.list.filteredItems = state.list.allItems;
+      state.list.total = total || state.list.allItems.length;
+      state.list.hasAllItems = true;
+      state.list.pageCache = state.list.pageCache || {};
+
+      updateListLoadProgress_();
+      return state.list.allItems;
     })().finally(() => {
       allListFetchPromise_ = null;
       updateFilterReadyState_();
@@ -1267,19 +1600,187 @@ document.addEventListener('click', async (e) => {
     });
   }
 
+  function stopSlowBackgroundListFetch_(label = '裏読み停止中') {
+    if (backgroundListController_) {
+      backgroundListController_.stopped = true;
+      backgroundListController_.reason = label;
+    }
+    updateListLoadProgress_(label);
+  }
+
+  function startSlowBackgroundListFetch_() {
+    const state = getDeckPostState_();
+    if (state?.list?.hasAllItems || normalizeCompleteAllItemsState_()) {
+      updateListLoadProgress_();
+      return;
+    }
+    if (allListFetchPromise_) return;
+
+    backgroundListController_ = { stopped: false, reason: '', startedAt: Date.now() };
+    updateListLoadProgress_();
+    fetchAllList().catch((e) => {
+      console.warn('startSlowBackgroundListFetch_ failed:', e);
+      updateListLoadProgress_('裏読み停止中');
+    });
+  }
+
+  async function prefetchListPage_(page) {
+    const state = getDeckPostState_();
+    const p = Math.max(Number(page || 1), 1);
+    if (p <= 1 || shouldUseAllItemsForList_()) return null;
+    if (state?.list?.pageCache?.[p]) return state.list.pageCache[p];
+    if (document.hidden) return null;
+
+    if (!backgroundListController_ || backgroundListController_.stopped) {
+      backgroundListController_ = { stopped: false, reason: '', startedAt: Date.now() };
+    }
+
+    const controller = backgroundListController_;
+    const okToContinue = await waitBackgroundInterval_(controller, BACKGROUND_FETCH_DELAY_MS);
+    if (!okToContinue) return null;
+
+    const offset = (p - 1) * PAGE_LIMIT;
+    const res = await enqueueBackgroundListRequest_(() => window.DeckPostApi.apiList({
+      limit: PAGE_LIMIT,
+      offset,
+      mine: false,
+      sort: 'new',
+    }));
+
+    if (!res || !res.ok) {
+      throw createListFetchError_((res && res.error) || 'list page prefetch failed', res);
+    }
+
+    const items = Array.isArray(res.items) ? res.items : [];
+    const total = Number(res.total || state.list.total || 0);
+    const totalPages = Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT));
+
+    state.list.pageCache = state.list.pageCache || {};
+    state.list.pageCache[p] = {
+      items,
+      total,
+      totalPages,
+      nextOffset: res.nextOffset ?? null,
+    };
+    state.list.total = total;
+    state.list.totalPages = totalPages;
+    mergeListItemsDedup_(items);
+    updateListLoadProgress_();
+
+    return state.list.pageCache[p];
+  }
+
+  function scheduleNextPagePrefetch_(fromPage) {
+    const state = getDeckPostState_();
+    if (shouldUseAllItemsForList_() || document.hidden) return;
+    const nextPage = Number(fromPage || state?.list?.currentPage || 1) + 1;
+    const totalPages = Number(state?.list?.totalPages || 1);
+    if (nextPage > totalPages) return;
+    if (state?.list?.pageCache?.[nextPage]) return;
+    if (getLoadedPageItems_(nextPage)) return;
+
+    prefetchListPage_(nextPage).catch((e) => {
+      console.warn('prefetchListPage_ failed:', e);
+      stopSlowBackgroundListFetch_('裏読み停止中');
+    });
+  }
+
+  function stopCurrentPageDetailPrefetch_() {
+    if (currentPageDetailPrefetchController_) {
+      currentPageDetailPrefetchController_.stopped = true;
+    }
+  }
+
+  function getPostIdFromPrefetchItem_(item) {
+    return String(item?.postId || '').trim();
+  }
+
+  function showFirstCardAfterDetailPrefetch_(controller, firstPostId) {
+    if (controller?.stopped || !window.matchMedia('(min-width: 1024px)').matches) return;
+    if (document.querySelector('#postList .post-card.is-active')) return;
+
+    const safePostId = window.CSS?.escape
+      ? CSS.escape(firstPostId)
+      : String(firstPostId).replace(/"/g, '\\"');
+    const firstCard = document.querySelector(`#postList .post-card[data-postid="${safePostId}"]`);
+    if (!firstCard || typeof detail().showDetailPaneForArticle !== 'function') return;
+
+    const item = detail().findPostItemById?.(firstPostId);
+    const hasDetail = detail().hasDetailPayload?.(item);
+    detail().showDetailPaneForArticle(firstCard, hasDetail ? { skipFetch: true } : {});
+  }
+
+  function startCurrentPageDetailPrefetch_(pageItems) {
+    stopCurrentPageDetailPrefetch_();
+
+    const items = (Array.isArray(pageItems) ? pageItems : [])
+      .filter((item) => !!getPostIdFromPrefetchItem_(item));
+    if (!items.length) return;
+
+    const D = detail();
+    if (typeof D.prefetchPostDetail !== 'function' || typeof D.prefetchPostDetails !== 'function') {
+      return;
+    }
+
+    const controller = { stopped: false, startedAt: Date.now() };
+    currentPageDetailPrefetchController_ = controller;
+
+    const [firstItem, ...restItems] = items;
+    const firstPostId = getPostIdFromPrefetchItem_(firstItem);
+
+    (async () => {
+      await D.prefetchPostDetail(firstItem, { signal: controller });
+      if (controller.stopped) return;
+
+      showFirstCardAfterDetailPrefetch_(controller, firstPostId);
+
+      if (restItems.length) {
+        await D.prefetchPostDetails(restItems, {
+          concurrency: 1,
+          signal: controller,
+        });
+      }
+    })().catch((e) => {
+      if (!controller.stopped) console.warn('current page detail prefetch failed:', e);
+    });
+  }
+
+  function hasActivePostFilter_() {
+    const fs = window.PostFilterState || {};
+    return (
+      !!fs.selectedTags?.size ||
+      !!fs.selectedUserTags?.size ||
+      !!fs.selectedEnvironmentIds?.size ||
+      !!fs.selectedCardCds?.size ||
+      !!String(fs.selectedPosterKey || '').trim() ||
+      !!String(fs.selectedPoster || '').trim() ||
+      !!String(fs.selectedPostId || '').trim()
+    );
+  }
+
+  function shouldUseAllItemsForList_() {
+    const state = getDeckPostState_();
+    const sortKey = String(state?.list?.sortKey || 'new');
+    return !!state?.list?.hasAllItems || hasCompleteAllItems_() || hasActivePostFilter_() || sortKey !== 'new';
+  }
+
   /**
    * 通常一覧の指定ページだけ取得
    */
   async function fetchListPage_(page) {
     const state = getDeckPostState_();
-    const totalPages = Math.max(1, Number(state?.list?.totalPages || 1));
-    const p = Math.min(Math.max(Number(page || 1), 1), totalPages);
+    stopSlowBackgroundListFetch_('裏読み停止中');
+    const maxKnownPages = Math.max(1, Number(state?.list?.totalPages || 1));
+    const p = Math.min(Math.max(Number(page || 1), 1), maxKnownPages);
     const offset = (p - 1) * PAGE_LIMIT;
+
+    await listBackgroundChain_.catch(() => {});
 
     const res = await window.DeckPostApi.apiList({
       limit: PAGE_LIMIT,
       offset,
       mine: false,
+      sort: 'new',
     });
 
     if (!res || !res.ok) {
@@ -1288,14 +1789,22 @@ document.addEventListener('click', async (e) => {
 
     const items = Array.isArray(res.items) ? res.items : [];
     const total = Number(res.total || 0);
+    const totalPages = Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT));
 
+    state.list.pageCache = state.list.pageCache || {};
+    state.list.pageCache[p] = {
+      items,
+      total,
+      totalPages,
+      nextOffset: res.nextOffset ?? null,
+    };
     state.list.items = items;
-    state.list.filteredItems = items;
+    // filteredItems は全件/フィルター用なので、ページ単位では上書きしない
+    // state.list.filteredItems = items;
     state.list.total = total;
-    state.list.totalPages = Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT));
+    state.list.totalPages = totalPages;
     state.list.currentPage = Math.min(Math.max(p, 1), state.list.totalPages);
     state.list.nextOffset = res.nextOffset ?? null;
-    state.list.pageCache = {};
 
     return items;
   }
@@ -1305,6 +1814,22 @@ document.addEventListener('click', async (e) => {
    */
   async function applySortAndRerenderList(resetToFirstPage = false) {
     const state = getDeckPostState_();
+    const page = resetToFirstPage ? 1 : (state?.list?.currentPage || 1);
+    stopSlowBackgroundListFetch_('裏読み停止中');
+    normalizeCompleteAllItemsState_();
+
+    if (!shouldUseAllItemsForList_()) {
+      loadListPage(page);
+      return;
+    }
+
+    if (!state?.list?.hasAllItems) {
+      try {
+        await fetchAllList();
+      } catch (e) {
+        console.warn('applySortAndRerenderList fetchAllList failed:', e);
+      }
+    }
 
     // 全件未取得でも並び替え時には追加取得しない。スマホでの連続API失敗を避ける。
     if (!state?.list?.hasAllItems) {
@@ -1315,7 +1840,6 @@ document.addEventListener('click', async (e) => {
     window.DeckPostFilter?.rebuildFilteredItems?.();
 
     // 描画するページを決めて再描画
-    const page = resetToFirstPage ? 1 : (state?.list?.currentPage || 1);
     loadListPage(page);
   }
 
@@ -1367,20 +1891,45 @@ document.addEventListener('click', async (e) => {
    */
   async function loadListPage(page) {
     const state = getDeckPostState_();
+    stopCurrentPageDetailPrefetch_();
+    normalizeCompleteAllItemsState_();
 
     const listEl = document.getElementById('postList');
     if (!listEl) return;
 
     const requestedPage = Math.max(Number(page || 1), 1);
+    normalizeCompleteAllItemsState_();
+    const usesAllItems = shouldUseAllItemsForList_();
+    const pageCache = state.list.pageCache || {};
+    const cachedPage = pageCache[requestedPage] || null;
+    const loadedPageItems = !usesAllItems ? getLoadedPageItems_(requestedPage) : null;
     const hasCurrentPageItems =
+      !usesAllItems &&
       Number(state?.list?.currentPage || 0) === requestedPage &&
       Array.isArray(state?.list?.items) &&
       state.list.items.length > 0;
 
-    if (!state?.list?.hasAllItems && requestedPage > 1) {
+    if (!usesAllItems && cachedPage && Array.isArray(cachedPage.items)) {
+      state.list.items = cachedPage.items;
+      // filteredItems は全件/フィルター用なので、ページ単位では上書きしない
+      // state.list.filteredItems = cachedPage.items;
+      state.list.total = Number(cachedPage.total || state.list.total || cachedPage.items.length);
+      state.list.totalPages = Number(cachedPage.totalPages || state.list.totalPages || 1);
+      state.list.currentPage = requestedPage;
+      state.list.nextOffset = cachedPage.nextOffset ?? null;
+    } else if (!usesAllItems && loadedPageItems) {
+      state.list.items = loadedPageItems;
+      // filteredItems は全件/フィルター用なので、ページ単位では上書きしない
+      // state.list.filteredItems = loadedPageItems;
+      state.list.currentPage = requestedPage;
+    }
+
+    if (usesAllItems && !state?.list?.hasAllItems) {
       try {
         listEl.replaceChildren();
-        showListStatusMessage('loading', '全投稿を読み込み中です…');
+        showListStatusMessage('loading', '全投稿を読み込み中です…', {
+          progress: getPageLoadProgress_(requestedPage),
+        });
         await fetchAllList();
         window.DeckPostFilter?.rebuildFilteredItems?.();
       } catch (e) {
@@ -1393,10 +1942,12 @@ document.addEventListener('click', async (e) => {
         );
         return;
       }
-    } else if (!state?.list?.hasAllItems && !hasCurrentPageItems) {
+    } else if (!usesAllItems && !cachedPage && !loadedPageItems && !hasCurrentPageItems) {
       try {
         listEl.replaceChildren();
-        showListStatusMessage('loading', '投稿一覧を読み込み中です…');
+        showListStatusMessage('loading', '投稿一覧を読み込み中です…', {
+          progress: getPageLoadProgress_(requestedPage),
+        });
         await fetchListPage_(requestedPage);
       } catch (e) {
         console.error('一覧ページ取得に失敗しました', e);
@@ -1414,7 +1965,15 @@ document.addEventListener('click', async (e) => {
       ? state.list.filteredItems
       : [];
 
-    const total = Number(state?.list?.total || filtered.length || 0);
+    const cachedItems = Array.isArray(cachedPage?.items)
+      ? cachedPage.items
+      : null;
+
+    const sourceItems = usesAllItems
+      ? filtered
+      : (cachedItems || loadedPageItems || state.list.items || []);
+
+    const total = Number(state?.list?.total || sourceItems.length || 0);
     const totalPages = total > 0
       ? Math.max(1, Math.ceil(total / PAGE_LIMIT))
       : 1;
@@ -1426,13 +1985,13 @@ document.addEventListener('click', async (e) => {
 
     const start = (p - 1) * PAGE_LIMIT;
     const end = start + PAGE_LIMIT;
-    const pageItems = state?.list?.hasAllItems
-      ? filtered.slice(start, end)
-      : filtered;
+    const pageItems = usesAllItems && state?.list?.hasAllItems
+      ? sourceItems.slice(start, end)
+      : sourceItems;
 
     listEl.replaceChildren();
 
-    if (!filtered.length) {
+    if (!sourceItems.length) {
       showListStatusMessage('empty', '条件に合う投稿がありません');
       updatePagerUI();
 
@@ -1461,6 +2020,7 @@ document.addEventListener('click', async (e) => {
     }
 
     renderPostListInto('postList', pageItems, { mode: 'list' });
+    scheduleVisibleSpDetailWarmup_();
 
     const resultCount = document.getElementById('resultCount');
     if (resultCount) resultCount.textContent = `投稿：${total}件`;
@@ -1469,13 +2029,9 @@ document.addEventListener('click', async (e) => {
     if (resultCountTop) resultCountTop.textContent = `投稿：${total}件`;
 
     updatePagerUI();
-
-    if (window.matchMedia('(min-width: 1024px)').matches) {
-      const firstCard = document.querySelector('#postList .post-card');
-      if (firstCard && typeof detail().showDetailPaneForArticle === 'function') {
-        detail().showDetailPaneForArticle(firstCard);
-      }
-    }
+    scheduleNextPagePrefetch_(p);
+    startSlowBackgroundListFetch_();
+    startCurrentPageDetailPrefetch_(pageItems);
 
     scrollToPostListTop_();
   }
@@ -1909,7 +2465,18 @@ document.addEventListener('click', async (e) => {
     const state = getDeckPostState_();
 
     bindListPaneHeightSync_();
+    ensureListLoadProgressEl_();
     updateFilterReadyState_();
+
+    if (!window.__deckPostListVisibilityBound) {
+      window.__deckPostListVisibilityBound = true;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopSlowBackgroundListFetch_('裏読み停止中');
+          stopCurrentPageDetailPrefetch_();
+        }
+      });
+    }
 
     // =========================
     // 並び替えセレクト初期化
@@ -1940,7 +2507,7 @@ document.addEventListener('click', async (e) => {
       });
       window.DeckPostList?.showListStatusMessage?.(
         'loading',
-        '投稿一覧を読み込み中です…(5秒ほどかかります)'
+        '最新の投稿を読み込み中…'
       );
 
       if (shouldLoadAllInitially) {
@@ -1959,6 +2526,7 @@ document.addEventListener('click', async (e) => {
           limit: PAGE_LIMIT,
           offset: 0,
           mine: false,
+          sort: 'new',
         });
 
         window.debugLog?.('L2 初回apiList結果', {
@@ -1985,11 +2553,20 @@ document.addEventListener('click', async (e) => {
         state.list.currentPage = 1;
         state.list.nextOffset = res.nextOffset ?? null;
         state.list.hasAllItems = false;
-        state.list.pageCache = {};
+        state.list.pageCache = {
+          1: {
+            items,
+            total,
+            totalPages: state.list.totalPages,
+            nextOffset: state.list.nextOffset,
+          },
+        };
+        mergeListItemsDedup_(items);
         updateFilterReadyState_();
       }
 
-      prefetchMineItems_().catch(() => {});
+      // 初回一覧の体感速度とGAS通信の安定性を優先し、マイ投稿はマイページ表示時に読む。
+      // prefetchMineItems_().catch(() => {});
       // スマホ/タブレットでGAS連続取得が不安定なため、初期表示時の全件先読みは停止する。
       // prefetchAllListInBackground_();
       await window.DeckPostList?.loadListPage?.(1);
@@ -2064,6 +2641,7 @@ document.addEventListener('click', async (e) => {
     });
 
     document.getElementById('toMineBtn')?.addEventListener('click', async () => {
+      stopSlowBackgroundListFetch_('裏読み停止中');
       setToMineButtonLoading_(true);
 
       try {
@@ -2117,6 +2695,12 @@ document.addEventListener('click', async (e) => {
   window.deletePost_ = deletePost_;
   window.findPostItemById = findPostItemById;
   window.bindPostListActionHandlers_ = bindPostListActionHandlers_;
+  window.ensureListLoadProgressEl_ = ensureListLoadProgressEl_;
+  window.updateListLoadProgress_ = updateListLoadProgress_;
+  window.startSlowBackgroundListFetch_ = startSlowBackgroundListFetch_;
+  window.stopSlowBackgroundListFetch_ = stopSlowBackgroundListFetch_;
+  window.prefetchListPage_ = prefetchListPage_;
+  window.mergeListItemsDedup_ = mergeListItemsDedup_;
 
   // 新namespace
   window.DeckPostList = window.DeckPostList || {};
@@ -2127,6 +2711,12 @@ document.addEventListener('click', async (e) => {
   window.DeckPostList.loadMinePage = loadMinePage;
   window.DeckPostList.fetchAllList = fetchAllList;
   window.DeckPostList.applySortAndRerenderList = applySortAndRerenderList;
+  window.DeckPostList.ensureListLoadProgressEl = ensureListLoadProgressEl_;
+  window.DeckPostList.updateListLoadProgress = updateListLoadProgress_;
+  window.DeckPostList.startSlowBackgroundListFetch = startSlowBackgroundListFetch_;
+  window.DeckPostList.stopSlowBackgroundListFetch = stopSlowBackgroundListFetch_;
+  window.DeckPostList.prefetchListPage = prefetchListPage_;
+  window.DeckPostList.mergeListItemsDedup = mergeListItemsDedup_;
   window.DeckPostList.showListStatusMessage = showListStatusMessage;
   window.DeckPostList.showList = showList;
   window.DeckPostList.showMine = showMine;

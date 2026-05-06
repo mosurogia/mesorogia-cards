@@ -228,12 +228,14 @@
     const limit = Number(opts.limit ?? DEFAULT_PAGE_LIMIT);
     const offset = Number(opts.offset ?? 0);
     const mine = !!opts.mine;
+    const sort = String(opts.sort || opts.sortKey || '').trim();
 
     const qs = new URLSearchParams();
     qs.set('mode', 'list');
     qs.set('limit', String(limit));
     qs.set('offset', String(offset));
     if (mine) qs.set('mine', '1');
+    if (sort) qs.set('sort', sort);
 
     const tk = (window.Auth && window.Auth.token) || opts.token || resolveToken();
     if (tk) qs.set('token', String(tk));

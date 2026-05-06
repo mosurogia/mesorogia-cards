@@ -78,22 +78,12 @@ async function init() {
   }
 
   try {
-    window.DeckPostList?.showListStatusMessage?.('loading', '投稿一覧を読み込み中です…(5秒ほどかかります)');
+    window.DeckPostList?.showListStatusMessage?.('loading', '最新の投稿を読み込み中…');
   } catch (e) {
     debugLog('status表示エラー', e.message);
   }
 
   await waitForPaint_();
-
-  debugLog('③ cardMap読み込み前');
-
-  try {
-    await withTimeout_(window.ensureCardMapLoaded(), 6000, 'cardMap');
-    debugLog('④ cardMap成功', Object.keys(window.cardMap || {}).length);
-  } catch (e) {
-    debugLog('❌ cardMap失敗', e.message);
-    console.error('カードマスタ読み込みに失敗しました', e);
-  }
 
   debugLog('⑤ token設定前');
 
@@ -118,7 +108,20 @@ async function init() {
   window.DeckPostDetail?.init?.();
 
   debugLog('⑩ campaign init前');
-  window.DeckPostCampaign?.init?.();
+  window.setTimeout(() => {
+    window.DeckPostCampaign?.init?.();
+  }, 0);
+
+  debugLog('③ cardMap読み込み前');
+  Promise.resolve()
+    .then(() => withTimeout_(window.ensureCardMapLoaded(), 6000, 'cardMap'))
+    .then(() => {
+      debugLog('④ cardMap成功', Object.keys(window.cardMap || {}).length);
+    })
+    .catch((e) => {
+      debugLog('❌ cardMap失敗', e.message);
+      console.error('カードマスタ読み込みに失敗しました', e);
+    });
 
   debugLog('⑪ hash処理前');
   await openInitialHashPage_();

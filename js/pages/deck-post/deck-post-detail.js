@@ -485,6 +485,68 @@
     };
     return true;
   }
+
+  function setPostChartLoading_(paneUid, loading, message = 'グラフ生成中…') {
+    const id = String(paneUid || '').trim();
+    if (!id) return;
+
+    [`costChart-${id}`, `powerChart-${id}`].forEach((canvasId) => {
+      const canvas = document.getElementById(canvasId);
+      const box = canvas?.closest?.('.post-detail-chartcanvas');
+      if (!box) return;
+
+      box.classList.toggle('is-chart-loading', !!loading);
+      let loadingEl = box.querySelector('.post-detail-chart-loading');
+
+      if (loading) {
+        if (!loadingEl) {
+          loadingEl = document.createElement('div');
+          loadingEl.className = 'post-detail-chart-loading';
+          loadingEl.setAttribute('role', 'status');
+          loadingEl.setAttribute('aria-live', 'polite');
+          box.appendChild(loadingEl);
+        }
+        loadingEl.textContent = message;
+        return;
+      }
+
+      loadingEl?.remove();
+    });
+  }
+
+  function schedulePostDistCharts_(item, paneUid, opts = {}) {
+    const id = String(paneUid || '').trim();
+    if (!item || !id) return;
+
+    setPostChartLoading_(id, true);
+
+    const run = () => {
+      window.setTimeout(() => {
+        if (opts.isStale?.()) return;
+
+        let ok = false;
+        try {
+          ok = renderPostDistCharts_(item, id);
+        } catch (e) {
+          console.warn('renderPostDistCharts_ failed:', e);
+        }
+
+        if (ok) {
+          setPostChartLoading_(id, false);
+          opts.onRendered?.();
+        } else {
+          setPostChartLoading_(id, true, 'グラフを表示できませんでした');
+          opts.onFailed?.();
+        }
+      }, 0);
+    };
+
+    if (typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(() => window.requestAnimationFrame(run));
+    } else {
+      window.setTimeout(run, 0);
+    }
+  }
   function normalizePackEnName_(enName) {
     const s = String(enName || '').trim();
     if (!s) return '';
@@ -1077,11 +1139,16 @@
     if (!pid) return null;
 
     const state = window.DeckPostState.getState();
+
+    const pageCacheItems = Object.values(state?.list?.pageCache || {})
+      .flatMap((p) => Array.isArray(p?.items) ? p.items : []);
+
     const pools = [
       state?.mine?.items,
       state?.list?.items,
       state?.list?.allItems,
       state?.list?.filteredItems,
+      pageCacheItems,
     ].filter(Array.isArray);
 
     for (const arr of pools) {
@@ -1097,10 +1164,33 @@
    */
   function hasDetailPayload_(item) {
     if (!item || typeof item !== 'object') return false;
-    return (
-      Object.prototype.hasOwnProperty.call(item, 'deckNote') ||
-      Object.prototype.hasOwnProperty.call(item, 'cardNotes')
-    );
+    return item.__detailPayloadLoaded === true;
+  }
+
+  const detailPayloadCache_ = new Map();
+  const detailPayloadInFlight_ = new Map();
+
+  function getPostIdFromItem_(itemOrPostId) {
+    if (itemOrPostId && typeof itemOrPostId === 'object') {
+      return String(itemOrPostId.postId || '').trim();
+    }
+    return String(itemOrPostId || '').trim();
+  }
+
+  function getCachedPostDetail_(postId) {
+    const pid = getPostIdFromItem_(postId);
+    if (!pid) return null;
+
+    const current = findItemById_(pid);
+    if (hasDetailPayload_(current)) {
+      detailPayloadCache_.set(pid, current);
+      return current;
+    }
+
+    const cached = detailPayloadCache_.get(pid);
+    if (!cached) return null;
+
+    return mergeFetchedPostIntoState_(pid, cached) || cached;
   }
 
   /**
@@ -1142,15 +1232,23 @@
     const src = res?.item || res?.post || res?.data || res || {};
     if (!src || typeof src !== 'object') return null;
 
+    const payload = parseJsonObject_(src.payload || src.payloadJSON || src.rawPayload);
     const next = { ...base, ...src };
     next.postId = String(next.postId || base.postId || '').trim();
     if (!next.postId) return null;
 
-    if (!Object.prototype.hasOwnProperty.call(next, 'deckNote')) {
-      next.deckNote = String(next.comment || base.comment || '');
-    }
-    next.cardNotes = normalizeCardNotes_(next.cardNotes);
+    next.deckNote = String(
+      Object.prototype.hasOwnProperty.call(src, 'deckNote')
+        ? src.deckNote
+        : (payload?.deckNote || next.deckNote || next.comment || base.comment || '')
+    );
+    next.cardNotes = normalizeCardNotes_(
+      Object.prototype.hasOwnProperty.call(src, 'cardNotes')
+        ? src.cardNotes
+        : payload?.cardNotes
+    );
     if (!next.cardNotes.length) next.cardNotes = normalizeCardNotes_(base.cardNotes);
+    next.__detailPayloadLoaded = true;
     return next;
   }
 
@@ -1161,19 +1259,75 @@
     const pid = String(postId || '').trim();
     if (!pid) return null;
 
+    const cached = getCachedPostDetail_(pid);
+    if (cached) return cached;
+
+    const inFlight = detailPayloadInFlight_.get(pid);
+    if (inFlight) return await inFlight;
+
     const current = findItemById_(pid);
     if (!current) return null;
     if (hasDetailPayload_(current)) return current;
 
-    const res = await window.DeckPostApi?.apiGetPost?.({ postId: pid });
-    if (!res || res.ok === false) {
-      throw new Error((res && res.error) || 'get failed');
-    }
+    const promise = (async () => {
+      const latest = findItemById_(pid) || current;
+      if (hasDetailPayload_(latest)) {
+        detailPayloadCache_.set(pid, latest);
+        return latest;
+      }
 
-    const normalized = normalizeFetchedPostResponse_(res, current);
-    if (!normalized) return current;
+      const res = await window.DeckPostApi?.apiGetPost?.({ postId: pid });
+      if (!res || res.ok === false) {
+        throw new Error((res && res.error) || 'get failed');
+      }
 
-    return mergeFetchedPostIntoState_(pid, normalized) || normalized;
+      const normalized = normalizeFetchedPostResponse_(res, latest);
+      if (!normalized) return latest;
+
+      const merged = mergeFetchedPostIntoState_(pid, normalized) || normalized;
+      detailPayloadCache_.set(pid, merged);
+      return merged;
+    })().finally(() => {
+      detailPayloadInFlight_.delete(pid);
+    });
+
+    detailPayloadInFlight_.set(pid, promise);
+    return await promise;
+  }
+
+  function prefetchPostDetail_(itemOrPostId, opts = {}) {
+    const pid = getPostIdFromItem_(itemOrPostId);
+    if (!pid) return Promise.resolve(null);
+    if (opts.signal?.stopped) return Promise.resolve(null);
+    return ensurePostDetailData_(pid).catch((err) => {
+      console.warn('prefetchPostDetail_ failed:', err);
+      return null;
+    });
+  }
+
+  async function prefetchPostDetails_(items, opts = {}) {
+    const list = (Array.isArray(items) ? items : [])
+      .map((item) => getPostIdFromItem_(item))
+      .filter(Boolean);
+    const seen = new Set();
+    const ids = list.filter((pid) => {
+      if (seen.has(pid)) return false;
+      seen.add(pid);
+      return true;
+    });
+    const concurrency = Math.max(1, Math.min(2, Number(opts.concurrency || 1) || 1));
+    let index = 0;
+
+    const worker = async () => {
+      while (index < ids.length) {
+        if (opts.signal?.stopped || document.hidden) return;
+        const pid = ids[index];
+        index += 1;
+        await prefetchPostDetail_(pid, opts);
+      }
+    };
+
+    await Promise.all(Array.from({ length: concurrency }, worker));
   }
 
   window.__cardMapCache = window.__cardMapCache || new Map();
@@ -2171,6 +2325,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
               <div class="post-detail-chartchips" id="cost-summary-${escHtml_(paneUid)}"></div>
             </div>
             <div class="post-detail-chartcanvas">
+              <div class="post-detail-chart-loading" role="status" aria-live="polite">グラフ生成中…</div>
               <canvas id="costChart-${escHtml_(paneUid)}"></canvas>
             </div>
           </div>
@@ -2181,6 +2336,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
               <div class="post-detail-chartchips" id="power-summary-${escHtml_(paneUid)}"></div>
             </div>
             <div class="post-detail-chartcanvas">
+              <div class="post-detail-chart-loading" role="status" aria-live="polite">グラフ生成中…</div>
               <canvas id="powerChart-${escHtml_(paneUid)}"></canvas>
             </div>
           </div>
@@ -2349,17 +2505,32 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     }
   }
 
-  try {
-    renderPostDistCharts_(item, paneUid);
-  } catch (e) {
-    console.warn('renderPostDistCharts_ failed:', e);
-  }
+  schedulePostDistCharts_(item, paneUid);
 
   refreshDeckPeekOnSp_();
 }
 
   // 指定した記事要素に対して詳細ペインを表示する
-  async function showDetailPaneForArticle(articleEl) {
+  let detailPaneRequestSeq_ = 0;
+
+  function renderDetailPaneLoading_(paneId, item) {
+    const pane = document.getElementById(paneId || 'postDetailPane');
+    if (!pane) return;
+
+    const title = String(item?.title || '選択したデッキ').trim();
+    pane.setAttribute('aria-busy', 'true');
+    pane.innerHTML = `
+      <div class="post-detail-loading" role="status">
+        <div class="post-detail-loading-spinner" aria-hidden="true"></div>
+        <div class="post-detail-loading-text">
+          <div class="post-detail-loading-title">デッキ詳細を読み込み中です</div>
+          <div class="post-detail-loading-sub">${escHtml_(title)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function showDetailPaneForArticle(articleEl, opts = {}) {
     const art = articleEl?.closest?.('.post-card') || articleEl;
     if (!art) return;
 
@@ -2369,7 +2540,19 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     let item = findItemById_(postId);
     if (!item) return;
 
-    if (!hasDetailPayload_(item)) {
+    const requestSeq = ++detailPaneRequestSeq_;
+    const listMode = art.dataset.listMode || (art.closest('#myPostList') ? 'mine' : 'list');
+    const usesMinePane = !!art.closest('#myPostList, #pageMine');
+    const basePaneId = usesMinePane ? 'postDetailPaneMine' : 'postDetailPane';
+
+    document.querySelectorAll('.post-card.is-active').forEach((el) => {
+      el.classList.remove('is-active');
+    });
+    art.classList.add('is-active');
+
+    renderDetailPaneLoading_(basePaneId, item);
+
+    if (!opts.skipFetch && !hasDetailPayload_(item)) {
       try {
         item = await ensurePostDetailData_(postId);
       } catch (e) {
@@ -2377,16 +2560,47 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
       }
     }
 
-    const listMode = art.dataset.listMode || (art.closest('#myPostList') ? 'mine' : 'list');
-    const usesMinePane = !!art.closest('#myPostList, #pageMine');
-    const basePaneId = usesMinePane ? 'postDetailPaneMine' : 'postDetailPane';
+    if (requestSeq !== detailPaneRequestSeq_) return;
 
-    withCardMapForPostDate_(item, () => renderDetailPaneForItem(item, basePaneId, { listMode }));
+    if (!hasDetailPayload_(item)) {
+      const pane = document.getElementById(basePaneId);
+      if (pane) {
+        pane.innerHTML = `
+          <div class="post-detail-loading post-detail-loading--error" role="status">
+            <div class="post-detail-loading-text">
+              <div class="post-detail-loading-title">デッキ詳細を取得できませんでした</div>
+              <div class="post-detail-loading-sub">時間をおいてもう一度クリックしてください。</div>
+            </div>
+          </div>
+        `;
+        pane.removeAttribute('aria-busy');
+      }
+      return;
+    }
 
-    document.querySelectorAll('.post-card.is-active').forEach((el) => {
-      el.classList.remove('is-active');
-    });
-    art.classList.add('is-active');
+    try {
+      await withCardMapForPostDate_(item, () => renderDetailPaneForItem(item, basePaneId, { listMode }));
+    } catch (e) {
+      console.warn('showDetailPaneForArticle: render failed', e);
+      if (requestSeq === detailPaneRequestSeq_) {
+        const pane = document.getElementById(basePaneId);
+        if (pane) {
+          pane.innerHTML = `
+            <div class="post-detail-loading post-detail-loading--error" role="status">
+              <div class="post-detail-loading-text">
+                <div class="post-detail-loading-title">デッキ詳細を表示できませんでした</div>
+                <div class="post-detail-loading-sub">時間をおいてもう一度クリックしてください。</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    if (requestSeq === detailPaneRequestSeq_) {
+      const pane = document.getElementById(basePaneId);
+      if (pane) pane.removeAttribute('aria-busy');
+    }
   }
 
   function findPostItemById(postId) {
@@ -2532,12 +2746,44 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     if (!art || !d) return;
 
     const willOpen = !!d.hidden;
-    d.hidden = !d.hidden;
+    if (!willOpen) {
+      d.hidden = true;
+      return;
+    }
+
+    const postId = String(art.dataset.postid || '').trim();
+    const listMode = art.dataset.listMode || (art.closest('#myPostList') ? 'mine' : 'list');
+    let item = postId ? findPostItemById(postId) : null;
+    d.setAttribute('aria-busy', 'true');
+
+    if (willOpen && d.dataset.lazyDetail === '1') {
+      if (item && !hasDetailPayload_(item)) {
+        try {
+          item = await ensurePostDetailData_(postId);
+        } catch (err) {
+          console.warn('toggleSpDetail_: apiGetPost failed', err);
+        }
+      }
+
+      if (!item || !hasDetailPayload_(item)) {
+        d.removeAttribute('aria-busy');
+        window.showActionToast?.('詳細情報を取得できませんでした。もう一度お試しください。');
+        return;
+      }
+
+      const replacement = item && window.buildCardSp?.(item, { mode: listMode, deferDetail: false });
+      if (replacement) {
+        art.replaceWith(replacement);
+        art = replacement;
+        d = art.querySelector('.post-detail');
+        if (!d) return;
+        d.setAttribute('aria-busy', 'true');
+      }
+    }
 
     // 開いた直後だけ、分布グラフを描画する
-    if (willOpen && !d.dataset.chartsRendered) {
-      const postId = String(art.dataset.postid || '').trim();
-      let item = findPostItemById(postId);
+    if (willOpen && !d.dataset.chartsRendered && !d.dataset.chartsScheduled) {
+      item = item || findPostItemById(postId);
       if (item && !hasDetailPayload_(item)) {
         try {
           item = await ensurePostDetailData_(postId);
@@ -2545,14 +2791,19 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
           console.warn('toggleSpDetail_: apiGetPost failed', err);
         }
 
-        const listMode = art.dataset.listMode || (art.closest('#myPostList') ? 'mine' : 'list');
+        if (!item || !hasDetailPayload_(item)) {
+          d.removeAttribute('aria-busy');
+          window.showActionToast?.('詳細情報を取得できませんでした。もう一度お試しください。');
+          return;
+        }
+
         const replacement = item && window.buildCardSp?.(item, { mode: listMode });
         if (replacement) {
           art.replaceWith(replacement);
           art = replacement;
           d = art.querySelector('.post-detail');
           if (!d) return;
-          d.hidden = false;
+          d.setAttribute('aria-busy', 'true');
         }
       }
 
@@ -2565,13 +2816,19 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
       }
 
       if (item && paneUid) {
-        requestAnimationFrame(() => {
-          try {
-            const ok = renderPostDistCharts_(item, paneUid);
-            if (ok && d) d.dataset.chartsRendered = '1';
-          } catch (err) {
-            console.warn('SP renderPostDistCharts_ failed:', err);
-          }
+        d.hidden = false;
+        d.dataset.chartsScheduled = '1';
+        schedulePostDistCharts_(item, paneUid, {
+          isStale: () => !d?.isConnected,
+          onRendered: () => {
+            if (!d) return;
+            d.dataset.chartsRendered = '1';
+            delete d.dataset.chartsScheduled;
+          },
+          onFailed: () => {
+            if (!d) return;
+            delete d.dataset.chartsScheduled;
+          },
         });
       } else {
         console.warn('SP charts skipped: item or paneUid missing', {
@@ -2579,8 +2836,31 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
           hasItem: !!item,
           paneUid,
         });
+        d.hidden = false;
       }
+    } else {
+      d.hidden = false;
     }
+
+    d.removeAttribute('aria-busy');
+  }
+
+  function setSpDetailButtonLoading_(button, loading) {
+    if (!button) return;
+
+    if (loading) {
+      button.dataset.originalText = button.dataset.originalText || button.textContent || '詳細';
+      button.dataset.loading = '1';
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+      button.textContent = '読み込み中…';
+      return;
+    }
+
+    button.dataset.loading = '0';
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    button.textContent = button.dataset.originalText || '詳細';
   }
 
   function isElementInViewport_(element) {
@@ -2812,40 +3092,20 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
 
     const detailBtn = e.target.closest('.btn-detail');
     if (detailBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (detailBtn.dataset.loading === '1') return;
+
       const art = detailBtn.closest('.post-card');
       const d = art?.querySelector('.post-detail');
-      if (!art || !d) return;
+      const willOpen = !!d?.hidden;
+      if (willOpen) setSpDetailButtonLoading_(detailBtn, true);
 
-      const willOpen = !!d.hidden;
-      d.hidden = !d.hidden;
-
-      // 開いた瞬間だけ、分布グラフを描画
-      if (willOpen && !d.dataset.chartsRendered) {
-        const postId = String(art.dataset.postid || '').trim();
-        const item = findPostItemById(postId);
-        const charts = art.querySelector('.post-detail-charts');
-        const paneUid = String(charts?.dataset?.paneid || '').trim();
-        const root = art.querySelector('.post-detail-inner');
-
-        if (item && root) {
-          renderDeckAdjustmentNoticeForPostDate_(root, item);
-        }
-
-        if (item && paneUid) {
-          requestAnimationFrame(() => {
-            try {
-              const ok = renderPostDistCharts_(item, paneUid);
-              if (ok) d.dataset.chartsRendered = '1';
-            } catch (err) {
-              console.warn('SP renderPostDistCharts_ failed:', err);
-            }
-          });
-        } else {
-          console.warn('SP charts skipped: item or paneUid missing', {
-            postId,
-            hasItem: !!item,
-            paneUid,
-          });
+      try {
+        await toggleSpDetail_(art);
+      } finally {
+        if (willOpen && detailBtn.isConnected) {
+          setSpDetailButtonLoading_(detailBtn, false);
         }
       }
       return;
@@ -3051,6 +3311,11 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
 
   window.DeckPostDetail.buildDeckNoteHtml = buildDeckNoteHtml;
   window.DeckPostDetail.buildCardNotesHtml = buildCardNotesHtml;
+  window.DeckPostDetail.hasDetailPayload = hasDetailPayload_;
+  window.DeckPostDetail.getCachedPostDetail = getCachedPostDetail_;
+  window.DeckPostDetail.ensurePostDetailData = ensurePostDetailData_;
+  window.DeckPostDetail.prefetchPostDetail = prefetchPostDetail_;
+  window.DeckPostDetail.prefetchPostDetails = prefetchPostDetails_;
   window.DeckPostDetail.renderDetailPaneForItem = renderDetailPaneForItem;
   window.DeckPostDetail.showDetailPaneForArticle = showDetailPaneForArticle;
   window.DeckPostDetail.findPostItemById = findPostItemById;
