@@ -1,0 +1,58 @@
+{
+  "environments": [
+    {
+      "env_id": "2025-10-d-pack",
+      "label": "Dパック環境",
+      "start_at": "2025-10-23",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Drawn Sword「引き抜かれた剣」実装",
+      "is_enabled": true
+    },
+    {
+      "env_id": "2025-12-balance",
+      "label": "2025/12調整後環境",
+      "start_at": "2025-12-16",
+      "end_at": "",
+      "kind": "balance",
+      "note": "「アドミラルシップ」、「愚者愚者」、「電竜」等が調整",
+      "is_enabled": true
+    },
+    {
+      "env_id": "2026-01-e-pack",
+      "label": "Eパック環境",
+      "start_at": "2026-01-01",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Ensemble of Slience 「無音の合唱曲」実装",
+      "is_enabled": true
+    },
+    {
+      "env_id": "2026-02-f-pack",
+      "label": "Fパック環境",
+      "start_at": "2026-02-17",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Fallen Fate 「堕ちた宿命」実装＆一部カード調整",
+      "is_enabled": true
+    },
+    {
+      "env_id": "2026-03-balance",
+      "label": "2026/03調整後環境",
+      "start_at": "2026-03-11",
+      "end_at": "",
+      "kind": "balance",
+      "note": "環境カードナーフと弱カードのアッパー",
+      "is_enabled": true
+    },
+    {
+      "env_id": "2026-04-g-pack",
+      "label": "Gパック環境",
+      "start_at": "2026-04-07",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Glory of the Gods「神々の栄光」実装",
+      "is_enabled": true
+    }
+  ]
+}
