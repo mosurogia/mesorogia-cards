@@ -1976,6 +1976,33 @@ body.is-pwa-standalone .app-bottom-nav {
     box-shadow: 0 -8px 24px rgba(0, 0, 0, .1);
 }
 
+/* アプリ版ではモーダルを下部メニューより前面に表示する */
+body.is-pwa-standalone .modal {
+    z-index: 6000;
+}
+
+body.is-pwa-standalone #cardZoomModal,
+body.is-pwa-standalone .card-detail-modal-root {
+    z-index: 7000;
+}
+
+body.is-pwa-standalone .modal .modal-content {
+    max-height: calc(100dvh - 28px);
+}
+
+body.is-pwa-standalone #filterModal {
+    padding-bottom: 14px;
+}
+
+body.is-pwa-standalone #filterModal .modal-content,
+body.is-pwa-standalone .card-pick-modal,
+body.is-pwa-standalone .cardnote-modal,
+body.is-pwa-standalone .note-fullscreen,
+body.is-pwa-standalone .post-filter-modal,
+body.is-pwa-standalone .deckcode-modal {
+    max-height: calc(100dvh - 28px);
+}
+
 .app-bottom-nav[hidden] {
     display: none;
 }
