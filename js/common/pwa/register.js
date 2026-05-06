@@ -66,6 +66,24 @@
     });
   }
 
+  function updateServiceWorkers_() {
+    if (!navigator.serviceWorker || typeof navigator.serviceWorker.getRegistrations !== 'function') {
+      return Promise.resolve();
+    }
+
+    return navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      return Promise.all(registrations.map(function (registration) {
+        if (!registration || typeof registration.update !== 'function') {
+          return Promise.resolve();
+        }
+
+        return registration.update().catch(function () {
+          return undefined;
+        });
+      }));
+    });
+  }
+
   function reloadWithCacheBust_() {
     var url = new URL(window.location.href);
     url.searchParams.set('cache_reset', String(Date.now()));
@@ -81,7 +99,9 @@
       localStorage.setItem(markerKey, String(Date.now()));
     } catch (_) {}
 
-    return deleteCaches_({ all: !!opts.all, keepRuntime: !!opts.keepRuntime }).then(function () {
+    return updateServiceWorkers_().then(function () {
+      return deleteCaches_({ all: !!opts.all, keepRuntime: !!opts.keepRuntime });
+    }).then(function () {
       if (opts.unregister) {
         return unregisterServiceWorkers_();
       }

@@ -113,23 +113,44 @@
     return nav;
   }
 
+  function ensureAppNavLoading_(message, isError = false) {
+    let overlay = document.querySelector('.app-nav-loading');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'app-nav-loading';
+      overlay.setAttribute('role', 'status');
+      overlay.setAttribute('aria-live', 'polite');
+      document.body.appendChild(overlay);
+    }
+
+    overlay.classList.toggle('is-error', !!isError);
+    overlay.innerHTML = isError
+      ? `<span>${message}</span>`
+      : `<span class="app-nav-loading-spinner" aria-hidden="true"></span><span>${message}</span>`;
+    overlay.hidden = false;
+    return overlay;
+  }
+
+  function showAppNavLoading_() {
+    if (!isStandalone_()) return;
+    ensureAppNavLoading_('読み込み中...');
+  }
+
+  function hideAppNavLoading_() {
+    window.clearTimeout(appNavFailureTimer);
+    const overlay = document.querySelector('.app-nav-loading');
+    if (overlay) overlay.hidden = true;
+  }
+
   function showAppNavFailureLater_() {
     if (!isStandalone_()) return;
     window.clearTimeout(appNavFailureTimer);
 
     appNavFailureTimer = window.setTimeout(() => {
-      let overlay = document.querySelector('.app-nav-loading');
-      if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'app-nav-loading';
-        overlay.setAttribute('role', 'status');
-        overlay.setAttribute('aria-live', 'polite');
-        document.body.appendChild(overlay);
-      }
-
-      overlay.classList.add('is-error');
-      overlay.innerHTML = '<span>読み込みに失敗しました。通信状況を確認して、もう一度お試しください。</span>';
-      overlay.hidden = false;
+      ensureAppNavLoading_(
+        '読み込みに失敗しました。通信状況を確認して、もう一度お試しください。',
+        true
+      );
     }, 8000);
   }
 
@@ -185,6 +206,7 @@
         return;
       }
 
+      showAppNavLoading_();
       showAppNavFailureLater_();
     });
 
@@ -559,6 +581,7 @@
     ensureBackToTopButton_();
     refreshBackToTopButton_();
     window.addEventListener('scroll', refreshBackToTopButton_, { passive: true });
+    window.addEventListener('pageshow', hideAppNavLoading_);
   }
 
   if (document.readyState === 'loading') {
