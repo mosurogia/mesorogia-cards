@@ -227,13 +227,41 @@
 
 /* カード選択モーダル内フィルター */
 .card-pick-filters {
-    position: relative;
     display: grid;
     grid-template-columns: minmax(132px, auto) minmax(0, 1fr);
     align-items: start;
     column-gap: 4px;
     row-gap: 8px;
-    margin: 8px 0 10px;
+    margin: 8px 0 0;
+}
+
+.card-pick-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card-pick-sticky-tools {
+    position: sticky;
+    top: 0;
+    z-index: 7;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 10px;
+    padding: 10px 16px 12px;
+    border: 1px solid rgba(49, 116, 164, .24);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .97);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+}
+
+.card-pick-modal #cardPickQuery {
+    display: block;
+    width: 100% !important;
+    box-sizing: border-box;
+    margin: 0;
+    background: #fff;
 }
 
 .card-pick-type-filter {
@@ -676,6 +704,10 @@
     display: none;
     position: fixed;
     inset: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
     background: rgba(0, 0, 0, .5);
     z-index: 2000;
     justify-content: center;
@@ -691,8 +723,10 @@
     padding: 0 15px;
     border-radius: 10px;
     max-width: 950px;
-    width: 90%;
+    width: min(90%, calc(100vw - 24px));
+    width: min(90%, calc(100dvw - 24px));
     max-height: 85%;
+    overflow-x: hidden;
     overflow-y: auto;
     position: relative;
     box-sizing: border-box;

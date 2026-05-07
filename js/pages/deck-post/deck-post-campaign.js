@@ -57,10 +57,10 @@
   }
 
   async function renderCampaignBanner() {
-    const box = document.getElementById('campaign-banner');
-    const titleEl = document.getElementById('campaign-banner-title');
-    const textEl = document.getElementById('campaign-banner-text');
-    const rangeEl = document.getElementById('campaign-banner-range');
+    const box = document.getElementById('campaign-info-panel') || document.getElementById('campaign-banner');
+    const titleEl = document.getElementById('campaign-info-title') || document.getElementById('campaign-banner-title');
+    const textEl = document.getElementById('campaign-info-text') || document.getElementById('campaign-banner-text');
+    const rangeEl = document.getElementById('campaign-info-range') || document.getElementById('campaign-banner-range');
 
     if (!box || !titleEl || !textEl) return;
 
@@ -78,6 +78,7 @@
     if (!isActive) {
       setCampaignBannerVisible_(box, false);
       window.__isCampaignRunning = false;
+      window.__activeCampaign = null;
       window.__activeCampaignTag = '';
       return;
     }
@@ -87,7 +88,11 @@
     const end = camp.endAt ? new Date(camp.endAt) : null;
 
     const fmt = (d) => (d && !isNaN(d)) ? window.fmtDate?.(d) || '' : '';
-    const computedRange = (start || end) ? `${fmt(start)}〜${fmt(end)}` : '';
+    const startText = fmt(start);
+    const endText = fmt(end);
+    const computedRange = startText && endText
+      ? `${startText}〜${endText}`
+      : (startText || endText);
 
     const titleHasRange =
       /[（(]\s*\d{4}\/\d{1,2}\/\d{1,2}\s*〜\s*\d{4}\/\d{1,2}\/\d{1,2}\s*[)）]/.test(rawTitle);
@@ -99,6 +104,7 @@
     titleEl.textContent = cleanTitle || 'キャンペーン';
 
     window.__isCampaignRunning = true;
+    window.__activeCampaign = camp;
     window.__activeCampaignTag = getCampaignTag_(camp, cleanTitle);
 
     if (rangeEl) {

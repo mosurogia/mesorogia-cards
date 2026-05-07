@@ -2630,13 +2630,6 @@ body.is-pwa-standalone .deck-code-controls.floating {
     min-height: min(420px, calc(100vh - 72px));
 }
 
-.card-pick-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
 .card-pick-item {
     border: none;
     background: transparent;
@@ -2672,7 +2665,7 @@ body.is-pwa-standalone .deck-code-controls.floating {
 
 @media (max-width: 600px) {
     .card-pick-modal {
-        margin-top: 20px;
+        margin-top: 90px;
         min-height: min(360px, calc(100vh - 32px));
     }
 
@@ -2722,7 +2715,8 @@ body.is-pwa-standalone .deck-code-controls.floating {
 
 /* 全画面エディタ */
 .note-fullscreen {
-    width: min(1200px, 96vw);
+    width: min(1200px, calc(100vw - 24px));
+    width: min(1200px, calc(100dvw - 24px));
     height: min(88vh, 920px);
     max-height: 90%;
     display: flex;

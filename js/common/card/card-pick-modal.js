@@ -89,6 +89,12 @@
     `;
 
     resultEl.parentNode.insertBefore(panel, resultEl);
+
+    const stickyTools = document.createElement('div');
+    stickyTools.className = 'card-pick-sticky-tools';
+    queryEl.parentNode.insertBefore(stickyTools, queryEl);
+    stickyTools.appendChild(queryEl);
+    stickyTools.appendChild(panel);
   }
 
   function ensureModal_() {

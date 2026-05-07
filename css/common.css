@@ -157,6 +157,19 @@ body {
     font-family: sans-serif;
     background: #f5f5f5;
 }
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+}
 /*カード画像*/
 .card img {
     width: 100%;
