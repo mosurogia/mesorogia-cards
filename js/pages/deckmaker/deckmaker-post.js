@@ -377,9 +377,26 @@
       imgEl.onerror = () => { imgEl.src = 'img/00000.webp'; };
     }
 
+    function syncFromDomToState() {
+      const root = elWrap();
+      if (!root) return;
+
+      root.querySelectorAll('.post-card-note').forEach(item => {
+        const i = Number(item.dataset.index);
+        if (!Number.isInteger(i) || i < 0) return;
+
+        const row = cardNotes[i] || { cd: '', text: '' };
+        row.cd = String(item.dataset.cd || row.cd || '');
+        row.text = String(item.querySelector('textarea.note')?.value || '');
+        cardNotes[i] = row;
+      });
+    }
+
     function syncHidden() {
       const hid = elHidden();
       if (!hid) return;
+
+      syncFromDomToState();
 
       // 空行は UI としては残してよいが、保存は「cdかtextがある行」だけに寄せる
       const cleaned = (cardNotes || [])
@@ -397,7 +414,10 @@
         : [];
       renderRows();
     }
-    function get() { return cardNotes.slice(); } // 互換
+    function get() {
+      syncFromDomToState();
+      return cardNotes.map(r => ({ cd: String(r.cd || ''), text: String(r.text || '') }));
+    } // 互換
     function getList() { return get(); }         // 互換
 
     // --- 行操作 ---
@@ -1393,108 +1413,117 @@
   }
 
   // =====================================================
-  // 8) 投稿成功モーダル（deckmaker-post.jsで完結）
+  // 8) 同一デッキ投稿の更新確認モーダル
+  // =====================================================
+  function ensureSameDeckUpdateModal_(){
+    if (document.getElementById('sameDeckUpdateModal')) return;
+
+    const wrap = document.createElement('div');
+    wrap.id = 'sameDeckUpdateModal';
+    wrap.className = 'modal';
+    wrap.style.display = 'none';
+    wrap.innerHTML = `
+      <div class="modal-content deck-post-result-dialog" role="dialog" aria-modal="true" aria-labelledby="sameDeckUpdateTitle">
+        <button type="button" class="modal-close-x" data-same-deck-close aria-label="閉じる">×</button>
+        <div class="deck-post-result-header" id="sameDeckUpdateTitle">同じデッキリストの投稿があります</div>
+        <div class="deck-post-result-body">
+          <div class="deck-post-result-text">
+            <div class="deck-post-result-row">
+              <span class="deck-post-result-label">既存投稿</span>
+              <span id="same-deck-existing-title" class="deck-post-result-deck-name">（投稿タイトル）</span>
+            </div>
+            <p class="deck-post-result-desc">
+              新しい投稿は作らず、既存投稿を今の入力内容で更新できます。
+            </p>
+          </div>
+        </div>
+        <div class="deck-post-result-buttons">
+          <button type="button" class="btn ghost" data-same-deck-close>閉じる</button>
+          <button type="button" class="btn primary" data-same-deck-update>今の内容で既存投稿を更新</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(wrap);
+  }
+
+  function confirmSameDeckUpdate_(info = {}){
+    ensureSameDeckUpdateModal_();
+
+    const modal = document.getElementById('sameDeckUpdateModal');
+    const titleEl = document.getElementById('same-deck-existing-title');
+    if (!modal) return Promise.resolve(false);
+
+    if (titleEl) titleEl.textContent = String(info.existingTitle || '（投稿タイトル）');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    return new Promise((resolve) => {
+      const updateBtn = modal.querySelector('[data-same-deck-update]');
+      const closeBtns = modal.querySelectorAll('[data-same-deck-close]');
+
+      const cleanup = (value) => {
+        updateBtn?.removeEventListener('click', onUpdate);
+        closeBtns.forEach((btn) => btn.removeEventListener('click', onClose));
+        modal.removeEventListener('click', onBackdrop);
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        resolve(value);
+      };
+
+      const onUpdate = () => cleanup(true);
+      const onClose = () => cleanup(false);
+      const onBackdrop = (e) => {
+        if (e.target === modal) cleanup(false);
+      };
+
+      updateBtn?.addEventListener('click', onUpdate);
+      closeBtns.forEach((btn) => btn.addEventListener('click', onClose));
+      modal.addEventListener('click', onBackdrop);
+    });
+  }
+
+  // =====================================================
+  // 9) 投稿成功モーダル（deckmaker-post.jsで完結）
   // =====================================================
   let _lastPostedId = '';
 
   function openPostSuccessModal(opts = {}) {
-    const modal = document.getElementById('postSuccessModal');
-    if (!modal) return;
-
-    const nameEl = document.getElementById('post-success-deck-name');
-    const deckName = (opts.deckName || (window.readDeckNameInput?.() || '').trim());
-    if (nameEl) nameEl.textContent = deckName || '（デッキ名）';
-
     _lastPostedId = String(opts.postId || '');
-    modal.dataset.postId = _lastPostedId;
-
-    const campBox  = document.getElementById('post-success-campaign');
-    const campText = document.getElementById('post-success-campaign-text');
-    const camp     = opts.campaign || null;
-
-    if (campBox && campText) {
-      if (camp && (camp.isActive === true || String(camp.isActive) === 'true') && String(camp.campaignId || '')) {
-        const title = String(camp.title || 'キャンペーン');
-        const start = camp.startAt ? new Date(camp.startAt) : null;
-        const end   = camp.endAt   ? new Date(camp.endAt)   : null;
-        const fmt = (d) => (d && !isNaN(d)) ? window.formatYmd?.(d) || '' : '';
-        const range = (start || end) ? `（${fmt(start)}〜${fmt(end)}）` : '';
-        campText.textContent = `${title}${range}`;
-        campBox.style.display = '';
-      } else {
-        campBox.style.display = 'none';
-      }
-    }
-
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    if (typeof window.updatePostSuccessPreview === 'function') {
-      window.updatePostSuccessPreview().catch(err => console.error('post-success preview error:', err));
-    }
+    window.DeckPostResultModal?.openPostSuccess?.(opts);
   }
 
+  function openPostUpdateSuccessModal(opts = {}){
+    window.DeckPostResultModal?.openPostUpdateSuccess?.(opts);
+  }
+
+  function initPostUpdateSuccessModal_(){
+    window.DeckPostResultModal?.ensure?.();
+  }
+
+  window.openPostUpdateSuccessModal = window.openPostUpdateSuccessModal || openPostUpdateSuccessModal;
+
   function initPostSuccessModal() {
-    const modal = document.getElementById('postSuccessModal');
-    if (!modal || modal.__bound) return;
-    modal.__bound = true;
-
-    const closeBtn  = document.getElementById('post-success-close');
-    const openPosts = document.getElementById('post-success-open-posts');
-    const tweetBtn  = document.getElementById('post-success-tweet');
-    const genImgBtn = document.getElementById('post-success-gen-image');
-
-    const closeModal = () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    };
-
-    closeBtn?.addEventListener('click', closeModal);
-
-    openPosts?.addEventListener('click', () => {
-      closeModal();
-      location.href = 'deck-post.html';
-    });
-
-    genImgBtn?.addEventListener('click', () => {
-      try {
-        if (typeof window.exportDeckImage === 'function') window.exportDeckImage();
-        else if (window.DeckImg && typeof window.DeckImg.export === 'function') window.DeckImg.export();
-        else if (window.DeckImg && typeof window.DeckImg.exportDeckImage === 'function') window.DeckImg.exportDeckImage();
-        else alert('画像生成機能が見つかりませんでした。上部の「画像生成」ボタンをお使いください。');
-      } catch (e) {
-        console.error('post-success image gen error:', e);
-        alert('画像生成中にエラーが発生しました。');
-      }
-    });
-
-    tweetBtn?.addEventListener('click', () => {
-      const deckName = (window.readDeckNameInput?.() || document.getElementById('post-success-deck-name')?.textContent || '').trim();
-      const baseText = deckName ? `【神託のメソロギア】「${deckName}」デッキを投稿しました！` : '【神託のメソロギア】デッキを投稿しました！';
-      const hashtags = '#神託のメソロギア #メソロギアデッキ';
-      const text = `${baseText}\n${hashtags}`;
-      const url = 'https://mosurogia.github.io/mesorogia-cards/deck-post.html';
-
-      const intent =
-        'https://twitter.com/intent/tweet?text=' +
-        encodeURIComponent(text) +
-        '&url=' +
-        encodeURIComponent(url);
-
-      window.open(intent, '_blank', 'noopener');
-    });
+    window.DeckPostResultModal?.ensure?.();
   }
 
   (function bootPostSuccessModal(){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPostSuccessModal);
-    else initPostSuccessModal();
+    const init = () => {
+      initPostSuccessModal();
+      initPostUpdateSuccessModal_();
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
   })();
 
   // =====================================================
   // 追記：投稿成功モーダル内：画像プレビュー（任意の共通関数がある場合のみ）
   // =====================================================
   async function updatePostSuccessPreview(){
-    const container = document.getElementById('post-success-preview');
+    const container =
+      document.getElementById('deck-post-result-preview') ||
+      document.getElementById('post-success-preview');
     if (!container) return;
     container.innerHTML = '';
 
@@ -1966,7 +1995,52 @@
           reason: json.reason || json.message || json.error || '投稿APIが失敗応答を返しました。',
         };
 
-        if (json.error === 'too_many_posts'){
+        if (json.error === 'same_deck_exists'){
+          const shouldUpdate = await confirmSameDeckUpdate_(json);
+          if (!shouldUpdate) {
+            showPostToast('既存投稿の更新をキャンセルしました。', 'info', false, failureDetails);
+            return false;
+          }
+
+          const existingPostId = String(json.existingPostId || '').trim();
+          if (!existingPostId) {
+            showPostToast('更新対象の投稿IDを取得できませんでした。', 'error', true, failureDetails);
+            return false;
+          }
+
+          const updateRes = await fetch(`${GAS_POST_ENDPOINT}?mode=update`, {
+            method : 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body   : JSON.stringify({ ...payload, postId: existingPostId }),
+          });
+          const updateJson = await updateRes.json().catch(() => null);
+          if (!updateJson || !updateJson.ok) {
+            showPostToast(`投稿更新失敗：${updateJson?.error || '不明なエラー'}`, 'error', true, {
+              code: updateJson?.error || 'UPDATE_FAILED',
+              status: updateRes.status,
+              statusText: updateRes.statusText,
+              reason: updateJson?.reason || updateJson?.message || updateJson?.error || '投稿更新APIが失敗応答を返しました。',
+            });
+            return false;
+          }
+
+          showPostToast('投稿を更新しました', 'success');
+          try { showSuccessCheck(); } catch(_){}
+
+          const deckName =
+            (window.readDeckNameInput?.() ||
+              document.getElementById('post-deck-name')?.value ||
+              '').trim();
+          openPostUpdateSuccessModal({ deckName, postId: existingPostId });
+          window.MesorogiaPwaInstall?.showNudge?.();
+        }else if (json.error === 'campaign_daily_limit'){
+          showPostToast(
+            json.message || '本日の投稿上限数に達しました。明日また投稿してください。',
+            'error',
+            true,
+            failureDetails
+          );
+        }else if (json.error === 'too_many_posts'){
           showPostToast('短時間に連続して投稿することはできません。少し時間をおいて再度お試しください。', 'error', true, failureDetails);
         }else if (json.error === 'dup_post'){
           showPostToast('同じ内容の投稿を二重送信しそうだったのでブロックしました。', 'info', true, failureDetails);

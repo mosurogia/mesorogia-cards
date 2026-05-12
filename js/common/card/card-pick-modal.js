@@ -9,10 +9,13 @@
   if (window.openCardPickModal && window.closeCardPickModal) return;
 
   let cardPickOnPicked_ = null;
+  let cardPickShowDeckActions_ = true;
+  let cardPickDeckOverride_ = null;
   const cardPickFilters_ = {
     type: '',
     category: '',
     pack: '',
+    deckOnly: false,
   };
 
   function escHtml_(value) {
@@ -85,6 +88,11 @@
         </details>
       </div>
 
+      <div class="card-pick-deck-actions">
+        <button type="button" class="card-pick-deck-btn" data-card-pick-deck-peek>デッキ表示</button>
+        <button type="button" class="card-pick-deck-btn" data-card-pick-deck-only aria-pressed="false">デッキカードのみ</button>
+      </div>
+
       <div id="cardPickActiveChips" class="card-pick-chips" style="display:none;"></div>
     `;
 
@@ -150,8 +158,11 @@
         const type = String(filters.type || '').trim();
         const category = String(filters.category || '').trim();
         const pack = String(filters.pack || '').trim();
+        const deckOnly = !!filters.deckOnly;
+        const deckCds = deckOnly ? getCurrentDeckCdSet_() : null;
 
         const filtered = rows.filter((row) => {
+          if (deckCds && !deckCds.has(normCd5_(row.cd5 || row.cd))) return false;
           if (q && !String(row.name || '').toLowerCase().includes(q)) return false;
           if (type && String(row.type || '') !== type) return false;
           if (category && String(row.category || '') !== category) return false;
@@ -173,6 +184,18 @@
     }
 
     return window.__cardNameIndex;
+  }
+
+  function getCurrentDeckCdSet_() {
+    const deck = cardPickDeckOverride_ && typeof cardPickDeckOverride_ === 'object'
+      ? cardPickDeckOverride_
+      : (window.deck && typeof window.deck === 'object' ? window.deck : {});
+    return new Set(
+      Object.entries(deck)
+        .filter(([, count]) => (parseInt(count, 10) || 0) > 0)
+        .map(([cd]) => normCd5_(cd))
+        .filter(Boolean)
+    );
   }
 
   function renderCardPickFilterOptions_() {
@@ -224,6 +247,7 @@
 
     const chips = Object.entries(cardPickFilters_)
       .filter(([key]) => key !== 'type')
+      .filter(([key]) => key !== 'deckOnly')
       .filter(([, value]) => String(value || '').trim())
       .map(([key, value]) => ({ key, value, label: filterLabel_(key, value) }));
 
@@ -236,6 +260,9 @@
   }
 
   function syncCardPickFilterUi_() {
+    const deckActions = document.querySelector('.card-pick-deck-actions');
+    if (deckActions) deckActions.hidden = !cardPickShowDeckActions_;
+
     document.querySelectorAll('[data-card-pick-type]').forEach((btn) => {
       const active = String(btn.dataset.cardPickType || '') === cardPickFilters_.type;
       btn.classList.toggle('is-active', active);
@@ -254,13 +281,62 @@
       folder.classList.toggle('is-active', !!cardPickFilters_[key]);
     });
 
+    const deckCds = getCurrentDeckCdSet_();
+    const deckOnlyBtn = document.querySelector('[data-card-pick-deck-only]');
+    if (deckOnlyBtn) {
+      deckOnlyBtn.classList.toggle('is-active', !!cardPickFilters_.deckOnly);
+      deckOnlyBtn.setAttribute('aria-pressed', cardPickFilters_.deckOnly ? 'true' : 'false');
+      deckOnlyBtn.disabled = deckCds.size === 0;
+    }
+
+    const deckPeekBtn = document.querySelector('[data-card-pick-deck-peek]');
+    if (deckPeekBtn) {
+      deckPeekBtn.disabled = deckCds.size === 0 || !document.getElementById('deckpeek-button');
+    }
+
     renderCardPickChips_();
+  }
+
+  function getCurrentDeckItems_() {
+    const deck = cardPickDeckOverride_ && typeof cardPickDeckOverride_ === 'object'
+      ? cardPickDeckOverride_
+      : (window.deck && typeof window.deck === 'object' ? window.deck : {});
+
+    return Object.entries(deck)
+      .map(([cd, count]) => ({
+        code: normCd5_(cd),
+        count: parseInt(count, 10) || 0,
+      }))
+      .filter((item) => item.code && item.count > 0);
+  }
+
+  function showCardPickDeckPeek_() {
+    const items = getCurrentDeckItems_();
+    if (!items.length) return false;
+
+    const overlay = document.getElementById('deckpeek-overlay');
+    const grid = document.getElementById('deckpeek-grid');
+    if (!overlay || !grid || !window.DeckPeekCommon?.renderGrid) return false;
+
+    window.DeckPeekCommon.renderGrid(grid, items);
+    overlay.classList.add('is-card-pick-deck-peek');
+    overlay.style.display = 'block';
+    return true;
+  }
+
+  function hideCardPickDeckPeek_() {
+    const overlay = document.getElementById('deckpeek-overlay');
+    if (overlay) {
+      overlay.classList.remove('is-card-pick-deck-peek');
+      overlay.style.display = 'none';
+    }
   }
 
   function resetCardPickFilters_() {
     cardPickFilters_.type = '';
     cardPickFilters_.category = '';
     cardPickFilters_.pack = '';
+    cardPickFilters_.deckOnly = false;
     syncCardPickFilterUi_();
   }
 
@@ -269,7 +345,9 @@
     if (!resultEl) return;
 
     const q = String(query || '');
-    const rows = window.searchCardsByName?.(q, q.trim() ? 120 : 999999, cardPickFilters_) || [];
+    const deckCds = cardPickFilters_.deckOnly ? getCurrentDeckCdSet_() : null;
+    const rows = (window.searchCardsByName?.(q, q.trim() ? 120 : 999999, cardPickFilters_) || [])
+      .filter((row) => !deckCds || deckCds.has(normCd5_(row.cd5 || row.cd)));
 
     if (!rows.length) {
       resultEl.innerHTML = '<div class="card-pick-empty">一致するカードがありません</div>';
@@ -298,6 +376,8 @@
   function closeCardPickModal() {
     const modalEl = document.getElementById('cardPickModal');
     if (modalEl) modalEl.style.display = 'none';
+    document.body.classList.remove('is-card-pick-open');
+    hideCardPickDeckPeek_();
 
     cardPickOnPicked_ = null;
 
@@ -333,6 +413,15 @@
     if (modalEl && !modalEl.dataset.wiredCommonCardPickFilters) {
       modalEl.dataset.wiredCommonCardPickFilters = '1';
       modalEl.addEventListener('click', (e) => {
+        const deckOnlyBtn = e.target.closest('[data-card-pick-deck-only]');
+        if (deckOnlyBtn) {
+          if (!cardPickShowDeckActions_) return;
+          cardPickFilters_.deckOnly = !cardPickFilters_.deckOnly;
+          syncCardPickFilterUi_();
+          renderCardPickResult_(queryEl?.value || '');
+          return;
+        }
+
         const typeBtn = e.target.closest('[data-card-pick-type]');
         if (typeBtn) {
           cardPickFilters_.type = String(typeBtn.dataset.cardPickType || '').trim();
@@ -368,6 +457,30 @@
           renderCardPickResult_(queryEl?.value || '');
         }
       });
+    }
+
+    const deckPeekBtn = document.querySelector('[data-card-pick-deck-peek]');
+    if (deckPeekBtn && !deckPeekBtn.dataset.wiredCardPickDeckPeek) {
+      deckPeekBtn.dataset.wiredCardPickDeckPeek = '1';
+
+      const sourceBtn = () => document.getElementById('deckpeek-button');
+      const show = (event) => {
+        if (!cardPickShowDeckActions_) return;
+        event.preventDefault();
+        if (showCardPickDeckPeek_()) return;
+        sourceBtn()?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+      };
+      const hide = () => {
+        hideCardPickDeckPeek_();
+        window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+      };
+
+      deckPeekBtn.addEventListener('touchstart', show, { passive: false });
+      deckPeekBtn.addEventListener('touchend', hide, { passive: true });
+      deckPeekBtn.addEventListener('touchcancel', hide, { passive: true });
+      deckPeekBtn.addEventListener('mousedown', show);
+      deckPeekBtn.addEventListener('mouseup', hide);
+      deckPeekBtn.addEventListener('mouseleave', hide);
     }
 
     document.querySelectorAll('.card-pick-folder').forEach((folder) => {
@@ -418,6 +531,8 @@
     cardPickOnPicked_ = typeof opts?.onPicked === 'function'
       ? opts.onPicked
       : null;
+    cardPickShowDeckActions_ = opts?.showDeckActions !== false;
+    cardPickDeckOverride_ = opts?.deck && typeof opts.deck === 'object' ? opts.deck : null;
 
     const modalEl = ensureModal_();
     bindCardPickUi_();
@@ -427,6 +542,7 @@
     if (!modalEl || !queryEl || !resultEl) return;
 
     modalEl.style.display = 'flex';
+    document.body.classList.add('is-card-pick-open');
     queryEl.value = '';
     resetCardPickFilters_();
     resultEl.innerHTML = '<div class="card-pick-empty">カードを読み込み中です</div>';

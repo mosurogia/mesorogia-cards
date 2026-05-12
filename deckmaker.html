@@ -33,11 +33,11 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-07-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-05-10-001">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
-    <link rel="stylesheet" href="css/page2.css?v=2026-05-05-007">
+    <link rel="stylesheet" href="css/page2.css?v=2026-05-10-001">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -961,60 +961,6 @@
     ✓
 </div>
 
-<!-- 投稿成功モーダル -->
-<div id="postSuccessModal" class="modal" style="display:none;">
-    <div class="modal-content post-success-modal">
-        <button id="post-success-close" class="modal-close-x" type="button" aria-label="閉じる">×</button>
-
-        <div class="post-success-header">
-            🎉 デッキ投稿が完了しました
-        </div>
-
-        <div class="post-success-body">
-            <div class="post-success-content">
-                <div class="post-success-text">
-                    <div class="post-success-row">
-                        <span class="post-success-label">デッキ名</span>
-                        <span id="post-success-deck-name" class="post-success-deck-name">（デッキ名）</span>
-                    </div>
-                    <p class="post-success-desc">
-                    デッキ投稿一覧ページにあなたのデッキが追加されました。<br>
-                    Xで投稿したことをシェアしてみましょう！<br>
-                    ポスト用のデッキリスト画像は、下の「画像生成」から保存できます。
-                    </p>
-
-                    <!-- キャンペーン案内（開催中のみ表示） -->
-                    <div id="post-success-campaign" class="beta-note" style="display:none; margin-top:10px;">
-                        <div class="beta-note-icon">🎁</div>
-                        <div class="beta-note-body">
-                            <div class="beta-note-title">キャンペーン開催中</div>
-                            <div id="post-success-campaign-text">（キャンペーン情報）</div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- 右側のプレビュー領域 -->
-                <div id="post-success-preview" class="post-success-preview"></div>
-            </div>
-        </div>
-
-
-        <div class="post-success-buttons">
-            <button type="button" id="post-success-gen-image" class="btn ghost">
-                🖼 デッキリスト画像を生成
-            </button>
-            <button type="button" id="post-success-open-posts" class="btn primary">
-                📂 投稿一覧を開く
-            </button>
-            <button type="button" id="post-success-tweet" class="btn x-share">
-                𝕏 でポストする
-            </button>
-        </div>
-    </div>
-</div>
-
-
-
                 <!-- Hidden values -->
                 <input type="hidden" id="post-deck-code" name="deckCode">
                 <input type="hidden" id="post-races-hidden" name="races">
@@ -1272,6 +1218,7 @@
 <script src="js/common/deck/image-export.js?v=2026-05-05-007"></script>
 <script src="js/common/deck/deck-analysis.js?v=2026-05-05-007"></script>
 <script src="js/common/deck/deck-note-presets.js?v=2026-05-05-007"></script>
+<script src="js/common/deck/post-result-modal.js?v=2026-05-10-001"></script>
 <script defer src="js/common/deck/screenshot-panel.js?v=2026-05-05-007"></script>
 
 <!-- デッキメーカーページ専用 -->

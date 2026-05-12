@@ -69,7 +69,18 @@
       return;
     }
 
+    const root = btn?.closest?.('.post-detail-inner') ||
+      target.closest?.('.post-detail-inner') ||
+      document.querySelector('.post-detail-inner');
+    const postId = String(root?.dataset?.postid || '').trim();
+    const item = postId ? findItemById_(postId) : null;
+    const deck = item && typeof window.DeckPostDetail?.extractDeckMap === 'function'
+      ? window.DeckPostDetail.extractDeckMap(item)
+      : null;
+
     window.openCardPickModal({
+      showDeckActions: true,
+      deck,
       onPicked: (picked) => {
         const name = String(picked?.name || '').trim();
         if (!name) return;
@@ -198,6 +209,12 @@
       editor.hidden = true;
       view.hidden = false;
 
+      window.openPostUpdateSuccessModal?.({
+        label: 'デッキ解説',
+        postId,
+        deckName: item?.title || '',
+        item,
+      });
       showActionToast_('デッキ解説を更新しました');
       window.MesorogiaPwaInstall?.showNudge?.();
     } finally {
@@ -562,8 +579,9 @@
       }
 
       // カード選択
-      if (target && target.classList.contains('pick-btn')) {
-        const row = target.closest('.post-card-note');
+      const pickTrigger = target?.closest?.('.pick-btn, .thumb img');
+      if (pickTrigger) {
+        const row = pickTrigger.closest('.post-card-note');
         if (!row) return;
 
         __cardNotesPickContext = {
@@ -707,6 +725,12 @@
       editor.hidden = true;
       view.hidden = false;
 
+      window.openPostUpdateSuccessModal?.({
+        label: 'カード解説',
+        postId,
+        deckName: item?.title || '',
+        item,
+      });
       showActionToast_('カード解説を更新しました');
       window.MesorogiaPwaInstall?.showNudge?.();
     } finally {
@@ -791,6 +815,12 @@
         }
 
         modal.style.display = 'none';
+        window.openPostUpdateSuccessModal?.({
+          label: 'ユーザータグ',
+          postId,
+          deckName: item?.title || '',
+          item,
+        });
         window.showMiniToast_?.('ユーザータグを保存しました');
         window.MesorogiaPwaInstall?.showNudge?.();
       } finally {
@@ -1018,6 +1048,13 @@
       refreshDeckCodeUIs_(postId);
       closeDeckCodeModal_();
 
+      const item = findItemById_(postId);
+      window.openPostUpdateSuccessModal?.({
+        label: 'デッキコード',
+        postId,
+        deckName: item?.title || '',
+        item,
+      });
       window.showMiniToast_('デッキコードを保存しました');
       window.MesorogiaPwaInstall?.showNudge?.();
       return;
@@ -1357,22 +1394,34 @@
       return (t.length > 24) ? t.slice(0, 24) : t;
     }
 
+    function normalizeUserTagSearch_(value) {
+      return String(value || '')
+        .normalize('NFKC')
+        .trim()
+        .toLowerCase()
+        .replace(/[\u30a1-\u30f6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+    }
+
     function collectAllUserTagCandidates_() {
       const items =
         window.DeckPostState?.getState?.()?.list?.allItems ||
         window.__DeckPostState?.list?.allItems ||
         [];
 
-      const set = new Set();
+      const freq = new Map();
       (items || []).forEach((it) => {
         String(it?.tagsUser || '')
           .split(',')
           .map((s) => s.trim())
           .filter(Boolean)
-          .forEach((t) => set.add(t));
+          .forEach((t) => freq.set(t, (freq.get(t) || 0) + 1));
       });
 
-      return [...set].sort((a, b) => a.localeCompare(b, 'ja'));
+      return [...freq.entries()]
+        .sort((a, b) => {
+          if (b[1] !== a[1]) return b[1] - a[1];
+          return a[0].localeCompare(b[0], 'ja');
+        });
     }
 
     function renderSelected_() {
@@ -1411,21 +1460,31 @@
     function renderSuggest_(query) {
       sugWrap.replaceChildren();
 
-      const q = normalizeNewTag_(query).toLowerCase();
+      const q = normalizeUserTagSearch_(query);
       const selected = getAllSelected_();
       const all = collectAllUserTagCandidates_();
 
-      const rows = all.filter((tag) => {
+      const rows = all.filter(([tag]) => {
         if (selected.has(tag)) return false;
         if (!q) return true;
-        return tag.toLowerCase().includes(q);
-      });
+        return normalizeUserTagSearch_(tag).includes(q);
+      }).slice(0, 40);
 
-      rows.slice(0, 20).forEach((tag) => {
+      rows.forEach(([tag, count]) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'filter-btn';
-        btn.textContent = tag;
+        btn.className = 'suggest-item';
+        btn.dataset.utag = tag;
+
+        const label = document.createElement('span');
+        label.className = 'suggest-item-label';
+        label.textContent = tag;
+
+        const countBadge = document.createElement('span');
+        countBadge.className = 'c';
+        countBadge.textContent = String(count);
+
+        btn.append(label, countBadge);
 
         btn.addEventListener('click', (e) => {
           e.preventDefault();

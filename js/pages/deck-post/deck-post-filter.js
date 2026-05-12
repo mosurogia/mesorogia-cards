@@ -97,6 +97,9 @@
   function tagChipsUser(tagsUser){
   const s = String(tagsUser || '');
   if (!s) return '';
+  const quickFilterAttrs = quickFilterReady_()
+    ? 'data-ready="1"'
+    : 'disabled aria-disabled="true" data-ready="0" title="フィルター準備中です。全投稿の読み込み完了後に使えます。"';
 
   return s.split(',')
     .map(x => x.trim())
@@ -108,11 +111,22 @@
         <button type="button"
           class="chip-search-btn btn-user-tag-search"
           data-utag="${escapeHtml(tag)}"
+          ${quickFilterAttrs}
           aria-label="このユーザータグで絞り込み">🔎</button>
       </span>
     `)
     .join('');
 }
+
+  function quickFilterReady_() {
+    const list = window.__DeckPostState?.list;
+    const openBtn = document.getElementById('filterBtn');
+    return !!list?.hasAllItems || openBtn?.dataset.ready === '1';
+  }
+
+  function showQuickFilterPreparing_() {
+    window.showActionToast?.('フィルター準備中です。全投稿の読み込み完了後に使えます。');
+  }
 
   /*　キャンペーンタグの状態更新*/
   function refreshCampaignTagChips_(){
@@ -553,7 +567,7 @@
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
-    selectedCardMode: 'or',
+    selectedFilterMode: 'or',
     selectedPostId: '',
     selectedPostLabel: '',
   };
@@ -566,7 +580,7 @@
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
-    selectedCardMode: 'or',
+    selectedFilterMode: 'or',
     selectedPostId: '',
     selectedPostLabel: '',
   };
@@ -585,9 +599,58 @@
     draft.selectedPosterKey = String(applied?.selectedPosterKey || '');
     draft.selectedPosterLabel = String(applied?.selectedPosterLabel || '');
     draft.selectedCardCds = new Set(Array.from(applied?.selectedCardCds || []));
-    draft.selectedCardMode = String(applied?.selectedCardMode || 'or');
+    draft.selectedFilterMode = String(applied?.selectedFilterMode || applied?.selectedCardMode || 'or');
     draft.selectedPostId = String(applied?.selectedPostId || '');
     draft.selectedPostLabel = String(applied?.selectedPostLabel || '');
+  }
+
+  /** 全体タグ検索モード */
+  function getFilterMatchMode_(source = window.PostFilterState) {
+    const mode = String(source?.selectedFilterMode || source?.selectedCardMode || 'or').toLowerCase();
+    return mode === 'and' ? 'and' : 'or';
+  }
+
+  /** 適用中チップ左側の OR/AND 表示を更新 */
+  function wireActiveMatchModeChip_() {
+      const bar = document.getElementById('active-chips-bar');
+      const count = bar?.querySelector('.chips-left .chips-count');
+      if (!count) return;
+
+      const mode = getFilterMatchMode_(window.PostFilterState);
+      count.innerHTML = `
+        <span class="match-chip-label">タグ検索</span>
+        <span class="match-chip-mode ${mode}">
+          ${mode.toUpperCase()}
+        </span>
+      `;
+
+      count.classList.add('post-filter-match-chip');
+      count.setAttribute('role', 'button');
+      count.setAttribute('tabindex', '0');
+      count.setAttribute('aria-label', `タグ検索を${mode === 'and' ? 'OR' : 'AND'}に切り替え`);
+      count.setAttribute('aria-pressed', mode === 'and' ? 'true' : 'false');
+
+      if (count.dataset.wiredPostFilterMatchMode === '1') return;
+      count.dataset.wiredPostFilterMatchMode = '1';
+
+      const toggle = async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const next = getFilterMatchMode_(window.PostFilterState) === 'and' ? 'or' : 'and';
+          window.PostFilterState.selectedFilterMode = next;
+          window.PostFilterDraft.selectedFilterMode = next;
+
+          window.__renderFilterModeToggle_?.();
+          window.DeckPostFilter?.updateActiveChipsBar?.();
+          await window.DeckPostList?.applySortAndRerenderList?.(false);
+      };
+
+      count.addEventListener('click', toggle);
+      count.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          toggle(e);
+      });
   }
 
   // =========================
@@ -607,7 +670,6 @@
       const postLabel = String(st.selectedPostLabel || '').trim();
       const postId = String(st.selectedPostId || '').trim();
       const cards = Array.from(st.selectedCardCds || []);
-      const cardMode = String(st.selectedCardMode || 'or');
 
       const chips = [];
 
@@ -688,13 +750,11 @@
       }
 
       if (cards.length) {
-          const labelHead = cardMode === 'and' ? 'AND' : 'OR';
-
           cards.forEach((cd) => {
               const name = (window.cardMap || window.allCardsMap || {})?.[cd]?.name || cd;
 
               chips.push({
-                  label: `🃏${labelHead}:${name}`,
+                  label: `🃏${name}`,
                   className: 'chip-card',
                   onRemove: () => {
                       window.PostFilterState.selectedCardCds?.delete?.(cd);
@@ -727,11 +787,13 @@
           });
       }
 
+      const showBar = chips.length > 0;
+
       FilterChipBar.render({
           rootId: 'active-chips-bar',
           countText: '',
-          show: chips.length > 0,
-          showLeft: false,
+          show: showBar,
+          showLeft: showBar,
           chips,
           clearLabel: 'すべて解除',
           onClearAll: () => {
@@ -749,8 +811,8 @@
 
               window.PostFilterState.selectedCardCds?.clear?.();
               window.PostFilterDraft.selectedCardCds?.clear?.();
-              window.PostFilterState.selectedCardMode = 'or';
-              window.PostFilterDraft.selectedCardMode = 'or';
+              window.PostFilterState.selectedFilterMode = 'or';
+              window.PostFilterDraft.selectedFilterMode = 'or';
 
               window.PostFilterState.selectedPostId = '';
               window.PostFilterState.selectedPostLabel = '';
@@ -774,6 +836,8 @@
               window.DeckPostList?.applySortAndRerenderList?.(false);
           }
       });
+
+      if (showBar) wireActiveMatchModeChip_();
   }
 
   // =========================
@@ -819,6 +883,100 @@
     return arr;
   }
 
+  /** 投稿タグの選択条件に一致するか */
+  function matchesPostTagFilter_(item, tag) {
+    const t = String(tag || '').trim();
+    if (!t) return false;
+
+    const postTags = new Set(
+      [item.tagsAuto, item.tagsPick]
+        .filter(Boolean)
+        .join(',')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+    );
+
+    const kind = classifyTag_(t);
+
+    // 通常タグ
+    if (kind === 'deckinfo') {
+      return postTags.has(t);
+    }
+
+    // 種族
+    if (kind === 'race') {
+      const raceCandidates = [
+        item.race,
+        item.mainRace,
+        item.deckRace,
+        item.raceKey,
+      ]
+        .map(v => String(v || '').trim())
+        .filter(Boolean);
+
+      // raceKey が INN+OLD+DRAGON 形式なら、その中にも含まれるか確認
+      if (raceCandidates.some(v => v === t)) return true;
+      if (raceCandidates.some(v => v.includes(t))) return true;
+
+      return postTags.has(t);
+    }
+
+    // カテゴリ
+    if (kind === 'category') {
+      const categoryCandidates = [
+        item.category,
+        item.deckCategory,
+      ]
+        .map(v => String(v || '').trim())
+        .filter(Boolean);
+
+      if (categoryCandidates.includes(t)) return true;
+      return postTags.has(t);
+    }
+
+    return postTags.has(t);
+  }
+
+  /** ユーザータグの選択条件に一致するか */
+  function matchesUserTagFilter_(item, tag) {
+    const raw = String(item.tagsUser || '');
+    if (!raw) return false;
+
+    const selected = normalizeUserTagSearch_(tag);
+    if (!selected) return false;
+
+    const tags = raw.split(',')
+      .map(t => normalizeUserTagSearch_(t))
+      .filter(Boolean);
+
+    return tags.includes(selected);
+  }
+
+  /** カードの選択条件に一致するか */
+  function matchesCardFilter_(item, cd) {
+    const deck = extractDeckMap(item);
+    if (!deck) return false;
+    return !!deck[String(cd)];
+  }
+
+  /** 投稿者の選択条件に一致するか */
+  function matchesPosterFilter_(item, posterKey, posterName) {
+    const key = String(posterKey || '').trim();
+    if (key) {
+      return window.posterKeyFromItem_(item) === key;
+    }
+
+    const name = String(posterName || '').trim();
+    if (!name) return false;
+
+    const want = `name:${window.normPosterName_(name)}`;
+    if (window.posterKeyFromItem_(item) === want) return true;
+
+    const currentName = String(item.posterName || item.username || '').trim();
+    return currentName === name;
+  }
+
 // ===== 一覧：フィルタ＆ソート結果を作り直す =====
 function rebuildFilteredItems(){
   const state =
@@ -836,156 +994,62 @@ function rebuildFilteredItems(){
   // ★ 投稿フィルター（タグ） — window.PostFilterState を見る
   const fs = window.PostFilterState;
 
-  // ① 環境（作成日ベース / 複数選択 OR）
+  // ① タグ系フィルター（全体 OR/AND）
+  const matchMode = String(fs?.selectedFilterMode || fs?.selectedCardMode || 'or');
+  const tagConditions = [];
+
   const selectedEnvIds = Array.from(fs?.selectedEnvironmentIds || [])
     .map((id) => String(id || '').trim())
     .filter(Boolean);
-  if (selectedEnvIds.length) {
-    const selectedEnvs = selectedEnvIds
-      .map(getEnvironmentById_)
-      .filter(Boolean);
 
-    if (selectedEnvs.length) {
-      filtered = filtered.filter((item) =>
-        selectedEnvs.some((env) => isPostInEnvironment_(item, env))
-      );
-    }
+  selectedEnvIds
+    .map(getEnvironmentById_)
+    .filter(Boolean)
+    .forEach((env) => {
+      tagConditions.push((item) => isPostInEnvironment_(item, env));
+    });
+
+  Array.from(fs?.selectedTags || [])
+    .map(s => String(s).trim())
+    .filter(Boolean)
+    .forEach((tag) => {
+      tagConditions.push((item) => matchesPostTagFilter_(item, tag));
+    });
+
+  Array.from(fs?.selectedUserTags || [])
+    .map(s => String(s).trim())
+    .filter(Boolean)
+    .forEach((tag) => {
+      tagConditions.push((item) => matchesUserTagFilter_(item, tag));
+    });
+
+  Array.from(fs?.selectedCardCds || [])
+    .map(cd => String(cd).trim())
+    .filter(Boolean)
+    .forEach((cd) => {
+      tagConditions.push((item) => matchesCardFilter_(item, cd));
+    });
+
+  const selPosterKey = String(fs?.selectedPosterKey || '').trim();
+  const selPosterName = String(fs?.selectedPoster || '').trim();
+  if (selPosterKey || selPosterName) {
+    tagConditions.push((item) => matchesPosterFilter_(item, selPosterKey, selPosterName));
+  }
+
+  if (tagConditions.length) {
+    filtered = filtered.filter((item) => {
+      if (matchMode === 'and') {
+        return tagConditions.every((matches) => matches(item));
+      }
+
+      return tagConditions.some((matches) => matches(item));
+    });
   }
 
   // ★ 投稿1件だけ表示（共有リンク用）
   const selPid = String(fs?.selectedPostId || '').trim();
   if (selPid) {
     filtered = filtered.filter(item => String(item.postId || '').trim() === selPid);
-  }
-
-  // ① 投稿タグ（自動＋選択タグ / 種族 / カテゴリ）
-  if (fs?.selectedTags?.size) {
-    const selected = Array.from(fs.selectedTags)
-      .map(s => String(s).trim())
-      .filter(Boolean);
-
-    filtered = filtered.filter(item => {
-      const postTags = new Set(
-        [item.tagsAuto, item.tagsPick]
-          .filter(Boolean)
-          .join(',')
-          .split(',')
-          .map(s => s.trim())
-          .filter(Boolean)
-      );
-
-      return selected.some(tag => {
-        const kind = classifyTag_(tag);
-
-        // 通常タグ
-        if (kind === 'deckinfo') {
-          return postTags.has(tag);
-        }
-
-        // 種族
-        if (kind === 'race') {
-          const raceCandidates = [
-            item.race,
-            item.mainRace,
-            item.deckRace,
-            item.raceKey,
-          ]
-            .map(v => String(v || '').trim())
-            .filter(Boolean);
-
-          // raceKey が INN+OLD+DRAGON 形式なら、その中にも含まれるか確認
-          if (raceCandidates.some(v => v === tag)) return true;
-          if (raceCandidates.some(v => v.includes(tag))) return true;
-
-          return postTags.has(tag);
-        }
-
-        // カテゴリ
-        if (kind === 'category') {
-          const categoryCandidates = [
-            item.category,
-            item.deckCategory,
-          ]
-            .map(v => String(v || '').trim())
-            .filter(Boolean);
-
-          if (categoryCandidates.includes(tag)) return true;
-          return postTags.has(tag);
-        }
-
-        return postTags.has(tag);
-      });
-    });
-  }
-
-  // ★ ユーザータグ検索（複数選択 OR）
-  const selUserTags = Array.from(window.PostFilterState?.selectedUserTags || []);
-  if (selUserTags.length) {
-    // かな/カナ混合に対応するための正規化（ひらがな⇔カタカナ差を吸収）
-    const toHira = (s) => String(s || '').replace(/[\u30a1-\u30f6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
-    const norm = (s) => toHira(String(s || '').trim().toLowerCase());
-
-    const selNorm = selUserTags.map(norm).filter(Boolean);
-
-    filtered = filtered.filter(item => {
-      const raw = String(item.tagsUser || '');
-      if (!raw) return false;
-
-      const tags = raw.split(',')
-        .map(t => t.trim())
-        .filter(Boolean);
-
-      const tagNorm = tags.map(norm);
-
-      // OR：どれか1つでも一致
-      return selNorm.some(t => tagNorm.includes(t));
-    });
-  }
-
-  // ★ カードで絞り込み（OR/AND）
-  const cds = fs?.selectedCardCds; // Set
-  if (cds && cds.size){
-    const mode = String(fs?.selectedCardMode || 'or'); // 'or' | 'and'
-
-    filtered = filtered.filter(it=>{
-      const deck = extractDeckMap(it); // {cd:count}
-      if (!deck) return false;
-
-      if (mode === 'and'){
-        for (const cd of cds){
-          if (!deck[String(cd)]) return false;
-        }
-        return true;
-      }
-
-      // or
-      for (const cd of cds){
-        if (deck[String(cd)]) return true;
-      }
-      return false;
-    });
-  }
-
-  // ★ 投稿者フィルタ（完全一致）
-  const selPoster = String(fs?.selectedPoster || '').trim();
-  if (selPoster){
-    filtered = filtered.filter(item => {
-      const p = String(item.posterName || item.username || '').trim();
-      return p === selPoster;
-    });
-  }
-
-  // ===== 投稿者フィルタ（キー一致）=====
-  const selKey = String(fs?.selectedPosterKey || '').trim();
-  if (selKey){
-    filtered = filtered.filter(item => window.posterKeyFromItem_(item) === selKey);
-  } else {
-    // 互換：昔の selectedPoster が残ってる場合
-    const selPoster = String(fs?.selectedPoster || '').trim();
-    if (selPoster){
-      const want = `name:${window.normPosterName_(selPoster)}`;
-      filtered = filtered.filter(item => window.posterKeyFromItem_(item) === want);
-    }
   }
 
   // 並び替え
@@ -1026,7 +1090,7 @@ function rebuildFilteredItems(){
     applied.selectedPosterKey = String(draft?.selectedPosterKey || '');
     applied.selectedPosterLabel = String(draft?.selectedPosterLabel || '');
     applied.selectedCardCds = new Set(Array.from(draft?.selectedCardCds || []));
-    applied.selectedCardMode = String(draft?.selectedCardMode || 'or');
+    applied.selectedFilterMode = String(draft?.selectedFilterMode || draft?.selectedCardMode || 'or');
     applied.selectedPostId = String(draft?.selectedPostId || '');
     applied.selectedPostLabel = String(draft?.selectedPostLabel || '');
 
@@ -1044,7 +1108,7 @@ function rebuildFilteredItems(){
       selectedPosterKey: '',
       selectedPosterLabel: '',
       selectedCardCds: new Set(),
-      selectedCardMode: 'or',
+      selectedFilterMode: 'or',
       selectedPostId: '',
       selectedPostLabel: '',
     };
@@ -1057,9 +1121,10 @@ function rebuildFilteredItems(){
     window.PostFilterDraft.selectedPostId = '';
     window.PostFilterDraft.selectedPostLabel = '';
     window.PostFilterDraft.selectedCardCds?.clear?.();
-    window.PostFilterDraft.selectedCardMode = 'or';
+    window.PostFilterDraft.selectedFilterMode = 'or';
 
     window.__renderSelectedCards_?.();
+    window.__renderFilterModeToggle_?.();
 
     try {
       document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
@@ -1095,6 +1160,8 @@ function rebuildFilteredItems(){
     window.PostFilterState.selectedEnvironmentIds?.clear?.();
     window.PostFilterState.selectedCardCds?.clear?.();
     window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
+    window.PostFilterState.selectedFilterMode = 'or';
+    window.PostFilterDraft.selectedFilterMode = 'or';
     window.PostFilterState.selectedPosterKey = '';
     window.PostFilterState.selectedPosterLabel = '';
     window.PostFilterState.selectedPostId = String(pid);
@@ -1213,6 +1280,7 @@ function rebuildFilteredItems(){
       const onPicked = typeof opts?.onPicked === 'function' ? opts.onPicked : null;
       window.openCardPickModal({
         ...opts,
+        showDeckActions: opts?.showDeckActions === true,
         onPicked: (picked) => {
           const cd = (picked && typeof picked === 'object') ? picked.cd : picked;
           onPicked?.(cd);
@@ -1224,6 +1292,9 @@ function rebuildFilteredItems(){
     cardPickOnPicked_ = typeof opts?.onPicked === 'function'
       ? opts.onPicked
       : null;
+
+    const deckActions = document.querySelector('.card-pick-deck-actions');
+    if (deckActions) deckActions.hidden = opts?.showDeckActions !== true;
 
     const modalEl = document.getElementById('cardPickModal');
     const queryEl = document.getElementById('cardPickQuery');
@@ -1309,6 +1380,7 @@ function rebuildFilteredItems(){
     refreshCampaignTagChips: refreshCampaignTagChips_,
     tagChipsMain,
     tagChipsUser,
+    quickFilterReady: quickFilterReady_,
     rebuildFilteredItems,
   });
 
@@ -1356,6 +1428,11 @@ function rebuildFilteredItems(){
         e.stopPropagation();
         e.stopImmediatePropagation();
 
+        if (ut.disabled || !quickFilterReady_()) {
+          showQuickFilterPreparing_();
+          return;
+        }
+
         const tag = String(ut.dataset.utag || '').trim();
         if (tag) {
           window.PostFilterState ??= {};
@@ -1378,6 +1455,11 @@ function rebuildFilteredItems(){
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
+
+        if (btn.disabled || !quickFilterReady_()) {
+          showQuickFilterPreparing_();
+          return;
+        }
 
         const label = String(btn.dataset.poster || '').trim();
         const key =
@@ -1606,6 +1688,7 @@ function rebuildFilteredItems(){
         e.stopPropagation();
 
         window.DeckPostFilter?.openCardPickModal?.({
+          showDeckActions: false,
           onPicked: (cd) => {
             window.PostFilterDraft.selectedCardCds ??= new Set();
             window.PostFilterDraft.selectedCardCds.add(String(cd));
@@ -1615,34 +1698,36 @@ function rebuildFilteredItems(){
       });
     }
 
-    const modeOrBtn = document.getElementById('postFilterCardModeOr');
-    const modeAndBtn = document.getElementById('postFilterCardModeAnd');
+    const modeOrBtn = document.getElementById('postFilterModeOr');
+    const modeAndBtn = document.getElementById('postFilterModeAnd');
 
-    function renderCardModeToggle_() {
-      const mode = String(window.PostFilterDraft?.selectedCardMode || 'or');
+    function renderFilterModeToggle_() {
+      const mode = String(window.PostFilterDraft?.selectedFilterMode || window.PostFilterDraft?.selectedCardMode || 'or');
       if (modeOrBtn) modeOrBtn.classList.toggle('is-active', mode !== 'and');
       if (modeAndBtn) modeAndBtn.classList.toggle('is-active', mode === 'and');
+      modeOrBtn?.setAttribute('aria-pressed', mode !== 'and' ? 'true' : 'false');
+      modeAndBtn?.setAttribute('aria-pressed', mode === 'and' ? 'true' : 'false');
     }
 
-    window.__renderCardModeToggle_ = renderCardModeToggle_;
+    window.__renderFilterModeToggle_ = renderFilterModeToggle_;
 
-    if (modeOrBtn && !modeOrBtn.dataset.wiredCardMode) {
-      modeOrBtn.dataset.wiredCardMode = '1';
+    if (modeOrBtn && !modeOrBtn.dataset.wiredFilterMode) {
+      modeOrBtn.dataset.wiredFilterMode = '1';
       modeOrBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        window.PostFilterDraft.selectedCardMode = 'or';
-        renderCardModeToggle_();
+        window.PostFilterDraft.selectedFilterMode = 'or';
+        renderFilterModeToggle_();
       });
     }
 
-    if (modeAndBtn && !modeAndBtn.dataset.wiredCardMode) {
-      modeAndBtn.dataset.wiredCardMode = '1';
+    if (modeAndBtn && !modeAndBtn.dataset.wiredFilterMode) {
+      modeAndBtn.dataset.wiredFilterMode = '1';
       modeAndBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        window.PostFilterDraft.selectedCardMode = 'and';
-        renderCardModeToggle_();
+        window.PostFilterDraft.selectedFilterMode = 'and';
+        renderFilterModeToggle_();
       });
     }
 
@@ -1727,7 +1812,7 @@ function rebuildFilteredItems(){
 
         syncDraftFromApplied_();
         window.__renderSelectedCards_?.();
-        window.__renderCardModeToggle_?.();
+        window.__renderFilterModeToggle_?.();
         window.__renderSelectedUserTags_?.();
         window.__renderUserTagSuggest_?.(document.getElementById('userTagQuery')?.value || '');
 

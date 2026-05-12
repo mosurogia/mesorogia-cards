@@ -208,8 +208,10 @@
           containerId: 'savedDeckList',
           counterId: 'savedDeckCount',
           hooks: {
-            // 読み込み後に何か追加でやりたい場合はここ（今は無しでもOK）
-            onLoaded: () => {}
+            // 保存デッキの呼び出し時は、呼び出し前のカード解説を残さない。
+            onLoaded: () => {
+              try { window.writeCardNotes?.([]); } catch (_) {}
+            }
           }
         });
       } else {

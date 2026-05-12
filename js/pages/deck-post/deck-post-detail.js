@@ -1398,6 +1398,35 @@
     return loadCardMapFile_('cards_latest.json');
   }
 
+  function hasUsableCardMap_(map) {
+    return !!(map && typeof map === 'object' && Object.keys(map).length);
+  }
+
+  async function runWithTemporaryCardMap_(map, fn) {
+    const prev = window.cardMap;
+    window.cardMap = map;
+    try {
+      return await fn();
+    } finally {
+      window.cardMap = prev;
+    }
+  }
+
+  async function runWithLatestCardMapIfNeeded_(fn) {
+    if (hasUsableCardMap_(window.cardMap)) return fn();
+
+    try {
+      const map = await loadLatestCardMap_();
+      if (hasUsableCardMap_(map)) {
+        return runWithTemporaryCardMap_(map, fn);
+      }
+    } catch (e) {
+      console.warn('runWithLatestCardMapIfNeeded_ failed:', e);
+    }
+
+    return fn();
+  }
+
   function cardCompareValue_(card, key) {
     const v = card?.[key];
     return v === null || v === undefined
@@ -1602,25 +1631,23 @@
 
       // 投稿後の編集で環境がずれないよう、作成日を優先する
       const base = cOk ? c : (uOk ? u : null);
-      if (!base) return fn();
+      if (!base) return runWithLatestCardMapIfNeeded_(fn);
 
       const idx = await loadCardVersionsIndex_();
       const file = pickSnapshotFileForPostDate_(idx?.versions, base);
-      if (!file) return fn();
+      if (!file) return runWithLatestCardMapIfNeeded_(fn);
 
       const map = await loadCardMapFile_(file);
-
-      const prev = window.cardMap;
-      window.cardMap = map;
-      try {
-        return await fn();
-      } finally {
-        window.cardMap = prev;
-      }
+      return runWithTemporaryCardMap_(map, fn);
     } catch (e) {
       console.warn('withCardMapForPostDate_ failed:', e);
-      return fn();
+      return runWithLatestCardMapIfNeeded_(fn);
     }
+  }
+
+  async function buildCardSpWithPostCardMap_(item, opts = {}) {
+    if (!item || typeof window.buildCardSp !== 'function') return null;
+    return withCardMapForPostDate_(item, () => window.buildCardSp(item, opts));
   }
 
   // =========================
@@ -2647,10 +2674,16 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
 
     const cardMap = window.cardMap || {};
     const entries = window.sortCardEntries?.(Object.entries(deck), cardMap) || Object.entries(deck);
-    return entries.map(([cd, n]) => ({
-      code: normCd5_(cd),
-      count: n,
-    }));
+    return entries.map(([cd, n]) => {
+      const cd5 = normCd5_(cd);
+      const card = cardMap[cd5] || {};
+      const cardForImage = card.cd ? card : { ...card, cd: cd5 };
+      return {
+        code: cd5,
+        count: n,
+        imageSrc: cardImageSrc_(cardForImage),
+      };
+    });
   }
 
   function refreshDeckPeekOnSp_() {
@@ -2687,7 +2720,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     overlay.style.width = '';
   }
 
-  function showPostDeckPeekForArticle_(art, thumbEl) {
+  async function showPostDeckPeekForArticle_(art, thumbEl) {
     if (!window.matchMedia('(max-width: 1023px)').matches) return;
 
     const postId = String(art?.dataset?.postid || '').trim();
@@ -2701,7 +2734,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     if (!body) return;
 
     overlay.dataset.postid = postId;
-    body.innerHTML = buildDeckListHtml(item);
+    body.innerHTML = await withCardMapForPostDate_(item, () => buildDeckListHtml(item));
     overlay.style.display = 'block';
     overlay.style.left = '';
     overlay.style.top = '';
@@ -2771,7 +2804,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
         return;
       }
 
-      const replacement = item && window.buildCardSp?.(item, { mode: listMode, deferDetail: false });
+      const replacement = await buildCardSpWithPostCardMap_(item, { mode: listMode, deferDetail: false });
       if (replacement) {
         art.replaceWith(replacement);
         art = replacement;
@@ -2797,7 +2830,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
           return;
         }
 
-        const replacement = item && window.buildCardSp?.(item, { mode: listMode });
+        const replacement = await buildCardSpWithPostCardMap_(item, { mode: listMode, deferDetail: false });
         if (replacement) {
           art.replaceWith(replacement);
           art = replacement;
@@ -2934,7 +2967,20 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
         render: ({ grid }) => {
           const postId = getDeckPeekContext_().postId;
           const item = postId ? findItemById_(postId) : null;
-          const items = item ? buildDeckPeekEntries_(item) : [];
+          const items = [];
+          if (item) {
+            withCardMapForPostDate_(item, () => buildDeckPeekEntries_(item)).then((nextItems) => {
+              if (postId !== getDeckPeekContext_().postId) return;
+              window.DeckPeekCommon.renderGrid(grid, nextItems, {
+                emptyText: '繝・ャ繧ｭ繝ｪ繧ｹ繝域悴逋ｻ骭ｲ',
+              });
+            }).catch((err) => {
+              console.warn('[deck-post] deck peek render failed:', err);
+              window.DeckPeekCommon.renderGrid(grid, buildDeckPeekEntries_(item), {
+                emptyText: '繝・ャ繧ｭ繝ｪ繧ｹ繝域悴逋ｻ骭ｲ',
+              });
+            });
+          }
           window.DeckPeekCommon.renderGrid(grid, items, {
             emptyText: 'デッキリスト未登録',
           });
@@ -3086,7 +3132,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
         hidePostDeckPeek_();
         return;
       }
-      showPostDeckPeekForArticle_(art, thumbBox);
+      await showPostDeckPeekForArticle_(art, thumbBox);
       return;
     }
 
@@ -3317,6 +3363,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
   window.DeckPostDetail.prefetchPostDetail = prefetchPostDetail_;
   window.DeckPostDetail.prefetchPostDetails = prefetchPostDetails_;
   window.DeckPostDetail.renderDetailPaneForItem = renderDetailPaneForItem;
+  window.DeckPostDetail.buildCardSpWithPostCardMap = buildCardSpWithPostCardMap_;
   window.DeckPostDetail.showDetailPaneForArticle = showDetailPaneForArticle;
   window.DeckPostDetail.findPostItemById = findPostItemById;
   window.DeckPostDetail.setupDeckPeekOnSp = setupDeckPeekOnSp;

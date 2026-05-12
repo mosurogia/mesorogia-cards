@@ -8,6 +8,7 @@
   let costChart = null;
   let powerChart = null;
   let deckCountControlsVisible = true;
+  const DECK_COUNT_ADJUST_STORAGE_KEY = 'deck_count_adjust_visible_v1';
 
   // =========================
   // 1) 共通ユーティリティ（このファイル内で統一）
@@ -32,6 +33,23 @@
 
   // モバイル判定（768px以下）
   const isMobile_ = () => window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+
+  // デッキ枚数調整ボタンの表示設定を取得
+  function readDeckCountAdjustVisible_() {
+    try {
+      const saved = localStorage.getItem(DECK_COUNT_ADJUST_STORAGE_KEY);
+      return saved === null ? true : saved === '1';
+    } catch (_) {
+      return true;
+    }
+  }
+
+  // デッキ枚数調整ボタンの表示設定を保存
+  function writeDeckCountAdjustVisible_(visible) {
+    try {
+      localStorage.setItem(DECK_COUNT_ADJUST_STORAGE_KEY, visible ? '1' : '0');
+    } catch (_) {}
+  }
 
   // 「分析(edit)」が開いているか
   function isEditTabOpen_() {
@@ -385,9 +403,11 @@
     const toggle = document.querySelector('.deck-count-adjust-toggle');
     if (!toggle || toggle.__deckCountAdjustBound) return;
 
+    deckCountControlsVisible = readDeckCountAdjustVisible_();
     toggle.__deckCountAdjustBound = true;
     toggle.addEventListener('click', () => {
       deckCountControlsVisible = !deckCountControlsVisible;
+      writeDeckCountAdjustVisible_(deckCountControlsVisible);
       applyDeckCountControlsVisibility_();
     });
 

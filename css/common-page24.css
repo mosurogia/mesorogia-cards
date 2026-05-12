@@ -390,6 +390,8 @@
     box-shadow: 0 10px 22px rgba(17, 24, 39, .10);
 
     color: #0f172a;
+    /* ★中央寄りにならないよう保険 */
+        text-align: left;
 }
 
 .campaign-mini-emoji {
@@ -407,6 +409,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    /* ★日本語を変な位置で割りにくくして、wbrで折れる */
+    word-break: keep-all;
 }
 
 .campaign-mini-link {
@@ -434,20 +439,16 @@
         /* ←wbrが効く＆折り返し可 */
 
         display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
         -webkit-box-orient: vertical;
-        overflow: hidden;
 
         line-height: 1.25;
-        word-break: break-word;
     }
 }
 
 /* 超小型端末の余白保険 */
 @media (max-width: 380px) {
     .campaign-mini {
-        padding: 6px 8px;
+        padding: 0;
     }
 }
 /* =========================

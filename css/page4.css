@@ -303,7 +303,8 @@ body {
 
 
 /* 候補（薄色チップ） */
-#userTagSuggest {
+#userTagSuggest,
+#userTagEditSuggest {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -312,7 +313,8 @@ body {
     box-sizing: border-box;
 }
 
-#userTagSuggest .suggest-item {
+#userTagSuggest .suggest-item,
+#userTagEditSuggest .suggest-item {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
@@ -327,17 +329,20 @@ body {
     transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 
-#userTagSuggest .suggest-item:hover {
+#userTagSuggest .suggest-item:hover,
+#userTagEditSuggest .suggest-item:hover {
     border-color: rgba(45, 109, 224, .45);
     background: rgba(108, 181, 255, .24);
 }
 
-#userTagSuggest .suggest-item:focus-visible {
+#userTagSuggest .suggest-item:focus-visible,
+#userTagEditSuggest .suggest-item:focus-visible {
     outline: 2px solid rgba(45, 109, 224, .45);
     outline-offset: 2px;
 }
 
-#userTagSuggest .suggest-item-label {
+#userTagSuggest .suggest-item-label,
+#userTagEditSuggest .suggest-item-label {
     min-width: 0;
     overflow-wrap: anywhere;
 }
@@ -349,7 +354,8 @@ body {
     opacity: .85;
 }
 
-#userTagSuggest .suggest-item .c {
+#userTagSuggest .suggest-item .c,
+#userTagEditSuggest .suggest-item .c {
     margin-left: 6px;
     padding: 1px 7px;
     border-radius: 999px;
@@ -361,7 +367,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #userTagSuggest .suggest-item {
+    #userTagSuggest .suggest-item,
+    #userTagEditSuggest .suggest-item {
         transition: none;
     }
 }
@@ -732,6 +739,11 @@ body.is-pwa-standalone .list-footer--bottom {
 .btn-filter-poster:hover {
     filter: brightness(0.98);
 }
+.btn-filter-poster:disabled {
+    cursor: default;
+    opacity: .45;
+    filter: grayscale(.35);
+}
 #myPostList .btn-filter-poster {
     display: none;
 }
@@ -1071,6 +1083,9 @@ body.is-pwa-standalone .list-footer--bottom {
     #deckpeek-button,
     #deckpeek-overlay {
         display: none !important;
+    }
+    #deckpeek-overlay.is-card-pick-deck-peek {
+        display: block !important;
     }
 }
 
@@ -2423,6 +2438,11 @@ body.is-pwa-standalone .list-footer--bottom {
 .post-tags .chip-search-btn:hover {
     opacity: 1;
     transform: translateY(-0.5px);
+}
+.post-tags .chip-search-btn:disabled {
+    cursor: default;
+    opacity: .45;
+    transform: none;
 }
 #myPostList .post-tags .chip-search-btn {
     display: none;
@@ -4345,7 +4365,7 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 
 @media (max-width: 600px) {
     .card-pick-modal {
-        margin-top: 20px;
+        margin-top: 8px;
         min-height: min(360px, calc(100vh - 32px));
     }
 
@@ -4454,23 +4474,26 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     background: #f9fafb;
 }
 /* =========================
-   投稿フィルター：カードで絞り込み（専用）
-   他の filter UI に影響しない
+   投稿フィルター：全体の一致条件
 ========================= */
-.post-card-filter .post-card-filter-head {
+.post-filter-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
 }
 
-.post-card-filter .post-card-match-toggle {
+.post-filter-header .filter-maintitle {
+    margin: 0;
+}
+
+.post-filter-match-toggle {
     display: inline-flex;
     gap: 6px;
     flex: 0 0 auto;
 }
 
-.post-card-filter .post-card-mode-btn {
+.post-filter-mode-btn {
     min-height: 30px;
     padding: 6px 10px;
     border-radius: 999px;
@@ -4481,11 +4504,77 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     cursor: pointer;
 }
 
-.post-card-filter .post-card-mode-btn.is-active {
+.post-filter-mode-btn.is-active {
     background: #2b90ff;
     border-color: #2b90ff;
     color: #fff;
 }
+
+#active-chips-bar .post-filter-match-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    height: 28px;
+    padding: 0 8px 0 10px;
+
+    border-radius: 999px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+
+    font-weight: 700;
+    cursor: pointer;
+    opacity: 1;
+    user-select: none;
+    transition: background-color .15s ease, box-shadow .15s ease;
+}
+
+#active-chips-bar .post-filter-match-chip:hover {
+    background: #dbeafe;
+    box-shadow: 0 1px 4px rgba(37, 99, 235, .14);
+}
+
+#active-chips-bar .post-filter-match-chip:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+#active-chips-bar .match-chip-label {
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+#active-chips-bar .match-chip-mode {
+    min-width: 34px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+#active-chips-bar .match-chip-mode.or {
+    background: #2563eb;
+    color: #fff;
+}
+
+#active-chips-bar .match-chip-mode.and {
+    background: #7c3aed;
+    color: #fff;
+}
+
+/* =========================
+   投稿フィルター：カードで絞り込み（専用）
+   他の filter UI に影響しない
+========================= */
 
 .post-card-filter .post-card-selected {
     margin-top: 6px;
@@ -4520,11 +4609,11 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 
 /* スマホ：OR/AND を少し詰める */
 @media (max-width: 768px) {
-    .post-card-filter .post-card-filter-head {
+    .post-filter-header {
         gap: 6px;
     }
 
-    .post-card-filter .post-card-mode-btn {
+    .post-filter-mode-btn {
         padding: 6px 9px;
         font-size: 12px;
     }

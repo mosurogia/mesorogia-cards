@@ -34,7 +34,7 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-07-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-05-10-001">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-06-001">
@@ -374,19 +374,18 @@
 <!-- ▼ 投稿フィルター モーダル -->
 <div id="postFilterModal" class="modal" style="display:none;">
     <div class="modal-content post-filter-modal" role="dialog" aria-modal="true" aria-labelledby="postFilterTitle">
-        <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
+        <div class="post-filter-header">
+            <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
+            <div class="post-filter-match-toggle" role="group" aria-label="タグ条件">
+                <button type="button" id="postFilterModeOr" class="post-filter-mode-btn is-active" aria-pressed="true">OR</button>
+                <button type="button" id="postFilterModeAnd" class="post-filter-mode-btn" aria-pressed="false">AND</button>
+            </div>
+        </div>
 
         <div id="main-filters">
             <!-- ▼ カードで絞り込み -->
             <div class="filter-block filter-section post-card-filter">
-                <div class="post-card-filter-head">
-                    <strong class="filter-title">カードで絞り込み</strong>
-
-                    <div class="post-card-match-toggle" role="group" aria-label="カード条件">
-                        <button type="button" id="postFilterCardModeOr" class="post-card-mode-btn is-active">OR</button>
-                        <button type="button" id="postFilterCardModeAnd" class="post-card-mode-btn">AND</button>
-                    </div>
-                </div>
+                <strong class="filter-title">カードで絞り込み</strong>
 
                 <!-- 選択中カード（チップ） -->
                 <div id="postFilterCardSelectedArea" class="post-card-selected">
@@ -450,6 +449,18 @@
                 <strong class="filter-title">ユーザータグで絞り込み</strong>
                 <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
 
+                <div class="user-tag-panel">
+
+                    <div class="user-tag-subtitle">選択中(複数選択可)</div>
+                    <div id="userTagSelectedArea" class="user-tag-selected-area">
+                        <!-- ★ 初期から置いておく：未選択表示 -->
+                        <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
+
+                        <!-- ★ 選択チップはここにだけ描画する -->
+                        <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+                    </div>
+                </div>
+
                 <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
 
                 <div class="user-tag-panel">
@@ -463,14 +474,6 @@
                         <div class="user-tag-suggest-items" data-user-tag-items></div>
                     </div>
 
-                <div class="user-tag-subtitle">選択中(複数選択可)</div>
-                <div id="userTagSelectedArea" class="user-tag-selected-area">
-                    <!-- ★ 初期から置いておく：未選択表示 -->
-                    <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
-
-                    <!-- ★ 選択チップはここにだけ描画する -->
-                    <div class="user-tag-selected-items" data-user-tag-selected-items></div>
-                </div>
                 </div>
             </div>
         </div>
@@ -757,7 +760,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-008"></script>
 <script src="js/common/account/account.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-008"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-06-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-12-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-008"></script>
@@ -768,6 +771,7 @@
 <script src="js/common/deck/image-export.js?v=2026-05-05-008"></script>
 <script src="js/common/deck/deck-analysis.js?v=2026-05-05-008"></script>
 <script src="js/common/deck/deck-note-presets.js?v=2026-05-05-008"></script>
+<script src="js/common/deck/post-result-modal.js?v=2026-05-10-001"></script>
 <script src="js/common/card/card-detail.js?v=2026-05-05-008"></script>
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-008"></script>
 <script src="js/common/card/card-pick-modal.js?v=2026-05-05-008"></script>

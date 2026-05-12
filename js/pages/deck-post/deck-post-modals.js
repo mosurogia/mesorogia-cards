@@ -3,6 +3,7 @@
  * - デッキ投稿ページの汎用モーダル管理
  * - ヘルプモーダル
  * - 削除確認モーダル
+ * - 更新完了モーダル
  * - トースト表示
  * ========================= */
 (function () {
@@ -198,7 +199,23 @@
   }
 
   // =========================
-  // 4) トースト
+  // 4) 投稿更新完了モーダル
+  // =========================
+
+  function ensurePostUpdateSuccessModal_() {
+    window.DeckPostResultModal?.ensure?.();
+  }
+
+  function openPostUpdateSuccessModal(opts = {}) {
+    window.DeckPostResultModal?.openPostUpdateSuccess?.(opts);
+  }
+
+  function closePostUpdateSuccessModal_() {
+    window.DeckPostResultModal?.close?.();
+  }
+
+  // =========================
+  // 5) トースト
   // =========================
 
   function showMiniToast_(text) {
@@ -248,7 +265,7 @@
   }
 
   // =========================
-  // 5) Esc 閉じる
+  // 6) Esc 閉じる
   // =========================
 
   function bindEscClose_() {
@@ -261,22 +278,24 @@
       closeMineHelp();
       closeManaHelp();
       closeDeleteModal_();
+      closePostUpdateSuccessModal_();
     });
   }
 
   // =========================
-  // 6) 初期化
+  // 7) 初期化
   // =========================
 
   function initDeckPostModals() {
     bindMineHelpModal_();
     bindManaHelpModal_();
     ensureDeleteConfirmModal_();
+    ensurePostUpdateSuccessModal_();
     bindEscClose_();
   }
 
   // =========================
-  // 7) 公開API
+  // 8) 公開API
   // =========================
 
   window.DeckPostModals = window.DeckPostModals || {
@@ -289,6 +308,9 @@
     openDeleteModal_,
     closeDeleteModal_,
     confirmDeleteByModal_,
+    ensurePostUpdateSuccessModal_,
+    openPostUpdateSuccessModal,
+    closePostUpdateSuccessModal_,
     showMiniToast_,
     showActionToast,
   };
@@ -300,6 +322,9 @@
   window.openDeleteModal_ = window.openDeleteModal_ || openDeleteModal_;
   window.closeDeleteModal_ = window.closeDeleteModal_ || closeDeleteModal_;
   window.confirmDeleteByModal_ = window.confirmDeleteByModal_ || confirmDeleteByModal_;
+  window.ensurePostUpdateSuccessModal_ = window.ensurePostUpdateSuccessModal_ || ensurePostUpdateSuccessModal_;
+  window.openPostUpdateSuccessModal = window.openPostUpdateSuccessModal || openPostUpdateSuccessModal;
+  window.closePostUpdateSuccessModal_ = window.closePostUpdateSuccessModal_ || closePostUpdateSuccessModal_;
   window.showMiniToast_ = window.showMiniToast_ || showMiniToast_;
   window.showActionToast = window.showActionToast || showActionToast;
 

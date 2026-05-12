@@ -674,6 +674,8 @@
       if (typeof window.syncDeckNameFields === 'function') window.syncDeckNameFields();
     } catch {}
 
+    try { hooks.onLoaded?.(savedDeck); } catch (e) { console.warn('[saved-deck] onLoaded failed', e); }
+
     return true;
   }
 
