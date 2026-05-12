@@ -5081,7 +5081,7 @@
   },
   {
     "version":2,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-07-16",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
     "cd":30108,
@@ -5120,7 +5120,7 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":2,
+    "version":10,
     "is_latest":true,
     "updated_at":"2025-07-16",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
@@ -8001,7 +8001,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50013,
