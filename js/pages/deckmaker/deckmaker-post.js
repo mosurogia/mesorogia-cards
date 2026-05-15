@@ -146,6 +146,86 @@
   // =====================================================
 
   const NOTE_PRESETS = window.DeckNotePresets?.templates || {};
+  const POST_DECK_NOTE_MAX_LENGTH = Number(window.POST_DECK_NOTE_MAX_LENGTH || 5000);
+  const POST_CARD_NOTE_MAX_LENGTH = Number(window.POST_CARD_NOTE_MAX_LENGTH || 300);
+
+  function getTextLength_(value){
+    return Array.from(String(value || '')).length;
+  }
+
+  function ensureLimitStatus_(el, className){
+    if (!el) return null;
+    const next = el.nextElementSibling;
+    if (next?.classList?.contains(className)) return next;
+
+    const status = document.createElement('div');
+    status.className = `post-char-limit ${className}`;
+    status.setAttribute('aria-live', 'polite');
+    el.insertAdjacentElement('afterend', status);
+    return status;
+  }
+
+  function updateLimitStatus_(el, max, label, className){
+    if (!el || !max) return false;
+
+    const value = String(el.value || '');
+    const chars = Array.from(value);
+    const count = chars.length;
+    const over = Math.max(0, count - max);
+    const status = ensureLimitStatus_(el, className);
+
+    el.classList.toggle('is-char-limit-over', over > 0);
+    el.setAttribute('aria-invalid', over > 0 ? 'true' : 'false');
+    el.setCustomValidity?.(over > 0 ? `${label}は${max}字以内で入力してください` : '');
+
+    if (status) {
+      status.classList.toggle('is-over', over > 0);
+      if (over > 0) {
+        const overflow = chars.slice(max).join('');
+        status.innerHTML = `
+          <span>${label}: ${count}/${max}字（${over}字超過）</span>
+          <span class="post-char-limit-overflow">${escapeToastHtml_(overflow)}</span>
+        `;
+      } else {
+        status.textContent = `${label}: ${count}/${max}字`;
+      }
+    }
+
+    return over > 0;
+  }
+
+  function bindLimitStatus_(el, max, label, className){
+    if (!el || el.__charLimitBound) return;
+    el.__charLimitBound = true;
+    const update = () => updateLimitStatus_(el, max, label, className);
+    el.addEventListener('input', update);
+    update();
+  }
+
+  function hasDeckNoteLimitIssue_(){
+    return updateLimitStatus_(
+      document.getElementById('post-note'),
+      POST_DECK_NOTE_MAX_LENGTH,
+      'デッキ解説',
+      'post-note-char-limit'
+    );
+  }
+
+  function getOverLimitCardNoteTextarea_(){
+    const root = document.getElementById('post-card-notes');
+    const list = Array.from(root?.querySelectorAll('textarea.note') || []);
+    let firstOver = null;
+    list.forEach((ta) => {
+      const isOver = updateLimitStatus_(
+        ta,
+        POST_CARD_NOTE_MAX_LENGTH,
+        'カード解説',
+        'post-card-note-char-limit'
+      );
+      if (isOver && !firstOver) firstOver = ta;
+    });
+    return firstOver;
+  }
 
   // =====================================================
   // D) デッキ解説：全画面モーダル（noteFullModal）
@@ -157,6 +237,7 @@
     if (!modal || !src || !dst) return;
 
     dst.value = src.value || '';
+    bindLimitStatus_(dst, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-full-char-limit');
 
     // 右ペイン：デッキ一覧を軽量レンダリング
     const side = document.getElementById('note-side-list');
@@ -219,6 +300,7 @@
     if (!modal || !src || !dst) return;
 
     src.value = dst.value || '';
+    updateLimitStatus_(src, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
     src.dispatchEvent(new Event('input', { bubbles:true })); // autosave連動
 
     modal.style.display = 'none';
@@ -483,8 +565,10 @@
         // テキスト反映 & 入力で保存
         const ta = item.querySelector('textarea.note');
         ta.value = row.text || '';
+        bindLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
         ta.addEventListener('input', () => {
           if (cardNotes[i]) cardNotes[i].text = ta.value;
+          updateLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
           syncHidden();
         });
 
@@ -1327,8 +1411,10 @@
     if (deckCount < 30 || deckCount > 40) items.push(`デッキ枚数を30〜40枚に調整（現在${deckCount}枚）`);
     if (!window.representativeCd) items.push('メインカードを選択');
     if (!note) items.push('デッキ解説を入力');
+    if (hasDeckNoteLimitIssue_()) items.push(`デッキ解説を${POST_DECK_NOTE_MAX_LENGTH}字以内に調整`);
     if (!posterName) items.push('投稿者名を入力');
     if (hasIncompleteCardNotes_()) items.push('カード解説の未入力行を確認');
+    if (getOverLimitCardNoteTextarea_()) items.push(`カード解説を各${POST_CARD_NOTE_MAX_LENGTH}字以内に調整`);
 
     return items;
   }
@@ -1356,6 +1442,8 @@
     if ((window.validateDeckBeforePost?.() || []).length) return true;
     if (!window.representativeCd) return true;
     if (hasIncompleteCardNotes_()) return true;
+    if (hasDeckNoteLimitIssue_()) return true;
+    if (getOverLimitCardNoteTextarea_()) return true;
     return false;
   }
 
@@ -1813,6 +1901,8 @@
 
     const form = document.getElementById('deck-post-form');
     clearPostAuxiliaryValidity_();
+    hasDeckNoteLimitIssue_();
+    getOverLimitCardNoteTextarea_();
     if (form && !form.checkValidity()){
       const invalidItems = getPostInvalidControls_(form);
       showPostValidationNotice_(invalidItems);
@@ -2269,7 +2359,11 @@
 
     // 入力監視（note / user-tag追加でautosave）
     const note = document.getElementById('post-note');
-    note?.addEventListener('input', () => window.scheduleAutosave?.());
+    bindLimitStatus_(note, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
+    note?.addEventListener('input', () => {
+      updateLimitStatus_(note, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
+      window.scheduleAutosave?.();
+    });
 
     // ユーザータグUI（page2移植分）
     bindUserTagUI_();

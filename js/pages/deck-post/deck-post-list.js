@@ -267,6 +267,8 @@
         ? src.cardNotes
         : payload?.cardNotes
     );
+    item.hasCardNotes = item.cardNotes.some((row) => row && (row.cd || row.text));
+    item.deckNoteLength = Array.from(String(item.deckNote || '').trim()).length;
     item.__detailPayloadLoaded = true;
     return item;
   }
@@ -1853,6 +1855,7 @@ document.addEventListener('click', async (e) => {
       !!fs.selectedTags?.size ||
       !!fs.selectedUserTags?.size ||
       !!fs.selectedEnvironmentIds?.size ||
+      !!fs.selectedContentFilters?.size ||
       !!fs.selectedCardCds?.size ||
       !!String(fs.selectedPosterKey || '').trim() ||
       !!String(fs.selectedPoster || '').trim() ||

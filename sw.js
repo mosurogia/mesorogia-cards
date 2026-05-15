@@ -1,4 +1,4 @@
-var SW_BUILD_VERSION = '2026-05-06-002';
+var SW_BUILD_VERSION = '2026-05-16-001';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
@@ -23,28 +23,6 @@ self.addEventListener('install', function (event) {
   self.skipWaiting();
 });
 
-function reloadControlledClients() {
-  return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-    return Promise.all(
-      clientList.map(function (client) {
-        if (!client.url || typeof client.navigate !== 'function') {
-          return Promise.resolve();
-        }
-
-        try {
-          var url = new URL(client.url);
-          url.searchParams.set('sw_refresh', SW_BUILD_VERSION);
-          return client.navigate(url.toString()).catch(function () {
-            return undefined;
-          });
-        } catch (_) {
-          return Promise.resolve();
-        }
-      })
-    );
-  });
-}
-
 self.addEventListener('activate', function (event) {
   if (isLocalDev) {
     event.waitUntil(
@@ -68,7 +46,7 @@ self.addEventListener('activate', function (event) {
     caches.keys().then(function (cacheNames) {
       return Promise.all(
         cacheNames.map(function (cacheName) {
-          if (cacheName.indexOf('mesorogia-') === 0 && managedCacheNames.indexOf(cacheName) === -1) {
+          if (cacheName.indexOf('mesorogia-static-') === 0 && cacheName !== staticCacheName) {
             return caches.delete(cacheName);
           }
           return Promise.resolve();
@@ -76,8 +54,6 @@ self.addEventListener('activate', function (event) {
       );
     }).then(function () {
       return self.clients.claim();
-    }).then(function () {
-      return reloadControlledClients();
     })
   );
 });
@@ -103,7 +79,7 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (event.request.mode === 'navigate') {
-    event.respondWith(networkOnly(event.request));
+    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs));
     return;
   }
 
@@ -112,7 +88,12 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (shouldUseNetworkOnly(requestUrl)) {
-    event.respondWith(networkOnly(event.request));
+    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs));
+    return;
+  }
+
+  if (shouldUseNetworkFirstAsset(requestUrl)) {
+    event.respondWith(networkFirst(event.request, false, config.assetNetworkTimeoutMs));
     return;
   }
 
@@ -146,7 +127,11 @@ function shouldUseCacheFirst(url) {
 }
 
 function shouldUseNetworkOnly(url) {
-  return /\.(?:html|css|js)$/.test(url.pathname);
+  return /\.html$/.test(url.pathname);
+}
+
+function shouldUseNetworkFirstAsset(url) {
+  return /\.(?:css|js)$/.test(url.pathname);
 }
 
 function isCardDataJson(url) {
@@ -191,9 +176,51 @@ function staleWhileRevalidate(request) {
   });
 }
 
-function networkFirst(request, useFallbackPage) {
-  return fetch(request).then(function (networkResponse) {
+function networkFirst(request, useFallbackPage, timeoutMs) {
+  var fetchPromise = fetch(request).then(function (networkResponse) {
     return putRuntimeCache(request, networkResponse);
+  });
+
+  if (!timeoutMs || timeoutMs <= 0) {
+    return fetchPromise.catch(function () {
+      return caches.match(request).then(function (cachedResponse) {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        if (useFallbackPage) {
+          return caches.match(config.offlineFallbackPage);
+        }
+
+        return undefined;
+      });
+    });
+  }
+
+  var timeoutPromise = new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve('__mesorogia_network_timeout__');
+    }, timeoutMs);
+  });
+
+  return Promise.race([fetchPromise, timeoutPromise]).then(function (response) {
+    if (response !== '__mesorogia_network_timeout__') {
+      return response;
+    }
+
+    return caches.match(request).then(function (cachedResponse) {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      if (useFallbackPage) {
+        return caches.match(config.offlineFallbackPage).then(function (fallbackResponse) {
+          return fallbackResponse || fetchPromise;
+        });
+      }
+
+      return fetchPromise;
+    });
   }).catch(function () {
     return caches.match(request).then(function (cachedResponse) {
       if (cachedResponse) {

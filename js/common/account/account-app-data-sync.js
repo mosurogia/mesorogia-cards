@@ -392,6 +392,23 @@
         } catch(_) {}
     }
 
+    function clearMigrationDecision_(key){
+        const normalizedKey = String(key || '').trim();
+        const keys = normalizedKey === 'all' || !normalizedKey
+            ? [LS_CARD_GROUPS_MIGRATION_DECISION, LS_OWNED_MIGRATION_DECISION, LS_SAVED_DECKS_MIGRATION_DECISION]
+            : normalizedKey === 'cardGroups'
+                ? [LS_CARD_GROUPS_MIGRATION_DECISION]
+                : normalizedKey === 'ownedCards'
+                    ? [LS_OWNED_MIGRATION_DECISION]
+                    : normalizedKey === 'savedDecks'
+                        ? [LS_SAVED_DECKS_MIGRATION_DECISION]
+                        : [];
+
+        keys.forEach((storageKey) => {
+            try { localStorage.removeItem(storageKey); } catch(_) {}
+        });
+    }
+
     function hasCardGroupsMigrationDecision_(groups){
         return hasMigrationDecision_(readCardGroupsMigrationDecision_(), cardGroupsDataKey_(groups));
     }
@@ -960,6 +977,43 @@
             source: 'local',
             reason: 'logout-restore-local',
         });
+    }
+
+    function restoreGuestDataForMigration_(key){
+        const normalizedKey = String(key || '').trim();
+        let restored = false;
+
+        if (normalizedKey === 'ownedCards' || normalizedKey === 'all' || !normalizedKey) {
+            const guestOwned = readGuestOwned_();
+            if (hasOwnedData_(guestOwned)) {
+                writeLocalOwned_(guestOwned, { source: 'local' });
+                refreshOwnedDisplay_('migration-confirm-restore-local');
+                restored = true;
+            }
+        }
+
+        if (normalizedKey === 'cardGroups' || normalizedKey === 'all' || !normalizedKey) {
+            const guestGroups = readGuestCardGroups_();
+            if (hasCardGroupsData_(guestGroups)) {
+                writeLocalCardGroups_(guestGroups, { source: 'local' });
+                refreshCardGroupsDisplay_('migration-confirm-restore-local');
+                restored = true;
+            }
+        }
+
+        if (normalizedKey === 'savedDecks' || normalizedKey === 'all' || !normalizedKey) {
+            const guestDecks = readGuestSavedDecks_();
+            if (hasSavedDecksData_(guestDecks)) {
+                writeLocalSavedDecks_(guestDecks, {
+                    silent: true,
+                    source: 'local',
+                    reason: 'migration-confirm-restore-local',
+                });
+                restored = true;
+            }
+        }
+
+        return restored;
     }
 
     function refreshCardGroupsDisplay_(reason){
@@ -1563,6 +1617,32 @@
         return !syncing;
     }
 
+    async function requestMigrationConfirm_(key = 'all'){
+        if (!isLoggedIn_()) return { ok: false, skipped: true, reason: 'login-required' };
+
+        clearMigrationDecision_(key);
+        accountOwnedLinkEnabled = false;
+
+        const restored = restoreGuestDataForMigration_(key);
+        if (!restored) {
+            setAccountLinked_();
+            return { ok: false, skipped: true, reason: 'no-guest-data' };
+        }
+
+        return await syncAppDataWithAccount('manual-badge-click');
+    }
+
+    function hasGuestMigrationData_(key = 'all'){
+        const normalizedKey = String(key || '').trim();
+        if (normalizedKey === 'ownedCards') return hasOwnedData_(readGuestOwned_());
+        if (normalizedKey === 'cardGroups') return hasCardGroupsData_(readGuestCardGroups_());
+        if (normalizedKey === 'savedDecks') return hasSavedDecksData_(readGuestSavedDecks_());
+
+        return hasOwnedData_(readGuestOwned_()) ||
+            hasCardGroupsData_(readGuestCardGroups_()) ||
+            hasSavedDecksData_(readGuestSavedDecks_());
+    }
+
     async function syncAppDataWithAccount(reason = 'manual'){
         if (syncing) return { ok: false, skipped: true };
         if (!isLoggedIn_()) {
@@ -1958,6 +2038,9 @@
         saveSavedDecks: saveSavedDecksToAccount_,
         readLocal: readLocalAppData_,
         debug: debugOwnedData_,
+        requestMigrationConfirm: requestMigrationConfirm_,
+        clearMigrationDecision: clearMigrationDecision_,
+        hasGuestMigrationData: hasGuestMigrationData_,
         isReady: isOwnedInteractionReady_,
         getStatus: () => Object.assign({}, syncStatus),
     };

@@ -114,11 +114,6 @@
   function autoRepairOldCaches_() {
     var version = getCurrentVersion_();
     var markerKey = CACHE_REPAIR_PREFIX + ':' + version;
-    var wasSwRefreshed = false;
-
-    try {
-      wasSwRefreshed = new URL(window.location.href).searchParams.get('sw_refresh') === version;
-    } catch (_) {}
 
     try {
       if (localStorage.getItem(markerKey)) {
@@ -126,14 +121,10 @@
       }
     } catch (_) {}
 
-    return deleteCaches_({ all: false }).then(function () {
+    return deleteCaches_({ all: false, keepRuntime: true }).then(function () {
       try {
         localStorage.setItem(markerKey, String(Date.now()));
       } catch (_) {}
-
-      if (navigator.serviceWorker.controller && !wasSwRefreshed) {
-        reloadWithCacheBust_();
-      }
     }).catch(function (error) {
       console.warn('PWAキャッシュの更新処理に失敗しました。', error);
     });

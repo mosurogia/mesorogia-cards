@@ -34,7 +34,7 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckpostogp.jpg">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-10-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-05-16-001">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-06-001">
@@ -71,7 +71,40 @@
             <img src="img/header_icon_3.webp" alt="">
             <span>デッキ投稿</span>
         </a>
+
+        <a class="header-nav-tier is-disabled" href="#" aria-disabled="true" data-header-disabled-link>
+            <span>Tier表</span>
+            <span class="header-nav-badge">予定</span>
+        </a>
     </nav>
+    <div class="header-actions">
+        <div class="header-dropdown header-explore-menu" data-header-dropdown>
+            <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false"
+                aria-controls="header-explore-menu">
+                <span aria-hidden="true">≡</span>
+                <span class="sr-only">探索・情報メニュー</span>
+            </button>
+            <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>ホーム</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a class="header-menu-tier-link" role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>Tier表</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>用語集・質問</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>ランダムデッキ</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <button type="button" role="menuitem" data-header-app-action="install">アプリで開く</button>
+            </div>
+        </div>
+    </div>
     <div class="header-account" data-header-auth></div>
 </header>
 
@@ -375,16 +408,31 @@
 <div id="postFilterModal" class="modal" style="display:none;">
     <div class="modal-content post-filter-modal" role="dialog" aria-modal="true" aria-labelledby="postFilterTitle">
         <div class="post-filter-header">
-            <h3 id="postFilterTitle" class="filter-maintitle">投稿のフィルター</h3>
-            <div class="post-filter-match-toggle" role="group" aria-label="タグ条件">
-                <button type="button" id="postFilterModeOr" class="post-filter-mode-btn is-active" aria-pressed="true">OR</button>
-                <button type="button" id="postFilterModeAnd" class="post-filter-mode-btn" aria-pressed="false">AND</button>
+            <h3 id="postFilterTitle" class="filter-maintitle">デッキ投稿検索</h3>
+        </div>
+
+        <div class="post-filter-overview" aria-label="検索できる項目">
+            <div class="post-filter-overview-head">
+                <div class="post-filter-overview-title">検索できる項目</div>
+                <div class="post-filter-match-toggle" role="group" aria-label="タグ条件">
+                    <button type="button" id="postFilterModeOr" class="post-filter-mode-btn is-active" aria-pressed="true">OR</button>
+                    <button type="button" id="postFilterModeAnd" class="post-filter-mode-btn" aria-pressed="false">AND</button>
+                </div>
+            </div>
+            <div class="post-filter-overview-chips">
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecCard">カード</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecRaceCate">種族＆カテゴリ</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecDeckInfo">デッキ情報</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecUserTag">ユーザータグ</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#postFilterCampaignSection">キャンペーン</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#postFilterEnvironmentSection">環境</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecContent">投稿内容</button>
             </div>
         </div>
 
         <div id="main-filters">
             <!-- ▼ カードで絞り込み -->
-            <div class="filter-block filter-section post-card-filter">
+            <div class="filter-block filter-section post-card-filter" id="filterSecCard">
                 <strong class="filter-title">カードで絞り込み</strong>
 
                 <!-- 選択中カード（チップ） -->
@@ -400,87 +448,136 @@
             <!-- ▲ カードで絞り込み -->
 
             <!-- タグで絞り込み -->
-            <div class="filter-block">
+            <div class="filter-block filter-section">
                 <strong class="filter-title">タグで絞り込み</strong>
                 <p class="filter-help">デッキ情報 / 種族 / カテゴリ（テーマ）で整理して表示します。</p>
 
+                <!-- ▼ 種族＆カテゴリ（カテゴリは補助条件） -->
+                <div class="filter-details" id="filterSecRaceCate">
+                    <div class="filter-section-title">
+                        <span>▼ 種族＆カテゴリ</span>
+                        <button type="button" class="filter-help-button" aria-label="種族＆カテゴリの説明">?</button>
+                    </div>
+                    <p class="filter-help">種族を主条件にして、必要に応じてカテゴリタグを追加できます。</p>
+                    <div id="postFilterRaceArea" class="filter-group" data-key="種族">
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+
+                    <button type="button" class="filter-category-toggle" id="postFilterCategoryToggle" aria-expanded="false" aria-controls="postFilterCategoryArea">
+                        ＋カテゴリタグを表示
+                    </button>
+                    <div id="postFilterCategoryArea" class="filter-group filter-category-group" data-key="カテゴリ" hidden>
+                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                    </div>
+                </div>
+
                 <!-- ▼ デッキ情報（常時表示） -->
-                <div class="filter-section">
-                    <div class="filter-section-title">▼ デッキ情報</div>
+                <div class="filter-details" id="filterSecDeckInfo">
+                    <div class="filter-section-title">
+                        <span>▼ デッキ情報</span>
+                        <button type="button" class="filter-help-button" aria-label="デッキ情報の説明">?</button>
+                    </div>
+                    <p class="filter-help">デッキの構成や特徴に関するタグで絞り込めます。</p>
                     <div id="postFilterDeckInfoArea" class="filter-group" data-key="デッキ情報">
                         <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
                     </div>
                 </div>
 
-                <!-- ▼ 種族（常時表示） -->
-                <div class="filter-section">
-                    <div class="filter-section-title">▼ 種族</div>
-                    <div id="postFilterRaceArea" class="filter-group" data-key="種族">
-                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
+                <!-- ユーザータグで絞り込み -->
+                <div class="filter-section" id="filterSecUserTag">
+                    <div class="filter-section-title">
+                        <span>ユーザータグ</span>
+                        <button type="button" class="filter-help-button" aria-label="ユーザータグの説明">?</button>
+                    </div>
+                    <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
+
+                    <div class="user-tag-panel">
+
+                        <div class="user-tag-subtitle">選択中(複数選択可)</div>
+                        <div id="userTagSelectedArea" class="user-tag-selected-area">
+                            <!-- ★ 初期から置いておく：未選択表示 -->
+                            <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
+
+                            <!-- ★ 選択チップはここにだけ描画する -->
+                            <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+                        </div>
+                    </div>
+
+                    <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
+
+                    <div class="user-tag-panel">
+                        <!-- サジェスト＋選択中エリア -->
+                        <div class="user-tag-subtitle">候補（クリックで追加）</div>
+                        <div id="userTagSuggest" class="user-tag-suggest">
+                            <!-- ★ 初期から置いておく：空表示（ここに候補が出ます / 候補がありません） -->
+                            <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
+
+                            <!-- ★ 候補チップはここにだけ描画する -->
+                            <div class="user-tag-suggest-items" data-user-tag-items></div>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- ▶ カテゴリ（テーマ）（折りたたみ） -->
-                <details class="filter-details" id="postFilterCategoryDetails">
-                    <summary class="filter-section-title">▶ カテゴリ（テーマ）</summary>
-                    <div id="postFilterCategoryArea" class="filter-group" data-key="カテゴリ">
-                        <!-- JS で .filter-btn.post-filter-tag-btn を並べる -->
-                    </div>
-                </details>
-
                 <!-- ▼ 過去のキャンペーン（終了済みのみ表示） -->
                 <div class="filter-section" id="postFilterCampaignSection" style="display:none;">
-                    <div class="filter-section-title">▼ 過去のキャンペーン</div>
+                    <div class="filter-section-title">
+                        <span>過去のキャンペーン</span>
+                        <button type="button" class="filter-help-button" aria-label="キャンペーンの説明">?</button>
+                    </div>
+                    <p class="filter-help">終了済みキャンペーンのタグがある投稿を探せます。</p>
                     <div id="postFilterCampaignArea" class="filter-group" data-key="キャンペーン">
                         <!-- JS で終了済みキャンペーンの .filter-btn.post-filter-tag-btn を並べる -->
                     </div>
                 </div>
 
+            </div>
+
+            <!-- ▼ その他の条件 -->
+            <div class="filter-block filter-section">
+                <div class="filter-section-title">
+                    <strong class="filter-title">その他の条件</strong>
+                    <button type="button" class="filter-help-button" aria-label="その他の条件の説明">?</button>
+                </div>
+                <p class="filter-help">環境や投稿内容など、補助的な条件で絞り込めます。</p>
+
                 <!-- ▼ 環境（環境基準シートから生成） -->
                 <div class="filter-section" id="postFilterEnvironmentSection" style="display:none;">
-                    <div class="filter-section-title">▼ 環境</div>
+                    <div class="filter-section-title">
+                        <span>環境</span>
+                        <button type="button" class="filter-help-button" aria-label="環境の説明">?</button>
+                    </div>
+                    <p class="filter-help">投稿日時が指定環境の期間に含まれるデッキを探せます。</p>
                     <div id="postFilterEnvironmentArea" class="filter-group" data-key="環境">
                         <!-- JS で .filter-btn.post-filter-env-btn を並べる -->
                     </div>
                 </div>
-            </div>
-            <!-- ユーザータグで絞り込み -->
-            <div class="filter-block filter-section">
-                <strong class="filter-title">ユーザータグで絞り込み</strong>
-                <p class="filter-help">投稿者が自由に付けたタグ（青タグ）を検索できます。</p>
 
-                <div class="user-tag-panel">
-
-                    <div class="user-tag-subtitle">選択中(複数選択可)</div>
-                    <div id="userTagSelectedArea" class="user-tag-selected-area">
-                        <!-- ★ 初期から置いておく：未選択表示 -->
-                        <div class="user-tag-empty" data-user-tag-selected-empty>未選択</div>
-
-                        <!-- ★ 選択チップはここにだけ描画する -->
-                        <div class="user-tag-selected-items" data-user-tag-selected-items></div>
+                <!-- 投稿内容で絞り込み -->
+                <div class="filter-section post-content-filter" id="filterSecContent">
+                    <div class="filter-section-title">
+                        <span>投稿内容</span>
+                        <button type="button" class="filter-help-button" aria-label="投稿内容の説明">?</button>
+                    </div>
+                    <p class="filter-help">解説が充実している投稿を探しやすくします。</p>
+                    <div id="postFilterContentArea" class="filter-group" data-key="投稿内容">
+                        <button type="button" class="filter-btn post-filter-content-btn" data-content-filter="hasCardNotes">
+                            カード解説あり
+                        </button>
+                        <button type="button" class="filter-btn post-filter-content-btn" data-content-filter="richDeckNote">
+                            デッキ解説豊富
+                        </button>
                     </div>
                 </div>
-
-                <input id="userTagQuery" class="ctrl-input" type="text" placeholder="例：○○大会入賞 / 脳汁 / 「カード名」" autocomplete="off">
-
-                <div class="user-tag-panel">
-                    <!-- サジェスト＋選択中エリア -->
-                    <div class="user-tag-subtitle">候補（クリックで追加）</div>
-                    <div id="userTagSuggest" class="user-tag-suggest">
-                        <!-- ★ 初期から置いておく：空表示（ここに候補が出ます / 候補がありません） -->
-                        <div class="user-tag-empty" data-user-tag-empty>ここに候補が出ます</div>
-
-                        <!-- ★ 候補チップはここにだけ描画する -->
-                        <div class="user-tag-suggest-items" data-user-tag-items></div>
-                    </div>
-
-                </div>
             </div>
+            <!-- ▲ 投稿内容で絞り込み -->
+
+
         </div>
 
         <div class="modal-footer">
             <button class="modal-buttun" type="button" id="postFilterApplyBtn">
-                この条件で絞り込む
+                デッキを探す
             </button>
             <button class="modal-buttun" type="button" id="postFilterResetBtn">
                 リセット
@@ -760,11 +857,12 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-008"></script>
 <script src="js/common/account/account.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-008"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-12-001"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-16-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
-<script src="js/common/account/account-data-manager.js?v=2026-05-06-003"></script>
+<script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-008"></script>
-<script src="js/common/account/header-auth.js?v=2026-05-05-008"></script>
+<script src="js/common/ui/header-menu.js?v=2026-05-15-002"></script>
+<script src="js/common/account/header-auth.js?v=2026-05-15-001"></script>
 
 <!-- 画像生成 -->
 <script src="js/common/deck/deck-peek.js?v=2026-05-05-008"></script>
@@ -788,7 +886,7 @@
 <!-- ページ固有 -->
 <script src="js/pages/deck-post/deck-post-page-loader.js?v=2026-05-05-008"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-07-001"></script>
-<script src="js/common/pwa/register.js?v=2026-05-06-003"></script>
+<script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
 
 
 </body>

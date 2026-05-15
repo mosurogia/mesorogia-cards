@@ -2,12 +2,18 @@
   'use strict';
 
   var config = {
-    version: '2026-05-12-001',
-    staticCacheName: 'mesorogia-static-2026-05-12-001',
-    runtimeCacheName: 'mesorogia-runtime-2026-05-12-001',
+    version: '2026-05-16-001',
+    staticCacheName: 'mesorogia-static-2026-05-16-001',
+    runtimeCacheName: 'mesorogia-runtime-2026-05-16-001',
+    navigationNetworkTimeoutMs: 1200,
+    assetNetworkTimeoutMs: 900,
     appShell: [
       './favicon.ico',
       './manifest.webmanifest',
+      './cards.html',
+      './deckmaker.html',
+      './deck-post.html',
+      './match-results.html',
       './img/appicon_1024.webp',
       './img/appicon_192.webp',
       './img/appicon_512.webp',

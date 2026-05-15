@@ -88,6 +88,8 @@
   // =========================
   // 3) 共通GET(JSONP fallback)
   // =========================
+  const JSONP_CALLBACK_GRACE_MS = 60000;
+
   function makeRequestError_(base, fallbackCode, fallbackReason) {
     const err = new Error(base?.message || fallbackReason || 'request failed');
     err.code = base?.code || fallbackCode;
@@ -133,15 +135,24 @@
       let timer = null;
       let didCallback = false;
 
+      const retireCallback = () => {
+        const noop = () => {};
+        window[cbName] = noop;
+        setTimeout(() => {
+          if (window[cbName] !== noop) return;
+          try {
+            delete window[cbName];
+          } catch (_) {
+            window[cbName] = undefined;
+          }
+        }, JSONP_CALLBACK_GRACE_MS);
+      };
+
       const cleanup = () => {
         if (cleaned) return;
         cleaned = true;
 
-        try {
-          delete window[cbName];
-        } catch (_) {
-          window[cbName] = undefined;
-        }
+        retireCallback();
 
         if (script.parentNode) script.parentNode.removeChild(script);
         if (timer) clearTimeout(timer);
@@ -234,6 +245,7 @@
     qs.set('mode', 'list');
     qs.set('limit', String(limit));
     qs.set('offset', String(offset));
+    qs.set('contentMeta', '1');
     if (mine) qs.set('mine', '1');
     if (sort) qs.set('sort', sort);
 

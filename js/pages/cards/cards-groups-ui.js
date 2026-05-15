@@ -25,6 +25,18 @@ function ensureReady_() {
 
 // UI上の「選択中グループ」（activeId/editingIdとは別）
 let uiSelectedId = '';
+let lastEditStartedAt = 0;
+const EDIT_START_GUARD_MS = 500;
+
+function markEditStarted_() {
+  lastEditStartedAt = Date.now();
+  window.__CardGroupsUI = window.__CardGroupsUI || {};
+  window.__CardGroupsUI.lastEditStartedAt = lastEditStartedAt;
+}
+
+function isJustStartedEditing_() {
+  return Date.now() - lastEditStartedAt < EDIT_START_GUARD_MS;
+}
 
 function getStorageStatus_() {
   const Auth = window.Auth;
@@ -272,6 +284,7 @@ function renderSidebar_() {
 
     // 編集中 → 終了（選択完了）
     if (st2.editingId) {
+        if (isJustStartedEditing_()) return;
         window.CardGroups.stopEditing();
         scheduleHeavySync_();
         return;
@@ -280,6 +293,7 @@ function renderSidebar_() {
     // 通常 → 編集開始
     if (!uiSelectedId) return showSelectWarn_();
     window.CardGroups.startEditing(uiSelectedId);
+    markEditStarted_();
 
     // ✅ 編集開始時だけ：選択済みを上に寄せた並びを反映
     try { window.sortCards?.(); } catch {}

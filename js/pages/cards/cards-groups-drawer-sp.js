@@ -154,13 +154,18 @@
       `<span class="shot-btn-ico">✅</span><span class="shot-btn-txt">完了</span>`;
 
     // FABクリック：編集中なら完了、未編集なら編集開始（適用中がある時だけ）
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       try {
         const st = window.CardGroups?.getState?.();
         const editingId = st?.editingId || '';
         const targetId = editingId || st?.activeId || ''; // 適用中を優先
 
         if (editingId) {
+          const startedAt = window.__CardGroupsUI?.lastEditStartedAt || 0;
+          if (Date.now() - startedAt < 500) return;
+
           // --- 編集中なら「選択完了」 ---
           window.CardGroups?.stopEditing?.();
 
@@ -172,6 +177,8 @@
           // --- 未編集なら編集開始（対象が無いなら何もしない） ---
           if (!targetId) return;
           window.CardGroups?.startEditing?.(targetId);
+          window.__CardGroupsUI = window.__CardGroupsUI || {};
+          window.__CardGroupsUI.lastEditStartedAt = Date.now();
 
           // 編集開始時は閉じない（編集操作を継続したいため）
         }

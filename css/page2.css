@@ -941,6 +941,7 @@
     flex-direction: row;
     height: 100%;
     max-height: clamp(40vh, calc( 4 * (12vw + 4px) ), 120vh);
+    min-width: 0;
 }
 @media (max-width: 768px) {
     #deck-layout {
@@ -956,6 +957,8 @@
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 6px;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 /*=======デッキリストゾーン=======*/
@@ -1351,8 +1354,10 @@
 /*情報ゾーンレイアウト*/
 #deck-info {
     overflow-y: auto;
+    overflow-x: hidden;
     flex: 1;
     max-width: 50%;
+    min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -1420,6 +1425,15 @@
     flex-direction: column;
     gap: .25rem;
     padding: .3rem;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+#deck-info .tab-contents-group,
+#deck-info .tab-content {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .info-row {
@@ -1452,6 +1466,7 @@
 .info-value {
     flex: 1;
     font-size: clamp(.7rem, 2.2vw, 1rem);
+    min-width: 0;
 }
 .any{
     display: block;
@@ -1525,9 +1540,10 @@
 /* レアリティ構成 */
 #rarity-summary {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     /* 2列 */
     gap: .2rem .6rem;
+    min-width: 0;
 }
 
 /* タイプ構成：チップの並び */
@@ -1548,6 +1564,7 @@
     color: #2d3b4f;
     line-height: 1.2;
     white-space: nowrap;
+    min-width: 0;
 }
 @media (max-width: 1024px) {
     .type-chip {
@@ -1575,6 +1592,7 @@
     align-items: center;
     gap: .2rem;
     white-space: nowrap;
+    min-width: 0;
     /* アイコンと文字を離さない */
 }
 
@@ -1715,9 +1733,11 @@
     box-shadow: 0 -4px 12px rgba(0, 0, 0, .08);
 }
 
+@media (max-width: 768px) {
 body.is-pwa-standalone .deck-code-controls,
 body.is-pwa-standalone .deck-code-controls.floating {
     bottom: var(--app-bottom-nav-offset);
+}
 }
 
 /* モバイル以外では常に無効（念のため） */
@@ -2042,6 +2062,12 @@ body.is-pwa-standalone .deck-code-controls.floating {
     grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 8px 10px;
 }
+@media (min-width: 769px) and (max-width: 1024px) {
+    #deck-info .mull-outcome-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+    }
+}
 @media (max-width: 768px) {
     .mull-outcome-grid {
         grid-template-columns: repeat(2, minmax(160px, 1fr));
@@ -2159,6 +2185,7 @@ body.is-pwa-standalone .deck-code-controls.floating {
 }
 /* ちょい説明 */
 .mull-outcome-note {
+    box-sizing: border-box;
     margin-top: 6px;
     padding: 10px 12px;
     border: 1px solid #dbeafe;
@@ -2176,6 +2203,11 @@ body.is-pwa-standalone .deck-code-controls.floating {
     letter-spacing: .01em;
 }
 /* mull-outcome-note が空なら表示しない（スペース削減） */
+.mull-outcome-grid > .mull-outcome-note {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
 .mull-outcome-note:empty {
     display: none;
 }
@@ -2225,14 +2257,16 @@ body.is-pwa-standalone .deck-code-controls.floating {
     flex: 1;
     font-size: clamp(.7rem, 2.2vw, 1rem);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: .2rem .6rem;
+    min-width: 0;
 }
 #shortage-summary-line .rar-item {
     display: inline-flex;
     align-items: center;
     gap: .2rem;
     white-space: nowrap;
+    min-width: 0;
     /* アイコンと文字が離れない */
 }
 
@@ -2684,6 +2718,32 @@ body.is-pwa-standalone .deck-code-controls.floating {
     min-height: 10rem;
     line-height: 1.4;
     margin-top: .4rem;
+}
+
+/* 文字数制限の状態表示 */
+.post-char-limit {
+    margin-top: .25rem;
+    color: #6b7280;
+    font-size: .85rem;
+    line-height: 1.5;
+}
+
+.post-char-limit.is-over {
+    color: #b91c1c;
+    font-weight: 700;
+}
+
+.post-char-limit-overflow {
+    display: block;
+    margin-top: .15rem;
+    color: #b91c1c;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+textarea.is-char-limit-over {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, .16);
 }
 
 @media (max-width: 768px) {
@@ -3839,7 +3899,7 @@ font-size: .8rem;
 
 @media (max-width: 600px) {
     #saved-deck {
-        padding: 8px;
+        padding: 4px;
     }
 
     .saved-deck-head-top {
@@ -3915,13 +3975,48 @@ font-size: .8rem;
     margin: 0.5em;
 }
 
+.saved-deck-empty {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.6em;
+    justify-items: center;
+    padding: 1em;
+    text-align: center;
+}
+
+.saved-deck-migrate-local-btn {
+    border: 1px solid var(--accent-color, #2563eb);
+    border-radius: 6px;
+    background: var(--accent-color, #2563eb);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.55em 0.9em;
+    cursor: pointer;
+}
+
+.saved-deck-migrate-local-btn:hover {
+    filter: brightness(0.96);
+}
+
+.saved-deck-migrate-local-btn:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 2px;
+}
+
+.saved-deck-migrate-local-btn:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
 .saved-deck-item {
     width: 100%;
     display: grid;
     grid-template-rows: auto auto;
-    gap: 0.5em;
+    gap: 0.35em;
+    gap: clamp(3px, 1.4cqw, 8px);
     border: 1px solid #ccc;
     background-color: #fff;
+    container-type: inline-size;
 }
 
 .saved-deck-item.race-bg-ドラゴン {
@@ -3947,7 +4042,8 @@ font-size: .8rem;
 .saved-deck-main {
     display: grid;
     grid-template-columns: 100px minmax(0, 1fr);
-    gap: 0.6em;
+    gap: 0.45em;
+    gap: clamp(4px, 1.6cqw, 9px);
     align-items: start;
 }
 
@@ -4010,27 +4106,44 @@ font-size: .8rem;
 .saved-deck-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25em;
+    gap: .15em;
+    gap: clamp(2px, 1cqw, 5px);
     min-width: 0;
+    container-type: inline-size;
 }
 
 .saved-deck-info .row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.3em;
+    gap: clamp(2px, 1.2cqw, 6px);
+    font-size: clamp(.8rem, 6.5cqw, 1.5rem);
 }
 
 .saved-deck-title-row {
-    justify-content: space-between;
+    position: relative;
+    display: block;
+    min-height: 26px;
+    padding-right: 50px;
 }
 
 .saved-deck-title-row strong {
+    display: block;
     min-width: 0;
-    overflow-wrap: anywhere;
+    max-width: 100%;
+    overflow: hidden;
+    /*font-size: clamp(1rem, 2.4vw, 1.65rem);*/
+    font-size: clamp(1rem, 7cqw, 1.65rem);
+    line-height: 1.15;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .saved-deck-number {
+    position: absolute;
+    top: 0;
+    right: 0;
     display: inline-flex;
     align-items: center;
     min-height: 22px;
@@ -4042,27 +4155,28 @@ font-size: .8rem;
     font-size: 0.78rem;
     font-weight: 700;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 .saved-deck-summary {
     position: relative;
     display: block;
-    margin: 0 0.35em 0.35em;
-    padding: 0 0.35em 0.35em;
 }
 
 .saved-deck-summary-head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.35em;
+    gap: 0.25em;
+    gap: clamp(2px, 1.1cqw, 6px);
 }
 
 .saved-deck-type-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
+    gap: clamp(2px, .9cqw, 4px);
 }
 
 .saved-deck-count-label {
@@ -4072,7 +4186,8 @@ font-size: .8rem;
     position: relative;
     z-index: 1;
     min-height: 24px;
-    padding: 3px 8px;
+    padding: 3px 6px;
+    padding-inline: clamp(4px, 1.4cqw, 8px);
     border: 1px solid rgba(31, 41, 55, .18);
     border-radius: 9999px;
     background: rgba(255, 255, 255, .7);
@@ -4109,7 +4224,8 @@ font-size: .8rem;
     display: inline-flex;
     align-items: center;
     min-height: 28px;
-    padding: 0 8px;
+    padding: 0 6px;
+    padding-inline: clamp(4px, 1.4cqw, 8px);
     cursor: default;
 }
 
@@ -4119,7 +4235,8 @@ font-size: .8rem;
     justify-content: center;
     align-self: stretch;
     min-width: 44px;
-    padding: 0 8px;
+    padding: 0 6px;
+    padding-inline: clamp(4px, 1.4cqw, 8px);
     border: 0;
     border-left: 1px solid rgba(22, 163, 74, .3);
     background: rgba(255, 255, 255, .68);
@@ -4200,8 +4317,10 @@ font-size: .8rem;
 }
 
 .saved-deck-type-box {
-    margin-top: -10px;
-    padding: 14px 8px 8px;
+    margin-top: -8px;
+    margin-top: clamp(-8px, -1.6cqw, -4px);
+    padding: 12px 6px 6px;
+    padding: clamp(8px, 2.2cqw, 14px) clamp(4px, 1.4cqw, 8px) clamp(4px, 1.4cqw, 8px);
     border: 1px solid rgba(31, 41, 55, .14);
     border-radius: 8px;
     background: rgba(255, 255, 255, .32);
@@ -4210,7 +4329,8 @@ font-size: .8rem;
 .saved-deck-summary .type-chip {
     flex: 0 0 auto;
     font-size: clamp(.58rem, 1.5vw, .78rem);
-    padding-inline: 6px;
+    padding-inline: 5px;
+    padding-inline: clamp(3px, 1.2cqw, 6px);
 }
 
 .saved-deck-info .row small {
@@ -4220,14 +4340,16 @@ font-size: .8rem;
 .saved-deck-buttons {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: 0.35em;
+    gap: clamp(3px, 1.2cqw, 7px);
     min-width: 80px;
 }
 
 .deck-buttons {
     display: flex;
     flex-direction: column;
-    gap: 0.35em;
+    gap: 0.25em;
+    gap: clamp(2px, 1cqw, 6px);
     width:100%;
     padding-right: 0;
 }
@@ -4235,7 +4357,8 @@ font-size: .8rem;
 .deck-buttons-top,
 .deck-buttons-bottom {
     display: flex;
-    gap: 0.45em;
+    gap: 0.3em;
+    gap: clamp(3px, 1.2cqw, 7px);
 }
 
 .deck-buttons-top .saved-deck-action {
@@ -4248,7 +4371,8 @@ font-size: .8rem;
 
 .saved-deck-action {
     min-height: 32px;
-    padding: 0.35em 0.75em;
+    padding: 0.3em 0.55em;
+    padding-inline: clamp(5px, 1.6cqw, 12px);
     border: 1px solid #cbd5e1;
     border-radius: 8px;
     background: #fff;

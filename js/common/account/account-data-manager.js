@@ -9,6 +9,7 @@
   const API = window.API || window.AUTH_API_BASE || window.GAS_API_BASE;
   const Auth = window.Auth;
   const postJSON = window.postJSON;
+  const JSONP_CALLBACK_GRACE_MS = 60000;
 
   const EMPTY_CARD_GROUPS = { groups: {}, order: [], sys: {} };
   const RESET_PAYLOADS = {
@@ -336,6 +337,7 @@
 
   async function refresh() {
     if (!document.getElementById('accountDataModal')) return;
+    reflectLoginRequiredVisibility_();
 
     if (!isLoggedIn_()) {
       await renderData_(readLocalFallback_(), 'ローカル表示');
@@ -536,16 +538,26 @@
 
       let cleaned = false;
       let timer = null;
+      let didCallback = false;
+
+      const retireCallback = () => {
+        const noop = () => {};
+        window[cbName] = noop;
+        setTimeout(() => {
+          if (window[cbName] !== noop) return;
+          try {
+            delete window[cbName];
+          } catch (_) {
+            window[cbName] = undefined;
+          }
+        }, JSONP_CALLBACK_GRACE_MS);
+      };
 
       const cleanup = () => {
         if (cleaned) return;
         cleaned = true;
 
-        try {
-          delete window[cbName];
-        } catch (_) {
-          window[cbName] = undefined;
-        }
+        retireCallback();
 
         if (script.parentNode) script.parentNode.removeChild(script);
         if (timer) clearTimeout(timer);
@@ -554,9 +566,10 @@
       timer = setTimeout(() => {
         cleanup();
         reject(new Error('JSONP timeout'));
-      }, 10000);
+      }, 30000);
 
       window[cbName] = (data) => {
+        didCallback = true;
         cleanup();
         resolve(data);
       };
@@ -566,7 +579,13 @@
         reject(new Error('JSONP failed'));
       };
 
-      document.head.appendChild(script);
+      script.onload = () => {
+        if (didCallback) return;
+        cleanup();
+        reject(new Error('JSONP callback missing'));
+      };
+
+      (document.head || document.body || document.documentElement).appendChild(script);
     });
   }
 
@@ -576,8 +595,33 @@
     return sectionName ? ['account', sectionName].filter((value, index, array) => array.indexOf(value) === index) : SCOPE_SECTIONS.all;
   }
 
+  function reflectLoginRequiredVisibility_() {
+    const loggedIn = isLoggedIn_();
+    const modal = document.getElementById('accountDataModal');
+    if (modal) modal.classList.toggle('is-logged-out', !loggedIn);
+
+    const jumps = document.querySelector('#accountDataModal .account-jump-chips');
+    if (jumps) {
+      jumps.hidden = !loggedIn;
+      jumps.style.display = loggedIn ? '' : 'none';
+    }
+
+    document.querySelectorAll('#accountDataModal [data-account-loggedout]').forEach((section) => {
+      section.hidden = loggedIn;
+      section.style.display = loggedIn ? 'none' : '';
+    });
+
+    const footerLogoutBtn = document.getElementById('account-footer-logout');
+    if (footerLogoutBtn) {
+      footerLogoutBtn.hidden = !loggedIn;
+      footerLogoutBtn.style.display = loggedIn ? '' : 'none';
+    }
+  }
+
   function applyScopeVisibility_(scope) {
-    const sectionNames = resolveScopeSections_(scope);
+    reflectLoginRequiredVisibility_();
+
+    const sectionNames = isLoggedIn_() ? resolveScopeSections_(scope) : [];
     const visibleSections = new Set(sectionNames);
 
     document.querySelectorAll('#accountDataModal [data-account-section]').forEach((section) => {
@@ -592,23 +636,46 @@
       chip.style.display = visible ? '' : 'none';
     });
 
-    return sectionNames[0] || 'account';
+    return sectionNames[0] || (isLoggedIn_() ? 'account' : 'loggedout');
   }
 
-  function scrollToScope_(scope) {
+  function highlightJumpSection_(section) {
+    document.querySelectorAll('#accountDataModal .account-data-section.is-jump-highlight').forEach((el) => {
+      el.classList.remove('is-jump-highlight');
+    });
+
+    if (!section?.matches?.('[data-account-section]')) return;
+
+    window.setTimeout(() => {
+      section.classList.add('is-jump-highlight');
+      window.setTimeout(() => section.classList.remove('is-jump-highlight'), 900);
+    }, 220);
+  }
+
+  function getJumpMenuOffset_() {
+    const chips = document.querySelector('#accountDataModal .account-jump-chips');
+    const height = chips?.getBoundingClientRect?.().height || 0;
+    return Math.ceil(height + 20);
+  }
+
+  function scrollToScope_(scope, opts = {}) {
     const sectionName = SCOPE_TO_SECTION[scope] || scope || 'account';
-    const section = document.querySelector(`#accountDataModal [data-account-section="${sectionName}"]:not([hidden])`);
+    const selector = sectionName === 'loggedout'
+      ? '#accountDataModal [data-account-loggedout]:not([hidden])'
+      : `#accountDataModal [data-account-section="${sectionName}"]:not([hidden])`;
+    const section = document.querySelector(selector);
     if (!section) return;
     const container = document.querySelector('#accountDataModal .account-modal-body');
 
     setTimeout(() => {
       if (container) {
-        const top = section.offsetTop - container.offsetTop;
+        const top = Math.max(0, section.offsetTop - container.offsetTop - getJumpMenuOffset_());
         container.scrollTo({ top, behavior: 'smooth' });
       } else {
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       setActiveChip_(sectionName);
+      if (opts.highlight) highlightJumpSection_(section);
     }, 0);
   }
 
@@ -785,6 +852,9 @@
       if (!res.ok) throw new Error(res.error || 'reset failed');
       clearLocalData_(key);
       renderData_(lastAppData || readLocalFallback_(), '更新済み');
+      if (key === 'cardGroups' || key === 'ownedCards' || key === 'savedDecks') {
+        try { await window.AccountAppDataSync?.requestMigrationConfirm?.(key); } catch (_) {}
+      }
       alert('リセットしました');
     } catch (err) {
       console.error(err);
@@ -993,7 +1063,7 @@
       const jump = ev.target.closest?.('[data-account-jump]');
       if (jump) {
         ev.preventDefault();
-        scrollToScope_(jump.dataset.accountJump);
+        scrollToScope_(jump.dataset.accountJump, { highlight: true });
         return;
       }
 
@@ -1033,6 +1103,20 @@
     scrollToScope_(firstSection);
   }
 
+  function chainReflectLoginUI_() {
+    const prev = window.reflectLoginUI;
+    window.reflectLoginUI = function reflectLoginUIWithAccountDataManager() {
+      if (typeof prev === 'function') prev.apply(this, arguments);
+
+      const modal = document.getElementById('accountDataModal');
+      if (!modal) return;
+
+      const scope = modal.dataset.accountScope || 'all';
+      applyScopeVisibility_(scope);
+      refresh();
+    };
+  }
+
   window.AccountDataManager = window.AccountDataManager || {
     open,
     refresh,
@@ -1040,6 +1124,7 @@
     reset: resetData_,
     fetch: fetchAppData_,
   };
+  chainReflectLoginUI_();
   bindLabelRefresh_();
   refreshLabels();
 })();

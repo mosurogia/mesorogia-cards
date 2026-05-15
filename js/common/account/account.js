@@ -33,6 +33,20 @@
         </nav>
 
         <div class="account-modal-body account-data-sections">
+            <section class="account-data-section account-login-required-section" data-account-loggedout>
+            <div class="account-section-head">
+                <h4>アカウント連携</h4>
+                <span class="account-section-status">未ログイン</span>
+            </div>
+            <p class="account-login-required-text">
+                アカウント情報、投稿、カードグループ、所持率、保存デッキ、戦績はログインすると表示できます。
+            </p>
+            <div class="account-login-required-actions">
+                <button type="button" class="cards-auth-btn primary" data-open="authLoginModal" data-auth-entry="login">ログイン</button>
+                <button type="button" class="cards-auth-btn" data-open="authLoginModal" data-auth-entry="signup">新規登録</button>
+            </div>
+            </section>
+
             <section class="account-data-section" id="account-section-account" data-account-section="account">
             <div class="account-section-head">
                 <h4>アカウント情報</h4>
@@ -219,7 +233,7 @@
 
             <section class="account-data-section account-offline-card-section" id="account-section-offline-cards" aria-labelledby="account-offline-card-title">
             <div class="account-section-head">
-                <h4 id="account-offline-card-title">データ・表示の管理</h4>
+                <h4 id="account-offline-card-title">オフラインデータの管理</h4>
                 <span class="account-section-status" id="offline-card-save-status">確認用</span>
             </div>
 
@@ -233,7 +247,6 @@
                         カードデータを保存
                     </button>
                 </div>
-
             </div>
 
             <div class="account-offline-card-status-row">
@@ -244,7 +257,26 @@
                         data-offline-cards-clear aria-label="保存済みカード画像を削除" title="保存済みカード画像を削除">🗑</button>
                 </span>
             </div>
+
             <p class="account-offline-card-error" id="offline-card-save-error" hidden></p>
+            </section>
+
+            <section class="account-data-section account-cache-repair-section" id="account-section-cache-repair" aria-labelledby="account-cache-repair-title">
+            <div class="account-section-head">
+                <h4 id="account-cache-repair-title">不具合修正</h4>
+            </div>
+
+            <div class="account-maintenance-list">
+                <div class="account-maintenance-item">
+                    <div class="account-maintenance-text">
+                        <strong>再読み込み</strong>
+                        <span>古い不要なファイルなどを削除して再読み込みします。<br>カードデータなどは残ります。</span>
+                    </div>
+                    <button type="button" class="btn ghost" data-pwa-cache-repair>
+                        再読み込み
+                    </button>
+                </div>
+            </div>
             </section>
 
             <section class="account-data-section account-site-info-section" id="account-section-site-info" aria-labelledby="account-site-info-title">

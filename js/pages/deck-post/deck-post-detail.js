@@ -1248,6 +1248,8 @@
         : payload?.cardNotes
     );
     if (!next.cardNotes.length) next.cardNotes = normalizeCardNotes_(base.cardNotes);
+    next.hasCardNotes = next.cardNotes.some((row) => row && (row.cd || row.text));
+    next.deckNoteLength = Array.from(String(next.deckNote || '').trim()).length;
     next.__detailPayloadLoaded = true;
     return next;
   }

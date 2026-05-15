@@ -37,6 +37,77 @@
   const updateDeckCode_ =
     (...args) => window.DeckPostApi?.updateDeckCode_?.(...args);
 
+  const POST_DECK_NOTE_MAX_LENGTH = Number(window.POST_DECK_NOTE_MAX_LENGTH || 5000);
+  const POST_CARD_NOTE_MAX_LENGTH = Number(window.POST_CARD_NOTE_MAX_LENGTH || 300);
+
+  function escapeLimitHtml_(value) {
+    if (typeof window.escapeHtml_ === 'function') return window.escapeHtml_(value);
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function ensureLimitStatus_(el, className){
+    if (!el) return null;
+    const next = el.nextElementSibling;
+    if (next?.classList?.contains(className)) return next;
+
+    const status = document.createElement('div');
+    status.className = `post-char-limit ${className}`;
+    status.setAttribute('aria-live', 'polite');
+    el.insertAdjacentElement('afterend', status);
+    return status;
+  }
+
+  function updateLimitStatus_(el, max, label, className){
+    if (!el || !max) return false;
+
+    const value = String(el.value || '');
+    const chars = Array.from(value);
+    const count = chars.length;
+    const over = Math.max(0, count - max);
+    const status = ensureLimitStatus_(el, className);
+
+    el.classList.toggle('is-char-limit-over', over > 0);
+    el.setAttribute('aria-invalid', over > 0 ? 'true' : 'false');
+    el.setCustomValidity?.(over > 0 ? `${label}は${max}字以内で入力してください` : '');
+
+    if (status) {
+      status.classList.toggle('is-over', over > 0);
+      if (over > 0) {
+        const overflow = chars.slice(max).join('');
+        status.innerHTML = `
+          <span>${label}: ${count}/${max}字（${over}字超過）</span>
+          <span class="post-char-limit-overflow">${escapeLimitHtml_(overflow)}</span>
+        `;
+      } else {
+        status.textContent = `${label}: ${count}/${max}字`;
+      }
+    }
+
+    return over > 0;
+  }
+
+  function bindLimitStatus_(el, max, label, className){
+    if (!el || el.__charLimitBound) return;
+    el.__charLimitBound = true;
+    const update = () => updateLimitStatus_(el, max, label, className);
+    el.addEventListener('input', update);
+    update();
+  }
+
+  function getOverLimitCardNoteTextarea_(root){
+    let firstOver = null;
+    Array.from(root?.querySelectorAll('textarea.note') || []).forEach((ta) => {
+      const isOver = updateLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
+      if (isOver && !firstOver) firstOver = ta;
+    });
+    return firstOver;
+  }
+
   function normCd5_(cd) {
     if (typeof window.normCd5 === 'function') return window.normCd5(cd);
     const s = String(cd ?? '').trim();
@@ -131,6 +202,8 @@
     const editor = section?.querySelector('.decknote-editor');
     if (!section || !view || !editor) return;
 
+    const ta = section.querySelector('.decknote-textarea');
+    bindLimitStatus_(ta, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
     view.hidden = true;
     editor.hidden = false;
   }
@@ -150,6 +223,7 @@
 
     const original = ta.dataset.original ?? '';
     ta.value = original;
+    updateLimitStatus_(ta, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
 
     editor.hidden = true;
     view.hidden = false;
@@ -174,6 +248,12 @@
 
     const raw = String(ta.value || '').trim();
     const origRaw = String(ta.dataset.original ?? '').trim();
+
+    if (updateLimitStatus_(ta, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit')) {
+      ta.reportValidity?.();
+      ta.focus?.();
+      return;
+    }
 
     // 変更なし
     if (raw === origRaw) {
@@ -203,6 +283,7 @@
       const item = findItemById_(postId);
       if (item) {
         item.deckNote = raw;
+        item.deckNoteLength = Array.from(String(raw || '').trim()).length;
         item.updatedAt = new Date().toISOString();
       }
 
@@ -388,7 +469,10 @@
     `;
 
     const ta = div.querySelector('textarea.note');
-    if (ta) ta.value = String(rowData?.text || '');
+    if (ta) {
+      ta.value = String(rowData?.text || '');
+      bindLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
+    }
 
     return div;
   }
@@ -500,6 +584,16 @@
 
     const list = readCardNotesFromEditor_(root);
     const bad = list.find((rowData) => rowData.cd && !String(rowData.text || '').trim());
+    const overLimitTextarea = getOverLimitCardNoteTextarea_(root);
+
+    if (overLimitTextarea) {
+      validator.setCustomValidity(
+        `カード解説は各${POST_CARD_NOTE_MAX_LENGTH}字以内で入力してください。`
+      );
+      overLimitTextarea.reportValidity?.();
+      overLimitTextarea.focus?.();
+      return false;
+    }
 
     if (bad) {
       validator.setCustomValidity(
@@ -713,6 +807,7 @@
       const item = findItemById_(postId);
       if (item) {
         item.cardNotes = listRaw;
+        item.hasCardNotes = listRaw.some((row) => row && (row.cd || row.text));
         item.updatedAt = new Date().toISOString();
       }
 

@@ -86,6 +86,10 @@
                         <a role="menuitem" href="deckmaker.html#saved-deck" data-header-action="saved-deck">保存デッキ</a>
                         <a role="menuitem" href="match-results.html" data-header-action="match-results">戦績ページへ</a>
                         <a role="menuitem" href="deck-post.html#mine" data-header-action="mine-posts">マイページ</a>
+                        <button type="button" role="menuitem" class="header-auth-planned" disabled>
+                            <span>プロフィール</span>
+                            <span class="header-menu-badge">今後予定</span>
+                        </button>
                         <button type="button" role="menuitem" class="header-auth-logout" data-header-action="logout">ログアウト</button>
                     </div>
                 </div>

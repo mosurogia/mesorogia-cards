@@ -4262,6 +4262,32 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     resize: vertical;
 }
 
+/* 文字数制限の状態表示 */
+.post-char-limit {
+    margin-top: .25rem;
+    color: #6b7280;
+    font-size: .85rem;
+    line-height: 1.5;
+}
+
+.post-char-limit.is-over {
+    color: #b91c1c;
+    font-weight: 700;
+}
+
+.post-char-limit-overflow {
+    display: block;
+    margin-top: .15rem;
+    color: #b91c1c;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+textarea.is-char-limit-over {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, .16);
+}
+
 /* 追加ボタン */
 .add-note-box {
     display: flex;
@@ -4463,15 +4489,50 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 }
 
 
-.filter-section .filter-group {
+.filter-section .filter-group,
+.filter-details .filter-group {
     padding: 10px 14px 14px;
 }
 
 .filter-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     font-weight: 700;
     padding: 12px 14px;
     color: #111827;
     background: #f9fafb;
+}
+
+.filter-help-button {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1d4ed8;
+    font-size: .78rem;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.filter-help-button:hover {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+.filter-help-button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.post-filter-modal .filter-section.is-help-open>.filter-help,
+.post-filter-modal .filter-details.is-help-open>.filter-help {
+    display: block;
+    margin: 10px 14px 0;
 }
 /* =========================
    投稿フィルター：全体の一致条件
@@ -4508,6 +4569,149 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     background: #2b90ff;
     border-color: #2b90ff;
     color: #fff;
+}
+
+/* =========================
+   投稿フィルター：検索項目ナビ
+========================= */
+
+.post-filter-overview {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
+    margin: 10px 0 12px;
+    padding: 8px 8px 0;
+
+    border-bottom: 2px solid #dbeafe;
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: blur(6px);
+}
+
+.post-filter-overview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 2px 6px;
+}
+
+.post-filter-overview-title {
+    margin: 0;
+    color: #64748b;
+    font-size: .76rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+}
+
+.post-filter-overview-chips {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.post-filter-overview-chip {
+    appearance: none;
+    position: relative;
+
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 7px 11px 8px;
+
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+
+    background: transparent;
+    color: #475569;
+
+    font-size: .82rem;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.post-filter-overview-chip:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.post-filter-overview-chip:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.post-filter-overview-chip:active {
+    transform: translateY(1px);
+}
+
+.post-filter-overview-chip::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    bottom: -2px;
+    left: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: transparent;
+}
+
+.post-filter-overview-chip:hover::after,
+.post-filter-overview-chip:focus-visible::after {
+    background: #3b82f6;
+}
+
+.filter-section.is-jump-highlight,
+.filter-details.is-jump-highlight,
+.filter-details-sub.is-jump-highlight {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .28);
+}
+
+@media (max-width: 768px) {
+    .post-filter-overview {
+        margin: 6px 0 8px;
+        padding: 6px 6px 5px;
+    }
+
+    .post-filter-overview-head {
+        gap: 6px;
+        margin-bottom: 5px;
+    }
+
+    .post-filter-overview-title {
+        font-size: .68rem;
+    }
+
+    .post-filter-overview-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        overflow: visible;
+    }
+
+    .post-filter-overview-chip {
+        min-height: 26px;
+        padding: 4px 8px;
+        border: 1px solid #dbeafe;
+        border-radius: 999px;
+
+        background: #fff;
+        color: #334155;
+
+        font-size: .7rem;
+        font-weight: 800;
+        line-height: 1.15;
+
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    .post-filter-overview-chip::after {
+        display: none;
+    }
 }
 
 #active-chips-bar .post-filter-match-chip {
@@ -4621,22 +4825,13 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 
 
 /* =========================
-投稿フィルター：details をカード見出し化
-- 閉じてる感を強める
-- 右側に「開く / 閉じる」
-- 標準マーカー消し
-- 中身に余白
+投稿フィルター：details 見出しの互換表示
 ========================= */
 
 .filter-details>summary.filter-section-title {
-    cursor: pointer;
     user-select: none;
     font-weight: 800;
     color: #111827;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
 }
 
 .filter-details>summary.filter-section-title:hover {
@@ -4656,30 +4851,55 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     content: "";
 }
 
-
-/* 右側に「開く/閉じる」 */
-.filter-details>summary.filter-section-title::after {
-    flex: 0 0 auto;
-    margin-left: 10px;
-    font-size: .8rem;
-    font-weight: 700;
-}
-
 .filter-details[open]>summary.filter-section-title {
     border-bottom: 1px solid #e5e7eb;
 }
 
-.filter-details:not([open])>summary.filter-section-title::after {
-    content: "開く";
-    opacity: .75;
+.filter-category-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    margin: 0 14px 10px;
+    padding: 6px 12px;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: .84rem;
+    font-weight: 800;
+    line-height: 1.2;
+    cursor: pointer;
 }
 
-.filter-details[open]>summary.filter-section-title::after {
-    content: "閉じる";
-    opacity: .6;
+.filter-category-toggle:hover {
+    border-color: #93c5fd;
+    background: #dbeafe;
 }
 
-/* detailsの中身余白 */
-.filter-details>*:not(summary) {
-    padding: 10px 14px 14px;
+.filter-category-toggle:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.filter-category-group {
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.filter-category-group[hidden] {
+    display: none !important;
+}
+
+.filter-section.is-jump-highlight,
+.filter-details.is-jump-highlight {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-filter-overview-chip {
+        transition: none;
+    }
 }

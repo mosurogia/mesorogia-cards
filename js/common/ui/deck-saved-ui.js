@@ -574,9 +574,22 @@
       return;
     }
 
+    const status = window.AccountSavedDecksSync?.getStatus?.() || {};
+    const isAccount = status.source === 'account' || status.state === 'account';
+    const canMigrateLocalDecks =
+      isAccount &&
+      !!window.AccountAppDataSync?.hasGuestMigrationData?.('savedDecks');
+
     container.insertAdjacentHTML(
       'beforeend',
-      `<div class="saved-deck-empty">保存デッキはまだありません</div>`
+      `<div class="saved-deck-empty">
+        <div>保存デッキはまだありません</div>
+        ${canMigrateLocalDecks ? `
+          <button type="button" class="saved-deck-migrate-local-btn" data-saved-deck-migrate-local>
+            端末内の保存デッキを移行する
+          </button>
+        ` : ''}
+      </div>`
     );
   }
 
@@ -806,6 +819,20 @@
       const accountBtn = e.target.closest('#savedDeckAccountSettingsBtn');
       if (accountBtn) {
         window.openAccountDataModal?.({ scope: accountBtn.dataset.accountScope || 'deckmaker' });
+        return;
+      }
+
+      const migrateBtn = e.target.closest('[data-saved-deck-migrate-local]');
+      if (migrateBtn) {
+        migrateBtn.disabled = true;
+        const prevText = migrateBtn.textContent;
+        migrateBtn.textContent = '確認中...';
+        Promise.resolve(window.AccountAppDataSync?.requestMigrationConfirm?.('savedDecks'))
+          .finally(() => {
+            migrateBtn.disabled = false;
+            migrateBtn.textContent = prevText;
+            renderSavedDeckList_({ key, cap, containerId: opts.containerId, counterId: opts.counterId });
+          });
         return;
       }
 

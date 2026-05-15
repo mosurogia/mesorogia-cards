@@ -33,7 +33,7 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerogp.jpg">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-10-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-05-16-001">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
@@ -68,7 +68,40 @@
             <img src="img/header_icon_3.webp" alt="">
             <span>デッキ投稿</span>
         </a>
+
+        <a class="header-nav-tier is-disabled" href="#" aria-disabled="true" data-header-disabled-link>
+            <span>Tier表</span>
+            <span class="header-nav-badge">予定</span>
+        </a>
     </nav>
+    <div class="header-actions">
+        <div class="header-dropdown header-explore-menu" data-header-dropdown>
+            <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false"
+                aria-controls="header-explore-menu">
+                <span aria-hidden="true">≡</span>
+                <span class="sr-only">探索・情報メニュー</span>
+            </button>
+            <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>ホーム</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a class="header-menu-tier-link" role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>Tier表</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>用語集・質問</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>ランダムデッキ</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <button type="button" role="menuitem" data-header-app-action="install">アプリで開く</button>
+            </div>
+        </div>
+    </div>
     <div class="header-account" data-header-auth></div>
 </header>
 
@@ -1002,11 +1035,14 @@
 
     <!-- デッキ保管庫表示用 -->
     <div id="saved-deck">
-        <h3 class="saved-deck-title">デッキ保管庫</h3>
-        <div id="savedDeckCount"></div>
-    </div>
-    <div id="savedDeckList">
-        <!--保存デッキリスト-->
+        <div class="saved-deck-head-top">
+            <h3 class="saved-deck-title">デッキ保管庫</h3>
+            <div id="savedDeckCount"></div>
+        </div>
+        <div class="saved-deck-head-meta"></div>
+        <div id="savedDeckList">
+            <!--保存デッキリスト-->
+        </div>
     </div>
 
 </div>
@@ -1189,11 +1225,12 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-06-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-16-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
-<script src="js/common/account/account-data-manager.js?v=2026-05-06-003"></script>
+<script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
-<script src="js/common/account/header-auth.js?v=2026-05-05-007"></script>
+<script src="js/common/ui/header-menu.js?v=2026-05-15-002"></script>
+<script src="js/common/account/header-auth.js?v=2026-05-15-001"></script>
 
 <!-- UI -->
 <script src="js/common/ui/tabs.js?v=2026-05-05-007"></script>
@@ -1224,7 +1261,7 @@
 <!-- デッキメーカーページ専用 -->
 <script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-05-05-007"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-07-001"></script>
-<script src="js/common/pwa/register.js?v=2026-05-06-003"></script>
+<script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
 
 </body>
 </html>

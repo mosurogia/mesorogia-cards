@@ -9,6 +9,11 @@
   'use strict';
 
     const extractDeckMap = (...args) => window.DeckPostDetail?.extractDeckMap?.(...args);
+    const RICH_DECK_NOTE_MIN_LENGTH = 500;
+    const CONTENT_FILTER_LABELS = {
+      hasCardNotes: 'カード解説あり',
+      richDeckNote: `デッキ解説豊富（${RICH_DECK_NOTE_MIN_LENGTH}文字以上）`,
+    };
 
   // =========================
   // 1) キャンペーン判定系
@@ -564,6 +569,7 @@
     selectedTags: new Set(),
     selectedUserTags: new Set(),
     selectedEnvironmentIds: new Set(),
+    selectedContentFilters: new Set(),
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
@@ -577,6 +583,7 @@
     selectedTags: new Set(),
     selectedUserTags: new Set(),
     selectedEnvironmentIds: new Set(),
+    selectedContentFilters: new Set(),
     selectedPosterKey: '',
     selectedPosterLabel: '',
     selectedCardCds: new Set(),
@@ -587,6 +594,8 @@
 
   window.PostFilterState.selectedEnvironmentIds ??= new Set();
   window.PostFilterDraft.selectedEnvironmentIds ??= new Set();
+  window.PostFilterState.selectedContentFilters ??= new Set();
+  window.PostFilterDraft.selectedContentFilters ??= new Set();
 
   /** state → draft 同期 */
   function syncDraftFromApplied_() {
@@ -596,6 +605,7 @@
     draft.selectedTags = new Set(Array.from(applied?.selectedTags || []));
     draft.selectedUserTags = new Set(Array.from(applied?.selectedUserTags || []));
     draft.selectedEnvironmentIds = new Set(Array.from(applied?.selectedEnvironmentIds || []));
+    draft.selectedContentFilters = new Set(Array.from(applied?.selectedContentFilters || []));
     draft.selectedPosterKey = String(applied?.selectedPosterKey || '');
     draft.selectedPosterLabel = String(applied?.selectedPosterLabel || '');
     draft.selectedCardCds = new Set(Array.from(applied?.selectedCardCds || []));
@@ -666,6 +676,7 @@
       const tags = Array.from(st.selectedTags || []);
       const user = Array.from(st.selectedUserTags || []);
       const envIds = Array.from(st.selectedEnvironmentIds || []);
+      const contentFilters = Array.from(st.selectedContentFilters || []);
       const posterLabel = String(st.selectedPosterLabel || '').trim();
       const postLabel = String(st.selectedPostLabel || '').trim();
       const postId = String(st.selectedPostId || '').trim();
@@ -725,6 +736,28 @@
                       document
                           .querySelectorAll(`.post-filter-env-btn[data-env-id="${CSS.escape(envId)}"]`)
                           .forEach((btn) => btn.classList.remove('selected'));
+                  } catch (_) {}
+
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
+      });
+
+      contentFilters.forEach((key) => {
+          const label = CONTENT_FILTER_LABELS[key] || key;
+          chips.push({
+              label: `投稿内容:${label}`,
+              className: 'chip-content',
+              onRemove: () => {
+                  window.PostFilterState.selectedContentFilters?.delete?.(key);
+                  window.PostFilterDraft?.selectedContentFilters?.delete?.(key);
+
+                  try {
+                      document
+                          .querySelectorAll(`.post-filter-content-btn[data-content-filter="${CSS.escape(key)}"]`)
+                          .forEach((btn) => btn.classList.remove('selected'));
+                      window.__renderContentFilterButtons_?.();
                   } catch (_) {}
 
                   window.DeckPostFilter?.updateActiveChipsBar?.();
@@ -800,9 +833,11 @@
               window.PostFilterState.selectedTags?.clear?.();
               window.PostFilterState.selectedUserTags?.clear?.();
               window.PostFilterState.selectedEnvironmentIds?.clear?.();
+              window.PostFilterState.selectedContentFilters?.clear?.();
               window.PostFilterDraft.selectedTags?.clear?.();
               window.PostFilterDraft.selectedUserTags?.clear?.();
               window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
+              window.PostFilterDraft.selectedContentFilters?.clear?.();
 
               window.PostFilterState.selectedPosterKey = '';
               window.PostFilterState.selectedPosterLabel = '';
@@ -821,11 +856,13 @@
 
               try {
                   window.__renderSelectedCards_?.();
+                  window.__renderContentFilterButtons_?.();
               } catch (_) {}
 
               try {
                   document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
                   document.querySelectorAll('.post-filter-env-btn.selected').forEach((b) => b.classList.remove('selected'));
+                  document.querySelectorAll('.post-filter-content-btn.selected').forEach((b) => b.classList.remove('selected'));
               } catch (_) {}
 
               try {
@@ -960,6 +997,50 @@
     return !!deck[String(cd)];
   }
 
+  function parseCardNotesForContentFilter_(value) {
+    if (Array.isArray(value)) return value;
+    if (typeof value !== 'string') return [];
+
+    try {
+      const parsed = JSON.parse(value.trim());
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function hasCardNotesForContentFilter_(item) {
+    const notes = parseCardNotesForContentFilter_(item?.cardNotes);
+    if (notes.some((row) => row && (row.cd || row.id || row.cardId || row.text || row.note || row.comment))) {
+      return true;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(item || {}, 'hasCardNotes')) {
+      const v = item.hasCardNotes;
+      return v === true || v === 1 || String(v).toLowerCase() === 'true' || String(v) === '1';
+    }
+
+    return false;
+  }
+
+  function getDeckNoteLengthForContentFilter_(item) {
+    const metaLength = Number(item?.deckNoteLength);
+    if (Number.isFinite(metaLength) && metaLength >= 0) return metaLength;
+
+    const text = Object.prototype.hasOwnProperty.call(item || {}, 'deckNote')
+      ? item.deckNote
+      : item?.comment;
+    return Array.from(String(text || '').trim()).length;
+  }
+
+  function matchesContentFilter_(item, key) {
+    if (key === 'hasCardNotes') return hasCardNotesForContentFilter_(item);
+    if (key === 'richDeckNote') {
+      return getDeckNoteLengthForContentFilter_(item) >= RICH_DECK_NOTE_MIN_LENGTH;
+    }
+    return false;
+  }
+
   /** 投稿者の選択条件に一致するか */
   function matchesPosterFilter_(item, posterKey, posterName) {
     const key = String(posterKey || '').trim();
@@ -1030,6 +1111,13 @@ function rebuildFilteredItems(){
       tagConditions.push((item) => matchesCardFilter_(item, cd));
     });
 
+  Array.from(fs?.selectedContentFilters || [])
+    .map((key) => String(key || '').trim())
+    .filter(Boolean)
+    .forEach((key) => {
+      tagConditions.push((item) => matchesContentFilter_(item, key));
+    });
+
   const selPosterKey = String(fs?.selectedPosterKey || '').trim();
   const selPosterName = String(fs?.selectedPoster || '').trim();
   if (selPosterKey || selPosterName) {
@@ -1087,6 +1175,7 @@ function rebuildFilteredItems(){
     applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
     applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
     applied.selectedEnvironmentIds = new Set(Array.from(draft?.selectedEnvironmentIds || []));
+    applied.selectedContentFilters = new Set(Array.from(draft?.selectedContentFilters || []));
     applied.selectedPosterKey = String(draft?.selectedPosterKey || '');
     applied.selectedPosterLabel = String(draft?.selectedPosterLabel || '');
     applied.selectedCardCds = new Set(Array.from(draft?.selectedCardCds || []));
@@ -1105,6 +1194,7 @@ function rebuildFilteredItems(){
       selectedTags: new Set(),
       selectedUserTags: new Set(),
       selectedEnvironmentIds: new Set(),
+      selectedContentFilters: new Set(),
       selectedPosterKey: '',
       selectedPosterLabel: '',
       selectedCardCds: new Set(),
@@ -1116,6 +1206,7 @@ function rebuildFilteredItems(){
     window.PostFilterDraft.selectedTags.clear();
     window.PostFilterDraft.selectedUserTags.clear();
     window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
+    window.PostFilterDraft.selectedContentFilters?.clear?.();
     window.PostFilterDraft.selectedPosterKey = '';
     window.PostFilterDraft.selectedPosterLabel = '';
     window.PostFilterDraft.selectedPostId = '';
@@ -1125,10 +1216,12 @@ function rebuildFilteredItems(){
 
     window.__renderSelectedCards_?.();
     window.__renderFilterModeToggle_?.();
+    window.__renderContentFilterButtons_?.();
 
     try {
       document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
       document.querySelectorAll('.post-filter-env-btn.selected').forEach((b) => b.classList.remove('selected'));
+      document.querySelectorAll('.post-filter-content-btn.selected').forEach((b) => b.classList.remove('selected'));
     } catch (_) {}
 
     const q = document.getElementById('userTagQuery');
@@ -1159,6 +1252,8 @@ function rebuildFilteredItems(){
     window.PostFilterState.selectedUserTags?.clear?.();
     window.PostFilterState.selectedEnvironmentIds?.clear?.();
     window.PostFilterState.selectedCardCds?.clear?.();
+    window.PostFilterState.selectedContentFilters?.clear?.();
+    window.PostFilterDraft.selectedContentFilters?.clear?.();
     window.PostFilterDraft.selectedEnvironmentIds?.clear?.();
     window.PostFilterState.selectedFilterMode = 'or';
     window.PostFilterDraft.selectedFilterMode = 'or';
@@ -1329,23 +1424,109 @@ function rebuildFilteredItems(){
   // 10) モーダル共通
   // =========================
 
-  /** details の ▶/▼ 同期 */
-  function syncDetailsChevron_(details) {
-    if (!details) return;
-    const summary = details.querySelector('summary');
-    if (!summary) return;
+  /** ジャンプ先と親の details を開く */
+  function openFilterJumpDetails_(target) {
+    if (!target) return;
 
-    const raw = summary.textContent || '';
-    const txt = raw.replace(/^[▶▼]\s*/, '').trim();
-    summary.textContent = `${details.open ? '▼' : '▶'} ${txt}`;
+    if (target.matches?.('details')) {
+      target.open = true;
+    }
+
+    let parent = target.parentElement?.closest?.('details');
+    while (parent) {
+      parent.open = true;
+      parent = parent.parentElement?.closest?.('details');
+    }
   }
 
-  /** details 群へ toggle 同期を付与 */
-  function bindChevronSync_(root) {
-    const list = root?.querySelectorAll?.('details') || [];
-    list.forEach((d) => {
-      syncDetailsChevron_(d);
-      d.addEventListener('toggle', () => syncDetailsChevron_(d));
+  /** 検索項目ナビに隠れない位置へスクロールする */
+  function scrollPostFilterTarget_(modal, target) {
+    const scroller = modal.querySelector('.post-filter-modal');
+    const overview = modal.querySelector('.post-filter-overview');
+    if (!scroller || typeof scroller.scrollTo !== 'function') {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+      return;
+    }
+
+    const scrollerRect = scroller.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const overviewHeight = overview?.getBoundingClientRect?.().height || 0;
+    const top = Math.max(0, targetRect.top - scrollerRect.top + scroller.scrollTop - overviewHeight - 12);
+    scroller.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  /** 検索項目ナビのジャンプ処理 */
+  function bindPostFilterOverviewJump_(modal) {
+    if (!modal || modal.dataset.wiredFilterOverviewJump === '1') return;
+    modal.dataset.wiredFilterOverviewJump = '1';
+
+    modal.querySelectorAll('.post-filter-overview-chip[data-filter-jump]').forEach((chip) => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const selector = String(chip.dataset.filterJump || '').trim();
+        if (!selector) return;
+
+        const target = modal.querySelector(selector);
+        if (!target) return;
+
+        openFilterJumpDetails_(target);
+
+        scrollPostFilterTarget_(modal, target);
+
+        window.setTimeout(() => {
+          target.classList.add('is-jump-highlight');
+          window.setTimeout(() => target.classList.remove('is-jump-highlight'), 900);
+        }, 220);
+      });
+    });
+  }
+
+  /** セクション見出しのヘルプボタン */
+  function bindPostFilterHelpButtons_(modal) {
+    if (!modal || modal.dataset.wiredFilterHelpButtons === '1') return;
+    modal.dataset.wiredFilterHelpButtons = '1';
+
+    modal.querySelectorAll('.filter-help-button').forEach((btn) => {
+      btn.setAttribute('aria-expanded', 'false');
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const section = btn.closest('.filter-details-sub, .filter-details, .filter-section, .filter-block');
+        if (!section?.querySelector?.('.filter-help')) return;
+
+        const open = !section.classList.contains('is-help-open');
+        section.classList.toggle('is-help-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+  }
+
+  /** カテゴリタグ表示の開閉 */
+  function bindPostFilterCategoryToggle_(modal) {
+    if (!modal || modal.dataset.wiredFilterCategoryToggle === '1') return;
+
+    const area = modal.querySelector('#postFilterCategoryArea');
+    if (!area) return;
+
+    modal.dataset.wiredFilterCategoryToggle = '1';
+
+    modal.addEventListener('click', (e) => {
+      const btn = e.target.closest('#postFilterCategoryToggle');
+      if (!btn || !modal.contains(btn)) return;
+
+      e.preventDefault();
+
+      const open = area.hidden;
+      area.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? '－カテゴリタグを閉じる' : '＋カテゴリタグを表示';
     });
   }
 
@@ -1698,6 +1879,38 @@ function rebuildFilteredItems(){
       });
     }
 
+    function renderContentFilterButtons_() {
+      const selected = window.PostFilterDraft?.selectedContentFilters || new Set();
+      document.querySelectorAll('.post-filter-content-btn[data-content-filter]').forEach((btn) => {
+        const key = String(btn.dataset.contentFilter || '').trim();
+        const active = !!key && selected.has(key);
+        btn.classList.toggle('selected', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    window.__renderContentFilterButtons_ = renderContentFilterButtons_;
+
+    document.querySelectorAll('.post-filter-content-btn[data-content-filter]').forEach((btn) => {
+      if (btn.dataset.wiredContentFilter === '1') return;
+      btn.dataset.wiredContentFilter = '1';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const key = String(btn.dataset.contentFilter || '').trim();
+        if (!key) return;
+
+        window.PostFilterDraft.selectedContentFilters ??= new Set();
+        if (window.PostFilterDraft.selectedContentFilters.has(key)) {
+          window.PostFilterDraft.selectedContentFilters.delete(key);
+        } else {
+          window.PostFilterDraft.selectedContentFilters.add(key);
+        }
+        renderContentFilterButtons_();
+      });
+    });
+
     const modeOrBtn = document.getElementById('postFilterModeOr');
     const modeAndBtn = document.getElementById('postFilterModeAnd');
 
@@ -1799,6 +2012,9 @@ function rebuildFilteredItems(){
     // 12-4) フィルターモーダル開閉 / 適用 / リセット
     // =========================
     if (!modal) return;
+    bindPostFilterOverviewJump_(modal);
+    bindPostFilterHelpButtons_(modal);
+    bindPostFilterCategoryToggle_(modal);
 
     if (openBtn && !openBtn.dataset.wiredFilterOpen) {
       openBtn.dataset.wiredFilterOpen = '1';
@@ -1813,12 +2029,12 @@ function rebuildFilteredItems(){
         syncDraftFromApplied_();
         window.__renderSelectedCards_?.();
         window.__renderFilterModeToggle_?.();
+        window.__renderContentFilterButtons_?.();
         window.__renderSelectedUserTags_?.();
         window.__renderUserTagSuggest_?.(document.getElementById('userTagQuery')?.value || '');
 
         buildPostFilterTagUI_();
         window.DeckPostFilter?.updateActiveChipsBar?.();
-        bindChevronSync_(modal);
         openPostFilter();
       });
     }
