@@ -45,6 +45,11 @@
     let cardsTabSwitchSeen = false;
     let lastAccountSaveDebug = null;
     let suppressOwnedAutosave = false;
+    let suppressCardGroupsAutosave = false;
+    let lastCardGroupsAutosaveKey = '';
+    let lastAutoSyncAt = 0;
+    let lastAutoSyncKey = '';
+    const AUTO_SYNC_COOLDOWN_MS = 30000;
     const savedDecksStatus = {
         source: 'local',
         state: 'local',
@@ -337,6 +342,18 @@
         }
     }
 
+    function isSameCardGroups_(a, b){
+        return cardGroupsDataKey_(a) === cardGroupsDataKey_(b);
+    }
+
+    function isCardGroupsEditing_(){
+        try {
+            return !!window.CardGroups?.getState?.()?.editingId;
+        } catch(_) {
+            return false;
+        }
+    }
+
     function readCardGroupsMigrationDecision_(){
         return readMigrationDecision_(LS_CARD_GROUPS_MIGRATION_DECISION);
     }
@@ -516,9 +533,11 @@
         if (startEmptyAccount) {
             if (label === 'カードグループ') {
                 writeLocalCardGroups_({}, { source: 'account' });
+                persistAccountViewData_({ cardGroups: {} });
                 refreshCardGroupsDisplay_('account-card-groups-empty-started');
             } else if (label === '所持率データ') {
                 writeLocalOwned_({}, { source: 'account' });
+                persistAccountViewData_({ ownedCards: {} });
                 refreshOwnedDisplay_('account-owned-empty-started');
             } else if (label === '保存デッキリスト') {
                 writeLocalSavedDecks_([], {
@@ -526,6 +545,7 @@
                     source: 'account',
                     reason: 'account-saved-decks-empty-started',
                 });
+                persistAccountViewData_({ savedDecks: [] });
             }
             setAccountLinked_();
             return true;
@@ -683,11 +703,6 @@
         try { localStorage.setItem(LS_LAST_SYNC, syncedAt); } catch(_) {}
         try { localStorage.setItem(LS_ACTIVE_SOURCE, 'account'); } catch(_) {}
         try { window.OwnedStore?.setAutosave?.(false); } catch(_) {}
-        try {
-            if (window.CardGroups?.replaceAll && window.CardGroups?.exportState) {
-                window.CardGroups.replaceAll(window.CardGroups.exportState(), { source: 'account', persist: false });
-            }
-        } catch(_) {}
         updateStatus_({
             source: 'account',
             state: 'account',
@@ -718,7 +733,12 @@
         try {
             const raw = localStorage.getItem(LS_CARD_GROUPS);
             const groups = normalizeCardGroups_(raw ? JSON.parse(raw) : {});
-            window.CardGroups?.replaceAll?.(groups, { source: 'local', persist: true });
+            suppressCardGroupsAutosave = true;
+            try {
+                window.CardGroups?.replaceAll?.(groups, { source: 'local', persist: true });
+            } finally {
+                suppressCardGroupsAutosave = false;
+            }
         } catch(_) {}
         try {
             const raw = localStorage.getItem('savedDecks');
@@ -895,10 +915,15 @@
 
         try {
             if (window.CardGroups?.replaceAll) {
-                window.CardGroups.replaceAll(normalized, {
-                    source: opts.source,
-                    persist: opts.source === 'account' ? false : true,
-                });
+                suppressCardGroupsAutosave = true;
+                try {
+                    window.CardGroups.replaceAll(normalized, {
+                        source: opts.source,
+                        persist: opts.source === 'account' ? false : true,
+                    });
+                } finally {
+                    suppressCardGroupsAutosave = false;
+                }
                 return;
             }
         } catch(_) {}
@@ -983,12 +1008,23 @@
         const isManual = !!opts.isManual;
         const currentLocalGroups = readLocalCardGroups_();
         const guestGroups = readGuestCardGroups_();
-        const localGroups = hasCardGroupsData_(currentLocalGroups) ? currentLocalGroups : guestGroups;
+        const localGroups = hasCardGroupsData_(currentLocalGroups)
+            ? currentLocalGroups
+            : (isAccountSourceActive_() ? {} : guestGroups);
         const remoteGroups = normalizeCardGroups_(remoteAppData?.cardGroups);
         const hasLocalGroups = hasCardGroupsData_(localGroups);
         const hasRemoteGroups = hasCardGroupsData_(remoteGroups);
 
         if (hasRemoteGroups) {
+            if (isSameCardGroups_(currentLocalGroups, remoteGroups)) {
+                return { groups: remoteGroups, saveRemote: false, same: true };
+            }
+
+            // 編集中の上書きは選択状態と編集中カードを消すため、次回同期まで待つ。
+            if (isCardGroupsEditing_()) {
+                return { groups: currentLocalGroups, saveRemote: false, pending: true, reason: 'card-groups-editing-skip-restore' };
+            }
+
             writeLocalCardGroups_(remoteGroups, { source: 'account' });
             refreshCardGroupsDisplay_('account-card-groups-restored');
             return { groups: remoteGroups, saveRemote: false, restored: true };
@@ -1003,6 +1039,9 @@
 
                 const cardGroupsDecision = isManual ? '' : getCardGroupsMigrationDecision_(localGroups);
                 if (cardGroupsDecision === MIGRATION_DECISION_EMPTY_ACCOUNT) {
+                    writeLocalCardGroups_({}, { source: 'account' });
+                    persistAccountViewData_({ cardGroups: {} });
+                    setAccountLinked_();
                     return { groups: {}, saveRemote: false, skipped: true, reason: 'card-groups-empty-account-recently' };
                 }
                 if (cardGroupsDecision === MIGRATION_DECISION_SKIPPED) {
@@ -1072,6 +1111,13 @@
 
             const savedDecksDecision = isManual ? '' : getSavedDecksMigrationDecision_(localDecks);
             if (savedDecksDecision === MIGRATION_DECISION_EMPTY_ACCOUNT) {
+                writeLocalSavedDecks_([], {
+                    silent: true,
+                    source: 'account',
+                    reason: 'account-saved-decks-empty-recently',
+                });
+                persistAccountViewData_({ savedDecks: [] });
+                setAccountLinked_();
                 return { decks: [], saveRemote: false, skipped: true, reason: 'saved-decks-empty-account-recently' };
             }
             if (savedDecksDecision === MIGRATION_DECISION_SKIPPED) {
@@ -1179,6 +1225,30 @@
         } catch(_) {
             return '';
         }
+    }
+
+    function isAccountSourceActive_(){
+        return readActiveSource_() === 'account';
+    }
+
+    function persistAccountViewData_(patch = {}){
+        try {
+            if (hasOwn_(patch, 'ownedCards')) {
+                localStorage.setItem(LS_OWNED, JSON.stringify(normalizeOwnedMap_(patch.ownedCards)));
+            }
+        } catch(_) {}
+
+        try {
+            if (hasOwn_(patch, 'cardGroups')) {
+                localStorage.setItem(LS_CARD_GROUPS, JSON.stringify(normalizeCardGroups_(patch.cardGroups)));
+            }
+        } catch(_) {}
+
+        try {
+            if (hasOwn_(patch, 'savedDecks')) {
+                localStorage.setItem('savedDecks', JSON.stringify(normalizeSavedDecks_(patch.savedDecks)));
+            }
+        } catch(_) {}
     }
 
     function buildDebugSummary_(data){
@@ -1476,7 +1546,9 @@
         if (!accountOwnedLinkEnabled) {
             return { ok: false, skipped: true, reason: 'account-link-disabled' };
         }
-        return saveAccountAppData_({ cardGroups: readLocalCardGroups_() });
+        const groups = readLocalCardGroups_();
+        lastCardGroupsAutosaveKey = cardGroupsDataKey_(groups);
+        return saveAccountAppData_({ cardGroups: groups });
     }
 
     async function saveSavedDecksToAccount_(){
@@ -1521,7 +1593,9 @@
         try {
             const localOwnedRaw = readLocalOwned_();
             const guestOwned = readGuestOwned_();
-            const localOwned = hasOwnedData_(localOwnedRaw) ? localOwnedRaw : guestOwned;
+            const localOwned = hasOwnedData_(localOwnedRaw)
+                ? localOwnedRaw
+                : (isAccountSourceActive_() ? {} : guestOwned);
             const hasLocalOwned = hasOwnedData_(localOwned);
             const remoteRes = await fetchAccountAppData_();
 
@@ -1557,6 +1631,9 @@
 
                 const ownedDecision = isManual ? '' : getOwnedMigrationDecision_(localOwned);
                 if (ownedDecision === MIGRATION_DECISION_EMPTY_ACCOUNT) {
+                    writeLocalOwned_({}, { source: 'account' });
+                    persistAccountViewData_({ ownedCards: {} });
+                    setAccountLinked_();
                     return { ok: true, skipped: true, reason: 'owned-empty-account-recently' };
                 }
                 if (ownedDecision === MIGRATION_DECISION_SKIPPED) {
@@ -1738,11 +1815,17 @@
         bindCardGroupsAutosave_._bound = true;
 
         window.CardGroups.onChange(() => {
+            if (suppressCardGroupsAutosave) return;
             if (!isLoggedIn_() || syncing || !accountOwnedLinkEnabled) return;
+
+            const groupsSnapshot = readLocalCardGroups_();
+            const snapshotKey = cardGroupsDataKey_(groupsSnapshot);
+            if (snapshotKey && snapshotKey === lastCardGroupsAutosaveKey) return;
 
             clearTimeout(bindCardGroupsAutosave_._timer);
             bindCardGroupsAutosave_._timer = setTimeout(() => {
-                saveCardGroupsToAccount_();
+                lastCardGroupsAutosaveKey = snapshotKey;
+                saveAccountAppData_({ cardGroups: groupsSnapshot });
             }, 1200);
         });
     }
@@ -1772,6 +1855,23 @@
 
     function runAccountSyncInBackground_(reason){
         try {
+            const reasonKey = String(reason || '');
+            const userKey = getUserDecisionId_();
+            const syncKey = `${userKey}:${reasonKey}`;
+            const isAuto = reasonKey === 'auto-login' || reasonKey === 'whoami' || reasonKey === 'init';
+            const now = Date.now();
+
+            if (isAuto && syncKey === lastAutoSyncKey && now - lastAutoSyncAt < AUTO_SYNC_COOLDOWN_MS) {
+                refreshStatusFromAuth_();
+                notifyReady_();
+                return;
+            }
+
+            if (isAuto) {
+                lastAutoSyncKey = syncKey;
+                lastAutoSyncAt = now;
+            }
+
             syncAppDataWithAccount(reason).catch((err) => {
                 console.warn('[account-app-data-sync] background sync failed:', err);
                 refreshStatusFromAuth_();
