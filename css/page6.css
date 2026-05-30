@@ -1,0 +1,1135 @@
+.tier-page-shell {
+    min-height: calc(100vh - 76px);
+    padding: 3px 10px 12px;
+    background: #f4f7fb;
+    color: #111827;
+}
+
+.tier-page-header {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+
+    margin-bottom: 6px;
+    padding: 14px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.96),
+            rgba(241,245,249,.92)
+        );
+
+    border: 1px solid rgba(15, 23, 42, .08);
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, .08);
+
+    overflow: hidden;
+}
+
+.tier-page-header::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at top right,
+            rgba(99, 102, 241, .12),
+            transparent 32%),
+        radial-gradient(circle at bottom left,
+            rgba(249, 115, 22, .10),
+            transparent 30%);
+
+    pointer-events: none;
+}
+
+.tier-page-header-main,
+.tier-page-header-title-row,
+.tier-page-header-title-wrap,
+.tier-page-header-description {
+    position: relative;
+    z-index: 1;
+}
+.tier-page-header-note {
+    position: relative;
+    z-index: 1;
+
+    margin: -6px 0 0;
+
+    color: #64748b;
+    font-size: .72rem;
+    line-height: 1.5;
+    font-weight: 800;
+}
+
+.tier-page-header-main {
+    display: grid;
+    gap: 14px;
+}
+
+.tier-page-header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tier-page-header-title-wrap {
+    display: grid;
+    gap: 4px;
+}
+
+.tier-page-header-title {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: clamp(1.7rem, 2.4vw, 2.35rem);
+    line-height: 1.1;
+    font-weight: 900;
+    letter-spacing: 0;
+}
+
+.tier-page-header-description {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: .75rem;
+    line-height: 1.6;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .tier-page-header {
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        margin-bottom: 3px;
+    }
+    .tier-page-header-main{
+        gap: 10px;
+    }
+
+    .tier-page-header-title-row {
+        gap: 8px;
+    }
+
+    .tier-page-header-title {
+        font-size: 1.35rem;
+        line-height: 1.15;
+    }
+
+    .tier-page-header-description {
+        font-size: .5rem;
+        line-height: 1.45;
+    }
+    .tier-page-header-note {
+        margin-top: -5px;
+        font-size: .5rem;
+        line-height: 1.4;
+    }
+}
+
+.tier-board-section {
+    max-width: none;
+    margin: 0 auto;
+}
+
+.tier-board-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.tier-board-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.tier-section-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.tier-board-meta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.tier-env-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tier-env-button {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 28px;
+    border: 1px solid rgba(37, 99, 235, .2);
+    border-radius: 999px;
+    background: #fff;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tier-env-button:disabled {
+    cursor: default;
+    opacity: .38;
+}
+
+.tier-env-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
+}
+
+.tier-board-image-button {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 28px;
+    border: 1px solid rgba(37, 99, 235, .2);
+    border-radius: 999px;
+    background: #fff;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tier-board-image-button:disabled {
+    cursor: wait;
+    opacity: .58;
+}
+
+.tier-board-image-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
+}
+
+.tier-tier-panel.is-tier-capturing .tier-env-controls,
+.tier-tier-panel.is-tier-capturing .tier-board-image-button {
+    display: none;
+}
+
+.tier-board-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 0 9px;
+    border: 1px solid rgba(37, 99, 235, .18);
+    border-radius: 999px;
+    background: #fff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.tier-board-status.is-error {
+    border-color: rgba(220, 38, 38, .2);
+    color: #dc2626;
+}
+
+.tier-board {
+    display: grid;
+    gap: 3px;
+    overflow: hidden;
+    border: 3px solid #202020;
+    border-radius: 8px;
+    background: #202020;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, .16);
+}
+
+.tier-row {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    min-height: 86px;
+    background: #3f3f3f;
+}
+
+.tier-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111827;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.tier-label.is-s {
+    background: #ef4444;
+}
+
+.tier-label.is-a {
+    background: #f97316;
+}
+
+.tier-label.is-b {
+    background: #facc15;
+}
+
+.tier-label.is-c {
+    background: #4ade80;
+}
+
+.tier-label.is-d {
+    background: #38bdf8;
+}
+
+.tier-label.is-e {
+    background: #a78bfa;
+}
+
+.tier-label.is-other {
+    background: #cbd5e1;
+}
+
+.tier-items {
+    display: flex;
+    align-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-width: 0;
+    padding: 6px;
+}
+
+.tier-card {
+    display: grid;
+    /* grid-template-rows: auto minmax(28px, auto); */
+    gap: 0;
+    width: 88px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 4px;
+    background: #1f2937;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .35);
+    color: #fff;
+    text-decoration: none;
+}
+
+.tier-card-image-wrap {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 106 / 133;
+    min-height: 90px;
+    background: linear-gradient(135deg, #111827, #334155);
+}
+
+.tier-card-image-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tier-card-image-wrap.is-image-missing::before {
+    content: "画像なし";
+    color: rgba(255, 255, 255, .72);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.tier-card-name {
+    display: block;
+    min-width: 0;
+    padding: 4px 3px;
+    background: rgba(15, 23, 42, .96);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.25;
+    text-align: center;
+    text-shadow: 0 1px 2px #000;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    display: none;
+}
+
+.tier-empty {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    color: rgba(255, 255, 255, .58);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tier-environment-comment {
+    position: relative;
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(to bottom,
+            rgba(241, 245, 249, .98),
+            rgba(226, 232, 240, .86));
+
+    border: 1px solid rgba(100, 116, 139, .18);
+    border-left: 3px solid #64748b;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .75),
+        0 2px 8px rgba(15, 23, 42, .06);
+}
+
+.tier-environment-comment[hidden] {
+    display: none;
+}
+
+.tier-environment-comment::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: -6px;
+    width: 10px;
+    height: 10px;
+
+    background: rgba(241, 245, 249, .98);
+
+    border-left: 1px solid rgba(100, 116, 139, .18);
+    border-top: 1px solid rgba(100, 116, 139, .18);
+
+    transform: rotate(45deg);
+}
+
+.tier-environment-comment-title {
+    margin: 0 0 4px;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.tier-environment-comment-text {
+    margin: 0;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.tier-deck-guide {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid rgba(15, 23, 42, .12);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, .08);
+}
+
+.tier-tier-panel {
+    margin-top: 0;
+}
+
+.tier-deck-guide[hidden] {
+    display: none;
+}
+
+.tier-deck-guide-head {
+    margin-bottom: 10px;
+}
+
+.tier-deck-guide-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tier-deck-guide-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tier-deck-guide-environment {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 0 9px;
+    border: 1px solid rgba(37, 99, 235, .18);
+    border-radius: 999px;
+    background: #fff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.tier-deck-guide-environment.is-error {
+    border-color: rgba(220, 38, 38, .2);
+    color: #dc2626;
+}
+
+.tier-deck-guide-title {
+    margin: 0;
+    color: #111827;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.tier-deck-guide-body {
+    display: grid;
+    gap: 14px;
+}
+
+.tier-guide-rank {
+    display: grid;
+    gap: 8px;
+}
+
+.tier-guide-rank-title {
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    width: 100%;
+    margin: 0;
+    padding: 0 14px;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.tier-guide-rank-title.is-s {
+    background: #ef4444;
+}
+
+.tier-guide-rank-title.is-a {
+    background: #f97316;
+}
+
+.tier-guide-rank-title.is-b {
+    background: #facc15;
+}
+
+.tier-guide-rank-title.is-c {
+    background: #4ade80;
+}
+
+.tier-guide-rank-title.is-d {
+    background: #38bdf8;
+}
+
+.tier-guide-rank-title.is-e {
+    background: #a78bfa;
+}
+
+.tier-guide-rank-title.is-other {
+    background: #cbd5e1;
+}
+
+.tier-guide-rank-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 8px;
+}
+
+.tier-guide-deck {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid rgba(15, 23, 42, .1);
+    border-radius: 8px;
+    background: #f8fafc;
+    scroll-margin-top: 84px;
+}
+
+.tier-guide-deck.race-bg-ドラゴン {
+    background: var(--race-dragon-bg);
+}
+
+.tier-guide-deck.race-bg-アンドロイド {
+    background: var(--race-android-bg);
+}
+
+.tier-guide-deck.race-bg-エレメンタル {
+    background: var(--race-elemental-bg);
+}
+
+.tier-guide-deck.race-bg-ルミナス {
+    background: var(--race-luminous-bg);
+}
+
+.tier-guide-deck.race-bg-シェイド {
+    background: var(--race-shade-bg);
+}
+
+.tier-guide-deck.race-bg-イノセント {
+    background: rgba(154, 160, 166, .14);
+}
+
+.tier-guide-deck.race-bg-旧神 {
+    background: var(--old-god);
+}
+
+.tier-guide-deck.is-focused {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
+}
+
+.tier-guide-deck-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tier-guide-deck-title {
+    margin: 0;
+    color: #111827;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.tier-guide-deck-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0px 0 10px;
+}
+
+.tier-guide-deck-meta-item {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 8px;
+    border: 1px solid rgba(15, 23, 42, .08);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .72);
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.tier-guide-deck-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.tier-guide-deck-actions-wide {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+}
+
+.tier-guide-detail-link,
+.tier-guide-copy-code-button {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        transform 0.05s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.tier-guide-detail-link {
+    border: 1px solid #2563eb;
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .28);
+}
+
+.tier-guide-copy-code-button {
+    border: 1px solid #6366f1;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, .35);
+}
+
+.tier-guide-detail-link:hover,
+.tier-guide-copy-code-button:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+.tier-guide-detail-link:hover {
+    box-shadow: 0 6px 20px rgba(37, 99, 235, .34);
+}
+
+.tier-guide-copy-code-button:not(:disabled):hover {
+    box-shadow: 0 6px 20px rgba(79, 70, 229, .4);
+}
+
+.tier-guide-detail-link:active,
+.tier-guide-copy-code-button:not(:disabled):active {
+    transform: translateY(0);
+}
+
+.tier-guide-detail-link:focus-visible,
+.tier-guide-copy-code-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
+}
+
+.tier-guide-detail-link[aria-disabled="true"],
+.tier-guide-copy-code-button:disabled {
+    border-color: rgba(100, 116, 139, .35);
+    background: #e2e8f0;
+    color: #64748b;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .86;
+}
+
+.tier-guide-post-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    border: 1px solid rgba(37, 99, 235, .2);
+    border-radius: 999px;
+    background: #fff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.tier-guide-post-link {
+    padding: 0 10px;
+}
+
+.tier-guide-post-link:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
+}
+
+.tier-guide-deck-status {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.tier-guide-deck-status.is-error {
+    color: #dc2626;
+}
+
+.tier-guide-deck-status:empty {
+    display: none;
+}
+
+.tier-post-decklist {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.tier-post-card {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, .14);
+    border-radius: 4px;
+    background: #111827;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, .22);
+    cursor: pointer;
+}
+
+.tier-post-card:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .32);
+    outline-offset: 2px;
+}
+
+.tier-post-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 106 / 133;
+    object-fit: cover;
+}
+
+.tier-post-card-count {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    min-width: 22px;
+    padding: 2px 4px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, .9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+}
+
+.tier-post-detail-empty {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tier-guide-deck-list-comment {
+    position: relative;
+    margin: 10px 0;
+    padding: 9px 12px;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(to bottom,
+            rgba(255, 255, 255, .96),
+            rgba(248, 250, 252, .96));
+
+    border: 1px solid rgba(15, 23, 42, .08);
+
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, .04),
+        0 4px 12px rgba(15, 23, 42, .05);
+    border-left: 3px solid #94a3b8;
+}
+
+.tier-guide-deck-list-comment::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: -6px;
+    width: 10px;
+    height: 10px;
+
+    background: rgba(255, 255, 255, .96);
+
+    border-left: 1px solid rgba(15, 23, 42, .08);
+    border-top: 1px solid rgba(15, 23, 42, .08);
+
+    transform: rotate(45deg);
+}
+
+@media (max-width: 768px) {
+    .tier-page-shell {
+        padding: 2px 6px 10px;
+    }
+
+    .tier-board-toolbar {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .tier-board-heading {
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .tier-section-title {
+        font-size: 17px;
+    }
+
+    .tier-board-meta {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .tier-env-button {
+        width: 28px;
+        height: 26px;
+        font-size: 12px;
+    }
+
+    .tier-board-image-button {
+        width: 28px;
+        height: 26px;
+        font-size: 13px;
+    }
+
+    .tier-board-status {
+        min-height: 26px;
+        padding: 0 8px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .tier-row {
+        grid-template-columns: 44px minmax(0, 1fr);
+        min-height: 74px;
+    }
+
+    .tier-label {
+        font-size: 17px;
+    }
+
+    .tier-items {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 3px;
+        padding: 4px;
+    }
+
+    /* Sだけ大きめ */
+    .tier-row:has(.tier-label.is-s) .tier-items {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+    }
+
+    .tier-card {
+        width: 100%;
+    }
+
+    .tier-card-image-wrap {
+        min-height: 0;
+    }
+
+    .tier-card-name {
+        font-size: 9px;
+    }
+
+    .tier-environment-comment {
+        margin-top: 7px;
+        padding: 8px 10px;
+    }
+
+    .tier-environment-comment-title {
+        font-size: 10px;
+    }
+
+    .tier-environment-comment-text {
+        font-size: 11px;
+    }
+
+    .tier-deck-guide {
+        padding: 10px;
+    }
+
+    .tier-deck-guide-title {
+        font-size: 15px;
+    }
+
+    .tier-deck-guide-title-row,
+    .tier-deck-guide-meta {
+        align-items: flex-start;
+    }
+
+    .tier-deck-guide-meta {
+        width: 100%;
+    }
+
+    .tier-deck-guide-environment {
+        min-height: 24px;
+        padding: 0 8px;
+        font-size: 11px;
+    }
+
+    .tier-guide-rank-list {
+        grid-template-columns: 1fr;
+    }
+
+    .tier-guide-deck {
+        scroll-margin-top: 72px;
+    }
+
+    .tier-guide-deck-head {
+        gap: 8px;
+    }
+
+    .tier-guide-deck-title {
+        font-size: 14px;
+    }
+
+    .tier-guide-deck-meta {
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .tier-guide-deck-meta-item {
+        min-height: 21px;
+        padding: 0 7px;
+        font-size: 11px;
+    }
+
+    .tier-guide-deck-actions-wide {
+        gap: 6px;
+    }
+
+    .tier-guide-detail-link,
+    .tier-guide-copy-code-button {
+        min-height: 34px;
+        padding: 0 8px;
+        font-size: 12px;
+    }
+
+    .tier-guide-post-link {
+        padding: 0 8px;
+        font-size: 11px;
+    }
+
+    .tier-post-card {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tier-board {
+        scroll-behavior: auto;
+    }
+
+    .tier-guide-detail-link,
+    .tier-guide-copy-code-button {
+        transition: none;
+    }
+}
+
+.tier-discord-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    margin-top: 12px;
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(135deg,
+            rgba(88, 101, 242, .10),
+            rgba(99, 102, 241, .14));
+
+    border: 1px solid rgba(88, 101, 242, .18);
+
+    box-shadow:
+        0 4px 14px rgba(15, 23, 42, .05);
+}
+
+.tier-discord-banner-main {
+    min-width: 0;
+}
+
+.tier-discord-banner-title {
+    color: #312e81;
+    font-size: .95rem;
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.tier-discord-banner-text {
+    margin: 4px 0 0;
+
+    color: #475569;
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1.6;
+}
+
+.tier-discord-banner-members {
+    margin: 6px 0 0;
+
+    color: #3730a3;
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1.6;
+}
+
+.tier-discord-banner-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    flex: 0 1 auto;
+
+    width: min(100%, 180px);
+    max-width: 100%;
+    min-height: 40px;
+    padding: 0 16px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(90deg,
+            #5865f2,
+            #6366f1);
+
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 900;
+    text-decoration: none;
+
+    box-shadow:
+        0 4px 14px rgba(88, 101, 242, .28);
+}
+
+.tier-discord-banner-button img {
+    display: block;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+    .tier-discord-banner {
+        flex-direction: column;
+        align-items: stretch;
+
+        padding: 12px;
+    }
+
+    .tier-discord-banner-button {
+        width: 100%;
+    }
+}

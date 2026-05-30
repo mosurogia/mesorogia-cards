@@ -38,6 +38,18 @@
       && Number(cardLike?.cost) === LOSSLIS_COST;
   }
 
+  function getCardDisplayName_(cardLike) {
+    const name = String(cardLike?.name || '').trim();
+    if (name) return name.replace(/聖獸/g, '聖獣');
+    const cd = String(cardLike?.cd || '').trim();
+    return cd ? `カードID:${cd}` : '不明なカード';
+  }
+
+  function addExcludedCardName_(list, cardLike) {
+    const name = getCardDisplayName_(cardLike);
+    if (!list.includes(name)) list.push(name);
+  }
+
   function buildDeckAnalysisCards(deckMap, cardMap, options = {}) {
     const map = deckMap && typeof deckMap === 'object' ? deckMap : {};
     const cards = cardMap && typeof cardMap === 'object' ? cardMap : {};
@@ -58,6 +70,7 @@
       for (let i = 0; i < cnt; i++) {
         deckCards.push({
           cd,
+          name: card.name || '',
           race: card.race || '',
           type: card.type || '',
           category: card.category || '',
@@ -94,6 +107,7 @@
     };
 
     let excludedLosslis66Count = 0;
+    const manaExcludedCardNames = [];
     const analysisCards = [];
     const costCards = [];
     const costCount = {};
@@ -112,6 +126,7 @@
 
       if (isExcludedLosslis66(card)) {
         excludedLosslis66Count += 1;
+        addExcludedCardName_(manaExcludedCardNames, card);
         return;
       }
 
@@ -122,6 +137,8 @@
         sumCost += card.cost;
         if (!manaExcludeCds.has(String(card.cd))) {
           sumCostForMana += card.cost;
+        } else {
+          addExcludedCardName_(manaExcludedCardNames, card);
         }
       }
 
@@ -156,6 +173,7 @@
       analysisCards,
       costCards,
       excludedLosslis66Count,
+      manaExcludedCardNames,
       rarityCounts,
       costLabels,
       powerLabels,

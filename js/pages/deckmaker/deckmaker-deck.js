@@ -8,7 +8,7 @@
  * - 一覧（.card）側の「使用中」「グレースケール」反映
  * - PC：ホバーでカード画像プレビュー
  * - Mobile：上フリック追加 / 下フリック削除 / 長押しでプレビュー
- * - オートセーブ（localStorage: deck_autosave_v1）
+ * - オートセーブ（localStorage: deck_working_v1 / deck_rescue_v1）
  * - デッキサマリー開閉ボタン（#deck-summary）
  *
  * 【依存（存在すれば使う）】
@@ -53,7 +53,8 @@
   // 状態
   // =========================
   const deck = window.deck || (window.deck = {});
-  let representativeCd = null; // 今は保存に載せるだけ（表示/変更は別ファイル想定）
+  let representativeCd = null;//デッキ内で代表的なカード（主にカードプレビューの表示に使う）。特に意味はないが、更新のたびに先頭から探すのも面倒なので一応保持しておく。
+  let lastAddedCd = null;//最後に追加したカード。削除の際、これが0枚になったら代表的なカードもリセットする。特に意味はないが、更新のたびに先頭から探すのも面倒なので一応保持しておく。
 
   // =========================
   // デッキ名管理
@@ -369,6 +370,8 @@
 
     deck[cd5] = (deck[cd5] || 0) + 1;
 
+    lastAddedCd = cd5;
+
     withDeckBarScrollKept(updateDeck);
     window.applyGrayscaleFilter?.();
     scheduleAutosave();
@@ -380,6 +383,10 @@
 
     if (next === 0) delete deck[cd5];
     else deck[cd5] = next;
+
+    if (lastAddedCd === cd5 && !deck[cd5]) {
+      lastAddedCd = null;
+    }
 
     withDeckBarScrollKept(updateDeck);
     window.applyGrayscaleFilter?.();
@@ -829,16 +836,30 @@
   }
 
   function clearAutosave_() {
-    try { localStorage.removeItem('deck_autosave_v1'); } catch (_) {}
+    try {
+      localStorage.removeItem(AUTOSAVE_KEY);
+      localStorage.removeItem(LEGACY_AUTOSAVE_KEY);
+    } catch (_) {}
   }
 
   function normalizeRestoreData_(data) {
     if (!data || typeof data !== 'object') return null;
-    const cardCounts =
+    const rawCardCounts =
       (data.cardCounts && typeof data.cardCounts === 'object') ? data.cardCounts :
       (data.cards && typeof data.cards === 'object' && !Array.isArray(data.cards)) ? data.cards :
       null;
-    if (!cardCounts) return null;
+    if (!rawCardCounts) return null;
+
+    const cardCounts = {};
+    for (const [cdRaw, nRaw] of Object.entries(rawCardCounts)) {
+      const n = Number(nRaw) || 0;
+      if (n <= 0) continue;
+      const cd5 = normCd5(cdRaw);
+      if (!cd5) continue;
+      cardCounts[cd5] = n;
+    }
+    if (!Object.keys(cardCounts).length) return null;
+
     return { ...data, cardCounts };
   }
 
@@ -861,6 +882,8 @@
     const rep = restoreData.m ? normCd5(restoreData.m) : (restoreData.representativeCd ? normCd5(restoreData.representativeCd) : null);
     representativeCd = (rep && deck[rep]) ? rep : null;
     window.representativeCd = representativeCd;
+
+    lastAddedCd = restoreData.lastAddedCd ? normCd5(restoreData.lastAddedCd) : null;
 
     // 入力復元
     window.writeDeckNameInput?.(restoreData.name || '');
@@ -971,6 +994,8 @@
     representativeCd = (rep && deck[rep]) ? rep : null;
     window.representativeCd = representativeCd;
 
+    lastAddedCd = null;
+
     // UI同期（復元と同じ流れ）
     withDeckBarScrollKept(updateDeck);
     window.applyGrayscaleFilter?.();
@@ -985,17 +1010,21 @@
 
     // =========================
   // オートセーブ（page2互換・上位互換）
-  // - localStorage: deck_autosave_v1
+  // - localStorage: deck_working_v1 / deck_rescue_v1
   // - 「空 payload で既存データを潰さない」
   // - selectTags / userTags / cardNotes も保存
   // - saveAutosaveNow / clearAutosave を提供
   // =========================
-  const AUTOSAVE_KEY = 'deck_autosave_v1';
+  const AUTOSAVE_KEY = 'deck_working_v1';
+  const RESCUE_KEY = 'deck_rescue_v1';
+  const LEGACY_AUTOSAVE_KEY = 'deck_autosave_v1';
   const POST_DRAFT_KEY = 'deckmaker_post_draft_v1';
 
   let __autosaveDirty = false;       // 変更が起きたときだけ true
   let __autosaveJustLoaded = true;   // 初期描画直後のガード
   let __autosaveTimer = 0;
+  let __restoreModalOpen = false;
+  let __restoreModalLastFocus = null;
 
   // 初期描画やオートフィルが落ち着くまで保存抑止（page2互換）
   window.addEventListener('load', () => {
@@ -1053,14 +1082,16 @@
     const payload = {
       cardCounts: { ...deck },
 
-      representativeCd,
-      m: representativeCd || null,
+    representativeCd,
+    m: representativeCd || null,
+    lastAddedCd: lastAddedCd || null,
 
       name: window.readDeckNameInput?.() || '',
       note: window.readPostNote?.() || '',
       poster: document.getElementById('poster-name')?.value?.trim() || '',
       shareCode: document.getElementById('post-share-code')?.value?.trim() || '',
       date: window.formatYmd?.(),
+      savedAt: new Date().toISOString(),
     };
 
     // userTags
@@ -1134,6 +1165,21 @@
     return payload;
   }
 
+  function savePostDraftFromData_(data) {
+    const restoreData = normalizeRestoreData_(data);
+    if (!restoreData) return null;
+
+    const payload = {
+      ...restoreData,
+      cardCounts: { ...restoreData.cardCounts },
+      savedAt: new Date().toISOString(),
+      version: 1,
+    };
+    delete payload.poster;
+    localStorage.setItem(POST_DRAFT_KEY, JSON.stringify(payload));
+    return payload;
+  }
+
   function restorePostDraft_() {
     const data = readPostDraftMeta_();
     if (!data) return null;
@@ -1144,6 +1190,7 @@
 
   function saveAutosaveNow() {
     try {
+      if (__restoreModalOpen || hasRescueData_()) return;
       if (__autosaveJustLoaded) {
         if (__autosaveTimer) clearTimeout(__autosaveTimer);
         __autosaveTimer = setTimeout(saveAutosaveNow, 1200);
@@ -1229,38 +1276,417 @@
 
   // 旧互換API用に公開できるようにしておく（末尾の公開APIで使う）
   window.saveAutosaveNow = window.saveAutosaveNow || saveAutosaveNow;
-  window.clearAutosave   = window.clearAutosave   || (() => { try { localStorage.removeItem(AUTOSAVE_KEY); } catch (_) {} });
+  window.clearAutosave   = window.clearAutosave   || (() => {
+    try {
+      localStorage.removeItem(AUTOSAVE_KEY);
+      localStorage.removeItem(LEGACY_AUTOSAVE_KEY);
+    } catch (_) {}
+  });
 
 
   function maybeRestoreFromStorage() {
     // URLで fresh=1 のときは復元導線を出さない（移植前互換）
     if (window.location.search.includes('fresh=1')) return;
 
-    const raw = localStorage.getItem('deck_autosave_v1');
-    if (!raw) return;
+    const rescueData = prepareRescueData_();
+    if (!rescueData) return;
 
     try {
-      const data = JSON.parse(raw);
-      const saved = data?.cardCounts || {};
-      if (!Object.keys(saved).length) return;
-
-      // 今の deck と同一なら出さない（ざっくり比較）
-      const now = window.deck || {};
-      const sameSize = Object.keys(now).length === Object.keys(saved).length;
-      let same = sameSize;
-      if (same) {
-        for (const k in saved) {
-          if ((now[k] | 0) !== (saved[k] | 0)) { same = false; break; }
-        }
-      }
-      if (same) return;
-
-      showRestoreToast_('以前のデータを復元しますか？', {
-        action: { label: '復元する', onClick: () => loadAutosave_(data) },
-        secondary: { label: '削除する', onClick: () => clearAutosave_() },
-      });
+      showRestoreModal_(rescueData);
     } catch (e) {
       // パース失敗などは黙って無視
+    }
+  }
+
+  function readStorageJson_(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function hasRescueData_() {
+    return !!normalizeRestoreData_(readStorageJson_(RESCUE_KEY));
+  }
+
+  function prepareRescueData_() {
+    const rescue = normalizeRestoreData_(readStorageJson_(RESCUE_KEY));
+    if (rescue && !isTrulyEmpty_(rescue)) return rescue;
+    try { localStorage.removeItem(RESCUE_KEY); } catch (_) {}
+
+    const working = normalizeRestoreData_(readStorageJson_(AUTOSAVE_KEY)) ||
+      normalizeRestoreData_(readStorageJson_(LEGACY_AUTOSAVE_KEY));
+    if (!working || isTrulyEmpty_(working)) {
+      clearAutosave_();
+      return null;
+    }
+
+    try {
+      localStorage.setItem(RESCUE_KEY, JSON.stringify(working));
+      localStorage.removeItem(AUTOSAVE_KEY);
+      localStorage.removeItem(LEGACY_AUTOSAVE_KEY);
+    } catch (_) {}
+    return working;
+  }
+
+  function clearRescueData_() {
+    try { localStorage.removeItem(RESCUE_KEY); } catch (_) {}
+  }
+
+  function getRestoreDeckCount_(data) {
+    const cardCounts = normalizeRestoreData_(data)?.cardCounts || {};
+    return Object.values(cardCounts).reduce((sum, n) => sum + Math.max(0, Number(n) || 0), 0);
+  }
+
+  function getRestoreMainRace_(data) {
+    const cardCounts = normalizeRestoreData_(data)?.cardCounts || {};
+    const races = Object.keys(cardCounts)
+      .map(cd => getCard(cd)?.race)
+      .filter(r => MAIN_RACES.includes(r));
+
+    return [...new Set(races)][0] || '未選択';
+  }
+
+  function getRestoreLastAddedName_(data) {
+    const cd = data?.lastAddedCd ? normCd5(data.lastAddedCd) : '';
+    if (!cd) return '';
+
+    const card = getCard(cd);
+    return card?.name || '';
+  }
+
+  function formatRestoreSavedAt_(data) {
+    const raw = data?.savedAt || data?.updatedAt || data?.date || '';
+    const d = raw ? new Date(raw) : null;
+    if (!d || Number.isNaN(d.getTime())) return '不明';
+
+    const now = new Date();
+    const isToday = d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    if (isToday) return `今日 ${hh}:${mm}`;
+    return `${d.getMonth() + 1}/${d.getDate()} ${hh}:${mm}`;
+  }
+
+  function escapeText_(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function hasPostDraftData_() {
+    const draft = readPostDraftMeta_();
+    if (!draft) return false;
+    if (typeof window.canRestoreDeckmakerData === 'function') return window.canRestoreDeckmakerData(draft);
+    return !!normalizeRestoreData_(draft);
+  }
+
+  function refreshSavedDeckList_() {
+    try { window.SavedDeckUI?.render?.(); } catch (_) {}
+    try { window.updateSavedDeckList?.(); } catch (_) {}
+  }
+
+  function buildSavedDeckFromRestore_(data) {
+    const restoreData = normalizeRestoreData_(data);
+    if (!restoreData || !window.SavedDeckStore?.buildFromState) return null;
+    return window.SavedDeckStore.buildFromState({
+      deck: restoreData.cardCounts,
+      representativeCd: restoreData.m || restoreData.representativeCd || null,
+      name: restoreData.name || '',
+      shareCode: restoreData.shareCode || '',
+      date: restoreData.date || window.formatYmd?.(),
+      getMainRace: () => getMainRaceFromCardCounts_(restoreData.cardCounts),
+    });
+  }
+
+  function getMainRaceFromCardCounts_(cardCounts) {
+    const races = Object.keys(cardCounts || {})
+      .map(cd => getCard(cd)?.race)
+      .filter(r => MAIN_RACES.includes(r));
+    return [...new Set(races)][0] || '';
+  }
+
+  function resetToFreshState_() {
+    if (__autosaveTimer) clearTimeout(__autosaveTimer);
+    __autosaveTimer = 0;
+    __autosaveDirty = false;
+
+    Object.keys(deck).forEach(k => delete deck[k]);
+    representativeCd = null;
+    window.representativeCd = null;
+
+    window.writeDeckNameInput?.('');
+    window.writePostNote?.('');
+    window.writeCardNotes?.([]);
+    try { window.__dmWriteSelectedTags?.([]); } catch (_) {}
+    try { window.writeSelectedTags?.([]); } catch (_) {}
+    try { window.writeUserTags?.([]); } catch (_) {}
+    try { window.writePastedDeckCode?.(''); } catch (_) {}
+
+    withDeckBarScrollKept(updateDeck);
+    window.updateDeckSummary?.([]);
+    window.updateCardDisabling?.();
+    window.applyGrayscaleFilter?.();
+    window.renderDeckList?.();
+    window.renderPostSelectTags?.();
+    window.refreshPostSummary?.();
+    clearAutosave_();
+  }
+
+  function closeRestoreModal_() {
+    const modal = document.getElementById('dmRestoreModal');
+    if (modal) modal.remove();
+    __restoreModalOpen = false;
+    document.removeEventListener('keydown', onRestoreDocumentKeydown_, true);
+    document.removeEventListener('focusin', onRestoreFocusIn_, true);
+    document.body.classList.remove('dm-restore-modal-open');
+  }
+
+  function onRestoreDocumentKeydown_(e) {
+    if (!__restoreModalOpen) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
+  function onRestoreFocusIn_(e) {
+    if (!__restoreModalOpen) return;
+    const modal = document.getElementById('dmRestoreModal');
+    const helpModal = document.getElementById('genericHelpModal');
+    if (helpModal && helpModal.style.display === 'flex' && helpModal.contains(e.target)) return;
+    if (!modal || modal.contains(e.target)) return;
+    e.stopPropagation();
+    const target = __restoreModalLastFocus || modal.querySelector('[data-restore-action="restore"]');
+    target?.focus?.();
+  }
+
+  function getSavedDeckUsage_() {
+    const cap = 20;
+    let count = 0;
+    try {
+      const key = window.SavedDeckStore?.KEY || 'savedDecks';
+      const list = window.SavedDeckStore?.list?.({ key }) || [];
+      count = Array.isArray(list) ? list.length : 0;
+    } catch (_) {}
+    return { count, cap, remaining: Math.max(0, cap - count) };
+  }
+
+  function openGenericHelpModal_(title, body) {
+    let modal = document.getElementById('genericHelpModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'genericHelpModal';
+      modal.className = 'modal help-modal-root';
+      modal.style.display = 'none';
+      modal.innerHTML = `
+        <div class="modal-content help-modal" role="dialog" aria-modal="true" aria-labelledby="genericHelpTitle">
+          <button type="button" class="modal-close-x" data-generic-help-close aria-label="閉じる">×</button>
+          <h3 class="help-modal-title" id="genericHelpTitle"></h3>
+          <div class="help-modal-body" data-generic-help-body></div>
+        </div>
+      `;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.closest('[data-generic-help-close]')) {
+          closeGenericHelpModal_();
+        }
+      });
+      document.body.appendChild(modal);
+    }
+
+    const titleEl = modal.querySelector('#genericHelpTitle');
+    const bodyEl = modal.querySelector('[data-generic-help-body]');
+    if (titleEl) titleEl.textContent = String(title || '');
+    if (bodyEl) bodyEl.textContent = String(body || '');
+    modal.style.display = 'flex';
+    modal.querySelector('[data-generic-help-close]')?.focus?.();
+  }
+
+  function closeGenericHelpModal_() {
+    const modal = document.getElementById('genericHelpModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function showRestoreModal_(data) {
+    const restoreData = normalizeRestoreData_(data);
+    if (!restoreData || isTrulyEmpty_(restoreData)) return;
+
+    document.getElementById('dmRestoreModal')?.remove();
+    __restoreModalOpen = true;
+    document.body.classList.add('dm-restore-modal-open');
+
+    const canSaveDraft = !hasPostDraftData_();
+    const savedDeckUsage = getSavedDeckUsage_();
+    const canSaveToStorage = savedDeckUsage.remaining > 0;
+    const storageLabel = `保管庫に保存（残り ${savedDeckUsage.remaining}/${savedDeckUsage.cap}）`;
+    const secondaryActionsCount = (canSaveDraft ? 1 : 0) + (canSaveToStorage ? 1 : 0);
+    const secondaryActionsHtml = `
+      ${canSaveDraft ? `
+        <div class="dm-restore-modal__button-wrap">
+          <button type="button" class="dm-restore-modal__button dm-restore-modal__button--secondary" data-restore-action="draft">下書きに保存</button>
+          <button type="button" class="dm-restore-modal__help" data-restore-help="draft" aria-label="下書きに保存の説明">?</button>
+        </div>
+      ` : ''}
+      ${canSaveToStorage ? `
+        <div class="dm-restore-modal__button-wrap">
+          <button type="button" class="dm-restore-modal__button dm-restore-modal__button--secondary" data-restore-action="saved">${storageLabel}</button>
+          <button type="button" class="dm-restore-modal__help" data-restore-help="saved" aria-label="保管庫に保存の説明">?</button>
+        </div>
+      ` : ''}
+    `.trim();
+    const deckName = String(restoreData.name || '').trim() || '未入力';
+    const raceName = getRestoreMainRace_(restoreData);
+    const lastAddedName = getRestoreLastAddedName_(restoreData);
+    const count = getRestoreDeckCount_(restoreData);
+    const savedAt = formatRestoreSavedAt_(restoreData);
+
+    const modal = document.createElement('div');
+    modal.id = 'dmRestoreModal';
+    modal.className = 'dm-restore-modal';
+    modal.setAttribute('role', 'presentation');
+    modal.innerHTML = `
+      <div class="dm-restore-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="dmRestoreTitle" aria-describedby="dmRestoreDesc">
+        <h2 class="dm-restore-modal__title" id="dmRestoreTitle">⚠ 前回の編集データがあります</h2>
+        <p class="dm-restore-modal__desc" id="dmRestoreDesc">作成途中だったのデッキデータを復元できます。</p>
+        <dl class="dm-restore-modal__meta">
+          <div><dt>デッキ名</dt><dd>${escapeText_(deckName)}</dd></div>
+          <div><dt>種族</dt><dd>${escapeText_(raceName)}</dd></div>
+          ${lastAddedName ? `<div class="dm-restore-modal__meta-last"><dt>最後に追加</dt><dd>${escapeText_(lastAddedName)}</dd></div>` : ''}
+          <div><dt>枚数</dt><dd>${count}枚</dd></div>
+          <div><dt>保存日時</dt><dd>${escapeText_(savedAt)}</dd></div>
+        </dl>
+        <div class="dm-restore-modal__actions">
+          <button type="button" class="dm-restore-modal__button dm-restore-modal__button--primary" data-restore-action="restore">デッキを復元</button>
+          ${secondaryActionsHtml ? `
+            <div class="dm-restore-modal__divider" aria-hidden="true"></div>
+            <div class="dm-restore-modal__sub-actions${secondaryActionsCount === 1 ? ' is-single' : ''}">${secondaryActionsHtml}</div>
+          ` : ''}
+          <div class="dm-restore-modal__divider" aria-hidden="true"></div>
+          <button type="button" class="dm-restore-modal__button dm-restore-modal__button--danger" data-restore-action="discard">破棄して新デッキ作成</button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        e.preventDefault();
+        return;
+      }
+
+      const help = e.target.closest('[data-restore-help]');
+      if (help) {
+        const type = help.getAttribute('data-restore-help');
+        openGenericHelpModal_(
+          type === 'draft' ? '下書きに保存' : '保管庫に保存',
+          type === 'draft'
+            ? '投稿内容も含めて一時保存します。後で続きを編集できます。保存数は1件です。'
+            : 'デッキを保管庫へ保存します。複数保存できます。投稿内容は保存されません。'
+        );
+        return;
+      }
+
+      const action = e.target.closest('[data-restore-action]')?.getAttribute('data-restore-action');
+      if (!action) return;
+      handleRestoreAction_(action, restoreData);
+    });
+
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusables = Array.from(modal.querySelectorAll('button:not(:disabled)'));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+    modal.addEventListener('focusin', (e) => {
+      if (e.target instanceof HTMLElement) __restoreModalLastFocus = e.target;
+    });
+
+    document.body.appendChild(modal);
+    document.addEventListener('keydown', onRestoreDocumentKeydown_, true);
+    document.addEventListener('focusin', onRestoreFocusIn_, true);
+    requestAnimationFrame(() => {
+      __restoreModalLastFocus = modal.querySelector('[data-restore-action="restore"]');
+      __restoreModalLastFocus?.focus();
+    });
+  }
+
+  function handleRestoreAction_(action, data) {
+    const restoreData = normalizeRestoreData_(data);
+    if (!restoreData) return;
+
+    if (action === 'restore') {
+      if (!loadAutosave_(restoreData)) {
+        alert('復元データを読み込めませんでした。');
+        return;
+      }
+      clearRescueData_();
+      closeRestoreModal_();
+      try { scheduleAutosave(); } catch (_) {}
+      return;
+    }
+
+    if (action === 'draft') {
+      if (hasPostDraftData_()) return;
+      const saved = savePostDraftFromData_(restoreData);
+      if (!saved) {
+        alert('下書きに保存できませんでした。');
+        return;
+      }
+      clearRescueData_();
+      closeRestoreModal_();
+      resetToFreshState_();
+      return;
+    }
+
+    if (action === 'saved') {
+      if (getSavedDeckUsage_().remaining <= 0) return;
+      const built = buildSavedDeckFromRestore_(restoreData);
+      if (!built || !window.SavedDeckStore?.upsert) {
+        alert('保管庫に保存できませんでした。');
+        return;
+      }
+      const res = window.SavedDeckStore.upsert(built, {
+        key: window.SavedDeckStore.KEY || 'savedDecks',
+        cap: 20,
+        confirmOverwrite: (name) => window.confirm(`「${name}」は既に保管庫にあります。上書きしますか？`),
+      });
+      if (!res?.ok) {
+        if (res?.reason !== 'cancelled') alert('保管庫に保存できませんでした。');
+        return;
+      }
+      refreshSavedDeckList_();
+      clearRescueData_();
+      closeRestoreModal_();
+      resetToFreshState_();
+      return;
+    }
+
+    if (action === 'discard') {
+      const ok = window.confirm('前回の編集データを破棄して新しいデッキを作成します。\nこの操作は元に戻せません。よろしいですか？');
+      if (!ok) return;
+      clearRescueData_();
+      closeRestoreModal_();
+      resetToFreshState_();
     }
   }
 

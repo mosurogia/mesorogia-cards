@@ -17,7 +17,8 @@
 function qs(sel, root = document) { return root.querySelector(sel); }
 const escapeHtml_ = window.escapeHtml_;
 const GENERATED_GROUP_ID = 'generated';
-const DEFAULT_GROUP_IDS = new Set(['fav', 'meta', GENERATED_GROUP_ID]);
+const INNOCENT_OLDGOD_MISSING_GROUP_ID = 'missing_innocent_oldgod';
+const DEFAULT_GROUP_IDS = new Set(['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, 'meta', GENERATED_GROUP_ID]);
 
 function ensureReady_() {
     return !!(window.CardGroups && document.getElementById('cards-groups-list') && document.getElementById('grid'));
@@ -229,13 +230,15 @@ function renderSidebar_() {
     const selectedGroup = hasSel ? st.groups[uiSelectedId] : null;
     const selectedCardTotal = sumGroupCards_(selectedGroup?.cards || {});
     const selectedFixedLocked = isDefaultGroup_(uiSelectedId);
+    const selectedAutoLocked = !!selectedGroup?.autoLocked;
 
     // 編集ボタン：通常は「選択が必要」／編集中は「終了ボタン」なので常に押せる
     {
     const b = qs('#cg-op-edit', host);
     if (b) {
-        b.disabled = !canEditGroups || (!hasSel && !isEditing);
+        b.disabled = !canEditGroups || (!hasSel && !isEditing) || (!isEditing && selectedAutoLocked);
         b.classList.toggle('is-disabled', b.disabled);
+        if (selectedAutoLocked) b.title = '自動更新グループは編集できません';
     }
     }
 
@@ -245,6 +248,7 @@ function renderSidebar_() {
     if (b) {
         b.disabled = !canEditGroups || !hasSel || selectedFixedLocked;
         b.classList.toggle('is-disabled', b.disabled);
+        if (selectedAutoLocked) b.title = '自動更新グループは削除できません';
     }
     }
 
@@ -292,7 +296,8 @@ function renderSidebar_() {
 
     // 通常 → 編集開始
     if (!uiSelectedId) return showSelectWarn_();
-    window.CardGroups.startEditing(uiSelectedId);
+    const res = window.CardGroups.startEditing(uiSelectedId);
+    if (res && res.ok === false) return;
     markEditStarted_();
 
     // ✅ 編集開始時だけ：選択済みを上に寄せた並びを反映
@@ -422,7 +427,7 @@ function rowHtml_(g, st) {
 
   const emptyLabel = st.editingId === g.id
     ? 'カード未選択（カードをタップして追加）'
-    : 'ここにカードが表示されます';
+    : (g.autoLocked ? '未コンプカードはありません' : 'ここにカードが表示されます');
 
   return `
     <div class="cg-row ${isActive ? 'is-active' : ''} ${isEditing ? 'is-editing' : ''} ${isSelected ? 'is-selected' : ''}"
@@ -707,8 +712,13 @@ function init() {
 
   if (!ensureReady_()) return;
 
-// ★ サムネの並びを安定させる（cardMap を先に読む）
-  try { window.ensureCardMapLoaded?.().then(() => scheduleHeavySync_()); } catch {}
+// ★ サムネの並びと自動グループを安定させる（cardMap を先に読む）
+  try {
+    window.ensureCardMapLoaded?.().then(() => {
+      try { window.CardGroups?.refreshAutoGroups?.({ force: true }); } catch {}
+      scheduleHeavySync_();
+    });
+  } catch {}
 
   // ✅ 再読込時はグループフィルターを解除
   try {
@@ -732,6 +742,12 @@ document.getElementById('group-select-all-btn')
   ?.addEventListener('click', selectAllCards_);
 document.getElementById('group-reset-btn')
   ?.addEventListener('click', resetSelectedCards_);
+
+try {
+  window.OwnedStore?.onChange?.(() => {
+    try { window.CardGroups?.refreshAutoGroups?.(); } catch {}
+  });
+} catch {}
 
   renderSidebar_();
   applyEditVisual_();

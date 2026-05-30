@@ -42,6 +42,103 @@
   }
 
   /**
+   * 採用デッキ検索で使うカード名を取得
+   */
+  function getCardDisplayName_(card, cd) {
+    const map = getCardMap_();
+    const cd5 = normalizeCd5_(cd || card?.cd || card?.id || '');
+    const fromMap = cd5 ? map?.[cd5] : null;
+    return String(
+      card?.name ||
+      card?.cardName ||
+      fromMap?.name ||
+      fromMap?.cardName ||
+      cd5 ||
+      'このカード'
+    ).trim();
+  }
+
+  /**
+   * 採用デッキ確認モーダルを生成
+   */
+  function ensureAdoptionDeckConfirmModal_() {
+    let modal = document.getElementById('adoptionDeckConfirmModal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'adoptionDeckConfirmModal';
+    modal.className = 'modal adoption-deck-confirm-modal';
+    modal.style.display = 'none';
+    modal.innerHTML = `
+      <div class="modal-content adoption-deck-confirm-content" role="dialog" aria-modal="true" aria-labelledby="adoptionDeckConfirmTitle" aria-describedby="adoptionDeckConfirmText">
+        <div class="adoption-deck-confirm-head">
+          <h3 id="adoptionDeckConfirmTitle">ページ移動の確認</h3>
+          <button type="button" class="adoption-deck-confirm-close" data-adoption-deck-cancel aria-label="閉じる">×</button>
+        </div>
+        <div class="adoption-deck-confirm-body">
+          <p id="adoptionDeckConfirmText"></p>
+        </div>
+        <div class="adoption-deck-confirm-actions">
+          <button type="button" class="adoption-deck-confirm-btn adoption-deck-confirm-btn--ghost" data-adoption-deck-cancel>キャンセル</button>
+          <button type="button" class="adoption-deck-confirm-btn adoption-deck-confirm-btn--primary" data-adoption-deck-ok>移動する</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  /**
+   * 採用デッキ検索ページへ移動する前に確認する
+   */
+  function openAdoptionDeckConfirm_(card, cd) {
+    const cd5 = normalizeCd5_(cd || card?.cd || card?.id || '');
+    if (!cd5 || cd5 === '00000') return;
+
+    const modal = ensureAdoptionDeckConfirmModal_();
+    const textEl = modal.querySelector('#adoptionDeckConfirmText');
+    const okBtn = modal.querySelector('[data-adoption-deck-ok]');
+    const cardName = getCardDisplayName_(card, cd5);
+    const url = `deck-post.html?card=${encodeURIComponent(cd5)}&cardName=${encodeURIComponent(cardName)}`;
+    const close = () => {
+      modal.style.display = 'none';
+      document.removeEventListener('keydown', onKeydown, true);
+    };
+    const onKeydown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+
+    if (textEl) {
+      textEl.textContent = `「${cardName}」の採用デッキをデッキ投稿ページで検索します。ページを移動しますか？`;
+    }
+
+    okBtn?.replaceWith(okBtn.cloneNode(true));
+    const freshOkBtn = modal.querySelector('[data-adoption-deck-ok]');
+    freshOkBtn?.addEventListener('click', () => {
+      window.location.href = url;
+    }, { once: true });
+
+    modal.querySelectorAll('[data-adoption-deck-cancel]').forEach((btn) => {
+      btn.replaceWith(btn.cloneNode(true));
+    });
+    modal.querySelectorAll('[data-adoption-deck-cancel]').forEach((btn) => {
+      btn.addEventListener('click', close, { once: true });
+    });
+
+    if (!modal.dataset.wiredAdoptionDeckBackdrop) {
+      modal.dataset.wiredAdoptionDeckBackdrop = '1';
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) close();
+      });
+    }
+
+    modal.style.display = 'flex';
+    document.addEventListener('keydown', onKeydown, true);
+    freshOkBtn?.focus?.();
+  }
+
+  /**
    * 使用可能なカードMapを取得
    */
   function getCardMap_(options) {
@@ -419,6 +516,9 @@
     cloned.setAttribute('data-cd', cd);
     cloned.__sourceCardElement = clickedCard;
 
+    cloned.querySelector('.card-detail-actions')?.remove();
+    cloned.querySelector('.detail-zoom-btn')?.remove();
+
     // 詳細内に所持数UIを付与
     attachOwnedEditor_(cloned, cd);
 
@@ -568,8 +668,10 @@
     btnToggle.textContent = '編集';
     btnToggle.setAttribute('aria-pressed', 'false');
 
+    const actions = ensureCardDetailActions_(detailEl, cd);
+
     wrap.append(label, btnMinus, num, btnPlus, btnToggle);
-    titleRow.appendChild(wrap);
+    (actions?.owned || titleRow).appendChild(wrap);
 
     // タイトル行が整った後で拡大ボタンも差し込む
     attachZoomBtnToDetail_(detailEl, cd);
@@ -681,6 +783,113 @@
         updateBtnState_();
       });
     } catch {}
+  }
+
+  function ensureCardDetailActions_(detailEl, cd) {
+    let actions = detailEl.querySelector('.card-detail-actions');
+    if (!actions) {
+      actions = document.createElement('div');
+      actions.className = 'card-detail-actions';
+
+      const ownedCol = document.createElement('div');
+      ownedCol.className = 'card-detail-actions-col card-detail-actions-owned';
+
+      const modalCol = document.createElement('div');
+      modalCol.className = 'card-detail-actions-col card-detail-actions-modal';
+
+      const sideCol = document.createElement('div');
+      sideCol.className = 'card-detail-actions-col card-detail-actions-side';
+
+      const modalBtn = document.createElement('button');
+      modalBtn.type = 'button';
+      modalBtn.className = 'card-detail-action-btn';
+      modalBtn.textContent = '詳細拡大';
+      modalBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openCardDetailModal_(detailEl.__cardDetailCurrentCard || cd, { anchorRect: modalBtn.getBoundingClientRect() });
+      });
+
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'card-detail-action-btn';
+      saveBtn.textContent = '画像保存';
+      saveBtn.disabled = !normalizeCd5_(cd) || normalizeCd5_(cd) === '00000';
+      saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openCardDetailModal_(detailEl.__cardDetailCurrentCard || cd, {
+          anchorRect: saveBtn.getBoundingClientRect(),
+          autoSaveImage: true,
+          hiddenForImage: true,
+        });
+      });
+
+      const wantedBtn = document.createElement('button');
+      wantedBtn.type = 'button';
+      wantedBtn.className = 'card-detail-action-btn';
+      wantedBtn.textContent = '欲しいカードに追加';
+      wantedBtn.title = 'カードグループに保存します';
+      wantedBtn.setAttribute('aria-label', '欲しいカードに追加。カードグループに保存します');
+      if (wantedBtn.title) wantedBtn.dataset.tooltip = wantedBtn.title;
+      wantedBtn.removeAttribute('title');
+
+      const decksBtn = document.createElement('button');
+      decksBtn.type = 'button';
+      decksBtn.className = 'card-detail-action-btn';
+      decksBtn.textContent = '採用デッキを見る';
+      decksBtn.title = 'このカードを採用している投稿デッキを検索します';
+      decksBtn.setAttribute('aria-label', '採用デッキを見る。デッキ投稿ページへ移動します');
+      decksBtn.disabled = !normalizeCd5_(cd) || normalizeCd5_(cd) === '00000';
+      if (decksBtn.title) decksBtn.dataset.tooltip = decksBtn.title;
+      decksBtn.removeAttribute('title');
+
+      const updateWantedBtn = () => {
+        const hasCard = !!window.CardGroups?.hasCard?.('generated', cd);
+        wantedBtn.textContent = hasCard ? '欲しいカードに追加済み' : '欲しいカードに追加';
+        wantedBtn.classList.toggle('is-added', hasCard);
+        wantedBtn.disabled = !window.CardGroups;
+      };
+
+      wantedBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const result = window.CardGroups?.addCardToGroup?.('generated', cd);
+        if (result?.ok) updateWantedBtn();
+      });
+
+      decksBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const card = detailEl.__cardDetailCurrentCard || getCardMap_()?.[normalizeCd5_(cd)] || null;
+        openAdoptionDeckConfirm_(card, cd);
+      });
+
+      try {
+        window.CardGroups?.onChange?.(updateWantedBtn);
+      } catch {}
+      updateWantedBtn();
+
+      modalCol.append(modalBtn, saveBtn);
+      sideCol.append(wantedBtn,decksBtn);
+      actions.append(ownedCol, modalCol, sideCol);
+
+      const effectEl = detailEl.querySelector('.card-effect');
+      if (effectEl && effectEl.parentNode) {
+        effectEl.insertAdjacentElement('afterend', actions);
+      } else {
+        detailEl.appendChild(actions);
+      }
+    }
+
+    return {
+      root: actions,
+      owned: actions.querySelector('.card-detail-actions-owned'),
+      modal: actions.querySelector('.card-detail-actions-modal'),
+      side: actions.querySelector('.card-detail-actions-side'),
+    };
   }
 
   // =========================
@@ -865,6 +1074,7 @@
       modal: document.getElementById('cardDetailModal'),
       box: document.getElementById('cardDetailModalContent'),
       close: document.getElementById('cardDetailModalClose'),
+      save: document.getElementById('cardDetailModalSave'),
       title: document.getElementById('cardDetailModalTitle'),
       img: document.getElementById('cardDetailModalImg'),
       figure: document.getElementById('cardDetailModalFigure'),
@@ -918,6 +1128,14 @@
 
                 <button
                   type="button"
+                  class="card-detail-modal-save"
+                  id="cardDetailModalSave"
+                  aria-label="画像保存"
+                  title="画像保存"
+                >保存</button>
+
+                <button
+                  type="button"
                   class="card-detail-modal-close"
                   id="cardDetailModalClose"
                   aria-label="閉じる"
@@ -957,6 +1175,7 @@
 
     effectTabs.innerHTML = '';
     effectBody.innerHTML = '';
+    effectBody.classList.remove('is-combined');
 
     const items = [];
     const names = [info?.effect_name1, info?.effect_name2].filter(Boolean);
@@ -984,34 +1203,16 @@
       return;
     }
 
-    const renderBody = (item) => {
-      effectBody.innerHTML = `<div class="effect-text">${escapeHtml_(item.text || '')}</div>`;
-    };
-
-    effectTabs.hidden = false;
-    renderBody(items[0]);
-
-    // 複数効果はタブで切り替える
-    items.forEach((item, index) => {
-      const tab = document.createElement('button');
-      tab.type = 'button';
-      tab.className = `card-detail-effect-tab${index === 0 ? ' is-active' : ''}`;
-      tab.textContent = item.name || `効果${index + 1}`;
-      tab.addEventListener('click', () => {
-        effectTabs.querySelectorAll('.card-detail-effect-tab').forEach((btn) => {
-          btn.classList.toggle('is-active', btn === tab);
-        });
-        renderBody(item);
-      });
-      effectTabs.appendChild(tab);
-    });
+    effectTabs.hidden = true;
+    effectTabs.__cardDetailEffectItems = items;
+    renderCombinedCardDetailEffects_(effectBody, items);
   }
 
   /**
    * モーダルを閉じる
    */
   function closeCardDetailModal_() {
-    const { modal, help } = getCardDetailModalEls_();
+    const { modal, box, help } = getCardDetailModalEls_();
     if (!modal) return;
 
     if (help) {
@@ -1022,7 +1223,208 @@
 
     modal.classList.remove('show');
     modal.style.display = 'none';
+    modal.style.pointerEvents = '';
+    if (box) {
+      box.style.pointerEvents = '';
+    }
     cardDetailModalCurrentCd_ = null;
+  }
+
+  /**
+   * 保存用ファイル名を作る
+   */
+  function buildCardDetailImageFileName_(info, cd, index = 0, total = 1) {
+    const name = String(info?.name || cd || 'card-detail')
+      .trim()
+      .replace(/[\\/:*?"<>|]/g, '_')
+      .replace(/\s+/g, '_')
+      .slice(0, 80);
+    const suffix = total > 1 ? `_detail_${index + 1}` : '_detail';
+
+    return `${name || 'card-detail'}${suffix}.png`;
+  }
+
+  /**
+   * モーダル内画像の読み込みを待つ
+   */
+  async function waitCardDetailModalImage_(img) {
+    if (!img || img.complete) return;
+
+    try {
+      if (typeof img.decode === 'function') {
+        await img.decode();
+        return;
+      }
+    } catch {}
+
+    await new Promise((resolve) => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true });
+    });
+  }
+
+  /**
+   * 描画反映を1フレーム待つ
+   */
+  function waitCardDetailModalFrame_() {
+    return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+  }
+
+  /**
+   * 効果をまとめて表示する
+   */
+  function renderCombinedCardDetailEffects_(effectBody, items) {
+    if (!effectBody || !items?.length) return;
+
+    effectBody.classList.add('is-combined');
+    effectBody.innerHTML = items.map((item) => `
+      <div class="card-detail-export-effect-item">
+        <div class="effect-name">${escapeHtml_(item.name || '効果')}</div>
+        <div class="effect-text">${escapeHtml_(item.text || '')}</div>
+      </div>
+    `).join('');
+  }
+
+  /**
+   * まとめ表示が1枚画像として扱いやすい高さか判定する
+   */
+  function canUseCombinedCardDetailImage_(box) {
+    if (!box) return false;
+
+    const limit = Math.min(620, Math.max(360, window.innerHeight * 0.86));
+    return box.scrollHeight <= limit;
+  }
+
+  /**
+   * 現在の詳細モーダル状態を1枚キャプチャする
+   */
+  async function captureCardDetailModalCanvas_(box, scale) {
+    return html2canvas(box, {
+      backgroundColor: null,
+      scale,
+      useCORS: true,
+      onclone: (doc) => {
+        const modalContent = doc.querySelector('#cardDetailModalContent');
+        const titleRow = doc.querySelector('#cardDetailModalContent .card-detail-modal-title-row');
+        titleRow?.querySelectorAll('button').forEach((button) => button.remove());
+        if (titleRow) titleRow.style.gridTemplateColumns = 'minmax(0, 1fr)';
+        if (modalContent && !modalContent.querySelector('.card-detail-modal-export-footer')) {
+          const footer = doc.createElement('div');
+          footer.className = 'card-detail-modal-export-footer';
+          footer.textContent = location.origin + location.pathname;
+          Object.assign(footer.style, {
+            marginTop: '10px',
+            padding: '6px 8px 2px',
+            color: 'rgba(15,23,42,0.72)',
+            fontSize: '13px',
+            lineHeight: '1.35',
+            textAlign: 'right',
+            overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
+            boxSizing: 'border-box',
+          });
+          modalContent.appendChild(footer);
+        }
+      },
+    });
+  }
+
+  /**
+   * 詳細モーダルを画像化してプレビューに渡す
+   */
+  async function exportCardDetailModalImage_(options = {}) {
+    const els = getCardDetailModalEls_();
+    if (!els.modal?.classList.contains('show') || !els.box) return;
+
+    if (typeof html2canvas !== 'function') {
+      alert('画像生成ライブラリを読み込めませんでした。ページを再読み込みしてから再度お試しください。');
+      return;
+    }
+
+    const cd = cardDetailModalCurrentCd_;
+    const info = cd ? getCardMap_()?.[cd] : null;
+    const loading = window.__DeckImgLoading?.show?.('画像を生成しています...');
+    const saveButton = els.save;
+
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.classList.add('is-loading');
+    }
+
+    try {
+      await waitCardDetailModalImage_(els.img);
+      const scale = Math.max(2, Math.min(3, window.devicePixelRatio || 1));
+      const effectItems = Array.isArray(els.effectTabs?.__cardDetailEffectItems)
+        ? els.effectTabs.__cardDetailEffectItems
+        : [];
+      const previewItems = [];
+
+      if (effectItems.length > 1) {
+        await waitCardDetailModalFrame_();
+
+        if (canUseCombinedCardDetailImage_(els.box)) {
+          previewItems.push({
+            canvas: await captureCardDetailModalCanvas_(els.box, scale),
+            fileName: buildCardDetailImageFileName_(info, cd),
+            label: 'まとめ',
+          });
+          if (typeof window.showDeckImgPreviewModal === 'function') {
+            window.showDeckImgPreviewModal(previewItems);
+            return;
+          }
+
+          const item = previewItems[0];
+          const link = document.createElement('a');
+          link.href = item.canvas.toDataURL('image/png');
+          link.download = item.fileName;
+          link.click();
+          return;
+        }
+
+        for (let i = 0; i < effectItems.length; i++) {
+          const item = effectItems[i];
+          renderCombinedCardDetailEffects_(els.effectBody, [item]);
+          await waitCardDetailModalFrame_();
+
+          previewItems.push({
+            canvas: await captureCardDetailModalCanvas_(els.box, scale),
+            fileName: buildCardDetailImageFileName_(info, cd, i, effectItems.length),
+            label: item.name || '',
+          });
+        }
+      } else {
+        previewItems.push({
+          canvas: await captureCardDetailModalCanvas_(els.box, scale),
+          fileName: buildCardDetailImageFileName_(info, cd),
+          label: '',
+        });
+      }
+
+      if (typeof window.showDeckImgPreviewModal === 'function') {
+        window.showDeckImgPreviewModal(previewItems);
+        return;
+      }
+
+      previewItems.forEach((item) => {
+        const link = document.createElement('a');
+        link.href = item.canvas.toDataURL('image/png');
+        link.download = item.fileName;
+        link.click();
+      });
+    } catch (err) {
+      console.error('[card-detail] モーダル画像生成に失敗しました', err);
+      alert('画像の生成に失敗しました。少し時間を置いて再度お試しください。');
+    } finally {
+      window.__DeckImgLoading?.hide?.(loading);
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.classList.remove('is-loading');
+      }
+      renderCardDetailModalEffects_(getCardMap_()?.[cardDetailModalCurrentCd_]);
+      if (options.closeAfterExport) {
+        closeCardDetailModal_();
+      }
+    }
   }
 
   /**
@@ -1174,11 +1576,34 @@
 
     renderCardDetailModalEffects_(info);
 
+    if (box) {
+      box.style.pointerEvents = '';
+    }
+    modal.style.pointerEvents = '';
+
     modal.style.display = 'block';
     modal.classList.add('show');
-    showCardDetailModalHelpOnce_();
+    if (!options.hiddenForImage) {
+      showCardDetailModalHelpOnce_();
+    }
 
-    positionCardDetailModal_(options.anchorRect);
+    if (options.hiddenForImage) {
+      modal.style.pointerEvents = 'none';
+      if (box) {
+        box.style.transform = 'none';
+        box.style.left = '-10000px';
+        box.style.top = '0';
+        box.style.pointerEvents = 'none';
+      }
+    } else {
+      positionCardDetailModal_(options.anchorRect);
+    }
+
+    if (options.autoSaveImage) {
+      window.requestAnimationFrame(() => {
+        exportCardDetailModalImage_({ closeAfterExport: !!options.hiddenForImage });
+      });
+    }
   }
 
   /**
@@ -1244,6 +1669,11 @@
       closeCardDetailModal_();
     });
 
+    els.save?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      exportCardDetailModalImage_();
+    });
+
     window.addEventListener('resize', keepCardDetailModalInViewport_);
 
     window.addEventListener('keydown', (e) => {
@@ -1257,12 +1687,106 @@
   // 9) 公開API
   // =========================
 
+  function ensureCardDetailActionTooltip_() {
+    let el = document.getElementById('card-detail-action-tooltip');
+    if (el) return el;
+
+    el = document.createElement('div');
+    el.id = 'card-detail-action-tooltip';
+    el.setAttribute('role', 'tooltip');
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function hideCardDetailActionTooltip_() {
+    const el = document.getElementById('card-detail-action-tooltip');
+    if (!el) return;
+    el.classList.remove('is-show');
+  }
+
+  function positionCardDetailActionTooltip_(target) {
+    const el = document.getElementById('card-detail-action-tooltip');
+    if (!el || !target) return;
+
+    const margin = 8;
+    const gap = 8;
+    const targetRect = target.getBoundingClientRect();
+    const tooltipRect = el.getBoundingClientRect();
+    const preferredLeft = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+    const left = Math.max(margin, Math.min(preferredLeft, window.innerWidth - tooltipRect.width - margin));
+    let top = targetRect.top - tooltipRect.height - gap;
+
+    if (top < margin) {
+      top = targetRect.bottom + gap;
+    }
+
+    el.style.left = `${left}px`;
+    el.style.top = `${Math.max(margin, top)}px`;
+  }
+
+  function showCardDetailActionTooltip_(target) {
+    const text = String(target?.dataset?.tooltip || '').trim();
+    if (!text) return;
+
+    const el = ensureCardDetailActionTooltip_();
+    el.textContent = text;
+    el.classList.add('is-show');
+    positionCardDetailActionTooltip_(target);
+  }
+
+  function bindCardDetailActionTooltip_() {
+    if (window.__cardDetailActionTooltipBound) return;
+    window.__cardDetailActionTooltipBound = true;
+
+    let currentTarget = null;
+    const findTarget = (event) => event.target.closest?.('.card-detail-actions-side .card-detail-action-btn[data-tooltip]');
+
+    document.addEventListener('pointerover', (event) => {
+      const target = findTarget(event);
+      if (!target) return;
+      currentTarget = target;
+      showCardDetailActionTooltip_(target);
+    });
+
+    document.addEventListener('pointerout', (event) => {
+      const target = findTarget(event);
+      if (!target || target.contains(event.relatedTarget)) return;
+      if (currentTarget === target) currentTarget = null;
+      hideCardDetailActionTooltip_();
+    });
+
+    document.addEventListener('focusin', (event) => {
+      const target = findTarget(event);
+      if (!target) return;
+      currentTarget = target;
+      showCardDetailActionTooltip_(target);
+    });
+
+    document.addEventListener('focusout', (event) => {
+      const target = findTarget(event);
+      if (!target) return;
+      if (currentTarget === target) currentTarget = null;
+      hideCardDetailActionTooltip_();
+    });
+
+    window.addEventListener('scroll', () => {
+      if (!currentTarget) return;
+      positionCardDetailActionTooltip_(currentTarget);
+    }, true);
+
+    window.addEventListener('resize', () => {
+      if (!currentTarget) return;
+      positionCardDetailActionTooltip_(currentTarget);
+    });
+  }
+
   window.CardDetailUI = {
     expandCard,
     handleZoomClick,
     ensureCardDetailModal: ensureCardDetailModal_,
     openCardDetailModal: openCardDetailModal_,
     closeCardDetailModal: closeCardDetailModal_,
+    exportCardDetailModalImage: exportCardDetailModalImage_,
     openCardZoom: openCardZoom_,
     closeCardZoom: closeCardZoom_,
     attachOwnedEditor: attachOwnedEditor_,
@@ -1306,4 +1830,6 @@
     window.__detailZoomBtnObserverBound = true;
     observeCardDetailsForZoomBtn_();
   }
+
+  bindCardDetailActionTooltip_();
 })();

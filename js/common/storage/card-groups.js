@@ -12,7 +12,10 @@
   const LS_UPDATED_AT_KEY = 'cardGroupsUpdatedAt';
   const MAX_GROUPS = 10;
   const GENERATED_GROUP_ID = 'generated';
-  const DEFAULT_GROUP_IDS = new Set(['fav', 'meta', GENERATED_GROUP_ID]);
+  const INNOCENT_OLDGOD_MISSING_GROUP_ID = 'missing_innocent_oldgod';
+  const INNOCENT_OLDGOD_MISSING_GROUP_NAME = '【期間限定】未コンプイノセント旧神カード';
+  const INNOCENT_OLDGOD_RACES = new Set(['イノセント', '旧神']);
+  const DEFAULT_GROUP_IDS = new Set(['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, 'meta', GENERATED_GROUP_ID]);
   let persistLocal = true;
 
     // ========================================
@@ -64,6 +67,10 @@
     return DEFAULT_GROUP_IDS.has(String(id || ''));
   }
 
+  function isAutoLockedGroupId_(id) {
+    return String(id || '') === INNOCENT_OLDGOD_MISSING_GROUP_ID;
+  }
+
   function countUserGroups_(st) {
     const order = Array.isArray(st?.order) ? st.order : [];
     const groups = st?.groups || {};
@@ -71,10 +78,81 @@
   }
 
   function normalizeDefaultGroupOrder_(st) {
-    const defaults = ['fav', GENERATED_GROUP_ID, 'meta'].filter(id => st.groups?.[id]);
+    const defaults = ['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, GENERATED_GROUP_ID, 'meta'].filter(id => st.groups?.[id]);
     const users = (Array.isArray(st?.order) ? st.order : [])
       .filter(id => st.groups?.[id] && !isDefaultGroupId_(id));
     st.order = defaults.concat(users);
+  }
+
+  function normalizeOwnedCount_(entry) {
+    if (typeof entry === 'number') return Math.max(0, entry | 0);
+    if (entry && typeof entry === 'object') return Math.max(0, entry.normal | 0);
+    return 0;
+  }
+
+  function readOwnedMap_() {
+    try {
+      if (typeof window.readOwnedDataSafe === 'function') return window.readOwnedDataSafe() || {};
+    } catch {}
+    try {
+      if (window.OwnedStore?.getAll) return window.OwnedStore.getAll() || {};
+    } catch {}
+    return {};
+  }
+
+  function getCardSourceList_() {
+    const map = (window.cardMap && Object.keys(window.cardMap).length)
+      ? window.cardMap
+      : (window.allCardsMap && Object.keys(window.allCardsMap).length ? window.allCardsMap : null);
+
+    if (map) {
+      return Object.values(map)
+        .map(card => ({
+          cd: window.normCd5 ? window.normCd5(card?.cd ?? card?.id) : String(card?.cd ?? card?.id ?? '').padStart(5, '0'),
+          race: String(card?.race || '').trim(),
+        }))
+        .filter(card => card.cd && card.cd !== '00000');
+    }
+
+    return Array.from(document.querySelectorAll('#grid .card[data-cd]'))
+      .map(el => ({
+        cd: window.normCd5 ? window.normCd5(el.dataset.cd) : String(el.dataset.cd || '').padStart(5, '0'),
+        race: String(el.dataset.race || '').trim(),
+      }))
+      .filter(card => card.cd && card.cd !== '00000');
+  }
+
+  function buildInnocentOldgodMissingCards_() {
+    const owned = readOwnedMap_();
+    const cardsObj = {};
+
+    getCardSourceList_().forEach(card => {
+      if (!INNOCENT_OLDGOD_RACES.has(card.race)) return;
+      const need = card.race === '旧神' ? 1 : 3;
+      if (normalizeOwnedCount_(owned[card.cd]) >= need) return;
+      cardsObj[card.cd] = 1;
+    });
+
+    return cardsObj;
+  }
+
+  function applyInnocentOldgodMissingGroup_(st) {
+    st.groups = st.groups || {};
+    st.order = Array.isArray(st.order) ? st.order : [];
+
+    const cards = buildInnocentOldgodMissingCards_();
+    st.groups[INNOCENT_OLDGOD_MISSING_GROUP_ID] = {
+      id: INNOCENT_OLDGOD_MISSING_GROUP_ID,
+      name: INNOCENT_OLDGOD_MISSING_GROUP_NAME,
+      fixed: true,
+      autoLocked: true,
+      cards,
+    };
+
+    if (!st.order.includes(INNOCENT_OLDGOD_MISSING_GROUP_ID)) {
+      const favIndex = st.order.indexOf('fav');
+      st.order.splice(favIndex >= 0 ? favIndex + 1 : 0, 0, INNOCENT_OLDGOD_MISSING_GROUP_ID);
+    }
   }
 
   function normalizeCardsMap_(cards) {
@@ -115,6 +193,7 @@
         id,
         name: String(g.name || ''),
         fixed: !!g.fixed,
+        autoLocked: !!g.autoLocked,
         cards: normalizeCardsMap_(g.cards),
       };
     });
@@ -202,6 +281,8 @@
       st.groups[GENERATED_GROUP_ID].cards = normalizeCardsMap_(st.groups[GENERATED_GROUP_ID].cards);
     }
 
+    applyInnocentOldgodMissingGroup_(st);
+
     st.order = st.order.filter(id => st.groups[id]);
     normalizeDefaultGroupOrder_(st);
 
@@ -229,6 +310,7 @@
       st.order.push('fav');
       st.groups[GENERATED_GROUP_ID] = { id:GENERATED_GROUP_ID, name:'生成したいカード', fixed:true, cards:{} };
       st.order.push(GENERATED_GROUP_ID);
+      applyInnocentOldgodMissingGroup_(st);
       const cardsObj = {};
       OFFICIAL_META.cards.forEach(cd => { cardsObj[window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5,'0')] = 1; });
       st.groups.meta = { id:'meta', name:'メタカード', fixed:true, cards:cardsObj };
@@ -277,6 +359,7 @@
       st.groups[GENERATED_GROUP_ID].fixed = true;
       st.groups[GENERATED_GROUP_ID].cards = normalizeCardsMap_(st.groups[GENERATED_GROUP_ID].cards);
     }
+    applyInnocentOldgodMissingGroup_(st);
     normalizeDefaultGroupOrder_(st);
 
 
@@ -374,6 +457,21 @@
     state = st;
     emit_();
     return { ok: true };
+  }
+
+  function refreshAutoGroups(opts = {}) {
+    const st = getState();
+    const before = hashCardsObj_(st.groups?.[INNOCENT_OLDGOD_MISSING_GROUP_ID]?.cards || {});
+    applyInnocentOldgodMissingGroup_(st);
+    normalizeDefaultGroupOrder_(st);
+    const after = hashCardsObj_(st.groups?.[INNOCENT_OLDGOD_MISSING_GROUP_ID]?.cards || {});
+    const changed = before !== after;
+    if (!changed && opts.force !== true) return { ok: true, changed: false };
+
+    state = st;
+    write_(state, { touch: false });
+    emit_();
+    return { ok: true, changed: true };
   }
 
   function listGroups() {
@@ -477,7 +575,7 @@ function uniqueName_(base, st, exceptId = '') {
     const from = st.order.indexOf(id);
     if (from < 0) return { ok: false };
 
-    const fixedCount = ['fav', GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).length;
+    const fixedCount = ['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).length;
     const userOrder = st.order.filter(x => st.groups[x] && !isDefaultGroupId_(x));
     const fromUserIndex = userOrder.indexOf(id);
     const toUserIndex = Math.max(0, Math.min(userOrder.length - 1, toIndex - fixedCount));
@@ -486,7 +584,7 @@ function uniqueName_(base, st, exceptId = '') {
 
     userOrder.splice(fromUserIndex, 1);
     userOrder.splice(toUserIndex, 0, id);
-    st.order = ['fav', GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).concat(userOrder);
+    st.order = ['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, GENERATED_GROUP_ID, 'meta'].filter(x => st.groups[x]).concat(userOrder);
     setState_(st);
     return { ok: true };
   }
@@ -529,6 +627,7 @@ function uniqueName_(base, st, exceptId = '') {
     if (locked) return locked;
 
     const st = getState();
+    if (isAutoLockedGroupId_(id)) return { ok: false, reason: 'auto' };
     st.editingId = (id && st.groups[id]) ? id : '';
 
     // ★ 編集開始スナップショット
@@ -612,6 +711,7 @@ function uniqueName_(base, st, exceptId = '') {
     const st = getState();
     const g = st.groups[groupId];
     if (!g) return { ok: false };
+    if (g.autoLocked || isAutoLockedGroupId_(groupId)) return { ok: false, reason: 'auto' };
     cd = window.normCd5 ? window.normCd5(cd) : String(cd || '').padStart(5, '0');
 
     g.cards = g.cards || {};
@@ -629,6 +729,7 @@ function uniqueName_(base, st, exceptId = '') {
     const st = getState();
     const g = st.groups[groupId];
     if (!g) return { ok: false };
+    if (g.autoLocked || isAutoLockedGroupId_(groupId)) return { ok: false, reason: 'auto' };
 
     cd = window.normCd5 ? window.normCd5(cd) : String(cd || '').padStart(5, '0');
     g.cards = g.cards || {};
@@ -648,6 +749,7 @@ function uniqueName_(base, st, exceptId = '') {
     const st = getState();
     const g = st.groups[groupId];
     if (!g) return { ok: false };
+    if (g.autoLocked || isAutoLockedGroupId_(groupId)) return { ok: false, reason: 'auto' };
 
     g.cards = {};
     setState_(st);
@@ -699,6 +801,7 @@ function uniqueName_(base, st, exceptId = '') {
     getUpdatedAt: readUpdatedAt_,
     exportState,
     replaceAll,
+    refreshAutoGroups,
     hasUserData,
     canEdit,
     listGroups,

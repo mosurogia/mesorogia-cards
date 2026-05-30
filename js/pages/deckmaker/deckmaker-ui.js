@@ -734,6 +734,7 @@
       manaEffEl.textContent = manaState.text;
       manaEffEl.className = manaState.className;
     }
+    renderManaExcludedCards_(analysis);
 
     const sumPowerEl = document.getElementById('total-power');
     if (sumPowerEl) sumPowerEl.textContent = '';
@@ -773,6 +774,36 @@
 
     window.updateAutoTags?.();
     if (typeof window.refreshPostSummary === 'function') window.refreshPostSummary();
+  }
+
+  function renderManaExcludedCards_(analysis) {
+    const noteEl = document.getElementById('mana-excluded-cards');
+    if (!noteEl) return;
+
+    const names = Array.isArray(analysis?.manaExcludedCardNames)
+      ? analysis.manaExcludedCardNames.filter(Boolean)
+      : [];
+
+    noteEl.replaceChildren();
+    if (!names.length) {
+      noteEl.hidden = true;
+      return;
+    }
+
+    const lead = document.createElement('div');
+    lead.className = 'mana-excluded-lead';
+    lead.textContent = '※以下のカードは計算から除外しています';
+
+    const list = document.createElement('ul');
+    list.className = 'mana-excluded-list';
+    names.forEach((name) => {
+      const item = document.createElement('li');
+      item.textContent = name;
+      list.appendChild(item);
+    });
+
+    noteEl.append(lead, list);
+    noteEl.hidden = false;
   }
   function updateDeckSummaryDisplay() {
     const cardMap = getCardMap_();

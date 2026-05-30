@@ -66,7 +66,7 @@
 
             if (!isLoggedIn()) {
                 root.innerHTML = `
-                    <button type="button" class="header-auth-login" data-header-action="login">
+                    <button type="button" class="header-auth-login" data-header-action="login" aria-label="ログイン">
                         ログイン
                     </button>
                 `;
@@ -76,7 +76,7 @@
             const label = window.escapeHtml_ ? window.escapeHtml_(getUserLabel()) : getUserLabel();
             root.innerHTML = `
                 <div class="header-auth-dropdown">
-                    <button type="button" class="header-auth-user" aria-haspopup="true" aria-expanded="false" aria-controls="${menuId}">
+                    <button type="button" class="header-auth-user" aria-label="アカウントメニュー" aria-haspopup="true" aria-expanded="false" aria-controls="${menuId}">
                         <span aria-hidden="true">👤</span>
                         <span class="header-auth-name">${label}</span>
                     </button>

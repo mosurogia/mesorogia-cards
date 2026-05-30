@@ -997,7 +997,7 @@ body.is-card-pick-open #deckpeek-button {
 .card-detail-modal-title-row {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 32px 32px;
+    grid-template-columns: minmax(0, 1fr) 32px 44px 32px;
     align-items: center;
     gap: 8px;
 }
@@ -1026,6 +1026,34 @@ body.is-card-pick-open #deckpeek-button {
     box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
 }
 
+.card-detail-modal-save {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid rgba(0, 0, 0, .14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .86);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+    color: #333;
+    cursor: pointer;
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.card-detail-modal-save:hover:not(:disabled) {
+    background: #eef8ff;
+    border-color: rgba(47, 126, 176, .45);
+    color: #195f8d;
+}
+
+.card-detail-modal-save:disabled {
+    cursor: progress;
+    opacity: .62;
+}
+
 .card-detail-modal-close:hover {
     background: #fff0f3;
     border-color: rgba(194, 59, 90, .45);
@@ -1033,6 +1061,7 @@ body.is-card-pick-open #deckpeek-button {
 }
 
 .card-detail-modal-close:focus-visible,
+.card-detail-modal-save:focus-visible,
 .card-detail-effect-tab:focus-visible {
     outline: 2px solid rgba(194, 59, 90, .5);
     outline-offset: 2px;
@@ -1112,6 +1141,10 @@ body.is-card-pick-open #deckpeek-button {
     border-bottom: 1px solid rgba(0, 0, 0, .12);
 }
 
+.card-detail-modal-effect-tabs[hidden] {
+    display: none !important;
+}
+
 .card-detail-effect-tab {
     position: relative;
     border: 0;
@@ -1156,6 +1189,33 @@ body.is-card-pick-open #deckpeek-button {
     word-break: break-word;
 }
 
+.card-detail-modal-effect-body.is-combined .effect-name {
+    position: relative;
+    display: inline-block;
+    margin: 0 0 5px;
+    padding: 4px 0 7px;
+    color: #555;
+    font-size: .9rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.card-detail-modal-effect-body.is-combined .effect-name::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: #c23b5a;
+}
+
+.card-detail-export-effect-item + .card-detail-export-effect-item {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 0, 0, .12);
+}
+
 @media (max-width: 768px) {
     .card-detail-modal {
         width: min(88vw, 360px);
@@ -1185,14 +1245,21 @@ body.is-card-pick-open #deckpeek-button {
     }
 
     .card-detail-modal-close,
+    .card-detail-modal-save,
     .card-detail-modal-move-hint {
         width: 28px;
         height: 28px;
     }
 
+    .card-detail-modal-save {
+        min-width: 36px;
+        padding: 0 5px;
+        font-size: .7rem;
+    }
+
     .card-detail-modal-title-row {
         grid-area: title;
-        grid-template-columns: minmax(0, 1fr) 28px 28px;
+        grid-template-columns: minmax(0, 1fr) 28px 36px 28px;
         gap: 4px;
     }
 
@@ -1248,6 +1315,10 @@ body.is-card-pick-open #deckpeek-button {
     .card-detail-modal-effect-tabs {
         gap: 10px;
         margin-bottom: 6px;
+    }
+
+    .card-detail-modal-effect-body.is-combined .effect-name {
+        font-size: .68rem;
     }
 
     .card-detail-modal-effect-body .effect-text {
@@ -1892,6 +1963,36 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-collab-accent-rgb));
 }
 
+.filter-group[data-key="パック名"] .filter-btn[data-pack-pickup="innocent_oldgod"] {
+    --ring: var(--race-innocent);
+    --ring-accent: rgba(220, 180, 255, .9);
+    border-color: transparent;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg,
+            var(--race-innocent),
+            rgba(255, 215, 140, .9),
+            rgba(180, 255, 255, .85),
+            rgba(220, 180, 255, .9),
+            var(--race-innocent)) border-box;
+}
+
+.filter-group[data-key="パック名"] .filter-btn.selected[data-pack-pickup="innocent_oldgod"] {
+    color: #1f2937;
+    background:
+        linear-gradient(90deg,
+            rgba(154, 160, 166, .28),
+            rgba(255, 215, 140, .28),
+            rgba(180, 255, 255, .24),
+            rgba(220, 180, 255, .28)) padding-box,
+        linear-gradient(90deg,
+            var(--race-innocent),
+            rgba(255, 215, 140, .95),
+            rgba(180, 255, 255, .9),
+            rgba(220, 180, 255, .95),
+            var(--race-innocent)) border-box;
+}
+
 
 /* =====================================================
    10) RACE（is-ring + 種族色注入 / 旧神は別処理）
@@ -2327,7 +2428,8 @@ body.is-card-pick-open #deckpeek-button {
 /* =====================================================
    16) FLOW MODAL（使い方モーダル）
 ===================================================== */
-.flow-modal {
+.flow-modal,
+.help-modal {
     max-width: 480px;
     width: 90%;
     padding: 1rem;
@@ -2350,26 +2452,40 @@ body.is-card-pick-open #deckpeek-button {
 
 }
 
-.flow-title {
+.flow-title,
+.help-modal-title {
     margin: 0 0 .75rem;
     font-size: 1.1rem;
 }
 
-.flow-steps {
+.flow-steps,
+.help-modal-steps {
     margin: .25rem 0 1rem;
     padding-left: 1.25rem;
     font-size: .9rem;
     line-height: 1.5;
 }
 
-.flow-steps li+li {
+.flow-steps li+li,
+.help-modal-steps li+li {
     margin-top: .25rem;
 }
 
-.flow-note {
+.flow-note,
+.help-modal-note {
     font-size: .8rem;
     color: #6b7280;
     margin: 0;
+}
+
+.help-modal-root {
+    z-index: 7100;
+}
+
+.help-modal-body {
+    margin: .25rem 0 1rem;
+    font-size: .9rem;
+    line-height: 1.6;
 }
 
 
@@ -2643,57 +2759,228 @@ body.is-card-pick-open #deckpeek-button {
     justify-content: space-between;
     gap: 3px;
     flex-wrap: wrap;
+}
 
-    padding-right: var(--owned-editor-w, 132px);
+.card-detail-actions {
+    display: grid;
+    grid-template-columns:
+        auto minmax(0, 2fr) minmax(0, 3fr);
+    gap: 5px;
+    align-items: stretch;
+}
+
+.card-detail-actions-col {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.card-detail-actions-owned {
+    justify-content: flex-start;
+}
+
+.card-detail-actions-modal {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.card-detail-actions-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.card-detail-action-btn {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    background: rgba(255, 255, 255, .88);
+    color: #1f3f5f;
+    font-weight: 800;
+    font-size: clamp(10px, 1.2vw, 13px);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-detail-action-btn:hover:not(:disabled) {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .14);
+}
+
+.card-detail-action-btn:focus-visible {
+    outline: 2px solid #2f80ed;
+    outline-offset: 2px;
+}
+
+.card-detail-action-btn:disabled,
+.card-detail-action-btn.is-disabled {
+    opacity: .48;
+    cursor: not-allowed;
+}
+
+.card-detail-action-btn.is-added {
+    border-color: rgba(47, 128, 237, .45);
+    background: #e9f5fb;
+    color: #1d4ed8;
+}
+
+#card-detail-action-tooltip {
+    position: fixed;
+    z-index: var(--z-tooltip, 4600);
+    max-width: min(260px, calc(100vw - 16px));
+    padding: 7px 9px;
+    border-radius: 8px;
+    background: rgba(22, 32, 45, .94);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    white-space: pre-line;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+#card-detail-action-tooltip.is-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #card-detail-action-tooltip {
+        transition: none;
+    }
+}
+
+/* 採用デッキ検索の移動確認モーダル */
+.adoption-deck-confirm-modal {
+    padding: 16px;
+}
+
+.adoption-deck-confirm-content {
+    width: min(420px, calc(100vw - 32px));
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.adoption-deck-confirm-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    background: rgba(255, 255, 255, .96);
+}
+
+.adoption-deck-confirm-head h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.adoption-deck-confirm-close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.adoption-deck-confirm-body {
+    padding: 16px 14px 10px;
+}
+
+.adoption-deck-confirm-body p {
+    margin: 0;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.adoption-deck-confirm-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px 14px 14px;
+}
+
+.adoption-deck-confirm-btn {
+    min-height: 38px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, .14);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.adoption-deck-confirm-btn--ghost {
+    background: #fff;
+    color: #333;
+}
+
+.adoption-deck-confirm-btn--primary {
+    border-color: rgba(47, 128, 237, .45);
+    background: #1d72d2;
+    color: #fff;
+}
+
+.adoption-deck-confirm-close:hover,
+.adoption-deck-confirm-btn:hover {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+}
+
+.adoption-deck-confirm-close:focus-visible,
+.adoption-deck-confirm-btn:focus-visible {
+    outline: 2px solid #2f80ed;
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .adoption-deck-confirm-content {
+        width: min(100%, calc(100vw - 24px));
+    }
+
+    .adoption-deck-confirm-head h3 {
+        font-size: 16px;
+    }
+
+    .adoption-deck-confirm-actions {
+        grid-template-columns: 1fr;
+    }
 }
 
 .owned-editor {
-    position: absolute;
-    top: 0;
-    right: 5px;
-    z-index: 2;
-
-    display: inline-grid;
-    grid-template-areas:
-        "label label toggle"
-        "minus num   plus";
-    grid-template-columns: 40px 10px 40px;
-    grid-template-rows: auto auto;
-    justify-content: center;
-
-    column-gap: 10px;
-    row-gap: 4px;
+    display: inline-flex;
     align-items: center;
-
-    padding: 4px 4px 4px 6px;
+    gap: 6px;
+    padding: 5px 8px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, .55);
+    background: rgba(255, 255, 255, .65);
     border: 1px solid rgba(0, 0, 0, .12);
     white-space: nowrap;
 }
 
 .owned-editor-label {
-    grid-area: label;
-    justify-self: start;
     font-size: .85em;
     opacity: .85;
-    padding-left: 2px;
-}
-
-.owned-editor-toggle {
-    grid-area: toggle;
-    justify-self: end;
-    height: 26px;
-    padding: 0 8px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, .18);
-    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
-    color: #1f3f5f;
-    cursor: pointer;
 }
 
 .owned-editor-btn {
-    width: 30px;
+    width: 28px;
     height: 26px;
     line-height: 1;
     border-radius: 6px;
@@ -2708,11 +2995,19 @@ body.is-card-pick-open #deckpeek-button {
 }
 
 .owned-editor-num {
-    grid-area: num;
-    justify-self: center;
-    min-width: 28px;
+    min-width: 1.4em;
     text-align: center;
     font-weight: 800;
+}
+
+.owned-editor-toggle {
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    background: linear-gradient(180deg, #e9f5fb 0%, #d4ecfa 100%);
+    color: #1f3f5f;
+    cursor: pointer;
 }
 
 .owned-editor-plus {
@@ -2726,36 +3021,71 @@ body.is-card-pick-open #deckpeek-button {
     cursor: not-allowed;
 }
 
-/* 小さいスマホは横1列に戻す */
 @media (max-width: 480px) {
-    .card-title-row {
-        padding-right: 0;
+    .card-detail-actions {
+        grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr);
+        gap: 2px;
+    }
+
+    .card-detail-actions-owned {
+        min-width: 0;
+        width: fit-content;
     }
 
     .owned-editor {
-        background: rgba(255, 255, 255, .7);
-        backdrop-filter: blur(1px);
-        position: static;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        justify-content: flex-start;
-        padding: 3px 6px;
+        display: inline-grid;
+        grid-template-areas:
+            "label label toggle"
+            "minus num plus";
+        grid-template-columns: 30px 1.4em 30px;
+        gap: 3px 4px;
+        justify-content: start;
+        padding: 4px 5px;
     }
 
-    .owned-editor-btn {
-        width: 26px;
-        height: 24px;
-    }
-
-    .owned-editor-num {
-        min-width: 1.4em;
-        font-size: .95em;
+    .owned-editor-label {
+        grid-area: label;
+        font-size: 10px;
     }
 
     .owned-editor-toggle {
-        height: 24px;
-        padding: 0 6px;
+        grid-area: toggle;
+        height: 22px;
+        padding: 0 5px;
+        font-size: 11px;
+    }
+
+    .owned-editor-minus {
+        grid-area: minus;
+    }
+
+    .owned-editor-num {
+        grid-area: num;
+        font-size: 12px;
+    }
+
+    .owned-editor-plus {
+        grid-area: plus;
+    }
+
+    .owned-editor-btn {
+        width: 22px;
+        height: 22px;
+    }
+
+    .card-detail-actions-modal {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+    }
+
+    .card-detail-actions-side {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-items: stretch;
+    }
+
+    .card-detail-action-btn {
+        min-height: 27px;
+        padding: 3px 6px;
     }
 }
 

@@ -2,27 +2,28 @@
   'use strict';
 
   var config = {
-    version: '2026-05-16-001',
-    staticCacheName: 'mesorogia-static-2026-05-16-001',
-    runtimeCacheName: 'mesorogia-runtime-2026-05-16-001',
+    version: '2026-05-30-005',
+    staticCacheName: 'mesorogia-static-2026-05-30-005',
+    runtimeCacheName: 'mesorogia-runtime-2026-05-30-005',
     navigationNetworkTimeoutMs: 1200,
     assetNetworkTimeoutMs: 900,
     appShell: [
-      './favicon.ico',
+      './img/mosurogia_favicon.ico',
       './manifest.webmanifest',
       './cards.html',
       './deckmaker.html',
       './deck-post.html',
       './match-results.html',
+      './tier.html',
       './img/appicon_1024.webp',
       './img/appicon_192.webp',
       './img/appicon_512.webp',
-      './img/tatudosi.webp',
       './public/cards_latest.json',
       './public/cards_latest.meta.json',
       './public/cards_versions.json',
       './public/cv.json',
       './public/environments.json',
+      './public/home-data.json',
       './public/packs.json'
     ],
     offlineFallbackPage: './deckmaker.html',

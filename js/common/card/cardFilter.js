@@ -1152,6 +1152,51 @@
     });
     }
 
+    const URL_PACK_FILTERS = {
+        innocent_oldgod: {
+        label: 'イノセント＆旧神ピックアップパック',
+        races: ['イノセント', '旧神'],
+        },
+    };
+
+    function isCardsPage_() {
+        const file = String(location.pathname || '').split('/').pop() || 'index.html';
+        return file === 'cards.html';
+    }
+
+    function getUrlPackFilter_() {
+        try {
+        const params = new URLSearchParams(window.location.search || '');
+        const key = String(params.get('pack') || '').trim();
+        return URL_PACK_FILTERS[key] || null;
+        } catch {
+        return null;
+        }
+    }
+
+    function getSelectedPackPickupValues_() {
+        return Array.from(document.querySelectorAll('.filter-btn.selected[data-pack-pickup]'))
+        .map(btn => String(btn.dataset.packPickup || '').trim())
+        .filter(Boolean);
+    }
+
+    function applyInitialUrlPackFilter_() {
+        if (window.__cardFilterInitialUrlPackApplied) return false;
+
+        const setting = getUrlPackFilter_();
+        if (!setting) return false;
+
+        const params = new URLSearchParams(window.location.search || '');
+        const key = String(params.get('pack') || '').trim();
+        const pickupBtn = document.querySelector(`.filter-btn[data-pack-pickup="${CSS.escape(key)}"]`);
+        if (!pickupBtn) return false;
+
+        pickupBtn.classList.add('selected');
+
+        window.__cardFilterInitialUrlPackApplied = true;
+        return true;
+    }
+
     // ==============================
     // フィルターUI生成
     // ==============================
@@ -1220,6 +1265,15 @@
             return [sp.en, sp];
         })).values()].sort((a, b) => a.en.localeCompare(b.en, 'en'));
         uniq.forEach(sp => addPackBtn(sp.en, sp.jp));
+        }
+
+        if (isCardsPage_()) {
+        const pickupBtn = document.createElement('button');
+        pickupBtn.type = 'button';
+        pickupBtn.className = 'filter-btn is-ring';
+        pickupBtn.dataset.packPickup = 'innocent_oldgod';
+        pickupBtn.textContent = 'イノセント＆旧神ピックアップ';
+        packGroup.appendChild(pickupBtn);
         }
 
         packWrapper.appendChild(packGroup);
@@ -1335,6 +1389,8 @@
         h.textContent = 'さらに詳しい条件フィルター';
         df.parentNode.insertBefore(h, df);
         }
+
+        applyInitialUrlPackFilter_();
     }
 
     // ==============================
@@ -1452,6 +1508,21 @@
         }
 
         // ボタン系
+        document.querySelectorAll('.filter-btn.selected[data-pack-pickup]').forEach(btn => {
+            const val = String(btn.dataset.packPickup || '').trim();
+            const setting = URL_PACK_FILTERS[val];
+            if (!setting) return;
+
+            chips.push({
+                label: setting.label || 'ピックアップパック',
+                className: 'chip-pack',
+                onRemove: () => {
+                    btn.classList.remove('selected');
+                    applyFilters();
+                },
+            });
+        });
+
         const GROUPS = [
             ['所持', 'owned'],
             ['種族', 'race'],
@@ -1645,9 +1716,48 @@
         .map(btn => btn.dataset[key]);
     }
 
+    function resetOpenedDetailSourceImage_(detailEl) {
+        const sourceCard = detailEl?.__sourceCardElement;
+        const img = sourceCard?.querySelector?.('img');
+        if (!img) return;
+
+        const cd = window.normCd5
+            ? window.normCd5(sourceCard.dataset?.cd || detailEl.dataset?.cd || '')
+            : String(sourceCard.dataset?.cd || detailEl.dataset?.cd || '').padStart(5, '0').slice(0, 5);
+        if (!cd) return;
+
+        const card = (window.cardMap || window.allCardsMap || {})[cd] || { cd };
+        if (typeof window.setCardImageSrc === 'function') {
+            window.setCardImageSrc(img, card);
+        } else {
+            img.src = `img/${cd}.webp`;
+        }
+    }
+
+    function closeOpenedDetailIfSourceHidden_(detailEl, gridRoot) {
+        if (!detailEl) return;
+
+        const cd = window.normCd5
+            ? window.normCd5(detailEl.dataset?.cd || '')
+            : String(detailEl.dataset?.cd || '').padStart(5, '0').slice(0, 5);
+        const escapedCd = window.CSS?.escape ? CSS.escape(cd) : cd.replace(/"/g, '\\"');
+        const sourceCard = detailEl.__sourceCardElement ||
+            (cd ? gridRoot?.querySelector?.(`.card[data-cd="${escapedCd}"]`) : null);
+        if (!sourceCard || !sourceCard.isConnected) {
+            resetOpenedDetailSourceImage_(detailEl);
+            detailEl.remove();
+            return;
+        }
+
+        const style = getComputedStyle(sourceCard);
+        if (style.display === 'none' || style.visibility === 'hidden') {
+            resetOpenedDetailSourceImage_(detailEl);
+            detailEl.remove();
+        }
+    }
+
     function applyFilters() {
-        const opened = document.querySelector('.card-detail.active');
-        if (opened) opened.remove();
+        const openedDetail = document.querySelector('.card-detail.active');
 
         const tokens = window.getKeywordTokens?.('keyword') || [];
         const cvTokens = getCvFilterTokens_();
@@ -1658,6 +1768,7 @@
         type: getSelectedFilterValues('type'),
         rarity: getSelectedFilterValues('rarity'),
         pack: getSelectedFilterValues('pack'),
+        pickup: getSelectedPackPickupValues_(),
         effect: getSelectedFilterValues('effect'),
         field: getSelectedFilterValues('field'),
         bp: getSelectedFilterValues('bp'),
@@ -1772,6 +1883,14 @@
             return selectedValues.includes(cardEn);
         }
 
+        // ピックアップ：複数条件をパック欄の専用ボタンで扱う
+        if (key === 'pickup') {
+            return selectedValues.some(value => {
+            const setting = URL_PACK_FILTERS[value];
+            return setting?.races?.includes(cardData.race);
+            });
+        }
+
         // effect：含む（効果名は effect_name1/2 の合成が入ってる想定）
         if (key === 'effect') {
             const eff = cardData.effect || '';
@@ -1861,6 +1980,8 @@
             if (cd) visibleCardCds.push(cd);
         }
         });
+
+        closeOpenedDetailIfSourceHidden_(openedDetail, gridRoot);
 
         window.__visibleCardCds = visibleCardCds;
 
@@ -2234,8 +2355,24 @@
 
         // UI生成＋状態同期
         generateFilterUI().catch(console.warn).then(() => {
+            const hasUrlFilter = !!getUrlPackFilter_();
+            applyInitialUrlPackFilter_();
             try { syncGroupFilterUIFromState_(); } catch {}
+            if (hasUrlFilter) applyFilters();
         });
+
+        if (!window.__cardFilterCardsLoadedHookBound) {
+        window.__cardFilterCardsLoadedHookBound = true;
+        const prevOnCardsLoaded = window.onCardsLoaded;
+        window.onCardsLoaded = function (...args) {
+            if (typeof prevOnCardsLoaded === 'function') {
+            try { prevOnCardsLoaded.apply(this, args); } catch (e) { console.warn(e); }
+            }
+            try { applyInitialUrlPackFilter_(); } catch {}
+            try { window.CardGroups?.refreshAutoGroups?.({ force: true }); } catch {}
+            try { applyFilters(); } catch {}
+        };
+        }
 
         // ==============================
         // CardGroups 更新 → フィルター側「カードグループ」欄を差し替え

@@ -48,7 +48,58 @@
         }
     }
 
+    function updateHeaderLogoTitle() {
+        const header = document.querySelector('.main-header');
+        const title = header?.querySelector('.header-logo-title');
+        const nav = header?.querySelector('.header-nav');
+        if (!header || !title || !nav) return;
+
+        header.classList.remove('is-header-logo-title-hidden');
+
+        if (window.matchMedia('(max-width: 560px)').matches) {
+            header.classList.add('is-header-logo-title-hidden');
+            return;
+        }
+
+        const titleRect = title.getBoundingClientRect();
+        const navRect = nav.getBoundingClientRect();
+        const headerRect = header.getBoundingClientRect();
+        const hasHorizontalOverflow = header.scrollWidth > Math.ceil(header.clientWidth + 1);
+        const touchesNav = titleRect.right + 8 > navRect.left;
+        const outsideHeader = titleRect.right > headerRect.right - 4;
+
+        if (hasHorizontalOverflow || touchesNav || outsideHeader) {
+            header.classList.add('is-header-logo-title-hidden');
+        }
+    }
+
+    function bindHeaderLogoTitle() {
+        let frameId = 0;
+        const requestUpdate = () => {
+            if (frameId) cancelAnimationFrame(frameId);
+            frameId = requestAnimationFrame(() => {
+                frameId = 0;
+                updateHeaderLogoTitle();
+            });
+        };
+
+        requestUpdate();
+        window.addEventListener('resize', requestUpdate);
+        window.addEventListener('load', requestUpdate);
+
+        const account = document.querySelector('.main-header .header-account');
+        if (account && typeof MutationObserver === 'function') {
+            new MutationObserver(requestUpdate).observe(account, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+    }
+
     function bindEvents() {
+        bindHeaderLogoTitle();
+
         document.addEventListener('click', (event) => {
             const disabledLink = event.target.closest('[data-header-disabled-link]');
             if (disabledLink) {

@@ -5,6 +5,7 @@
  *
  * このファイルに置くもの
  * - デッキ解説プリセット
+ * - 投稿デッキ名の編集開始 / キャンセル / 保存
  * - デッキ解説の編集開始 / キャンセル / 保存
  * - カード解説の編集開始 / キャンセル / 保存
  * - カード解説の選択モーダル / 行操作
@@ -31,6 +32,9 @@
   const updateDeckNote_ =
     (...args) => window.DeckPostApi?.updateDeckNote_?.(...args);
 
+  const updateDeckTitle_ =
+    (...args) => window.DeckPostApi?.updateDeckTitle_?.(...args);
+
   const showActionToast_ =
     (...args) => window.showActionToast?.(...args);
 
@@ -39,6 +43,7 @@
 
   const POST_DECK_NOTE_MAX_LENGTH = Number(window.POST_DECK_NOTE_MAX_LENGTH || 5000);
   const POST_CARD_NOTE_MAX_LENGTH = Number(window.POST_CARD_NOTE_MAX_LENGTH || 300);
+  const POST_DECK_TITLE_MAX_LENGTH = Number(window.POST_DECK_TITLE_MAX_LENGTH || 40);
 
   function escapeLimitHtml_(value) {
     if (typeof window.escapeHtml_ === 'function') return window.escapeHtml_(value);
@@ -52,6 +57,21 @@
 
   function ensureLimitStatus_(el, className){
     if (!el) return null;
+    if (className === 'post-title-char-limit') {
+      const editor = el.closest?.('.decktitle-editor');
+      const existing = editor?.querySelector?.(`.${className}`);
+      if (existing) return existing;
+
+      const actions = editor?.querySelector?.('.decktitle-editor-actions');
+      if (actions) {
+        const status = document.createElement('div');
+        status.className = `post-char-limit ${className}`;
+        status.setAttribute('aria-live', 'polite');
+        actions.prepend(status);
+        return status;
+      }
+    }
+
     const next = el.nextElementSibling;
     if (next?.classList?.contains(className)) return next;
 
@@ -191,7 +211,149 @@
   }
 
   // =========================
-  // 3) デッキ解説：編集開始
+  // 3) 投稿デッキ名：表示HTML
+  // =========================
+  /**
+   * buildDeckTitleEditHtml_(title, opts)
+   * - マイ投稿詳細用のデッキ名編集UIを生成
+   */
+  function buildDeckTitleEditHtml_(title, opts = {}) {
+    const headingLevel = Number(opts.headingLevel || 2);
+    const tag = headingLevel === 3 ? 'h3' : 'h2';
+    const className = tag === 'h3'
+      ? 'post-detail-title post-detail-title--sp'
+      : 'post-detail-title';
+    const value = String(title || '').trim();
+    const shown = value || '(無題)';
+
+    return `
+      <div class="decktitle-editor-box">
+        <div class="decktitle-view">
+          <${tag} class="${className}" data-decktitle-view>${escapeLimitHtml_(shown)}</${tag}>
+          <button type="button" class="btn-decktitle-edit" aria-label="デッキ名を編集">✏️ 名前編集</button>
+        </div>
+
+        <div class="decktitle-editor" hidden>
+          <label class="decktitle-label" aria-label="デッキ名">
+            <input
+              type="text"
+              class="decktitle-input"
+              value="${escapeLimitHtml_(value)}"
+              data-original="${escapeLimitHtml_(value)}"
+              maxlength="${POST_DECK_TITLE_MAX_LENGTH}"
+              required>
+          </label>
+          <div class="decknote-editor-actions decktitle-editor-actions">
+            <div class="post-char-limit post-title-char-limit" aria-live="polite"></div>
+            <button type="button" class="btn-decktitle-save">保存</button>
+            <button type="button" class="btn-decktitle-cancel">キャンセル</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // =========================
+  // 4) 投稿デッキ名：編集開始
+  // =========================
+  function openDeckTitleEdit_(box) {
+    const view = box?.querySelector('.decktitle-view');
+    const editor = box?.querySelector('.decktitle-editor');
+    const input = box?.querySelector('.decktitle-input');
+    if (!box || !view || !editor || !input) return;
+
+    bindLimitStatus_(input, POST_DECK_TITLE_MAX_LENGTH, 'デッキ名', 'post-title-char-limit');
+    view.hidden = true;
+    editor.hidden = false;
+    input.focus?.();
+    input.select?.();
+  }
+
+  // =========================
+  // 5) 投稿デッキ名：キャンセル
+  // =========================
+  function cancelDeckTitleEdit_(box) {
+    const view = box?.querySelector('.decktitle-view');
+    const editor = box?.querySelector('.decktitle-editor');
+    const input = box?.querySelector('.decktitle-input');
+    if (!box || !view || !editor || !input) return;
+
+    input.value = input.dataset.original ?? '';
+    updateLimitStatus_(input, POST_DECK_TITLE_MAX_LENGTH, 'デッキ名', 'post-title-char-limit');
+    editor.hidden = true;
+    view.hidden = false;
+  }
+
+  // =========================
+  // 6) 投稿デッキ名：保存
+  // =========================
+  async function saveDeckTitleEdit_(box, root, saveBtn) {
+    const view = box?.querySelector('.decktitle-view');
+    const editor = box?.querySelector('.decktitle-editor');
+    const input = box?.querySelector('.decktitle-input');
+    if (!box || !view || !editor || !input || !root || !saveBtn) return;
+
+    const postId = String(root.dataset.postid || '').trim();
+    if (!postId) return;
+
+    const title = String(input.value || '').trim();
+    const origTitle = String(input.dataset.original ?? '').trim();
+
+    if (!title) {
+      input.setCustomValidity?.('デッキ名を入力してください');
+      input.reportValidity?.();
+      input.focus?.();
+      return;
+    }
+
+    input.setCustomValidity?.('');
+    if (updateLimitStatus_(input, POST_DECK_TITLE_MAX_LENGTH, 'デッキ名', 'post-title-char-limit')) {
+      input.reportValidity?.();
+      input.focus?.();
+      return;
+    }
+
+    if (title === origTitle) {
+      editor.hidden = true;
+      view.hidden = false;
+      showActionToast_('変更はありません');
+      return;
+    }
+
+    const prevText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中…';
+
+    try {
+      const res = await updateDeckTitle_(postId, title);
+      if (!res || !res.ok) {
+        alert((res && res.error) || '保存に失敗しました');
+        return;
+      }
+
+      patchItemTitle_(postId, title);
+      refreshDeckTitleUIs_(postId, title);
+
+      input.dataset.original = title;
+      editor.hidden = true;
+      view.hidden = false;
+
+      const item = findItemById_(postId);
+      window.openPostUpdateSuccessModal?.({
+        label: 'デッキ名',
+        postId,
+        deckName: title,
+        item,
+      });
+      showActionToast_('デッキ名を更新しました');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = prevText;
+    }
+  }
+
+    // =========================
+  // 7) デッキ解説：編集開始
   // =========================
   /**
    * openDeckNoteEdit_(section)
@@ -844,6 +1006,37 @@
     const target = e.target;
 
     // -------------------------
+    // 投稿デッキ名：編集開始
+    // -------------------------
+    if (target.matches('.btn-decktitle-edit')) {
+      const box = target.closest('.decktitle-editor-box');
+      openDeckTitleEdit_(box);
+      return;
+    }
+
+    // -------------------------
+    // 投稿デッキ名：キャンセル
+    // -------------------------
+    if (target.matches('.btn-decktitle-cancel')) {
+      const box = target.closest('.decktitle-editor-box');
+      cancelDeckTitleEdit_(box);
+      return;
+    }
+
+    // -------------------------
+    // 投稿デッキ名：保存
+    // -------------------------
+    if (target.matches('.btn-decktitle-save')) {
+      const box = target.closest('.decktitle-editor-box');
+      const root =
+        target.closest('.post-detail-inner') ||
+        target.closest('[data-postid]');
+
+      await saveDeckTitleEdit_(box, root, target);
+      return;
+    }
+
+    // -------------------------
     // ユーザータグ：保存
     // -------------------------
     const utSaveBtn = target.closest('#userTagEditSaveBtn');
@@ -1309,6 +1502,64 @@
     (state.mine?.items || []).forEach(patch);
   }
 
+  /**
+   * patchItemTitle_(postId, title)
+   * - state上の title を即時更新
+   */
+  function patchItemTitle_(postId, title) {
+    const pid = String(postId || '').trim();
+    const nextTitle = String(title || '').trim();
+
+    const patch = (item) => {
+      if (!item) return;
+      if (String(item.postId || '') === pid) {
+        item.title = nextTitle;
+      }
+    };
+
+    const state = window.DeckPostState?.getState?.() || window.__DeckPostState || null;
+    if (!state) return;
+
+    (state.list?.items || []).forEach(patch);
+    (state.list?.allItems || []).forEach(patch);
+    (state.list?.filteredItems || []).forEach(patch);
+    (state.mine?.items || []).forEach(patch);
+    Object.values(state.list?.pageCache || {}).forEach((page) => {
+      (page?.items || []).forEach(patch);
+    });
+  }
+
+  /**
+   * refreshDeckTitleUIs_(postId, title)
+   * - 表示中カード / 詳細タイトルを即時更新
+   */
+  function refreshDeckTitleUIs_(postId, title) {
+    const pid = String(postId || '').trim();
+    const nextTitle = String(title || '').trim() || '(無題)';
+    const safePid = (window.CSS?.escape)
+      ? window.CSS.escape(pid)
+      : pid.replace(/["\\]/g, '\\$&');
+    const selector = `[data-postid="${safePid}"]`;
+
+    document.querySelectorAll(`${selector} .post-card-title`).forEach((el) => {
+      el.textContent = nextTitle;
+    });
+
+    document.querySelectorAll(`${selector} [data-decktitle-view], ${selector} .post-detail-title`).forEach((el) => {
+      el.textContent = nextTitle;
+    });
+
+    document.querySelectorAll(`${selector} .decktitle-input`).forEach((input) => {
+      input.value = nextTitle === '(無題)' ? '' : nextTitle;
+      input.dataset.original = input.value;
+      updateLimitStatus_(input, POST_DECK_TITLE_MAX_LENGTH, 'デッキ名', 'post-title-char-limit');
+    });
+
+    document.querySelectorAll(`${selector} .post-detail-repimg, ${selector} .post-card-thumb img`).forEach((img) => {
+      img.alt = nextTitle === '(無題)' ? '' : nextTitle;
+    });
+  }
+
   // =========================
   // 17) デッキコード：モーダル開閉
   // =========================
@@ -1374,6 +1625,9 @@
       : '貼り付けると、他の人がすぐデッキを使えます';
 
     const it = findItemById_(postId) || {};
+    const titleManageHtml = typeof buildDeckTitleEditHtml_ === 'function'
+      ? buildDeckTitleEditHtml_(it?.title || '', { headingLevel: 3 })
+      : '';
     const tagsUserArr = String(it?.tagsUser || '')
       .split(',')
       .map((s) => s.trim())
@@ -1387,6 +1641,14 @@
 
     return `
       <div class="post-manage-box" data-postid="${window.escapeHtml?.(postId || '') || String(postId || '')}">
+        <div class="post-manage-head">
+          <div class="deckcode-status">
+            <div class="deckcode-title">デッキ名管理</div>
+          </div>
+        </div>
+
+        ${titleManageHtml}
+
         <div class="post-manage-head">
           <div class="deckcode-status">
             <div class="deckcode-title">デッキコード管理</div>
@@ -1692,6 +1954,12 @@
 
     window.DeckPostEditor.DECKNOTE_PRESETS = DECKNOTE_PRESETS;
     window.DeckPostEditor.appendPresetToTextarea_ = appendPresetToTextarea_;
+    window.DeckPostEditor.buildDeckTitleEditHtml_ = buildDeckTitleEditHtml_;
+    window.DeckPostEditor.openDeckTitleEdit_ = openDeckTitleEdit_;
+    window.DeckPostEditor.cancelDeckTitleEdit_ = cancelDeckTitleEdit_;
+    window.DeckPostEditor.saveDeckTitleEdit_ = saveDeckTitleEdit_;
+    window.DeckPostEditor.patchItemTitle_ = patchItemTitle_;
+    window.DeckPostEditor.refreshDeckTitleUIs_ = refreshDeckTitleUIs_;
     window.DeckPostEditor.openDeckNoteEdit_ = openDeckNoteEdit_;
     window.DeckPostEditor.cancelDeckNoteEdit_ = cancelDeckNoteEdit_;
     window.DeckPostEditor.saveDeckNoteEdit_ = saveDeckNoteEdit_;

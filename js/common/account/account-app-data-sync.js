@@ -26,6 +26,7 @@
     const STATUS_LOCAL_ONLY = '端末内保存';
     const STATUS_ACCOUNT_LINKED = 'アカウント連携中';
     const STATUS_SYNC_ERROR = '同期エラー・端末内保存';
+    const STATUS_SAVE_PENDING = 'アカウントへ保存待ち';
     const MIGRATION_DECISION_SKIPPED = 'skipped';
     const MIGRATION_DECISION_EMPTY_ACCOUNT = 'empty-account';
 
@@ -41,6 +42,7 @@
     let pendingSavedDecksSync = null;
     let pendingSavedDecksProcessing = false;
     let pendingOwnedAccountSave = false;
+    let pendingOwnedAccountSaveSnapshot = null;
     let cardsTabSwitchSeen = false;
     let lastAccountSaveDebug = null;
     let suppressOwnedAutosave = false;
@@ -101,6 +103,63 @@
 
     function isLoginSyncReason_(reason){
         return ['login', 'signup', 'auto-login', 'whoami', 'init'].includes(String(reason || ''));
+    }
+
+    function isPageHidden_(){
+        return typeof document !== 'undefined' && document.visibilityState === 'hidden';
+    }
+
+    function isOffline_(){
+        return typeof navigator !== 'undefined' && navigator.onLine === false;
+    }
+
+    function isTransientSaveError_(error){
+        const message = String(error?.message || error || '').toLowerCase();
+        return isPageHidden_()
+            || isOffline_()
+            || message.includes('abort')
+            || message.includes('failed to fetch')
+            || message.includes('network')
+            || message.includes('load failed');
+    }
+
+    function setOwnedSavePendingStatus_(){
+        updateStatus_({
+            source: 'account',
+            state: 'syncing',
+            syncing: false,
+            message: STATUS_SAVE_PENDING,
+        });
+    }
+
+    function queueOwnedAccountSave_(owned){
+        const normalized = normalizeOwnedMap_(owned);
+        pendingOwnedAccountSave = true;
+        if (hasOwnedData_(normalized)) pendingOwnedAccountSaveSnapshot = normalized;
+        setOwnedSavePendingStatus_();
+    }
+
+    function flushQueuedOwnedAccountSave_(reason){
+        if (!pendingOwnedAccountSave) return;
+        if (!isLoggedIn_() || !accountOwnedLinkEnabled || syncing || isPageHidden_() || isOffline_()) return;
+
+        const owned = hasOwnedData_(pendingOwnedAccountSaveSnapshot)
+            ? pendingOwnedAccountSaveSnapshot
+            : recoverOwnedCandidate_(readLocalOwned_());
+        if (!hasOwnedData_(owned)) {
+            pendingOwnedAccountSave = false;
+            pendingOwnedAccountSaveSnapshot = null;
+            return;
+        }
+
+        pendingOwnedAccountSave = false;
+        pendingOwnedAccountSaveSnapshot = null;
+        saveOwnedToAccount_(owned).then((res) => {
+            if (res?.pending) queueOwnedAccountSave_(owned);
+        }).catch((err) => {
+            if (isTransientSaveError_(err)) queueOwnedAccountSave_(owned);
+            else console.warn('[account-app-data-sync] queued owned save failed:', reason, err);
+        });
     }
 
     function refreshOwnedDisplay_(reason){
@@ -1494,6 +1553,10 @@
 
         const base = await resolveSaveBaseAppData_(patch);
         if (!base) {
+            if (patchHasOwned_(patch) && (isPageHidden_() || isOffline_())) {
+                queueOwnedAccountSave_(patch.ownedCards || patch.ownedData || readLocalOwned_());
+                return { ok: false, pending: true, reason: 'owned-save-pending-base-fetch' };
+            }
             setSyncError_();
             return { ok: false, error: 'account appData base fetch failed' };
         }
@@ -1576,6 +1639,10 @@
             return { ok: true };
         } catch(e) {
             if (lastAccountSaveDebug) lastAccountSaveDebug.error = e?.message || 'appDataSave failed';
+            if (patchIncludesOwned && isTransientSaveError_(e)) {
+                queueOwnedAccountSave_(patch.ownedCards || patch.ownedData || readLocalOwned_());
+                return { ok: false, pending: true, error: e?.message || 'appDataSave pending' };
+            }
             setSyncError_();
             return { ok: false, error: e?.message || 'appDataSave failed' };
         }
@@ -1592,6 +1659,11 @@
             : recoverOwnedCandidate_(readLocalOwned_());
         if (!hasOwnedData_(owned)) {
             return { ok: false, skipped: true, reason: 'empty-owned-save-blocked' };
+        }
+
+        if (isPageHidden_() || isOffline_()) {
+            queueOwnedAccountSave_(owned);
+            return { ok: false, pending: true, reason: isOffline_() ? 'offline' : 'page-hidden' };
         }
 
         return saveAccountAppData_({ ownedCards: owned });
@@ -1878,10 +1950,7 @@
             refreshSavedDecksDisplay_('account-sync-ready');
 
             if (pendingOwnedAccountSave && isLoggedIn_() && accountOwnedLinkEnabled) {
-                pendingOwnedAccountSave = false;
-                setTimeout(() => {
-                    try { saveOwnedToAccount_(); } catch(_) {}
-                }, 0);
+                setTimeout(() => flushQueuedOwnedAccountSave_('account-sync-ready'), 0);
             }
         }
     }
@@ -1901,8 +1970,27 @@
 
             clearTimeout(bindOwnedAutosave_._timer);
             bindOwnedAutosave_._timer = setTimeout(() => {
-                saveOwnedToAccount_(ownedSnapshot);
+                saveOwnedToAccount_(ownedSnapshot).catch((err) => {
+                    if (isTransientSaveError_(err)) queueOwnedAccountSave_(ownedSnapshot);
+                    else console.warn('[account-app-data-sync] owned autosave failed:', err);
+                });
             }, 1200);
+        });
+    }
+
+    function bindOwnedSaveResume_(){
+        if (bindOwnedSaveResume_._bound) return;
+        bindOwnedSaveResume_._bound = true;
+
+        const flush = (reason) => {
+            setTimeout(() => flushQueuedOwnedAccountSave_(reason), 0);
+        };
+
+        window.addEventListener('online', () => flush('online'));
+        window.addEventListener('focus', () => flush('focus'));
+        window.addEventListener('pageshow', () => flush('pageshow'));
+        document.addEventListener('visibilitychange', () => {
+            if (!isPageHidden_()) flush('visible');
         });
     }
 
@@ -2024,6 +2112,7 @@
     function bootAppDataSync_(){
         refreshStatusFromAuth_();
         bindOwnedAutosave_();
+        bindOwnedSaveResume_();
         bindCardGroupsAutosave_();
         bindSavedDecksAutosave_();
         flushPendingCardGroupsSync_();

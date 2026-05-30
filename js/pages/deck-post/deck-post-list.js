@@ -22,8 +22,15 @@
   let currentPageDetailPrefetchController_ = null;
   let incrementalFilterController_ = null;
   let listProgressEl_ = null;
+  let listCacheStatusEl_ = null;
   let listBackgroundChain_ = Promise.resolve();
   let lastBackgroundRequestAt_ = 0;
+  let listUsingBrowserCache_ = false;
+  let listLatestSnapshot_ = null;
+  let listLatestRefreshPromise_ = null;
+  let applyingLatestSnapshot_ = false;
+  let listManualCacheRefreshBusy_ = false;
+  const LIST_BROWSER_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
   function wait_(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -56,11 +63,25 @@
     return run;
   }
 
+  function ensureListStatusGroupEl_() {
+    const wrap = document.querySelector('.list-controls-filter');
+    if (!wrap) return null;
+
+    let group = document.getElementById('listStatusGroup');
+    if (!group) {
+      group = document.createElement('div');
+      group.id = 'listStatusGroup';
+      group.className = 'list-status-group';
+      wrap.appendChild(group);
+    }
+    return group;
+  }
+
   function ensureListLoadProgressEl_() {
     if (listProgressEl_?.isConnected) return listProgressEl_;
 
-    const wrap = document.querySelector('.list-controls-filter');
-    if (!wrap) return null;
+    const group = ensureListStatusGroupEl_();
+    if (!group) return null;
 
     listProgressEl_ = document.getElementById('listLoadProgress');
     if (!listProgressEl_) {
@@ -69,8 +90,8 @@
       listProgressEl_.className = 'list-load-progress';
       listProgressEl_.setAttribute('role', 'status');
       listProgressEl_.setAttribute('aria-live', 'polite');
-      wrap.appendChild(listProgressEl_);
     }
+    group.appendChild(listProgressEl_);
     return listProgressEl_;
   }
 
@@ -88,7 +109,7 @@
 
       // フィルター中は検索結果を壊さない
       if (!hasActivePostFilter_() && !hasListSort_() && Array.isArray(state.list.allItems) && state.list.allItems.length) {
-        state.list.filteredItems = state.list.allItems;
+        state.list.filteredItems = getListItemsForFilterBase_(state.list.allItems);
       }
     }
 
@@ -107,6 +128,72 @@
     }
 
     el.hidden = false;
+  }
+
+  function ensureListCacheStatusEl_() {
+    if (listCacheStatusEl_?.isConnected) return listCacheStatusEl_;
+
+    const group = ensureListStatusGroupEl_();
+    if (!group) return null;
+
+    listCacheStatusEl_ = document.getElementById('listCacheStatus');
+    if (!listCacheStatusEl_) {
+      listCacheStatusEl_ = document.createElement('div');
+      listCacheStatusEl_.id = 'listCacheStatus';
+      listCacheStatusEl_.className = 'list-cache-status';
+      listCacheStatusEl_.innerHTML = `
+        <span class="list-cache-status-text" data-list-cache-updated>最終更新: --:--</span>
+        <button type="button" class="list-cache-refresh-btn" data-list-cache-refresh>更新</button>
+      `;
+    }
+    group.appendChild(listCacheStatusEl_);
+    return listCacheStatusEl_;
+  }
+
+  function formatListCacheUpdatedAt_(savedAt) {
+    const time = Number(savedAt || 0);
+    if (!time) return '--:--';
+    const d = new Date(time);
+    if (Number.isNaN(d.getTime())) return '--:--';
+    const now = new Date();
+    const sameDate = d.getFullYear() === now.getFullYear()
+      && d.getMonth() === now.getMonth()
+      && d.getDate() === now.getDate();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    if (sameDate) return `${hh}:${mm}`;
+    return `${d.getMonth() + 1}/${d.getDate()} ${hh}:${mm}`;
+  }
+
+  function updateListCacheStatus_(savedAt) {
+    const el = ensureListCacheStatusEl_();
+    if (!el) return;
+    const text = el.querySelector('[data-list-cache-updated]');
+    if (text) text.textContent = `最終更新: ${formatListCacheUpdatedAt_(savedAt)}`;
+    el.hidden = false;
+    updateListCacheRefreshButton_();
+  }
+
+  function updateListCacheRefreshButton_() {
+    const el = ensureListCacheStatusEl_();
+    const btn = el?.querySelector('[data-list-cache-refresh]');
+    if (!btn) return;
+
+    const state = getDeckPostState_();
+    if (listManualCacheRefreshBusy_) {
+      btn.hidden = false;
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      return;
+    }
+
+    const isLoading = !!state?.list?.loading || !!allListFetchPromise_ || !!listLatestRefreshPromise_;
+    btn.hidden = isLoading;
+    if (isLoading) return;
+
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    btn.textContent = listLatestSnapshot_ ? '最新を表示' : '更新';
   }
 
   function hasCompleteAllItems_() {
@@ -132,7 +219,7 @@
       return true;
     }
 
-    state.list.filteredItems = Array.isArray(state.list.allItems) ? state.list.allItems : [];
+    state.list.filteredItems = getListItemsForFilterBase_(state.list.allItems);
     state.list.items = state.list.filteredItems;
     state.list.total = state.list.filteredItems.length;
     state.list.totalPages = Math.max(1, Math.ceil(Math.max(state.list.total, 0) / PAGE_LIMIT));
@@ -211,6 +298,20 @@
     return allItems.slice(start, start + progress.expected);
   }
 
+  function getCurrentListPage_() {
+    const state = getDeckPostState_();
+    const fromState = Number(state?.list?.currentPage || 0);
+    if (fromState > 0) return Math.max(1, fromState);
+
+    const infoText = String(
+      document.getElementById('pageInfo')?.textContent ||
+      document.getElementById('pageInfoTop')?.textContent ||
+      ''
+    );
+    const m = infoText.match(/(\d+)\s*\/\s*\d+/);
+    return Math.max(1, Number(m?.[1] || 1));
+  }
+
   function mergeListItemsDedup_(items) {
     const state = getDeckPostState_();
     const incoming = Array.isArray(items) ? items : [];
@@ -225,7 +326,14 @@
     let added = 0;
     for (const item of incoming) {
       const postId = String(item?.postId || '').trim();
-      if (!postId || seen.has(postId)) continue;
+      if (!postId) continue;
+      if (seen.has(postId)) {
+        const index = state.list.allItems.findIndex((current) => String(current?.postId || '').trim() === postId);
+        if (index >= 0 && isSharedInitialOnlyItem_(state.list.allItems[index])) {
+          state.list.allItems[index] = item;
+        }
+        continue;
+      }
       seen.add(postId);
       state.list.allItems.push(item);
       added += 1;
@@ -313,6 +421,54 @@
     item.deckNoteLength = Array.from(String(item.deckNote || '').trim()).length;
     item.__detailPayloadLoaded = true;
     return item;
+  }
+
+  function isSharedInitialOnlyItem_(item) {
+    return item && item.__sharedInitialOnly === true;
+  }
+
+  function getListItemsForFilterBase_(items) {
+    const state = getDeckPostState_();
+    const list = Array.isArray(items) ? items : [];
+    if (!state?.list?.hasAllItems && !hasCompleteAllItems_()) return list;
+
+    return list.filter((item) => !isSharedInitialOnlyItem_(item));
+  }
+
+  function readTransferredPost_(postId) {
+    const pid = String(postId || '').trim();
+    if (!pid || typeof sessionStorage === 'undefined') return null;
+
+    try {
+      const key = `deck-post-transfer:${pid}`;
+      const raw = sessionStorage.getItem(key);
+      if (!raw) return null;
+
+      sessionStorage.removeItem(key);
+      const parsed = JSON.parse(raw);
+      if (!parsed || Number(parsed.expiresAt || 0) < Date.now()) return null;
+
+      return normalizeSharedPostResponse_({ item: parsed.item }, pid);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function clearBrowserListPageCache_(page) {
+    try {
+      const tokenKey = getBrowserListCacheTokenKey_();
+      localStorage.removeItem(getBrowserListAllCacheKey_());
+      localStorage.removeItem(getBrowserListPageCacheKey_(page));
+      const removeKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        if (key.indexOf('DeckPostListPage:') !== 0 && key.indexOf('DeckPostListAll:') !== 0) continue;
+        if (tokenKey && !key.endsWith(`:${tokenKey}`) && key.indexOf(':anon') < 0) continue;
+        removeKeys.push(key);
+      }
+      removeKeys.forEach(key => localStorage.removeItem(key));
+    } catch (_) {}
   }
 
   /**
@@ -972,6 +1128,7 @@
               </dt>
               <dd class="mana-eff-row">
                 <span id="mana-efficiency-${escapeHtml(spPaneId)}" class="mana-eff">-</span>
+                <div id="mana-excluded-cards-${escapeHtml(spPaneId)}" class="mana-excluded-cards" hidden></div>
                 <span class="avg-charge-inline">
                   （平均チャージ量：<span id="avg-charge-${escapeHtml(spPaneId)}">-</span>）
                 </span>
@@ -1680,6 +1837,7 @@ document.addEventListener('click', async (e) => {
     }
 
     updateFilterReadyState_();
+    updateListCacheRefreshButton_();
     allListFetchPromise_ = (async () => {
       const limit = FETCH_LIMIT;
       let offset = 0;
@@ -1778,19 +1936,23 @@ document.addEventListener('click', async (e) => {
         state.list.items = state.list.allItems;
       }
       if (!hasActivePostFilter_() && !hasListSort_()) {
-        state.list.filteredItems = state.list.allItems;
+        state.list.filteredItems = getListItemsForFilterBase_(state.list.allItems);
       }
       state.list.total = total || state.list.allItems.length;
       state.list.hasAllItems = true;
       state.list.pageCache = state.list.pageCache || {};
+      writeBrowserListAllCache_(state.list.allItems, state.list.total);
+      listUsingBrowserCache_ = false;
 
       updateListLoadProgress_();
       return state.list.allItems;
     })().finally(() => {
       allListFetchPromise_ = null;
       updateFilterReadyState_();
+      updateListCacheRefreshButton_();
     });
     updateFilterReadyState_();
+    updateListCacheRefreshButton_();
 
     return allListFetchPromise_;
   }
@@ -1973,6 +2135,202 @@ document.addEventListener('click', async (e) => {
     return !!state?.list?.hasAllItems || hasCompleteAllItems_() || hasActivePostFilter_() || sortKey !== 'new';
   }
 
+  function getBrowserListCacheTokenKey_() {
+    const tokenKey = String(window.Auth?.token || getDeckPostState_()?.token || 'anon').slice(-12);
+    return tokenKey || 'anon';
+  }
+
+  function getBrowserListAllCacheKey_() {
+    return `DeckPostListAll:v1:new:${PAGE_LIMIT}:${getBrowserListCacheTokenKey_()}`;
+  }
+
+  function getBrowserListPageCacheKey_(page) {
+    const p = Math.max(1, Number(page || 1) || 1);
+    const tokenKey = getBrowserListCacheTokenKey_();
+    return `DeckPostListPage:v2:new:${PAGE_LIMIT}:${p}:${tokenKey}`;
+  }
+
+  function readBrowserListAllCache_() {
+    try {
+      const raw = localStorage.getItem(getBrowserListAllCacheKey_());
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || !Array.isArray(obj.items)) return null;
+      if (Date.now() - Number(obj.savedAt || 0) > LIST_BROWSER_CACHE_TTL_MS) return null;
+      const items = obj.items;
+      const total = Number(obj.total || items.length || 0);
+      return {
+        allItems: items,
+        items,
+        total,
+        totalPages: Math.max(1, Number(obj.totalPages || Math.ceil(Math.max(total, 0) / PAGE_LIMIT) || 1)),
+        nextOffset: null,
+        savedAt: Number(obj.savedAt || 0),
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function readBrowserListPageCache_(page) {
+    const allCache = readBrowserListAllCache_();
+    if (!allCache) return null;
+
+    const p = Math.max(1, Number(page || 1) || 1);
+    const start = (p - 1) * PAGE_LIMIT;
+    const items = allCache.allItems.slice(start, start + PAGE_LIMIT);
+
+    return {
+      ...allCache,
+      items,
+      nextOffset: (start + items.length < allCache.total) ? start + items.length : null,
+    };
+  }
+
+  function writeBrowserListAllCache_(items, totalValue) {
+    try {
+      const savedAt = Date.now();
+      const rows = Array.isArray(items) ? items : [];
+      const total = Number(totalValue || rows.length || 0);
+      const payload = {
+        savedAt,
+        items: rows,
+        total,
+        totalPages: Math.max(1, Math.ceil(Math.max(total, 0) / PAGE_LIMIT)),
+      };
+      localStorage.setItem(getBrowserListAllCacheKey_(), JSON.stringify(payload));
+      updateListCacheStatus_(savedAt);
+      return { ...payload };
+    } catch (_) {
+      // ブラウザ側キャッシュに保存できない場合も通常表示を続ける
+      return null;
+    }
+  }
+
+  async function collectLatestListSnapshot_() {
+    const limit = FETCH_LIMIT;
+    let offset = 0;
+    let total = 0;
+    let errorCount = 0;
+    const allItems = [];
+    const seen = new Set();
+
+    updateListLoadProgress_('最新一覧を取得中…');
+
+    while (true) {
+      let res = null;
+      try {
+        res = await enqueueBackgroundListRequest_(() => window.DeckPostApi.apiList({
+          limit,
+          offset,
+          mine: false,
+          sort: 'new',
+        }));
+      } catch (e) {
+        errorCount += 1;
+        if (errorCount >= BACKGROUND_MAX_ERROR_COUNT) {
+          throw createListFetchError_(e?.message || 'latest list fetch failed');
+        }
+        continue;
+      }
+
+      if (!res || !res.ok) {
+        errorCount += 1;
+        if (errorCount >= BACKGROUND_MAX_ERROR_COUNT) {
+          throw createListFetchError_((res && res.error) || 'latest list fetch failed', res);
+        }
+        continue;
+      }
+
+      const items = Array.isArray(res.items) ? res.items : [];
+      errorCount = 0;
+      if (typeof res.total === 'number') total = res.total;
+
+      for (const item of items) {
+        const postId = String(item?.postId || '').trim();
+        if (!postId || seen.has(postId)) continue;
+        seen.add(postId);
+        allItems.push(item);
+      }
+
+      updateListLoadProgress_(
+        total
+          ? `最新一覧を取得中… ${allItems.length} / ${total}`
+          : `最新一覧を取得中… ${allItems.length}件読込済み`
+      );
+
+      const nextOffset = res.nextOffset ?? null;
+      if (nextOffset === null || items.length === 0) break;
+      offset = nextOffset;
+      if (total && allItems.length >= total) break;
+    }
+
+    const saved = writeBrowserListAllCache_(allItems, total || allItems.length);
+    updateListLoadProgress_(`最新一覧を取得しました ${allItems.length}件`);
+    return {
+      allItems,
+      total: total || allItems.length,
+      totalPages: Math.max(1, Math.ceil(Math.max(total || allItems.length, 0) / PAGE_LIMIT)),
+      savedAt: Number(saved?.savedAt || Date.now()),
+    };
+  }
+
+  async function refreshLatestListSnapshot_() {
+    if (listLatestRefreshPromise_) return listLatestRefreshPromise_;
+
+    listLatestRefreshPromise_ = (async () => {
+      updateListCacheRefreshButton_();
+      const snapshot = await collectLatestListSnapshot_();
+      listLatestSnapshot_ = snapshot;
+      return snapshot;
+    })().catch((e) => {
+      console.warn('投稿一覧の最新取得に失敗しました:', e);
+      throw e;
+    }).finally(() => {
+      listLatestRefreshPromise_ = null;
+      updateListCacheRefreshButton_();
+    });
+
+    return listLatestRefreshPromise_;
+  }
+
+  async function applyLatestListSnapshot_(page) {
+    const state = getDeckPostState_();
+    if (!state?.list || !listLatestSnapshot_ || applyingLatestSnapshot_) return false;
+
+    applyingLatestSnapshot_ = true;
+    try {
+      const targetPage = Math.max(1, Number(page || state.list.currentPage || 1));
+      state.list.allItems = listLatestSnapshot_.allItems.slice();
+      state.list.items = state.list.allItems;
+      state.list.filteredItems = getListItemsForFilterBase_(state.list.allItems);
+      state.list.total = Number(listLatestSnapshot_.total || state.list.allItems.length || 0);
+      state.list.totalPages = Math.max(1, Number(listLatestSnapshot_.totalPages || Math.ceil(Math.max(state.list.total, 0) / PAGE_LIMIT) || 1));
+      state.list.currentPage = Math.min(targetPage, state.list.totalPages);
+      state.list.nextOffset = null;
+      state.list.hasAllItems = true;
+      state.list.pageCache = {};
+      state.list.sourceTotal = state.list.total;
+      listUsingBrowserCache_ = false;
+      listLatestSnapshot_ = null;
+
+      window.DeckPostFilter?.rebuildFilteredItems?.();
+      const filteredCount = Array.isArray(state.list.filteredItems)
+        ? state.list.filteredItems.length
+        : state.list.total;
+      const visibleTotal = Math.max(0, Number(filteredCount || 0));
+      state.list.totalPages = Math.max(1, Math.ceil(visibleTotal / PAGE_LIMIT));
+      state.list.currentPage = Math.min(targetPage, state.list.totalPages);
+      updateFilterReadyState_();
+      await loadListPage(state.list.currentPage);
+      updateListLoadProgress_();
+      return true;
+    } finally {
+      applyingLatestSnapshot_ = false;
+      updateListCacheRefreshButton_();
+    }
+  }
+
   /**
    * 通常一覧の指定ページだけ取得
    */
@@ -2105,18 +2463,21 @@ document.addEventListener('click', async (e) => {
 
     showListStatusMessage('loading', '共有リンクのデッキを読み込み中…');
 
-    const res = await window.DeckPostApi?.apiGetPost?.({ postId: pid });
-    if (!res || res.ok === false) {
+    const transferredItem = readTransferredPost_(pid);
+    const res = transferredItem ? null : await window.DeckPostApi?.apiGetPost?.({ postId: pid });
+    if (!transferredItem && (!res || res.ok === false)) {
       throw createListFetchError_((res && res.error) || 'shared post fetch failed', res);
     }
 
-    const item = normalizeSharedPostResponse_(res, pid);
+    const item = transferredItem || normalizeSharedPostResponse_(res, pid);
     if (!item) {
       throw createListFetchError_('shared post response invalid', {
         code: 'INVALID_SHARED_POST_RESPONSE',
         reason: '共有リンクの投稿データ形式が想定と異なります。',
       });
     }
+
+    item.__sharedInitialOnly = true;
 
     state.list.allItems = [item];
     state.list.items = [item];
@@ -2137,6 +2498,10 @@ document.addEventListener('click', async (e) => {
 
     listEl.replaceChildren();
     renderPostListInto('postList', pageItems, { mode: 'list' });
+    const firstCard = listEl.querySelector('.post-card');
+    if (firstCard && typeof detail().showDetailPaneForArticle === 'function') {
+      detail().showDetailPaneForArticle(firstCard, { skipFetch: true });
+    }
     scheduleVisibleSpDetailWarmup_();
 
     const total = pageItems.length;
@@ -2148,7 +2513,6 @@ document.addEventListener('click', async (e) => {
 
     updatePagerUI();
     startCurrentPageDetailPrefetch_(pageItems);
-    startSlowBackgroundListFetch_();
     scrollToPostListTop_();
     return true;
   }
@@ -2384,6 +2748,10 @@ document.addEventListener('click', async (e) => {
 
     state.list.hasAllItems = true;
     state.list.items = state.list.allItems;
+    state.list.total = getKnownSourceTotal_() || state.list.allItems.length;
+    state.list.sourceTotal = state.list.total;
+    writeBrowserListAllCache_(state.list.allItems, state.list.total);
+    listUsingBrowserCache_ = false;
     window.DeckPostFilter?.rebuildFilteredItems?.();
     renderIncrementalFilterResults_(true);
     updateFilterReadyState_();
@@ -2488,6 +2856,10 @@ document.addEventListener('click', async (e) => {
 
     state.list.hasAllItems = true;
     state.list.items = state.list.allItems;
+    state.list.total = totalKnown || state.list.allItems.length;
+    state.list.sourceTotal = state.list.total;
+    writeBrowserListAllCache_(state.list.allItems, state.list.total);
+    listUsingBrowserCache_ = false;
     window.DeckPostFilter?.applyAdoptionCardFromUrl?.();
     window.DeckPostFilter?.rebuildFilteredItems?.();
     renderAdoptionCardSearchResults_(true);
@@ -2509,9 +2881,20 @@ document.addEventListener('click', async (e) => {
     if (!listEl) return;
 
     const requestedPage = Math.max(Number(page || 1), 1);
+    if (listLatestSnapshot_ && !applyingLatestSnapshot_) {
+      await applyLatestListSnapshot_(requestedPage);
+      return;
+    }
+
     normalizeCompleteAllItemsState_();
     const usesAllItems = shouldUseAllItemsForList_();
     const pageCache = state.list.pageCache || {};
+    const browserCachedPage = !usesAllItems ? readBrowserListPageCache_(requestedPage) : null;
+    if (!pageCache[requestedPage] && browserCachedPage) {
+      pageCache[requestedPage] = browserCachedPage;
+      state.list.pageCache = pageCache;
+      updateListCacheStatus_(browserCachedPage.savedAt);
+    }
     const cachedPage = pageCache[requestedPage] || null;
     const loadedPageItems = !usesAllItems ? getLoadedPageItems_(requestedPage) : null;
     const hasCurrentPageItems =
@@ -3111,6 +3494,43 @@ document.addEventListener('click', async (e) => {
       });
     }
 
+    const cacheStatusEl = ensureListCacheStatusEl_();
+    updateListCacheStatus_(0);
+    const cacheRefreshBtn = cacheStatusEl?.querySelector('[data-list-cache-refresh]');
+    if (cacheRefreshBtn && !cacheRefreshBtn.dataset.boundListCacheRefresh) {
+      cacheRefreshBtn.dataset.boundListCacheRefresh = '1';
+      cacheRefreshBtn.addEventListener('click', async () => {
+        const page = getCurrentListPage_();
+        const prevText = cacheRefreshBtn.textContent || '更新';
+        listManualCacheRefreshBusy_ = true;
+        cacheRefreshBtn.hidden = false;
+        cacheRefreshBtn.disabled = true;
+        cacheRefreshBtn.setAttribute('aria-busy', 'true');
+        cacheRefreshBtn.textContent = listLatestSnapshot_ ? '表示中' : '更新中';
+
+        try {
+          if (listLatestSnapshot_) {
+            await applyLatestListSnapshot_(page);
+            window.showActionToast?.('最新の投稿一覧を表示しました');
+            return;
+          }
+
+          await refreshLatestListSnapshot_();
+          await applyLatestListSnapshot_(page);
+          window.showActionToast?.('投稿一覧を更新しました');
+        } catch (e) {
+          console.warn('投稿一覧の手動更新に失敗しました', e);
+          window.showActionToast?.('投稿一覧を更新できませんでした');
+        } finally {
+          listManualCacheRefreshBusy_ = false;
+          cacheRefreshBtn.disabled = false;
+          cacheRefreshBtn.removeAttribute('aria-busy');
+          cacheRefreshBtn.textContent = prevText;
+          updateListCacheRefreshButton_();
+        }
+      });
+    }
+
     // =========================
     // 初回一覧取得 → 初期描画
     // =========================
@@ -3119,6 +3539,9 @@ document.addEventListener('click', async (e) => {
       const sharedPostId = getSharedPostIdFromUrl_();
       const adoptionCardCd = getAdoptionCardCdFromUrl_();
       const shouldLoadAllInitially = shouldLoadAllItemsInitially_();
+      const initialBrowserCache = (!sharedPostId && !adoptionCardCd && !shouldLoadAllInitially)
+        ? readBrowserListPageCache_(1)
+        : null;
       window.debugLog?.('L0 list init branch', {
         sharedPostId,
         adoptionCardCd,
@@ -3127,7 +3550,7 @@ document.addEventListener('click', async (e) => {
         hasAllItems: !!state?.list?.hasAllItems,
         items: Array.isArray(state?.list?.items) ? state.list.items.length : 'not array',
       });
-      window.DeckPostList?.showListStatusMessage?.(
+      if (!initialBrowserCache) window.DeckPostList?.showListStatusMessage?.(
         'loading',
         '最新の投稿を読み込み中…'
       );
@@ -3152,6 +3575,23 @@ document.addEventListener('click', async (e) => {
         });
         window.DeckPostFilter?.applySharedPostFromUrl?.();
         window.DeckPostFilter?.rebuildFilteredItems?.();
+      } else if (initialBrowserCache) {
+        const cachedAllItems = Array.isArray(initialBrowserCache.allItems)
+          ? initialBrowserCache.allItems
+          : initialBrowserCache.items;
+        state.list.allItems = cachedAllItems.slice();
+        state.list.items = initialBrowserCache.items;
+        state.list.filteredItems = getListItemsForFilterBase_(state.list.allItems);
+        state.list.total = Number(initialBrowserCache.total || initialBrowserCache.items.length || 0);
+        state.list.totalPages = Math.max(1, Number(initialBrowserCache.totalPages || 1));
+        state.list.currentPage = 1;
+        state.list.nextOffset = null;
+        state.list.hasAllItems = true;
+        state.list.pageCache = {};
+        if (state.list.total > 0) state.list.sourceTotal = state.list.total;
+        listUsingBrowserCache_ = true;
+        updateFilterReadyState_();
+        updateListCacheStatus_(initialBrowserCache.savedAt);
       } else {
         window.debugLog?.('L1 初回apiList前');
 
@@ -3205,6 +3645,9 @@ document.addEventListener('click', async (e) => {
         // スマホ/タブレットでGAS連続取得が不安定なため、初期表示時の全件先読みは停止する。
         // prefetchAllListInBackground_();
         await window.DeckPostList?.loadListPage?.(1);
+        if (initialBrowserCache) {
+          refreshLatestListSnapshot_().catch(() => {});
+        }
       }
     } catch (e) {
       window.debugLog?.('❌ 初期一覧取得catch', e.message);
@@ -3217,6 +3660,7 @@ document.addEventListener('click', async (e) => {
       );
     } finally {
       state.list.loading = false;
+      updateListCacheRefreshButton_();
     }
 
     // =========================
@@ -3281,6 +3725,9 @@ document.addEventListener('click', async (e) => {
       setToMineButtonLoading_(true);
 
       try {
+        if (listLatestSnapshot_) {
+          await applyLatestListSnapshot_(getDeckPostState_()?.list?.currentPage || 1);
+        }
         updateMineLoginStatus();
 
         if (getMineActiveTab_() === 'posts') {
@@ -3296,7 +3743,10 @@ document.addEventListener('click', async (e) => {
       }
     });
 
-    document.getElementById('backToListBtn')?.addEventListener('click', () => {
+    document.getElementById('backToListBtn')?.addEventListener('click', async () => {
+      if (listLatestSnapshot_) {
+        await applyLatestListSnapshot_(getDeckPostState_()?.list?.currentPage || 1);
+      }
       window.DeckPostList?.showList?.();
     });
   }
@@ -3333,11 +3783,13 @@ document.addEventListener('click', async (e) => {
   window.bindPostListActionHandlers_ = bindPostListActionHandlers_;
   window.ensureListLoadProgressEl_ = ensureListLoadProgressEl_;
   window.updateListLoadProgress_ = updateListLoadProgress_;
+  window.getListItemsForFilterBase_ = getListItemsForFilterBase_;
   window.startSlowBackgroundListFetch_ = startSlowBackgroundListFetch_;
   window.stopSlowBackgroundListFetch_ = stopSlowBackgroundListFetch_;
   window.prefetchListPage_ = prefetchListPage_;
   window.mergeListItemsDedup_ = mergeListItemsDedup_;
   window.applyFilterIncrementally_ = applyFilterIncrementally_;
+  window.clearDeckPostListBrowserCache_ = () => clearBrowserListPageCache_(1);
 
   // 新namespace
   window.DeckPostList = window.DeckPostList || {};
@@ -3350,11 +3802,13 @@ document.addEventListener('click', async (e) => {
   window.DeckPostList.applySortAndRerenderList = applySortAndRerenderList;
   window.DeckPostList.ensureListLoadProgressEl = ensureListLoadProgressEl_;
   window.DeckPostList.updateListLoadProgress = updateListLoadProgress_;
+  window.DeckPostList.getListItemsForFilterBase = getListItemsForFilterBase_;
   window.DeckPostList.startSlowBackgroundListFetch = startSlowBackgroundListFetch_;
   window.DeckPostList.stopSlowBackgroundListFetch = stopSlowBackgroundListFetch_;
   window.DeckPostList.prefetchListPage = prefetchListPage_;
   window.DeckPostList.mergeListItemsDedup = mergeListItemsDedup_;
   window.DeckPostList.applyFilterIncrementally = applyFilterIncrementally_;
+  window.DeckPostList.clearBrowserCache = window.clearDeckPostListBrowserCache_;
   window.DeckPostList.showListStatusMessage = showListStatusMessage;
   window.DeckPostList.showList = showList;
   window.DeckPostList.showMine = showMine;

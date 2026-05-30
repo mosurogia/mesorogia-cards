@@ -86,12 +86,98 @@
     line-height: 1.45;
 }
 
-/* ✅ 横長PCは2列リスト */
+/* 一覧表示の詳細操作 */
+.grid.is-list .card-detail-actions {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas:
+        "owned owned"
+        "modal side";
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.grid.is-list .card-detail-actions-owned {
+    grid-area: owned;
+    justify-content: flex-start;
+}
+
+.grid.is-list .card-detail-actions-modal {
+    grid-area: modal;
+}
+
+.grid.is-list .card-detail-actions-side {
+    grid-area: side;
+}
+
+.grid.is-list .card-detail-actions-modal,
+.grid.is-list .card-detail-actions-side {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.grid.is-list .owned-editor {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+}
+
+.grid.is-list .card-detail-action-btn {
+    min-width: 0;
+}
+
+/* 横長PCは2列リスト */
 @media (min-width: 1200px) {
     .grid.is-list {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 5px;
+    }
+
+    .grid.is-list .card-detail-actions {
+        grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr);
+        grid-template-areas:
+            "owned modal side";
+    }
+
+    .grid.is-list .owned-editor {
+        display: inline-grid;
+        grid-template-areas:
+            "label label toggle"
+            "minus num plus";
+        grid-template-columns: 30px 1.4em 30px;
+        gap: 3px 4px;
+        align-self: stretch;
+        justify-content: start;
+        padding: 4px 5px;
+    }
+
+    .grid.is-list .owned-editor-label {
+        grid-area: label;
+        font-size: 10px;
+    }
+
+    .grid.is-list .owned-editor-toggle {
+        grid-area: toggle;
+        height: 22px;
+        padding: 0 5px;
+        font-size: 11px;
+    }
+
+    .grid.is-list .owned-editor-minus {
+        grid-area: minus;
+    }
+
+    .grid.is-list .owned-editor-num {
+        grid-area: num;
+        font-size: 12px;
+    }
+
+    .grid.is-list .owned-editor-plus {
+        grid-area: plus;
+    }
+
+    .grid.is-list .owned-editor-btn {
+        width: 22px;
+        height: 22px;
     }
 }
 

@@ -1014,6 +1014,19 @@
     }
 
     try {
+      if (typeof window.clearTierListBrowserCache_ === 'function') {
+        const tierCacheTask = window.clearTierListBrowserCache_();
+        if (tierCacheTask && typeof tierCacheTask.catch === 'function') {
+          await tierCacheTask.catch((err) => {
+            console.warn('Tier表キャッシュの再取得に失敗しました。', err);
+          });
+        }
+      } else {
+        try {
+          localStorage.removeItem('tier-list-cache-v1');
+        } catch (_) {}
+      }
+
       if (window.MesorogiaPwaMaintenance?.repairAndReload) {
         await window.MesorogiaPwaMaintenance.repairAndReload();
         return;

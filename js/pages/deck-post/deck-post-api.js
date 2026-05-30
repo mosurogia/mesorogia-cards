@@ -313,6 +313,7 @@
     const qs = new URLSearchParams();
     qs.set('mode', 'get');
     qs.set('postId', postId);
+    if (opts.refresh) qs.set('refresh', '1');
 
     const tk = (window.Auth && window.Auth.token) || opts.token || resolveToken();
     if (tk) qs.set('token', String(tk));
@@ -370,6 +371,18 @@
     });
   }
 
+  async function updateDeckTitle_(postId, title) {
+    const token = resolveWriteToken_();
+    if (!token) return { ok: false, error: 'auth required' };
+
+    return await gasPost_({
+      mode: 'update',
+      token,
+      postId: String(postId || '').trim(),
+      title: String(title || '').trim(),
+    });
+  }
+
   async function updateCardNotes_(postId, cardNotes) {
     const token = resolveWriteToken_();
     if (!token) return { ok: false, error: 'auth required' };
@@ -420,6 +433,7 @@
     gasPost_,
     apiToggleLike,
     updateDeckNote_,
+    updateDeckTitle_,
     updateCardNotes_,
     updateDeckCode_,
 

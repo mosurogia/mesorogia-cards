@@ -24,19 +24,6 @@ body {
     display: none !important;
 }
 
-
-/* 一覧の上に置く簡易バー（将来検索/並び替え追加予定） */
-.toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    column-gap: 8px;
-    row-gap: 4px;
-    flex-wrap: wrap;
-
-    padding-top: 3px;
-}
-
 /* 一覧の並び替え・フィルターバー */
 .list-controls {
     align-items: center;
@@ -92,12 +79,68 @@ body {
     align-items: center;
 }
 
-.list-load-progress {
+.list-status-group {
     margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.list-load-progress {
     color: #4b5563;
     font-size: 0.78rem;
     line-height: 1.3;
     white-space: nowrap;
+}
+
+.list-cache-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #4b5563;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.list-cache-refresh-btn {
+    appearance: none;
+    min-height: 26px;
+    padding: 3px 9px;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.list-cache-refresh-btn:hover {
+    background: #dbeafe;
+}
+
+.list-cache-refresh-btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.list-cache-refresh-btn:disabled {
+    cursor: wait;
+    opacity: .65;
+}
+
+.list-cache-refresh-btn[aria-busy="true"]::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin-left: 6px;
+    border: 2px solid rgba(37, 99, 235, .2);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: deck-post-filter-spin .8s linear infinite;
 }
 
 /* 並び替え・フィルターボタン共通 */
@@ -133,14 +176,6 @@ body {
     animation: deck-post-filter-spin .8s linear infinite;
 }
 
-@media (max-width: 768px) {
-    .list-load-progress {
-        flex-basis: 100%;
-        margin-left: 0;
-        text-align: right;
-    }
-}
-
 @keyframes deck-post-filter-spin {
     to {
         transform: rotate(360deg);
@@ -151,15 +186,39 @@ body {
     .ctrl-btn[data-loading="1"]::after {
         animation: none;
     }
+
+    .post-list-message-spinner {
+        animation: none;
+    }
 }
 
-
+/* ツールバー */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* ← 右寄せ */
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 2px 4px 3px;
+}
 
 /* ゴーストボタン共通 */
 .btn-ghost {
+    --btn-ghost-accent: #64748b;
+    --btn-ghost-bg: #e9eef6;
+    --btn-ghost-bg-hover: #dfe9f7;
+    --btn-ghost-border: #c7d2e0;
+    --btn-ghost-border-hover: #9fb7d3;
+    --btn-ghost-shadow:
+        inset 4px 0 0 var(--btn-ghost-accent),
+        0 3px 9px rgba(15, 23, 42, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .55);
+
     appearance: none;
-    border: 1px solid rgba(0, 0, 0, .12);
-    background: #fff;
+    border: 1px solid var(--btn-ghost-border);
+    background: linear-gradient(180deg, #f3f6fb 0%, var(--btn-ghost-bg) 100%);
+    color: #1e293b;
     border-radius: 10px;
     padding: 6px 10px;
     font-size: 1.25rem;
@@ -169,6 +228,36 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    box-shadow: var(--btn-ghost-shadow);
+    transition:
+        background-color .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease,
+        transform .08s ease;
+}
+
+.btn-ghost:hover {
+    border-color: var(--btn-ghost-border-hover);
+    background: linear-gradient(180deg, #f8fbff 0%, var(--btn-ghost-bg-hover) 100%);
+    box-shadow:
+        inset 4px 0 0 var(--btn-ghost-accent),
+        0 5px 14px rgba(15, 23, 42, .24),
+        inset 0 1px 0 rgba(255, 255, 255, .65);
+    transform: translateY(-1px);
+}
+
+.btn-ghost:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* ゴーストボタン内の小アイコン */
+.btn-ghost-icon {
+    width: 3em;
+    height: 3em;
+    object-fit: contain;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25));
 }
 
 @media (max-width: 1023px) {
@@ -178,13 +267,10 @@ body {
 
 }
 
-.btn-ghost:hover {
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .08);
-}
-
 .btn-ghost:disabled {
     cursor: default;
     opacity: .78;
+    transform: none;
 }
 
 .btn-ghost[data-loading="1"]::after {
@@ -198,8 +284,73 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .btn-ghost {
+        transition: none;
+    }
+
     .btn-ghost[data-loading="1"]::after {
         animation: none;
+    }
+}
+
+/* ツールバー用ボタン */
+.toolbar .btn-ghost {
+    min-height: 42px;
+}
+
+.toolbar .btn-ghost .btn-ghost-icon {
+    width: 1.45em;
+    height: 1.45em;
+}
+
+.toolbar .btn-ghost-emoji {
+    font-size: 1.15em;
+    line-height: 1;
+}
+
+
+/* 左ラインだけ色を変える */
+.btn-toolbar-tier {
+    --btn-ghost-accent: #64748b;
+}
+
+.btn-toolbar-post {
+    --btn-ghost-accent: #7c3aed;
+}
+
+.btn-toolbar-mine {
+    --btn-ghost-accent: #a855f7;
+}
+
+@media (max-width: 600px) {
+    .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3px;
+    }
+
+    .toolbar .btn-ghost {
+        width: 100%;
+        min-height: 34px;
+        padding: 4px 7px;
+        font-size: .76rem;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .toolbar .btn-ghost .btn-ghost-icon {
+        width: 2.5em;
+        height: 2.5em;
+    }
+
+    .toolbar .btn-ghost-emoji {
+        font-size: 1.05em;
+    }
+
+    .btn-toolbar-mine {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: min(160px, 100%);
     }
 }
 
@@ -564,6 +715,49 @@ body.is-pwa-standalone .list-footer--bottom {
     text-align: center;
     font-size: .9rem;
     color: #6b7280;
+}
+
+.post-list-message--loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    color: #1e3a8a;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, .12);
+}
+
+.post-list-message--tail {
+    margin: 14px 0 4px 10px;
+}
+
+.post-list-message-spinner {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(37, 99, 235, .18);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: deck-post-filter-spin .8s linear infinite;
+}
+
+.post-list-message-body {
+    display: grid;
+    gap: 3px;
+    text-align: left;
+}
+
+.post-list-message-main {
+    font-weight: 800;
+}
+
+.post-list-message-sub {
+    color: #475569;
+    font-size: .82rem;
+    line-height: 1.45;
 }
 
 .post-list-loading-progress {
@@ -1375,6 +1569,111 @@ body.is-pwa-standalone .list-footer--bottom {
     margin: 0 0 4px;
 }
 
+.post-detail-title--sp {
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.decktitle-editor-box {
+    margin: 0 0 8px;
+}
+
+.decktitle-view {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.decktitle-view[hidden] {
+    display: none !important;
+}
+
+.btn-decktitle-edit,
+.btn-decktitle-save,
+.btn-decktitle-cancel {
+    border: 1px solid #d1d5db;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: .85rem;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.btn-decktitle-edit:hover,
+.btn-decktitle-save:hover,
+.btn-decktitle-cancel:hover {
+    background: #eef2f7;
+}
+
+.btn-decktitle-edit:focus-visible,
+.btn-decktitle-save:focus-visible,
+.btn-decktitle-cancel:focus-visible,
+.decktitle-input:focus-visible {
+    outline: 3px solid rgba(59, 130, 246, .35);
+    outline-offset: 2px;
+}
+
+.btn-decktitle-save {
+    background: #eef7ff;
+    border-color: #bfdbfe;
+}
+
+.decktitle-editor {
+    display: grid;
+    gap: 8px;
+}
+
+.decktitle-editor[hidden] {
+    display: none !important;
+}
+
+.decktitle-label {
+    display: grid;
+    gap: 4px;
+    font-size: .85rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.decktitle-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 9px 10px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.decktitle-editor-actions {
+    margin-top: 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.decktitle-editor-actions .post-title-char-limit {
+    margin-right: auto;
+    font-size: .8rem;
+    line-height: 1.4;
+}
+
+.post-manage-box .decktitle-editor-box {
+    margin: 6px 0 14px;
+}
+
+.post-manage-box .decktitle-view {
+    align-items: flex-start;
+}
+
+.post-manage-box .post-detail-title--sp {
+    flex: 1 1 auto;
+    min-width: min(100%, 180px);
+}
+
 .post-detail-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1871,6 +2170,33 @@ body.is-pwa-standalone .list-footer--bottom {
     color: #6b7280;
     opacity: .85;
     white-space: nowrap;
+    order: 1;
+}
+
+.mana-excluded-cards {
+    flex: 0 0 100%;
+    order: 2;
+    margin-top: .35rem;
+    color: #555;
+    font-size: clamp(.68rem, 2vw, .85rem);
+    line-height: 1.45;
+}
+
+.mana-excluded-cards[hidden] {
+    display: none;
+}
+
+.mana-excluded-lead {
+    margin-bottom: .1rem;
+}
+
+.mana-excluded-list {
+    margin: 0;
+    padding-left: 1.1em;
+}
+
+.mana-excluded-list li::marker {
+    content: "・";
 }
 
 .chart-note {
@@ -2283,6 +2609,34 @@ body.is-pwa-standalone .list-footer--bottom {
     border-bottom-color: #ffffff;
     color: #111827;
     font-weight: 600;
+}
+
+.post-detail-refresh-btn {
+    appearance: none;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    border-radius: 6px;
+    padding: 5px 9px;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.post-detail-refresh-btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.post-detail-refresh-btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.post-detail-refresh-btn:disabled {
+    cursor: wait;
+    opacity: .7;
 }
 
 /* タブパネルの表示切り替え（JSで .is-active を付ける想定） */
@@ -3678,21 +4032,6 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     margin: 2px 0;
 }
 
-.mine-header-beta {
-    margin-top: 6px;
-    padding: 6px 8px;
-    border-radius: 10px;
-    background: #fff7e5;
-    border: 1px solid #f3d089;
-    font-size: .85rem;
-    color: #6c4e14;
-}
-
-.mine-header-beta ul {
-    margin: 4px 0 0;
-    padding-left: 1.2em;
-}
-
 /* ?ボタン */
 .mine-help-btn {
     width: 28px;
@@ -3725,6 +4064,29 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+/* マイ投稿：編集案内 */
+.mine-edit-guide {
+    margin: 8px 0 4px;
+    padding: 10px 12px;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #1e3a8a;
+}
+
+.mine-edit-guide-title {
+    margin: 0 0 3px;
+    font-size: .92rem;
+    font-weight: 800;
+}
+
+.mine-edit-guide-text {
+    margin: 0;
+    font-size: .84rem;
+    font-weight: 600;
+    line-height: 1.6;
 }
 
 /* マイ投稿内タブ */

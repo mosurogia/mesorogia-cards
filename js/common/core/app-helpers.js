@@ -280,10 +280,26 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         return '画像を右クリックして保存できます。';
     }
 
-    function showDeckImgPreviewModal(canvas, fileName) {
-        if (!(canvas instanceof HTMLCanvasElement)) return;
+    function normalizeDeckImagePreviewItems_(canvasOrItems, fileName) {
+        const sourceItems = Array.isArray(canvasOrItems) ? canvasOrItems : [{ canvas: canvasOrItems, fileName }];
+        return sourceItems
+            .map((item, index) => {
+                const canvas = item instanceof HTMLCanvasElement ? item : item?.canvas;
+                if (!(canvas instanceof HTMLCanvasElement)) return null;
+                const currentFileName = item?.fileName || fileName || `image_${index + 1}.png`;
+                return {
+                    dataUrl: canvas.toDataURL('image/png'),
+                    fileName: currentFileName,
+                    label: item?.label || '',
+                };
+            })
+            .filter(Boolean);
+    }
 
-        const dataUrl = canvas.toDataURL('image/png');
+    function showDeckImgPreviewModal(canvasOrItems, fileName) {
+        const previewItems = normalizeDeckImagePreviewItems_(canvasOrItems, fileName);
+        if (!previewItems.length) return;
+
         closeDeckImagePreviewModal();
 
         const modal = document.createElement('div');
@@ -340,15 +356,6 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         hint.textContent = buildDeckImageHint_();
         hintBar.appendChild(hint);
 
-        const buttonBar = document.createElement('div');
-        Object.assign(buttonBar.style, {
-            width: 'min(80vw, 500px)',
-            maxWidth: 'min(80vw, 500px)',
-            display: 'flex',
-            gap: '8px',
-            margin: '8px auto 12px',
-        });
-
         const createActionButton_ = (label) => {
             const button = document.createElement('a');
             button.textContent = label;
@@ -368,43 +375,71 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
             return button;
         };
 
-        const saveButton = createActionButton_('ダウンロード');
-        saveButton.href = dataUrl;
-        saveButton.download = fileName;
+        modal.appendChild(hintBar);
 
-        const shareButton = createActionButton_('共有');
-        shareButton.href = 'javascript:void(0)';
         const ua = String(navigator.userAgent || '').toLowerCase();
         const isIos = /iphone|ipad|ipod/.test(ua) || (ua.includes('macintosh') && (navigator.maxTouchPoints || 0) >= 2);
         const isAndroid = /android/.test(ua);
-        if (!(isIos || isAndroid)) {
-            shareButton.style.display = 'none';
-        } else {
-            shareButton.onclick = async () => {
-                try {
-                    await shareDeckImage_(dataUrl, fileName);
-                } catch (_) {
-                    alert('この端末では画像共有に対応していません。ダウンロードしてご利用ください。');
-                }
-            };
-        }
+        const canShowShare = isIos || isAndroid;
 
-        buttonBar.appendChild(saveButton);
-        buttonBar.appendChild(shareButton);
-        modal.appendChild(hintBar);
-        modal.appendChild(buttonBar);
+        previewItems.forEach((item, index) => {
+            if (previewItems.length > 1) {
+                const label = document.createElement('div');
+                label.textContent = item.label || `${index + 1}枚目`;
+                Object.assign(label.style, {
+                    width: 'min(80vw, 500px)',
+                    maxWidth: 'min(80vw, 500px)',
+                    margin: index === 0 ? '4px auto 0' : '20px auto 0',
+                    fontSize: '14px',
+                    fontWeight: '800',
+                    color: 'rgba(255,255,255,0.92)',
+                });
+                modal.appendChild(label);
+            }
 
-        const image = document.createElement('img');
-        image.src = dataUrl;
-        image.alt = fileName || '画像プレビュー';
-        Object.assign(image.style, {
-            maxWidth: 'min(80vw, 500px)',
-            height: 'auto',
-            borderRadius: '12px',
-            boxShadow: '0 0 24px rgba(0,0,0,0.6)',
-            objectFit: 'contain',
+            const buttonBar = document.createElement('div');
+            Object.assign(buttonBar.style, {
+                width: 'min(80vw, 500px)',
+                maxWidth: 'min(80vw, 500px)',
+                display: 'flex',
+                gap: '8px',
+                margin: '8px auto 12px',
+            });
+
+            const saveButton = createActionButton_('ダウンロード');
+            saveButton.href = item.dataUrl;
+            saveButton.download = item.fileName;
+
+            const shareButton = createActionButton_('共有');
+            shareButton.href = 'javascript:void(0)';
+            if (!canShowShare) {
+                shareButton.style.display = 'none';
+            } else {
+                shareButton.onclick = async () => {
+                    try {
+                        await shareDeckImage_(item.dataUrl, item.fileName);
+                    } catch (_) {
+                        alert('この端末では画像共有に対応していません。ダウンロードしてご利用ください。');
+                    }
+                };
+            }
+
+            buttonBar.appendChild(saveButton);
+            buttonBar.appendChild(shareButton);
+            modal.appendChild(buttonBar);
+
+            const image = document.createElement('img');
+            image.src = item.dataUrl;
+            image.alt = item.fileName || '画像プレビュー';
+            Object.assign(image.style, {
+                maxWidth: 'min(80vw, 500px)',
+                height: 'auto',
+                borderRadius: '12px',
+                boxShadow: '0 0 24px rgba(0,0,0,0.6)',
+                objectFit: 'contain',
+            });
+            modal.appendChild(image);
         });
-        modal.appendChild(image);
 
         const note = document.createElement('div');
         note.textContent = 'ここで生成した画像はXやDiscordなどにそのまま共有できます。';

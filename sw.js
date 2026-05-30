@@ -1,4 +1,4 @@
-var SW_BUILD_VERSION = '2026-05-16-001';
+var SW_BUILD_VERSION = '2026-05-30-005';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
@@ -135,7 +135,7 @@ function shouldUseNetworkFirstAsset(url) {
 }
 
 function isCardDataJson(url) {
-  return /\/public\/(?:cards_latest|cards_latest\.meta|cards_versions|packs|cv|environments)\.json$/.test(url.pathname);
+  return /\/public\/(?:cards_latest|cards_latest\.meta|cards_versions|packs|cv|environments|home-data)\.json$/.test(url.pathname);
 }
 
 function isCardImage(url) {

@@ -68,6 +68,39 @@
     return /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
   }
 
+  function getVisualViewportBottomGap_() {
+    const viewport = window.visualViewport;
+    if (!viewport) return 0;
+
+    const layoutHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const visualBottom = viewport.offsetTop + viewport.height;
+    return Math.max(0, Math.round((layoutHeight - visualBottom) * 100) / 100);
+  }
+
+  function refreshAppViewportGap_() {
+    const gap = isStandalone_() ? getVisualViewportBottomGap_() : 0;
+    document.documentElement.style.setProperty('--app-visual-viewport-bottom-gap', `${gap}px`);
+  }
+
+  function bindAppViewportGap_() {
+    if (document.__appViewportGapBound) return;
+    document.__appViewportGapBound = true;
+
+    const refreshLater = () => {
+      refreshAppViewportGap_();
+      window.setTimeout(refreshAppViewportGap_, 120);
+    };
+
+    refreshAppViewportGap_();
+    window.addEventListener('resize', refreshLater, { passive: true });
+    window.addEventListener('orientationchange', refreshLater, { passive: true });
+    document.addEventListener('focusin', refreshLater);
+    document.addEventListener('focusout', refreshLater);
+
+    window.visualViewport?.addEventListener?.('resize', refreshLater, { passive: true });
+    window.visualViewport?.addEventListener?.('scroll', refreshLater, { passive: true });
+  }
+
   function getCurrentPageKey_() {
     const path = window.location.pathname || '';
     const file = path.split('/').pop() || 'deckmaker.html';
@@ -220,6 +253,7 @@
   function refreshStandaloneChrome_() {
     const standalone = isStandalone_();
     document.body.classList.toggle('is-pwa-standalone', standalone);
+    refreshAppViewportGap_();
 
     const nav = ensureAppBottomNav_();
     nav.hidden = !standalone;
@@ -283,12 +317,30 @@
     showInstruction_(isIos_() ? 'ios' : 'manual');
   }
 
-  function runRepairReload_(button) {
+  async function runRepairReload_(button) {
     const prevText = button?.textContent || '';
     if (button) {
       button.disabled = true;
       button.textContent = '再読み込み中...';
     }
+
+    try {
+      window.clearDeckPostListBrowserCache_?.();
+      const tierCacheTask = window.clearTierListBrowserCache_?.();
+      if (tierCacheTask && typeof tierCacheTask.catch === 'function') {
+        await tierCacheTask.catch((error) => {
+          console.warn('Tier表キャッシュの再取得に失敗しました。', error);
+        });
+      }
+      const removeKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.indexOf('DeckPostListAll:') === 0 || key.indexOf('DeckPostListPage:') === 0)) {
+          removeKeys.push(key);
+        }
+      }
+      removeKeys.forEach(key => localStorage.removeItem(key));
+    } catch (_) {}
 
     const task = window.MesorogiaPwaMaintenance?.repairAndReload?.();
     if (task && typeof task.catch === 'function') {
@@ -572,6 +624,7 @@
   });
 
   function init_() {
+    bindAppViewportGap_();
     refreshStandaloneChrome_();
     refreshHeaderBanner_();
     addFooterEntry_();
@@ -597,6 +650,7 @@
 
   window.matchMedia?.('(display-mode: standalone)')?.addEventListener?.('change', () => {
     refreshStandaloneChrome_();
+    refreshAppViewportGap_();
     refreshHeaderBanner_();
     refreshFooterButton_();
     refreshToolbarButtons_();

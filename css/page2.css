@@ -1614,6 +1614,26 @@
     font-weight: 700;
 }
 
+.mana-excluded-cards {
+    margin-top: .35rem;
+    color: #555;
+    font-size: clamp(.68rem, 2vw, .85rem);
+    line-height: 1.45;
+}
+
+.mana-excluded-lead {
+    margin-bottom: .1rem;
+}
+
+.mana-excluded-list {
+    margin: 0;
+    padding-left: 1.1em;
+}
+
+.mana-excluded-list li::marker {
+    content: "・";
+}
+
 
 
 
@@ -4623,4 +4643,205 @@ font-size: .8rem;
     transition: none !important;
     animation: none !important;
   }
+}
+/* デッキメーカー復元モーダル */
+body.dm-restore-modal-open {
+    overflow: hidden;
+}
+
+.dm-restore-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 7000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(10, 14, 28, .52);
+}
+
+.dm-restore-modal__dialog {
+    width: min(100%, 540px);
+    max-height: calc(100vh - 36px);
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid rgba(20, 28, 48, .16);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(10, 14, 28, .22);
+    color: #172033;
+}
+
+.dm-restore-modal__title {
+    margin: 0;
+    color: #172033;
+    font-size: 1.18rem;
+    line-height: 1.35;
+    font-weight: 800;
+}
+
+.dm-restore-modal__desc {
+    margin: 10px 0 0;
+    color: #475569;
+    font-size: .94rem;
+    line-height: 1.65;
+}
+
+.dm-restore-modal__meta {
+    display: grid;
+    gap: 8px;
+    margin: 16px 0 18px;
+    padding: 12px;
+    border: 1px solid rgba(31, 41, 55, .12);
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.dm-restore-modal__meta div {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 10px;
+    align-items: baseline;
+}
+
+.dm-restore-modal__meta-last {
+    align-items: start;
+}
+
+.dm-restore-modal__meta dt {
+    color: #5f6f87;
+    font-size: .84rem;
+    font-weight: 700;
+}
+
+.dm-restore-modal__meta dd {
+    min-width: 0;
+    margin: 0;
+    color: #172033;
+    font-size: .94rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.dm-restore-modal__actions {
+    display: grid;
+    gap: 12px;
+}
+
+.dm-restore-modal__sub-actions {
+    display: grid;
+    gap: 10px;
+}
+
+.dm-restore-modal__sub-actions.is-single {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.dm-restore-modal__button-wrap {
+    position: relative;
+    min-width: 0;
+}
+
+.dm-restore-modal__button {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: none;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+}
+
+.dm-restore-modal__button--primary {
+    min-height: 50px;
+    background: #4f46b5;
+    border-color: #453da4;
+    color: #fff;
+}
+
+.dm-restore-modal__button--primary:hover {
+    background: #453da4;
+}
+
+.dm-restore-modal__button--secondary {
+    padding-right: 42px;
+
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, .12);
+
+    color: #334155;
+}
+
+.dm-restore-modal__button--secondary:hover {
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, .20);
+}
+
+.dm-restore-modal__button--danger {
+    background: #fff8f8;
+    border-color: rgba(185, 28, 28, .20);
+
+    color: #b91c1c;
+}
+
+.dm-restore-modal__button--danger:hover {
+    background: #fff1f1;
+    border-color: rgba(185, 28, 28, .32);
+}
+
+.dm-restore-modal__button:focus-visible,
+.dm-restore-modal__help:focus-visible {
+    outline: 3px solid rgba(79, 70, 181, .28);
+    outline-offset: 2px;
+}
+
+.dm-restore-modal__help {
+    position: absolute;
+    top: 50%;
+    right: 9px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(31, 41, 55, .18);
+    border-radius: 50%;
+    background: #fff;
+    color: #475569;
+    font: inherit;
+    font-size: .86rem;
+    font-weight: 700;
+    line-height: 1;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.dm-restore-modal__help:hover {
+    background: #f1f5f9;
+}
+
+.dm-restore-modal__divider {
+    height: 1px;
+    background: rgba(31, 41, 55, .1);
+}
+
+@media (min-width: 768px) {
+    .dm-restore-modal__dialog {
+        padding: 24px;
+    }
+
+    .dm-restore-modal__sub-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dm-restore-modal__sub-actions.is-single {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dm-restore-modal__button {
+        transition: none;
+    }
 }

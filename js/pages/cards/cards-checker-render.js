@@ -1172,6 +1172,13 @@ function initPackViews_(){
   });
 }
 
+function reapplyCurrentPackViews_(forceRecalc = true){
+  document.querySelectorAll('#packs-root .pack-section').forEach(pack => {
+    const mode = pack.dataset.viewMode || window.__topPackViewMode || 'all';
+    applyPackView_(pack, mode, forceRecalc);
+  });
+}
+
 let __checkerOwnedRefreshTimer = 0;
 
 function logCheckerOwnedRefresh_(reason, step, detail = {}){
@@ -1216,8 +1223,8 @@ function scheduleCheckerOwnedRefresh_(delay = 0, reason = 'unknown'){
     }
 
     try {
-      applyTopPackView_(window.__topPackViewMode || 'all', true);
-      logCheckerOwnedRefresh_(reason, 'pack-view-applied', { mode: window.__topPackViewMode || 'all' });
+      reapplyCurrentPackViews_(true);
+      logCheckerOwnedRefresh_(reason, 'pack-view-applied', { mode: 'current' });
     } catch (e) {
       logCheckerOwnedRefresh_(reason, 'pack-view-error', { message: e?.message || String(e) });
     }

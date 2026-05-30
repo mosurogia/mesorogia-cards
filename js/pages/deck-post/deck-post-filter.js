@@ -124,9 +124,7 @@
 }
 
   function quickFilterReady_() {
-    const list = window.__DeckPostState?.list;
-    const openBtn = document.getElementById('filterBtn');
-    return !!list?.hasAllItems || openBtn?.dataset.ready === '1';
+    return true;
   }
 
   function showQuickFilterPreparing_() {
@@ -620,6 +618,50 @@
     return mode === 'and' ? 'and' : 'or';
   }
 
+  /** URL指定カードIDを5桁へ正規化 */
+  function normalizeUrlCardCd_(value) {
+    if (typeof window.normCd5 === 'function') return window.normCd5(value);
+    const s = String(value || '').trim();
+    return s ? s.padStart(5, '0').slice(0, 5) : '';
+  }
+
+  /** URLの採用デッキ検索カードIDを取得 */
+  function getAdoptionCardCdFromUrl_() {
+    try {
+      const sp = new URLSearchParams(location.search || '');
+      const hasSharedPost = !!String(sp.get('pid') || sp.get('post') || '').trim();
+      if (hasSharedPost) return '';
+      const cd = normalizeUrlCardCd_(sp.get('card') || '');
+      return cd && cd !== '00000' ? cd : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function getPostFilterCardName_(cd) {
+    const raw = String(cd || '').trim();
+    const cd5 = normalizeUrlCardCd_(raw);
+    const keys = Array.from(new Set([raw, cd5].filter(Boolean)));
+    const maps = [window.cardMap, window.allCardsMap].filter((map) => map && typeof map === 'object');
+
+    try {
+      const sp = new URLSearchParams(location.search || '');
+      const urlCd = normalizeUrlCardCd_(sp.get('card') || '');
+      const urlName = String(sp.get('cardName') || '').trim();
+      if (urlName && urlCd && urlCd === cd5) return urlName;
+    } catch (_) {}
+
+    for (const map of maps) {
+      for (const key of keys) {
+        const card = map[key];
+        const name = String(card?.name || card?.cardName || '').trim();
+        if (name) return name;
+      }
+    }
+
+    return cd5 || raw;
+  }
+
   /** 適用中チップ左側の OR/AND 表示を更新 */
   function wireActiveMatchModeChip_() {
       const bar = document.getElementById('active-chips-bar');
@@ -784,7 +826,7 @@
 
       if (cards.length) {
           cards.forEach((cd) => {
-              const name = (window.cardMap || window.allCardsMap || {})?.[cd]?.name || cd;
+              const name = getPostFilterCardName_(cd);
 
               chips.push({
                   label: `🃏${name}`,
@@ -1067,7 +1109,9 @@ function rebuildFilteredItems(){
 
   if (!state?.list) return [];
 
-  const base = state.list.allItems || [];
+  const base = typeof window.getListItemsForFilterBase_ === 'function'
+    ? window.getListItemsForFilterBase_(state.list.allItems || [])
+    : (state.list.allItems || []);
   const sortKey = state.list.sortKey || 'new';
 
   let filtered = base.slice();
@@ -1163,12 +1207,6 @@ function rebuildFilteredItems(){
 
   /** フィルター適用（再描画トリガー） */
   async function applyPostFilter_() {
-    if (!window.__DeckPostState?.list?.hasAllItems) {
-      try {
-        await window.DeckPostList?.fetchAllList?.();
-      } catch (_) {}
-    }
-
     const draft = window.PostFilterDraft;
     const applied = window.PostFilterState;
 
@@ -1273,6 +1311,64 @@ function rebuildFilteredItems(){
     window.PostFilterDraft.selectedPostLabel = window.PostFilterState.selectedPostLabel;
 
     window.DeckPostFilter?.updateActiveChipsBar?.();
+  }
+
+  /** URLのカード条件から採用デッキ検索を適用 */
+  function applyAdoptionCardFromUrl_() {
+    const cd = getAdoptionCardCdFromUrl_();
+    if (!cd) return '';
+
+    window.PostFilterState ??= {};
+    window.PostFilterDraft ??= {};
+    window.PostFilterState.selectedTags ??= new Set();
+    window.PostFilterDraft.selectedTags ??= new Set();
+    window.PostFilterState.selectedUserTags ??= new Set();
+    window.PostFilterDraft.selectedUserTags ??= new Set();
+    window.PostFilterState.selectedEnvironmentIds ??= new Set();
+    window.PostFilterDraft.selectedEnvironmentIds ??= new Set();
+    window.PostFilterState.selectedContentFilters ??= new Set();
+    window.PostFilterDraft.selectedContentFilters ??= new Set();
+
+    window.PostFilterState.selectedTags.clear();
+    window.PostFilterDraft.selectedTags.clear();
+    window.PostFilterState.selectedUserTags.clear();
+    window.PostFilterDraft.selectedUserTags.clear();
+    window.PostFilterState.selectedEnvironmentIds.clear();
+    window.PostFilterDraft.selectedEnvironmentIds.clear();
+    window.PostFilterState.selectedContentFilters.clear();
+    window.PostFilterDraft.selectedContentFilters.clear();
+
+    window.PostFilterState.selectedPosterKey = '';
+    window.PostFilterState.selectedPosterLabel = '';
+    window.PostFilterDraft.selectedPosterKey = '';
+    window.PostFilterDraft.selectedPosterLabel = '';
+    window.PostFilterState.selectedPostId = '';
+    window.PostFilterState.selectedPostLabel = '';
+    window.PostFilterDraft.selectedPostId = '';
+    window.PostFilterDraft.selectedPostLabel = '';
+    window.PostFilterState.selectedFilterMode = 'or';
+    window.PostFilterDraft.selectedFilterMode = 'or';
+    window.PostFilterState.selectedCardCds = new Set([cd]);
+    window.PostFilterDraft.selectedCardCds = new Set([cd]);
+
+    try {
+      window.__renderSelectedCards_?.();
+      window.__renderFilterModeToggle_?.();
+      window.__renderContentFilterButtons_?.();
+      window.__renderSelectedUserTags_?.();
+    } catch (_) {}
+
+    window.DeckPostFilter?.updateActiveChipsBar?.();
+
+    Promise.resolve(window.ensureCardMapLoaded?.())
+      .then(() => {
+        if (!window.PostFilterState?.selectedCardCds?.has?.(cd)) return;
+        window.__renderSelectedCards_?.();
+        window.DeckPostFilter?.updateActiveChipsBar?.();
+      })
+      .catch(() => {});
+
+    return cd;
   }
 
   // =========================
@@ -1551,6 +1647,8 @@ function rebuildFilteredItems(){
     applyPostFilter: applyPostFilter_,
     buildPostFilterTagUI: buildPostFilterTagUI_,
     applySharedPostFromUrl: applySharedPostFromUrl_,
+    applyAdoptionCardFromUrl: applyAdoptionCardFromUrl_,
+    getAdoptionCardCdFromUrl: getAdoptionCardCdFromUrl_,
     shouldShowTag: shouldShowTag_,
     normalizeUserTagSearch: normalizeUserTagSearch_,
     syncDraftFromApplied: syncDraftFromApplied_,
@@ -1813,9 +1911,7 @@ function rebuildFilteredItems(){
     // 12-2) カード条件UI
     // =========================
     function getCardNameByCd_(cd) {
-      const m = window.cardMap || window.allCardsMap || {};
-      const c = m?.[cd];
-      return String(c?.name || c?.cardName || cd);
+      return getPostFilterCardName_(cd);
     }
 
     function renderSelectedCards_() {
@@ -2019,13 +2115,6 @@ function rebuildFilteredItems(){
     if (openBtn && !openBtn.dataset.wiredFilterOpen) {
       openBtn.dataset.wiredFilterOpen = '1';
       openBtn.addEventListener('click', async () => {
-        const filterReady = !!window.__DeckPostState?.list?.hasAllItems || openBtn.dataset.ready === '1';
-        if (!filterReady) {
-          window.DeckPostList?.startSlowBackgroundListFetch?.();
-          window.showActionToast?.('フィルター準備中です。全投稿の読み込み完了後に開けます。');
-          return;
-        }
-
         syncDraftFromApplied_();
         window.__renderSelectedCards_?.();
         window.__renderFilterModeToggle_?.();

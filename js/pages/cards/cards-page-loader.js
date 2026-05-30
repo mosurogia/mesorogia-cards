@@ -32,6 +32,52 @@
     'cards-checker-render.js',
   ];
 
+  function initCardsSummaryPanelToggle_(){
+    const panel = document.getElementById('cards-summary-panel');
+    const button = document.getElementById('cards-summary-panel-toggle');
+    if (!panel || !button || button.dataset.bound === '1') return;
+
+    button.dataset.bound = '1';
+
+    let positionRaf = 0;
+
+    const updateTogglePosition = () => {
+      positionRaf = 0;
+      const rect = panel.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      const buttonHeight = button.offsetHeight || 48;
+      const visibleTop = Math.max(0, rect.top);
+      const visibleBottom = Math.min(viewportHeight, rect.bottom);
+      const visibleHeight = Math.max(buttonHeight, visibleBottom - visibleTop);
+      const top = Math.max(0, Math.round(visibleTop + ((visibleHeight - buttonHeight) / 2)));
+      button.style.setProperty('--summary-toggle-top', `${top}px`);
+    };
+
+    const scheduleTogglePosition = () => {
+      if (positionRaf) return;
+      positionRaf = requestAnimationFrame(updateTogglePosition);
+    };
+
+    const setCollapsed = (collapsed) => {
+      const label = collapsed ? 'カードグループを開く' : 'カードグループを閉じる';
+      panel.classList.toggle('is-collapsed', collapsed);
+      button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      button.setAttribute('aria-label', label);
+      button.dataset.tooltip = label;
+      button.innerHTML = collapsed ? '&#9654;' : '&#9664;';
+      scheduleTogglePosition();
+    };
+
+    setCollapsed(panel.classList.contains('is-collapsed'));
+    button.addEventListener('click', () => {
+      setCollapsed(!panel.classList.contains('is-collapsed'));
+    });
+    window.addEventListener('scroll', scheduleTogglePosition, { passive: true });
+    window.addEventListener('resize', scheduleTogglePosition);
+    panel.addEventListener('scroll', scheduleTogglePosition, { passive: true });
+    scheduleTogglePosition();
+  }
+
   function loadSeq(files, i, done, fail){
     if (i >= files.length) return done && done();
     const s = document.createElement('script');
@@ -132,9 +178,13 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hook, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      hook();
+      initCardsSummaryPanelToggle_();
+    }, { once: true });
   } else {
     hook();
+    initCardsSummaryPanelToggle_();
   }
 
   document.addEventListener('tab:switched', (e) => {
