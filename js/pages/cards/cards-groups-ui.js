@@ -300,9 +300,6 @@ function renderSidebar_() {
     if (res && res.ok === false) return;
     markEditStarted_();
 
-    // ✅ 編集開始時だけ：選択済みを上に寄せた並びを反映
-    try { window.sortCards?.(); } catch {}
-
     scheduleHeavySync_();
     });
 
@@ -372,7 +369,6 @@ function renderSidebar_() {
         return;
     }
     window.CardGroups.createGroupAndEdit();
-    try { window.sortCards?.(); } catch {}
     // createGroupAndEdit が editingId に入る想定：選択も追従
     try {
         const st3 = window.CardGroups.getState();
@@ -725,9 +721,18 @@ function init() {
     window.CardGroups?.clearActiveOnBoot?.();
   } catch {}
 
+let lastEditingId = window.CardGroups.getState()?.editingId || '';
 window.CardGroups.onChange(() => {
   try {
     const st = window.CardGroups.getState();
+    const editingId = st.editingId || '';
+
+    // 編集開始・終了時だけ並び替え、編集中のカード追加では一覧位置を動かさない
+    if (editingId !== lastEditingId) {
+      lastEditingId = editingId;
+      try { window.sortCards?.(); } catch {}
+    }
+
     if (st.editingId) {
       uiSelectedId = st.editingId;
     } else if (!st.activeId) {

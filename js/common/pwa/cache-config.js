@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-05-30-005',
-    staticCacheName: 'mesorogia-static-2026-05-30-005',
-    runtimeCacheName: 'mesorogia-runtime-2026-05-30-005',
+    version: '2026-05-31-002',
+    staticCacheName: 'mesorogia-static-2026-05-31-002',
+    runtimeCacheName: 'mesorogia-runtime-2026-05-31-002',
     navigationNetworkTimeoutMs: 1200,
     assetNetworkTimeoutMs: 900,
     appShell: [
@@ -15,6 +15,7 @@
       './deck-post.html',
       './match-results.html',
       './tier.html',
+      './info.html',
       './img/appicon_1024.webp',
       './img/appicon_192.webp',
       './img/appicon_512.webp',

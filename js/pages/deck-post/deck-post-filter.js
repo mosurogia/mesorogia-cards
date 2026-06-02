@@ -851,6 +851,7 @@
               label: `🔗投稿:${postLabel || postId}`,
               className: 'is-post',
               onRemove: () => {
+                  window.DeckPostList?.clearSharedPostView?.();
                   window.PostFilterState.selectedPostId = '';
                   window.PostFilterState.selectedPostLabel = '';
                   window.PostFilterDraft.selectedPostId = '';
@@ -872,6 +873,7 @@
           chips,
           clearLabel: 'すべて解除',
           onClearAll: () => {
+              const hadSharedPost = !!String(window.PostFilterState.selectedPostId || '').trim();
               window.PostFilterState.selectedTags?.clear?.();
               window.PostFilterState.selectedUserTags?.clear?.();
               window.PostFilterState.selectedEnvironmentIds?.clear?.();
@@ -895,6 +897,7 @@
               window.PostFilterState.selectedPostLabel = '';
               window.PostFilterDraft.selectedPostId = '';
               window.PostFilterDraft.selectedPostLabel = '';
+              if (hadSharedPost) window.DeckPostList?.clearSharedPostView?.();
 
               try {
                   window.__renderSelectedCards_?.();

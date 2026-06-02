@@ -2624,7 +2624,7 @@ body.is-pwa-standalone .deckcode-modal {
     padding: 4px 2px;
 }
 
-.app-bottom-nav a[data-key="settings"] {
+.app-bottom-nav a[data-key="info.html"] {
     padding-right: 0;
     padding-left: 0;
 }

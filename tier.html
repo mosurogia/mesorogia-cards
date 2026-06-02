@@ -1349,6 +1349,68 @@
     </div>
 </footer>
 
+<!-- ===== ログイン / 新規登録 モーダル ===== -->
+<div class="account-modal" id="authLoginModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+        <div class="account-modal-head">
+            <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+            <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+        </div>
+
+        <div class="account-modal-body">
+            <div class="auth-stack">
+                <!-- 非ログイン時に表示 -->
+                <form id="auth-login-form" class="auth-login-form">
+                    <div class="poster-line" style="margin-top:6px;">
+                        <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
+                            autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="poster-line">
+                        <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                            autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                    </div>
+
+                    <div class="poster-line">
+                        <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                            autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                    </div>
+
+                    <div class="auth-buttons">
+                        <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                        <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                    </div>
+
+                    <button type="button" class="auth-forgot-link" id="auth-forgot-password">
+                        パスワードを忘れた場合
+                    </button>
+
+                    <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;">
+                    </p>
+                </form>
+
+                <!-- ログイン中に表示 -->
+                <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                    <p style="margin:0;">ログイン中です。</p>
+                    <p style="margin:4px 0 0; font-size:.85rem; opacity:.8;">
+                        アカウント情報の変更は、ヘッダーのアカウントメニューから行えます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== パスワード保存用の隠しログインフォーム ===== -->
+<form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on" style="position:absolute; left:-9999px; top:-9999px;
+             width:1px; height:1px; overflow:hidden;
+             opacity:0; pointer-events:none;">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="current-password">
+</form>
+<iframe name="auth-login-save-frame" style="display:none;"></iframe>
+
 <!-- ===== JavaScript ===== -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="js/common/core/defs.js?v=2026-05-05-006"></script>
@@ -1358,15 +1420,15 @@
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-008"></script>
 <script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
-<script src="js/common/account/account.js?v=2026-05-06-003"></script>
+<script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-30-005"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-31-002"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
 <script src="js/pages/tier/tier-page.js?v=2026-05-24-003"></script>
-<script src="js/common/pwa/install-ui.js?v=2026-05-30-001"></script>
+<script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
 <script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
 
 </body>

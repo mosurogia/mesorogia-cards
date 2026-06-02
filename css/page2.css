@@ -236,7 +236,7 @@
 
 
 .deck-summary {
-    width: 155px;
+    width: 180px;
     text-align: right;
     font-size: 14px;
     line-height: 1.4;
@@ -252,7 +252,7 @@
         position: absolute;
         right: 18px;
         top: 0;
-        width: 120px;
+        width: 150px;
         height: 100%;
         background: #fff;
         border-left: 1px solid #ccc;
@@ -266,7 +266,7 @@
 @media (max-width: 410px) {
 .deck-summary {
         font-size: 8.5px;
-        width: 100px;
+        width: 130px;
     }
 }
 @media (max-width: 768px) {
@@ -304,6 +304,10 @@
     align-items: stretch;
 }
 
+.analyze-row-top .analyze-button {
+    white-space: nowrap;
+}
+
 .analyze-button {
     background-color: #6a5acd;
     color: white;
@@ -320,6 +324,7 @@
     .analyze-button {
             margin-top: 0rem;
             font-size: .5rem;
+            padding: 5px 6px;
         }
 }
 @media (max-width: 410px) {

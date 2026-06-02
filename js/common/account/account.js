@@ -279,16 +279,6 @@
             </div>
             </section>
 
-            <section class="account-data-section account-site-info-section" id="account-section-site-info" aria-labelledby="account-site-info-title">
-            <div class="account-section-head">
-                <h4 id="account-site-info-title">サイト情報</h4>
-            </div>
-            <div class="account-site-info">
-                <p><strong>モスロギア</strong> はアプリ「神託のメソロギア」の非公式ファンサイトです。</p>
-                <p><a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">公式サイト</a></p>
-                <p>© 2025 Mesorogia Cards</p>
-            </div>
-            </section>
         </div>
 
         <div class="account-modal-footer">

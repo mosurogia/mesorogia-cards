@@ -9,6 +9,11 @@
 
     const FALLBACK_NEWS_ITEMS = [];
     const FALLBACK_EVENT_ITEMS = [];
+    const NEWS_CATEGORIES = ['すべて', 'サイト更新', '不具合修正', 'その他'];
+    let currentNewsItems_ = [];
+    let newsModalMode_ = 'list';
+    let selectedNews_ = null;
+    let selectedNewsCategory_ = 'すべて';
     let currentEventItems_ = [];
     let visibleCalendarMonth_ = null;
 
@@ -122,18 +127,41 @@
         return element;
     }
 
+    function normalizeNewsCategory_(category) {
+        const key = String(category || '').trim();
+
+        const map = {
+            'サイト更新': 'site',
+            '不具合修正': 'bugfix',
+            'その他': 'other',
+        };
+
+        return map[key] || 'other';
+    }
+
+    function getNewsCategoryClass_(category) {
+        return `home-news-category--${normalizeNewsCategory_(category)}`;
+    }
+
     function renderNews(items) {
+        const newsItems = Array.isArray(items) ? items : [];
+        currentNewsItems_ = newsItems;
+
         const list = document.querySelector('[data-home-news-list]');
         if (!list) return;
 
-        const newsItems = Array.isArray(items) ? items : [];
-
         if (newsItems.length === 0) {
             list.replaceChildren(createEmptyItem_('現在表示できる更新履歴はありません。'));
+            if (newsModalMode_ === 'list' && document.getElementById('homeNewsModal')) {
+                renderNewsModalList_();
+            }
             return;
         }
 
-        list.replaceChildren(...newsItems.slice(0, 5).map((item) => {
+        const limit = Number(list.dataset.homeNewsLimit || 5);
+        const visibleItems = Number.isFinite(limit) && limit > 0 ? newsItems.slice(0, limit) : newsItems;
+
+        list.replaceChildren(...visibleItems.map((item) => {
             const article = document.createElement('article');
             article.className = 'home-list-item home-news-button';
             article.tabIndex = 0;
@@ -149,6 +177,13 @@
             const time = createTextElement('time', formatDate(item.date));
             time.dateTime = item.date || '';
 
+            const meta = document.createElement('div');
+            meta.className = 'home-news-meta';
+            meta.append(
+                time,
+                createTextElement('span', item.category || 'その他', `home-news-category ${getNewsCategoryClass_(item.category)}`)
+            );
+
             const body = document.createElement('div');
             body.className = 'home-news-body';
             body.append(
@@ -159,9 +194,13 @@
             const action = createTextElement('span', '詳細', 'home-news-action');
             action.setAttribute('aria-hidden', 'true');
 
-            article.append(time, body, action);
+            article.append(meta, body, action);
             return article;
         }));
+
+        if (newsModalMode_ === 'list' && document.getElementById('homeNewsModal')) {
+            renderNewsModalList_();
+        }
     }
 
     function ensureNewsModal_() {
@@ -177,30 +216,44 @@
         content.className = 'home-news-modal-content';
         content.setAttribute('role', 'dialog');
         content.setAttribute('aria-modal', 'true');
-        content.setAttribute('aria-labelledby', 'homeNewsModalTitle');
+        content.setAttribute('aria-label', '更新履歴');
 
         content.innerHTML = `
             <button type="button" class="home-news-modal-close" aria-label="閉じる">×</button>
 
-            <div class="home-news-modal-hero">
-                <h3 id="homeNewsModalTitle"></h3>
-                <div class="home-news-modal-meta">
-                    <time id="homeNewsModalDate"></time>
-                    <span id="homeNewsModalCategory">更新情報</span>
-                </div>
-            </div>
+            <section class="home-news-modal-screen home-news-modal-list-screen" data-home-news-modal-screen="list">
+                <header class="home-news-modal-list-head">
+                    <h3>更新履歴</h3>
+                </header>
+                <div class="home-news-modal-filter" aria-label="更新履歴カテゴリ"></div>
+                <div class="home-news-modal-list" data-home-news-modal-list></div>
+            </section>
 
-            <div class="home-news-modal-body">
-                <div class="home-news-modal-note" id="homeNewsModalNote"></div>
-                <a class="home-news-modal-link" id="homeNewsModalLink" href="#" target="_blank" rel="noopener noreferrer">
-                    詳細ページを見る
-                </a>
-            </div>
+            <section class="home-news-modal-screen home-news-modal-detail-screen" data-home-news-modal-screen="detail" hidden>
+                <button type="button" class="home-news-modal-back">← 更新履歴一覧へ戻る</button>
+                <div class="home-news-modal-hero">
+                    <h3 id="homeNewsModalTitle"></h3>
+                    <div class="home-news-modal-meta">
+                        <time id="homeNewsModalDate"></time>
+                        <span id="homeNewsModalCategory">更新情報</span>
+                    </div>
+                </div>
+
+                <div class="home-news-modal-body">
+                    <div class="home-news-modal-note" id="homeNewsModalNote"></div>
+                    <a class="home-news-modal-link" id="homeNewsModalLink" href="#" target="_blank" rel="noopener noreferrer">
+                        詳細ページを見る
+                    </a>
+                </div>
+            </section>
         `;
 
         modal.append(content);
 
         modal.querySelector('.home-news-modal-close')?.addEventListener('click', closeNewsModal_);
+        modal.querySelector('.home-news-modal-back')?.addEventListener('click', () => {
+            setNewsModalMode_('list');
+        });
 
         modal.addEventListener('click', (event) => {
             if (event.target === modal) closeNewsModal_();
@@ -208,6 +261,79 @@
 
         document.body.append(modal);
         return modal;
+    }
+
+    function setNewsModalMode_(mode) {
+        const modal = ensureNewsModal_();
+        newsModalMode_ = mode === 'detail' ? 'detail' : 'list';
+
+        modal.querySelectorAll('[data-home-news-modal-screen]').forEach((screen) => {
+            screen.hidden = screen.dataset.homeNewsModalScreen !== newsModalMode_;
+        });
+
+        if (newsModalMode_ === 'list') {
+            renderNewsModalList_();
+            modal.querySelector('.home-news-modal-close')?.focus();
+        } else {
+            modal.querySelector('.home-news-modal-back')?.focus();
+        }
+    }
+
+    function renderNewsModalList_() {
+        const modal = ensureNewsModal_();
+        const filter = modal.querySelector('.home-news-modal-filter');
+        const list = modal.querySelector('[data-home-news-modal-list]');
+        if (!filter || !list) return;
+
+        filter.replaceChildren(...NEWS_CATEGORIES.map((category) => {
+            const categoryClass = category === 'すべて'
+                ? 'home-news-category--all'
+                : getNewsCategoryClass_(category);
+            const button = createTextElement('button', category, `home-news-modal-filter-button ${categoryClass}`);
+            button.type = 'button';
+            button.classList.toggle('is-active', category === selectedNewsCategory_);
+            button.setAttribute('aria-pressed', String(category === selectedNewsCategory_));
+            button.addEventListener('click', () => {
+                selectedNewsCategory_ = category;
+                renderNewsModalList_();
+            });
+            return button;
+        }));
+
+        const visibleItems = selectedNewsCategory_ === 'すべて'
+            ? currentNewsItems_
+            : currentNewsItems_.filter((item) => item?.category === selectedNewsCategory_);
+
+        if (visibleItems.length === 0) {
+            list.replaceChildren(createEmptyItem_('該当する更新履歴はありません。'));
+            return;
+        }
+
+        list.replaceChildren(...visibleItems.map((item) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'home-news-modal-list-card';
+            button.setAttribute('aria-label', `${formatDate(item.date)} ${item.title || '更新履歴'} の詳細を見る`);
+
+            const meta = document.createElement('div');
+            meta.className = 'home-news-modal-list-meta';
+
+            const time = createTextElement('time', formatDate(item.date));
+            time.dateTime = item.date || '';
+            meta.append(
+                time,
+                createTextElement('span', item.category || 'その他', `home-news-modal-list-category home-news-category ${getNewsCategoryClass_(item.category)}`)
+            );
+
+            button.append(
+                meta,
+                createTextElement('h4', item.title || '更新履歴'),
+                createTextElement('p', item.description || ''),
+                createTextElement('span', '詳細を見る', 'home-news-modal-list-action')
+            );
+            button.addEventListener('click', () => openNewsModal_(item));
+            return button;
+        }));
     }
 
     function openNewsModal_(item) {
@@ -224,6 +350,7 @@
         const itemNote = item?.note || item?.description || '';
         const itemCategory = item?.category || item?.label || '更新情報';
         const itemUrl = item?.url || '';
+        selectedNews_ = item || null;
 
         if (title) title.textContent = itemTitle;
 
@@ -235,6 +362,7 @@
 
         if (category) {
             category.textContent = itemCategory;
+            category.className = `home-news-category ${getNewsCategoryClass_(itemCategory)}`;
         }
 
         if (note) {
@@ -251,13 +379,22 @@
         }
 
         modal.style.display = 'flex';
-        modal.querySelector('.home-news-modal-close')?.focus();
+        setNewsModalMode_('detail');
+    }
+
+    function openNewsListModal_() {
+        const modal = ensureNewsModal_();
+        selectedNews_ = null;
+        modal.style.display = 'flex';
+        setNewsModalMode_('list');
     }
 
     function closeNewsModal_() {
         const modal = document.getElementById('homeNewsModal');
         if (!modal) return;
         modal.style.display = 'none';
+        newsModalMode_ = 'list';
+        selectedNews_ = null;
     }
 
     function buildEventCalendarTable_(items, options = {}) {
@@ -566,7 +703,31 @@
         const root = document.querySelector('[data-home-event-calendar]');
         if (!root) return null;
 
-        const calendar = buildEventCalendarTable_(items, { targetPrefix: 'home-event-list' });
+        const isFullCalendar = root.hasAttribute('data-home-event-calendar-full');
+        const calendar = buildEventCalendarTable_(items, {
+            targetPrefix: isFullCalendar ? 'home-event-summary' : 'home-event-list',
+        });
+        const controls = buildEventCalendarControls_(calendar, (amount) => {
+            visibleCalendarMonth_ = addMonths_(visibleCalendarMonth_ || calendar.monthBase, amount);
+            renderEvents(currentEventItems_);
+        });
+
+        if (isFullCalendar) {
+            root.replaceChildren(
+                controls,
+                calendar.table,
+                buildEventCalendarSummary_(calendar.events)
+            );
+
+            if (!root.dataset.calendarJumpBound) {
+                root.addEventListener('click', handleCalendarJumpEvent_);
+                root.addEventListener('keydown', handleCalendarJumpEvent_);
+                root.dataset.calendarJumpBound = 'true';
+            }
+
+            return calendar;
+        }
+
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'home-event-calendar-button';
@@ -581,10 +742,7 @@
         const inline = document.createElement('div');
         inline.className = 'home-event-calendar-inline';
         inline.append(
-            buildEventCalendarControls_(calendar, (amount) => {
-                visibleCalendarMonth_ = addMonths_(visibleCalendarMonth_ || calendar.monthBase, amount);
-                renderEvents(currentEventItems_);
-            }),
+            controls,
             calendar.table
         );
 
@@ -740,9 +898,19 @@
         });
     }
 
+    function bindNewsListModal_() {
+        document.querySelectorAll('[data-home-news-list-open]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                openNewsListModal_();
+            });
+        });
+    }
+
     async function init() {
         bindDisabledLinks();
         bindNewsModalKeys_();
+        bindNewsListModal_();
 
         const initialData = getInitialHomeData_();
         renderNews(initialData.news);

@@ -2,12 +2,6 @@
   0.ベース / 共通レイアウト
 ========================*/
 
-/* 全体ベース */
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-}
-
 /* コンテナ */
 .container {
     max-width: 1200px;

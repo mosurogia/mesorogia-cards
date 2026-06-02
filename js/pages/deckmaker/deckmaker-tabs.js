@@ -67,20 +67,20 @@
   // 互換API：分析＆投稿タブ → デッキ投稿まで一気に移動
   // - HTML: onclick="goToAnalyzeTab()" の互換 :contentReference[oaicite:8]{index=8}
   // =====================================================
-  window.goToAnalyzeTab ??= function goToAnalyzeTab() {
+  function goToAnalyzeSubtab(subtabId, subtabClass) {
     // 1) 上段タブを edit に
     const tab2 = document.querySelector('#tab2');
     if (tab2 && typeof window.switchTab === 'function') {
       window.switchTab('edit', tab2);
     }
 
-    // 2) edit内サブタブを post-tab に
-    const postTabBtn =
-      document.querySelector('#deck-info .post-tab-bar') ||
-      document.querySelector('#deck-info [onclick*="post-tab"]');
+    // 2) edit内サブタブを切り替え
+    const subtabBtn =
+      document.querySelector(`#deck-info .${subtabClass}`) ||
+      document.querySelector(`#deck-info [onclick*="${subtabId}"]`);
 
-    if (postTabBtn && typeof window.switchTab === 'function') {
-      window.switchTab('post-tab', postTabBtn);
+    if (subtabBtn && typeof window.switchTab === 'function') {
+      window.switchTab(subtabId, subtabBtn);
     }
 
     // 3) 念のため同期（tab:switched側でも共通同期されるが、旧page2互換で保険）
@@ -89,5 +89,13 @@
       if (typeof window.updateDeckAnalysis === 'function') window.updateDeckAnalysis();
       if (typeof window.updateExchangeSummary === 'function') window.updateExchangeSummary();
     });
+  }
+
+  window.goToDeckInfoTab ??= function goToDeckInfoTab() {
+    goToAnalyzeSubtab('info-tab', 'info-tab-bar');
+  };
+
+  window.goToAnalyzeTab ??= function goToAnalyzeTab() {
+    goToAnalyzeSubtab('post-tab', 'post-tab-bar');
   };
 })();

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- ===== 基本設定 ===== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/mosurogia_favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <link rel="manifest" href="manifest.webmanifest?v=2026-05-05-006">
+    <meta name="theme-color" content="#111827">
+
+    <!-- ===== タイトル ===== -->
+    <title>情報｜モスロギア</title>
+    <meta name="description" content="モスロギアのイベントカレンダー、戦績ページ、設定、更新履歴、公式リンクをまとめた情報ページです。">
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/info.html">
+
+    <!-- ===== スタイル ===== -->
+    <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-05-28-001">
+    <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
+    <link rel="stylesheet" href="css/page0.css?v=2026-05-31-003">
+    <link rel="stylesheet" href="css/page7.css?v=2026-05-30-002">
+</head>
+
+<body>
+<header class="main-header">
+    <div class="header-logo">
+        <a href="index.html" aria-label="ホームへ移動">
+            <img src="img/appicon_1024.webp" alt="神託のメソロギア ロゴ">
+            <span class="header-logo-title">モスロギア</span>
+        </a>
+    </div>
+    <nav class="header-nav">
+        <a href="cards.html">
+            <img src="img/header_icon_1.webp" alt="">
+            <span>図鑑</span>
+        </a>
+        <a href="deckmaker.html">
+            <img src="img/header_icon_2.webp" alt="">
+            <span>デッキメーカー</span>
+        </a>
+        <a href="deck-post.html">
+            <img src="img/header_icon_3.webp" alt="">
+            <span>デッキ投稿</span>
+        </a>
+        <a class="header-nav-tier" href="tier.html">
+            <img src="img/header_icon_5.webp" alt="">
+            <span>Tier表</span>
+        </a>
+    </nav>
+    <div class="header-actions">
+        <div class="header-dropdown header-explore-menu" data-header-dropdown>
+            <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false"
+                aria-controls="header-explore-menu">
+                <span aria-hidden="true">≡</span>
+                <span class="sr-only">探索・情報メニュー</span>
+            </button>
+            <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
+                <a role="menuitem" href="index.html"><span>ホーム</span></a>
+                <a class="header-menu-tier-link" role="menuitem" href="tier.html"><span>Tier表</span></a>
+                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
+                    <span>用語集・質問</span>
+                    <span class="header-menu-badge">今後予定</span>
+                </a>
+                <button type="button" role="menuitem" data-header-app-action="install">アプリで開く</button>
+            </div>
+        </div>
+    </div>
+    <div class="header-account" data-header-auth></div>
+</header>
+
+<main class="home-page info-page">
+    <div class="info-page-grid">
+        <section class="info-card info-card--wide info-calendar-card" aria-labelledby="info-calendar-title">
+            <div class="info-card__head">
+                <div>
+                    <h2 id="info-calendar-title">イベントカレンダー</h2>
+                    <p>開催予定のイベントを月ごとに確認できます。</p>
+                </div>
+            </div>
+            <div class="home-event-calendar" data-home-event-calendar data-home-event-calendar-full aria-label="月間イベントカレンダー"></div>
+            <div class="home-event-submit">
+                <p>ユーザー大会や配信など、メソロギアに関するユーザーイベントを登録できます。申請フォームは外部ブラウザで開きます。</p>
+                <a class="home-more-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdqEqpC9Lqwdw_alra2WDprr7wZNGrddV6AZpML_yC-r1LmQg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">イベント申請はこちら</a>
+            </div>
+        </section>
+
+        <section class="info-card info-action-card" aria-labelledby="info-match-title">
+            <a class="info-action-card__link" href="match-results.html">
+                <img class="info-action-card__icon" src="img/header_icon_4.webp" alt="">
+                <div>
+                    <h2 id="info-match-title">戦績</h2>
+                    <p>保存デッキごとの対戦結果や勝率を確認します。</p>
+                </div>
+                <span class="info-action-card__arrow">開く ▶</span>
+            </a>
+        </section>
+
+        <section class="info-card info-card--quiet" aria-labelledby="info-plan-title">
+            <div class="info-card__head">
+                <div>
+                    <h2 id="info-plan-title">今後予定</h2>
+                    <p>追加予定のコンテンツです。</p>
+                </div>
+            </div>
+            <div class="info-chip-list">
+                <span>用語集</span>
+                <span>初心者ガイド</span>
+            </div>
+        </section>
+
+        <section class="info-card info-mini-action-card" aria-labelledby="info-settings-title">
+            <div>
+                <h2 id="info-settings-title">設定</h2>
+                <p>アカウント情報や保存データの設定を開きます。</p>
+            </div>
+            <button class="info-card__button" type="button" data-info-open-settings>⚙️ 設定を開く</button>
+        </section>
+
+        <section class="info-card info-card--wide" aria-labelledby="info-news-title">
+            <div class="info-card__head">
+                <div>
+                    <h2 id="info-news-title">更新履歴</h2>
+                    <p>直近3件の更新内容です。</p>
+                </div>
+            </div>
+            <div class="home-list info-news-list" data-home-news-list data-home-news-limit="3"></div>
+            <button class="info-card__button" type="button" data-home-news-list-open>更新履歴一覧を見る</button>
+        </section>
+
+        <section class="info-card info-card--wide" aria-labelledby="info-site-title">
+            <div class="info-card__head">
+                <div>
+                    <h2 id="info-site-title">サイト情報</h2>
+                </div>
+            </div>
+            <div class="account-site-info">
+                <p><strong>モスロギア</strong> はアプリ「神託のメソロギア」の非公式ファンサイトです。</p>
+                <p><a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">公式サイト</a></p>
+                <p>© 2025 Mesorogia Cards</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-mini">
+        <div class="footer-mini-left">
+            <span class="footer-brand">モスロギア</span>
+            <span class="footer-sep">・</span>
+            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">公式サイト</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== ログイン / 新規登録 モーダル ===== -->
+<div class="account-modal" id="authLoginModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+        <div class="account-modal-head">
+            <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+            <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+        </div>
+        <div class="account-modal-body">
+            <div class="auth-stack">
+                <form id="auth-login-form" class="auth-login-form">
+                    <div class="poster-line" style="margin-top:6px;">
+                        <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
+                            autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+                    <div class="poster-line">
+                        <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                            autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                    </div>
+                    <div class="poster-line">
+                        <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                            autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                    </div>
+                    <div class="auth-buttons">
+                        <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                        <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                    </div>
+                    <button type="button" class="auth-forgot-link" id="auth-forgot-password">パスワードを忘れた場合</button>
+                    <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;"></p>
+                </form>
+                <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                    <p style="margin:0;">ログイン中です。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on"
+    style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="current-password">
+</form>
+<iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
+
+<!-- ===== スクリプト ===== -->
+<script src="js/common/core/defs.js?v=2026-05-05-006"></script>
+<script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
+<script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
+<script src="js/common/account/account.js?v=2026-05-31-001"></script>
+<script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-05-31-002"></script>
+<script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
+<script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
+<script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
+<script src="js/pages/home/home.js?v=2026-05-31-002"></script>
+<script src="js/pages/info/info-page.js?v=2026-05-30-001"></script>
+<script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
+<script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
+</body>
+</html>

@@ -403,7 +403,7 @@
     if (!src || typeof src !== 'object') return null;
 
     const payload = parseJsonObject_(src.payload || src.payloadJSON || src.rawPayload);
-    const item = { ...src };
+    const item = { ...(payload || {}), ...src };
     item.postId = String(item.postId || postId || '').trim();
     if (!item.postId) return null;
 
@@ -2464,12 +2464,15 @@ document.addEventListener('click', async (e) => {
     showListStatusMessage('loading', '共有リンクのデッキを読み込み中…');
 
     const transferredItem = readTransferredPost_(pid);
-    const res = transferredItem ? null : await window.DeckPostApi?.apiGetPost?.({ postId: pid });
-    if (!transferredItem && (!res || res.ok === false)) {
+    const res = await window.DeckPostApi?.apiGetPost?.({ postId: pid });
+    const fetchedItem = res && res.ok !== false
+      ? normalizeSharedPostResponse_(res, pid)
+      : null;
+    if (!fetchedItem && !transferredItem && (!res || res.ok === false)) {
       throw createListFetchError_((res && res.error) || 'shared post fetch failed', res);
     }
 
-    const item = transferredItem || normalizeSharedPostResponse_(res, pid);
+    const item = fetchedItem || transferredItem;
     if (!item) {
       throw createListFetchError_('shared post response invalid', {
         code: 'INVALID_SHARED_POST_RESPONSE',
@@ -2515,6 +2518,35 @@ document.addEventListener('click', async (e) => {
     startCurrentPageDetailPrefetch_(pageItems);
     scrollToPostListTop_();
     return true;
+  }
+
+  /**
+   * 共有リンク専用の1件表示を解除して通常一覧へ戻す
+   */
+  function clearSharedPostView_() {
+    const state = getDeckPostState_();
+    if (!state?.list) return;
+
+    stopCurrentPageDetailPrefetch_();
+    stopSlowBackgroundListFetch_('裏読み停止中');
+
+    state.list.allItems = [];
+    state.list.filteredItems = [];
+    state.list.items = [];
+    state.list.nextOffset = 0;
+    state.list.currentPage = 1;
+    state.list.totalPages = 1;
+    state.list.total = 0;
+    state.list.sourceTotal = 0;
+    state.list.hasAllItems = false;
+    state.list.pageCache = {};
+
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('pid');
+      url.searchParams.delete('post');
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    } catch (_) {}
   }
 
   function renderAdoptionCardSearchResults_(complete = false) {
@@ -3790,6 +3822,7 @@ document.addEventListener('click', async (e) => {
   window.mergeListItemsDedup_ = mergeListItemsDedup_;
   window.applyFilterIncrementally_ = applyFilterIncrementally_;
   window.clearDeckPostListBrowserCache_ = () => clearBrowserListPageCache_(1);
+  window.clearSharedPostView_ = clearSharedPostView_;
 
   // 新namespace
   window.DeckPostList = window.DeckPostList || {};
@@ -3809,6 +3842,7 @@ document.addEventListener('click', async (e) => {
   window.DeckPostList.mergeListItemsDedup = mergeListItemsDedup_;
   window.DeckPostList.applyFilterIncrementally = applyFilterIncrementally_;
   window.DeckPostList.clearBrowserCache = window.clearDeckPostListBrowserCache_;
+  window.DeckPostList.clearSharedPostView = clearSharedPostView_;
   window.DeckPostList.showListStatusMessage = showListStatusMessage;
   window.DeckPostList.showList = showList;
   window.DeckPostList.showMine = showMine;

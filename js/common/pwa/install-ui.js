@@ -34,17 +34,16 @@
       icon: './img/header_icon_3.webp'
     },
     {
-      href: 'match-results.html',
-      key: 'match-results.html',
-      label: '戦績',
-      icon: './img/header_icon_4.webp'
+      href: 'tier.html',
+      key: 'tier.html',
+      label: 'ティア表',
+      icon: './img/header_icon_5.webp'
     },
     {
-      href: '#',
-      key: 'settings',
-      label: '設定',
-      iconText: '☰',
-      action: 'account'
+      href: 'info.html',
+      key: 'info.html',
+      label: '情報',
+      iconText: 'i'
     }
   ];
 
@@ -207,17 +206,6 @@
 
       const link = event.target.closest?.('.app-bottom-nav a');
       if (!link) return;
-      if (link.dataset.action === 'account') {
-        event.preventDefault();
-
-        if (typeof window.openAccountDataModal === 'function') {
-          window.openAccountDataModal({ scope: 'all' });
-        } else if (typeof window.openAccountModal === 'function') {
-          window.openAccountModal();
-        }
-
-        return;
-      }
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       if (link.target && link.target !== '_self') return;
 

@@ -145,6 +145,24 @@
     // - OFF / 所持 / 未コンプ / コンプ
     // - 排他（1つだけ選択）
     // ==============================
+    function hasAnyOwned_() {
+    const map = (typeof window.readOwnedDataSafe === 'function')
+        ? window.readOwnedDataSafe()
+        : {};
+
+    if (!map || typeof map !== 'object') return false;
+
+    for (const v of Object.values(map)) {
+        if (typeof v === 'number') {
+        if ((v | 0) > 0) return true;
+        } else if (v && typeof v === 'object') {
+        const total = v.normal | 0;
+        if (total > 0) return true;
+        }
+    }
+    return false;
+    }
+
     function createOwnedFilter4Buttons_() {
     const { wrapper } = createFilterBlock_('所持フィルター');
 
@@ -174,6 +192,15 @@
 
     wrapper.appendChild(groupDiv);
     return wrapper;
+    }
+
+    function ensureOwnedFilterUI_() {
+    const personalFilters = document.getElementById('personal-filters');
+    if (!personalFilters || !hasAnyOwned_()) return false;
+    if (personalFilters.querySelector('.filter-group[data-key="所持フィルター"]')) return false;
+
+    personalFilters.insertBefore(createOwnedFilter4Buttons_(), personalFilters.firstChild);
+    return true;
     }
 
     // ==============================
@@ -1097,9 +1124,10 @@
     // ✅ タブUIに反映（関数がまだなら何もしない）
     try { setTimeout(() => { try { setModalTab_(pick); } catch {} }, 0); } catch {}
 
-    // ✅ 追加：モーダルを開くたびに「カードグループ」を必ず再描画
+    // ✅ 追加：モーダルを開くたびに個人用フィルターを必ず再同期
     try {
         setTimeout(() => {
+        try { ensureOwnedFilterUI_(); } catch {}
         try { refreshCardGroupFilterUI_(); } catch {}
         try { renderActiveFilterChips(); } catch {}
         }, 0);
@@ -1310,25 +1338,6 @@
         // 先頭に “未所持” を固定
         return ['no_ability', ...list];
         })();
-
-        // ✅ 所持データが “1枚でも” 入ってるか（チェッカー未使用判定）
-        function hasAnyOwned_() {
-        const map = (typeof window.readOwnedDataSafe === 'function')
-            ? window.readOwnedDataSafe()
-            : {};
-
-        if (!map || typeof map !== 'object') return false;
-
-        for (const v of Object.values(map)) {
-            if (typeof v === 'number') {
-            if ((v | 0) > 0) return true;
-            } else if (v && typeof v === 'object') {
-            const total = v.normal | 0;
-            if (total > 0) return true;
-            }
-        }
-        return false;
-        }
 
         // ---- メイン ----
         if (hasAnyOwned_()) {
@@ -2387,11 +2396,18 @@
         } catch {}
 
         window.addEventListener('account-owned-sync:ready', () => {
+            try { ensureOwnedFilterUI_(); } catch {}
             try { refreshCardGroupFilterUI_(); } catch {}
         });
         window.addEventListener('account-owned-sync:status', () => {
+            try { ensureOwnedFilterUI_(); } catch {}
             try { refreshCardGroupFilterUI_(); } catch {}
         });
+        try {
+        window.OwnedStore?.onChange?.(() => {
+            try { ensureOwnedFilterUI_(); } catch {}
+        });
+        } catch {}
 
         // キーワード：デバウンス
         const kw = document.getElementById('keyword');
