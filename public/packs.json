@@ -50,6 +50,13 @@
       "selector": "#pack-glory-of-the-gods"
     },
     {
+      "en": "Honor of the Brave Heart",
+      "jp": "不屈の誇り",
+      "slug": "honor-of-the-brave-heart",
+      "key": "honor-of-the-brave-heart",
+      "selector": "#pack-honor-of-the-brave-heart"
+    },
+    {
       "en": "その他特殊カード",
       "jp": "",
       "slug": "その他特殊カード",
@@ -72,6 +79,7 @@
     "Ensemble of Slience",
     "Fallen Fate",
     "Glory of the Gods",
+    "Honor of the Brave Heart",
     "その他特殊カード",
     "コラボカード"
   ]

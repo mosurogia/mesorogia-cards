@@ -62,6 +62,15 @@
       "kind": "balance",
       "note": "風花森の精霊、モルゲン等の調整",
       "is_enabled": true
+    },
+    {
+      "env_id": "2026-06-h-pack",
+      "label": "Hパック環境",
+      "start_at": "2026-06-01",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Honor of the Brave Heart 「不屈の誇り」実装",
+      "is_enabled": true
     }
   ]
 }
