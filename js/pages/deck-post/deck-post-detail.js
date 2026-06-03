@@ -615,6 +615,7 @@
     if (low.includes('ensemble of silence') || low.includes('ensemble of slience')) return 'Eパック';
     if (low.includes('fallen fate')) return 'Fパック';
     if (low.includes('glory of the gods')) return 'Gパック';
+    if (low.includes('honor of the brave heart')) return 'Hパック';
 
     if (s.includes('コラボ') || low.includes('collab')) return 'コラボ';
     if (s.includes('その他特殊') || low.includes('special')) return '特殊';

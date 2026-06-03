@@ -263,7 +263,7 @@
           return (a.cat - b.cat) * dir || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
         case 'rarity':
-          return (a.rarity - b.rarity) * dir || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+          return (a.rarity - b.rarity) * dir || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
         default:
           return (a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja')) * dir;

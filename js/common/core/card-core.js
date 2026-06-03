@@ -26,6 +26,7 @@
   // ※ もう候補を出さない前提ならここで確定させる
   window.CARDS_JSON_URL = window.CARDS_JSON_URL || './public/cards_latest.json';
   window.PACKS_JSON_URL = window.PACKS_JSON_URL || './public/packs.json';
+  const DATA_CACHE_VERSION = '2026-06-03-001';
 
   function normalizeCd5ForCore_(cd) {
     if (typeof window.normCd5 === 'function') return window.normCd5(cd);
@@ -35,6 +36,12 @@
 
   function isLatestCardsUrl_(url) {
     return /cards_latest\.json(?:[?#].*)?$/.test(String(url || ''));
+  }
+
+  function withDataCacheVersion_(url) {
+    const s = String(url || '').trim();
+    if (!s || /[?&]v=/.test(s)) return s;
+    return `${s}${s.includes('?') ? '&' : '?'}v=${encodeURIComponent(DATA_CACHE_VERSION)}`;
   }
 
 
@@ -132,7 +139,7 @@
     if (__latestCardsPromise) return __latestCardsPromise;
 
     __latestCardsPromise = (async () => {
-      const allCards = await fetchJsonStrict_(window.CARDS_JSON_URL);
+      const allCards = await fetchJsonStrict_(withDataCacheVersion_(window.CARDS_JSON_URL));
       if (!Array.isArray(allCards)) return [];
       // latest 以外のスナップショットは、その時点で有効なカードをそのまま使う
       if (!isLatestCardsUrl_(window.CARDS_JSON_URL)) return allCards.filter(Boolean);
@@ -315,7 +322,7 @@
 
     __packCatalogPromise = (async () => {
       try {
-        const raw = await fetchJsonStrict_(window.PACKS_JSON_URL);
+        const raw = await fetchJsonStrict_(withDataCacheVersion_(window.PACKS_JSON_URL));
 
         const arr = Array.isArray(raw?.packs) ? raw.packs
           : Array.isArray(raw?.list) ? raw.list
