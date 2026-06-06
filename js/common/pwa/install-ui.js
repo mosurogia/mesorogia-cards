@@ -145,6 +145,14 @@
     return nav;
   }
 
+  function openCurrentBottomTabMenu_() {
+    const link = document.querySelector('.app-bottom-nav a.is-active[data-tab-menu]');
+    const key = link?.dataset.tabMenu;
+    if (!link || !key || !TAB_MENUS[key]?.length) return;
+
+    openBottomTabMenu_(link, key);
+  }
+
   function ensureAppNavLoading_(message, isError = false) {
     let overlay = document.querySelector('.app-nav-loading');
     if (!overlay) {
@@ -245,6 +253,12 @@
 
     const nav = ensureAppBottomNav_();
     nav.hidden = !standalone;
+
+    if (standalone) {
+      requestAnimationFrame(openCurrentBottomTabMenu_);
+    } else {
+      closeBottomTabMenu_();
+    }
   }
 
   function canShowNudge_() {

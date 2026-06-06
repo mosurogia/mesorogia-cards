@@ -713,6 +713,8 @@
     function elBox_() { return document.getElementById('user-tags'); }
     function elInput_() { return document.getElementById('user-tag-input'); }
     function elAddBtn_() { return document.getElementById('user-tag-add'); }
+    function elSuggestBtn_() { return document.getElementById('user-tag-suggest'); }
+    function elSuggestBox_() { return document.getElementById('user-tag-suggest-box'); }
 
     function normalize_(s) {
       // page2互換：全角スペース含めて空白を潰す
@@ -798,6 +800,105 @@
       try { localStorage.setItem(USER_TAG_HISTORY_KEY, JSON.stringify(list)); } catch (_) {}
     }
 
+    function getSuggestedTags_() {
+      const freq = new Map();
+
+      function ensureSuggestItem_(tag) {
+        const key = normalize_(tag);
+        if (!key) return null;
+
+        const current = freq.get(key) || { tag: key, count: 0, hasHistory: false, historyRank: 0 };
+        freq.set(key, current);
+        return current;
+      }
+
+      function addPostedTag_(tag, countScore = 1) {
+        const item = ensureSuggestItem_(tag);
+        if (!item) return;
+        item.count += countScore;
+      }
+
+      function addHistoryTag_(tag, index) {
+        const item = ensureSuggestItem_(tag);
+        if (!item) return;
+        item.hasHistory = true;
+        item.historyRank = Math.max(item.historyRank || 0, Math.max(1, 100 - index));
+      }
+
+      function addTagsUser_(raw, score = 1) {
+        String(raw || '')
+          .split(',')
+          .map(normalize_)
+          .filter(Boolean)
+          .forEach((tag) => {
+            addPostedTag_(tag, score);
+          });
+      }
+
+      function addItems_(items, score = 1) {
+        if (!Array.isArray(items)) return;
+        items.forEach((it) => addTagsUser_(it?.tagsUser, score));
+      }
+
+      getHistory().forEach((tag, index) => {
+        addHistoryTag_(tag, index);
+      });
+
+      addItems_(window.__DeckPostState?.list?.allItems, 1);
+      addItems_(window.DeckPostState?.getState?.()?.list?.allItems, 1);
+
+      try {
+        for (let i = 0; i < localStorage.length; i += 1) {
+          const key = localStorage.key(i);
+          if (!/^DeckPostListAll:v1:new:10:/.test(String(key || ''))) continue;
+
+          const cache = JSON.parse(localStorage.getItem(key) || '{}');
+          addItems_(cache?.items, 1);
+        }
+      } catch (_) {}
+
+      try {
+        const savedDecks = JSON.parse(localStorage.getItem('savedDecks') || '[]');
+        if (Array.isArray(savedDecks)) {
+          savedDecks.forEach((deck) => {
+            const tags = Array.isArray(deck?.userTags)
+              ? deck.userTags
+              : String(deck?.userTags || '').split(',');
+            tags.map(normalize_).filter(Boolean).forEach((tag) => {
+              addPostedTag_(tag, 1);
+            });
+          });
+        }
+      } catch (_) {}
+
+      try {
+        const currentDraft = window.readUserTags?.() || [];
+        if (Array.isArray(currentDraft)) {
+          currentDraft.map(normalize_).filter(Boolean).forEach((tag) => {
+            addPostedTag_(tag, 1);
+          });
+        }
+      } catch (_) {}
+
+      if (freq.size <= 0) {
+        read().forEach((tag, index) => addHistoryTag_(tag, index));
+      }
+
+      return [...freq.values()]
+        .map((item) => ({
+          ...item,
+          isHistoryOnly: item.hasHistory && item.count <= 0,
+        }))
+        .sort((a, b) => {
+          const aPosted = a.count > 0 ? 1 : 0;
+          const bPosted = b.count > 0 ? 1 : 0;
+          if (bPosted !== aPosted) return bPosted - aPosted;
+          if (b.count !== a.count) return b.count - a.count;
+          if (a.isHistoryOnly && b.isHistoryOnly && b.historyRank !== a.historyRank) return b.historyRank - a.historyRank;
+          return a.tag.localeCompare(b.tag, 'ja');
+        });
+    }
+
     // どこからでも呼べるフック（既存があれば上書きしない）
     function ensureHook_() {
       window.onUserTagAdded = window.onUserTagAdded || function(tag) {
@@ -813,9 +914,83 @@
       const box = elBox_();
       const input = elInput_();
       const addBtn = elAddBtn_();
+      const suggestBtn = elSuggestBtn_();
+      const suggestBox = elSuggestBox_();
       if (!box || !input || !addBtn) return;
 
       ensureHook_();
+
+      function closeSuggest_() {
+        if (!suggestBox) return;
+        suggestBox.dataset.postedLimit = '';
+        suggestBox.style.display = 'none';
+        suggestBox.replaceChildren();
+      }
+
+      function renderSuggest_() {
+        if (!suggestBox) return;
+
+        const query = normalize_(input.value).toLowerCase();
+        const selected = new Set(read());
+        const postedLimit = Math.max(40, Number(suggestBox.dataset.postedLimit || 40) || 40);
+        const matchedRows = getSuggestedTags_()
+          .filter(item => !selected.has(item.tag))
+          .filter(item => !query || item.tag.toLowerCase().includes(query));
+        const allPostedRows = matchedRows.filter(item => !item.isHistoryOnly);
+        const postedRows = allPostedRows.slice(0, postedLimit);
+        const historyRows = matchedRows.filter(item => item.isHistoryOnly).slice(0, 20);
+        const rows = [...postedRows, ...historyRows];
+
+        suggestBox.replaceChildren();
+
+        const head = document.createElement('div');
+        head.className = 'user-tag-suggest-head';
+        head.textContent = rows.length ? '候補' : '候補がありません';
+        suggestBox.appendChild(head);
+
+        for (const item of rows) {
+          const tag = item.tag;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'user-tag-suggest-item';
+          if (item.isHistoryOnly) btn.classList.add('is-history-only');
+          btn.dataset.tag = tag;
+
+          const label = document.createElement('span');
+          label.className = 'user-tag-suggest-label';
+          label.textContent = tag;
+
+          const meta = document.createElement('span');
+          meta.className = 'user-tag-suggest-meta';
+          meta.textContent = item.isHistoryOnly ? '履歴' : String(Math.max(1, item.count || 0));
+
+          btn.append(label, meta);
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addTag(tag);
+            renderSuggest_();
+          });
+
+          suggestBox.appendChild(btn);
+        }
+
+        if (allPostedRows.length > postedRows.length) {
+          const moreBtn = document.createElement('button');
+          moreBtn.type = 'button';
+          moreBtn.className = 'user-tag-suggest-more';
+          moreBtn.textContent = `さらに表示（残り${allPostedRows.length - postedRows.length}件）`;
+          moreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            suggestBox.dataset.postedLimit = String(postedLimit + 40);
+            renderSuggest_();
+          });
+          suggestBox.appendChild(moreBtn);
+        }
+
+        suggestBox.style.display = 'flex';
+      }
 
       function addTag(raw) {
         const v = normalize_(raw != null ? raw : input.value);
@@ -832,6 +1007,7 @@
         now.push(v);
         write(now);
 
+        pushHistory(v);
         try { window.onUserTagAdded?.(v); } catch (_) {}
         input.value = '';
         window.scheduleAutosave?.();
@@ -845,6 +1021,29 @@
       });
 
       addBtn.addEventListener('click', () => addTag());
+
+      suggestBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (suggestBox?.style.display === 'flex') {
+          closeSuggest_();
+          return;
+        }
+        renderSuggest_();
+      });
+
+      input.addEventListener('input', () => {
+        if (suggestBox?.style.display === 'flex') {
+          suggestBox.dataset.postedLimit = '40';
+          renderSuggest_();
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!suggestBox || suggestBox.style.display !== 'flex') return;
+        if (suggestBox.contains(e.target) || suggestBtn?.contains(e.target) || input.contains(e.target)) return;
+        closeSuggest_();
+      });
     }
 
     return { read, write, bindUI, getHistory, pushHistory };

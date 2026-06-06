@@ -519,6 +519,11 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-g-accent-rgb));
 }
 
+.card-pick-option[data-pack="Honor of the Brave Heart"] {
+    --ring: rgb(var(--pack-h-rgb));
+    --ring-accent: rgb(var(--pack-h-accent-rgb));
+}
+
 .card-pick-option[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
     --ring-accent: rgb(var(--pack-special-accent-rgb));
@@ -1952,6 +1957,11 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-g-accent-rgb));
 }
 
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Honor of the Brave Heart"] {
+    --ring: rgb(var(--pack-h-rgb));
+    --ring-accent: rgb(var(--pack-h-accent-rgb));
+}
+
 
 .filter-group[data-key="パック名"] .filter-btn[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
@@ -2610,6 +2620,23 @@ body.is-card-pick-open #deckpeek-button {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+}
+
+/* スマホ下部の固定ボタンに隠れないよう、表示ページだけカード一覧の下に余白を作る */
+@media (max-width: 768px) {
+    body:has(#screenshot-save-btn.floating-btn) #grid.grid {
+        padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 700px) {
+    body:has(#sp-group-open.floating-btn) #grid.grid {
+        padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+
+    body:has(#sp-group-done-fab.floating-btn:not([style*="display: none"])) #grid.grid {
+        padding-bottom: calc(44px + env(safe-area-inset-bottom));
+    }
 }
 
 .card {

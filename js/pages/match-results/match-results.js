@@ -14,6 +14,9 @@
   let matchesDirty_ = false;
   let matchesLoading_ = false;
   let editingMatchId_ = '';
+  let loginRequiredPromptShown_ = false;
+  let loginRequiredPromptTimer_ = 0;
+  let loginRequiredPromptAttempts_ = 0;
   const CUSTOM_OPPONENT_KEY_ = 'matchResultsCustomOpponentDecks';
   const TODAY_MATCHES_KEY_BASE_ = 'matchResultsTodayMatches';
   const TODAY_MATCH_KEEP_MS_ = 24 * 60 * 60 * 1000;
@@ -33,6 +36,49 @@
   function isLoggedIn_() {
     const auth = window.Auth || {};
     return !!(auth.user && auth.token && auth.verified);
+  }
+
+  function openLoginRequiredModal_() {
+    if (loginRequiredPromptShown_ || isLoggedIn_()) return;
+
+    const modal = document.getElementById('authLoginModal');
+    if (!modal) return;
+
+    loginRequiredPromptShown_ = true;
+    if (typeof window.openAuthModal === 'function') {
+      window.openAuthModal('login');
+    } else {
+      modal.style.display = 'flex';
+    }
+
+    const title = document.getElementById('authLoginModalTitle');
+    if (title) title.textContent = 'ログインをしてください';
+
+    const status = document.getElementById('auth-inline-status');
+    if (status) status.textContent = '戦績ページを利用するにはログインが必要です。';
+
+    modal.style.zIndex = '10000';
+    const content = modal.querySelector('.modal-content');
+    if (content) content.style.zIndex = '10001';
+
+    try {
+      document.getElementById('auth-username')?.focus?.();
+    } catch (_) {}
+  }
+
+  function scheduleLoginRequiredPrompt_() {
+    if (loginRequiredPromptShown_ || isLoggedIn_()) return;
+    if (loginRequiredPromptTimer_) clearTimeout(loginRequiredPromptTimer_);
+
+    const auth = window.Auth || {};
+    const waitingForTokenCheck = !!auth.token && !auth.verified;
+    if (waitingForTokenCheck && loginRequiredPromptAttempts_ < 20) {
+      loginRequiredPromptAttempts_ += 1;
+      loginRequiredPromptTimer_ = setTimeout(scheduleLoginRequiredPrompt_, 300);
+      return;
+    }
+
+    loginRequiredPromptTimer_ = setTimeout(openLoginRequiredModal_, 0);
   }
 
   function pad2_(n) {
@@ -1215,6 +1261,7 @@
     const deckId = form.elements.deckId?.value || '';
     const submit = document.getElementById('matchEntrySubmit');
     if (!isLoggedIn_()) {
+      scheduleLoginRequiredPrompt_();
       form.reportValidity?.();
       return;
     }
@@ -1642,6 +1689,7 @@
       renderDecks_();
       renderHeaderAuth_();
       if (isInputTabActive_()) renderCurrentMatches_();
+      scheduleLoginRequiredPrompt_();
     };
   }
 
@@ -1659,6 +1707,7 @@
     renderDecks_();
     renderHeaderAuth_();
     renderCurrentMatches_();
+    scheduleLoginRequiredPrompt_();
   }
 
   window.addEventListener('saved-decks:data-replaced', () => {

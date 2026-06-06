@@ -213,7 +213,7 @@ function buildPackSectionHTML(packEn, packJp, cardsGroupedByRace, packKey, packG
     html += `    <section id="race-${raceSlug}-${packSlug}" class="race-group race-${esc(race)}">`;
     html += `      <h4>${esc(race)}</h4>`;
     html += `      <div class="race-controls">`;
-    html += `        <button class="select-all-btn">全て選択+1</button>`;
+    html += `        <button class="select-all-btn">シルバーブロンズ+3</button>`;
     html += `        <button class="clear-all-btn">全て選択解除</button>`;
     html += `      </div>`;
 
@@ -1037,28 +1037,25 @@ schedulePostBulkUIUpdate_(packSection);
     // ✅ 全カード/不足カード（全体：トップバー）
     // ------------------------------
     // ------------------------------
-    // ✅ 種族：全て選択+1（=1枚増やす、上限で止める）
+    // ✅ 種族：シルバーブロンズ+3（=最大まで埋める扱い）
     // ------------------------------
     if (btn.classList.contains('select-all-btn') && raceGroup) {
-      const targets = raceGroup.querySelectorAll('.card[data-cd]');
+      const targets = raceGroup.querySelectorAll('.card.rarity-silver, .card.rarity-bronze');
 
       const ok = bulkUpdateOwned_((map) => {
         targets.forEach(el => {
           const cd = el.dataset.cd;
           if (!cd) return;
 
-          const cur = getOwnedEntry_(map, cd);
-          const curTotal = cur.normal | 0;
+          // 旧神=1 / それ以外=3（ただし対象はsilver/bronze想定なので基本3）
           const max = maxOwnedOfCardEl_(el);
-          const nextTotal = Math.min(max, curTotal + 1);
-
-          // 合計だけ合ってればよい前提で normal に寄せる
-          setOwnedTotalToNormal_(map, cd, nextTotal);
+          // “+3” は結局 max まで埋まるので max にしてOK
+          setOwnedTotalToNormal_(map, cd, max);
         });
       });
 
       if (!ok) {
-        targets.forEach(el => bump_(el, 1));
+        targets.forEach(el => bump_(el, 3));
       }
 
 schedulePostBulkUIUpdate_(packSection);

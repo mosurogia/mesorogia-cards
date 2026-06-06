@@ -159,6 +159,7 @@
     overflow-y: hidden;
     touch-action: pan-x;
     flex: 1;
+    min-width: 0;
 }
 
 .deck-bar-content {
@@ -249,29 +250,50 @@
 }
 @media (max-width: 768px) {
     .deck-summary {
-        position: absolute;
-        right: 18px;
-        top: 0;
-        width: 150px;
-        height: 100%;
+        width: 0;
+        max-width: 0;
+        height: 0;
+        flex: 0 0 0;
+        align-self: flex-start;
         background: #fff;
-        border-left: 1px solid #ccc;
+        border-left: 0 solid #ccc;
+        padding: 0;
         font-size: 10px;
         line-height: 1.3;
-        transform: translateX(120%);
-        transition: transform 0.3s ease;
+        overflow: hidden;
+        visibility: hidden;
+        transition: flex-basis 0.3s ease, width 0.3s ease, max-width 0.3s ease, padding 0.3s ease, border-left-width 0.3s ease;
         z-index: 1500;
     }
 }
 @media (max-width: 410px) {
 .deck-summary {
         font-size: 8.5px;
-        width: 130px;
+        width: 0;
     }
 }
 @media (max-width: 768px) {
     .deck-summary.open {
-        transform: translateX(0%);
+        width: 150px;
+        max-width: 150px;
+        height: auto;
+        flex-basis: 150px;
+        align-self: stretch;
+        border-left-width: 1px;
+        padding: 0 4px;
+        visibility: visible;
+    }
+}
+@media (max-width: 410px) {
+    .deck-summary.open {
+        width: 130px;
+        max-width: 130px;
+        flex-basis: 130px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .deck-summary {
+        transition: none;
     }
 }
 .deck-summary-toggle {
@@ -280,6 +302,7 @@
 @media (max-width: 768px) {
     .deck-summary-toggle {
         display: inline-block;
+        flex: 0 0 auto;
         z-index: 11;
         background: #ccc;
         border: 1px solid #999;
@@ -954,6 +977,12 @@
         height: auto;
         max-height: none;
     }
+
+    #deck-info > .subtab-bar {
+        position: sticky;
+        top: 0;
+        z-index: 2200;
+    }
 }
 
 
@@ -1368,7 +1397,7 @@
 @media (max-width: 768px) {
 #deck-info {
     max-width: 100%;
-    overflow-y: visible;
+    overflow: visible;
     }
 }
 
@@ -1742,45 +1771,6 @@
     box-shadow: 0 3px 8px rgba(107, 201, 107, 0.35);
 }
 
-
-/* ===== 画面下に出す“浮遊コントロール” ===== */
-.deck-code-controls.floating {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #fff;
-    border-top: 1px solid #ddd;
-    padding: .6rem .8rem;
-    display: none;
-    /* 可視・不可視はJSで切替 */
-    z-index: 3000;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, .08);
-}
-
-@media (max-width: 768px) {
-body.is-pwa-standalone .deck-code-controls,
-body.is-pwa-standalone .deck-code-controls.floating {
-    bottom: var(--app-bottom-nav-offset);
-}
-}
-
-/* モバイル以外では常に無効（念のため） */
-@media (min-width: 701px) {
-    .deck-code-controls.floating {
-        display: none !important;
-    }
-}
-
-/* ボタンの見た目は既存と揃える（必要なら） */
-.deck-code-controls.floating button {
-    background: linear-gradient(90deg, #6bc96b, #a0e4a0);
-    box-shadow: 0 2px 6px rgba(107, 201, 107, 0.25);
-}
-
-.deck-code-controls.floating button:hover {
-    box-shadow: 0 3px 8px rgba(107, 201, 107, 0.35);
-}
 
 
 /*交換ポイントボタン*/
@@ -2600,7 +2590,6 @@ body.is-pwa-standalone .deck-code-controls.floating {
     }
 
     .note-preset-panel {
-        width: 100%;
         max-height: min(62vh, 420px);
     }
 }
@@ -3277,50 +3266,120 @@ textarea.is-char-limit-over {
 /* ユーザータグ候補パネル */
 .user-tag-suggest-box {
     margin-top: 6px;
-    padding: 6px;
+    padding: 14px;
     border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: #fafafa;
-    max-height: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    max-height: 260px;
     overflow-y: auto;
     display: none;
-    /* JSで block にする */
+    box-sizing: border-box;
+    gap: 8px;
+    flex-wrap: wrap;
+    /* JSで flex にする */
 }
 
 /* 見出し */
 .user-tag-suggest-head {
-    font-size: 0.75rem;
-    color: #666;
+    flex: 0 0 100%;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #444;
     margin-bottom: 4px;
 }
 
 /* 候補1行 */
 .user-tag-suggest-item {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+    max-width: 100%;
+    display: inline-flex;
     align-items: center;
-    padding: 4px 8px;
-    margin-bottom: 4px;
-    border-radius: 6px;
-    border: none;
-    background: #fff;
-    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 109, 224, .25);
+    background: rgba(108, 181, 255, .16);
+    color: #1f4ea8;
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.2;
     text-align: left;
     cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 
 .user-tag-suggest-item:hover {
-    background: #edf4ff;
+    border-color: rgba(45, 109, 224, .45);
+    background: rgba(108, 181, 255, .24);
+}
+
+.user-tag-suggest-item.is-history-only {
+    border-color: rgba(116, 122, 132, .28);
+    background: rgba(148, 163, 184, .14);
+    color: #475569;
+}
+
+.user-tag-suggest-item.is-history-only:hover {
+    border-color: rgba(116, 122, 132, .45);
+    background: rgba(148, 163, 184, .22);
+}
+
+.user-tag-suggest-item:focus-visible {
+    outline: 2px solid rgba(45, 109, 224, .45);
+    outline-offset: 2px;
+}
+
+.user-tag-suggest-item::before {
+    content: "+";
+    margin-right: 6px;
+    opacity: .85;
 }
 
 .user-tag-suggest-label {
-    font-weight: 500;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .user-tag-suggest-meta {
-    font-size: 0.7rem;
-    color: #888;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(45, 109, 224, .12);
+    color: #2457b8;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.user-tag-suggest-item.is-history-only .user-tag-suggest-meta {
+    background: rgba(100, 116, 139, .14);
+    color: #64748b;
+}
+
+.user-tag-suggest-more {
+    flex: 0 0 100%;
+    padding: 7px 10px;
+    border: 1px solid rgba(45, 109, 224, .22);
+    border-radius: 8px;
+    background: #f8fbff;
+    color: #2457b8;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.user-tag-suggest-more:hover {
+    border-color: rgba(45, 109, 224, .4);
+    background: #edf4ff;
+}
+
+.user-tag-suggest-more:focus-visible {
+    outline: 2px solid rgba(45, 109, 224, .45);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .user-tag-suggest-item {
+        transition: none;
+    }
 }
 
 /* ===== 貼り付けコードブロック ===== */

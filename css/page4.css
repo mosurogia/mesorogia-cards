@@ -2488,6 +2488,11 @@ body.is-pwa-standalone .list-footer--bottom {
     --pack-stroke: rgba(var(--pack-g-accent-rgb), .70);
 }
 
+.stat-chip.pack-chip[data-pack="H"] {
+    --pack-bg: var(--pack-h-rgb);
+    --pack-stroke: rgba(var(--pack-h-accent-rgb), .70);
+}
+
 /* 特殊 / コラボ */
 .stat-chip.pack-chip[data-pack="SPECIAL"] {
     --pack-bg: var(--pack-special-rgb);
@@ -2959,6 +2964,10 @@ body.is-pwa-standalone .list-footer--bottom {
     --pack-rgb: var(--pack-g-rgb);
 }
 
+.deck-entry[data-pack="H"] {
+    --pack-rgb: var(--pack-h-rgb);
+}
+
 .deck-entry[data-pack="SPECIAL"] {
     --pack-rgb: var(--pack-special-rgb);
 }
@@ -3179,6 +3188,11 @@ body.is-pwa-standalone .list-footer--bottom {
 .carddetail-pack[data-pack="G"] {
     --pack-bg: var(--pack-g-rgb);
     --pack-stroke: rgba(var(--pack-g-accent-rgb), .7);
+}
+
+.carddetail-pack[data-pack="H"] {
+    --pack-bg: var(--pack-h-rgb);
+    --pack-stroke: rgba(var(--pack-h-accent-rgb), .7);
 }
 
 .carddetail-pack[data-pack="SPECIAL"] {
