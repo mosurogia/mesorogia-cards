@@ -232,6 +232,15 @@
     return fallbackTagChips_([tagsAuto, tagsPick].filter(Boolean).join(','));
   }
 
+  function tagChipsTitleBadge_(titleBadge) {
+    const label = String(titleBadge || '').trim();
+    if (!label) return '';
+    if (typeof window.DeckPostFilter?.tagChipsTitleBadge === 'function') {
+      return window.DeckPostFilter.tagChipsTitleBadge(label);
+    }
+    return `<span class="chip chip-title-badge">${escHtml_(label)}</span>`;
+  }
+
   function tagChipsUser_(tagsUser) {
     if (typeof window.DeckPostFilter?.tagChipsUser === 'function') {
       return window.DeckPostFilter.tagChipsUser(tagsUser);
@@ -1268,6 +1277,9 @@
     const next = { ...base, ...src };
     next.postId = String(next.postId || base.postId || '').trim();
     if (!next.postId) return null;
+    if (next.titleTags == null && payload?.titleTags != null) next.titleTags = payload.titleTags;
+    if (next.tagsTitle == null && payload?.tagsTitle != null) next.tagsTitle = payload.tagsTitle;
+    if (next.titleBadge == null && payload?.titleBadge != null) next.titleBadge = payload.titleBadge;
 
     next.deckNote = String(
       Object.prototype.hasOwnProperty.call(src, 'deckNote')
@@ -2262,6 +2274,8 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
     : '';
 
   // ✅ deck-post-detail.js 側の fallback 付き関数を使う
+  const titleBadge = item.titleBadge || item.titleTags || item.tagsTitle;
+  const tagsTitle = tagChipsTitleBadge_(titleBadge);
   const tagsMain = tagChipsMain_(item.tagsAuto, item.tagsPick);
   const tagsUser = tagChipsUser_(item.tagsUser);
 
@@ -2331,6 +2345,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
               </div>
 
               <div class="post-detail-tags">
+                <div class="post-tags post-tags-title">${tagsTitle}</div>
                 <div class="post-tags post-tags-main">${tagsMain}</div>
                 <div class="post-tags post-tags-user">${tagsUser}</div>
               </div>

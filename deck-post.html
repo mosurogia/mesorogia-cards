@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="css/common-page124.css?v=2026-05-28-001">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-06-001">
-    <link rel="stylesheet" href="css/page4.css?v=2026-05-05-008">
+    <link rel="stylesheet" href="css/page4.css?v=2026-06-08-001">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -215,9 +215,8 @@
     <div class="list-controls" id="listControls">
         <div class="list-controls-filter">
             <label class="sort-label">
-                並び替え：
                 <select id="sortSelect" class="ctrl-select">
-                    <option value="new" selected>新しい順</option>
+                    <option value="new" selected>最新順</option>
                     <option value="old">古い順</option>
                     <option value="like">いいね順</option>
                 </select>
@@ -488,6 +487,7 @@
                 <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecUserTag">ユーザータグ</button>
                 <button type="button" class="post-filter-overview-chip" data-filter-jump="#postFilterCampaignSection">キャンペーン</button>
                 <button type="button" class="post-filter-overview-chip" data-filter-jump="#postFilterEnvironmentSection">環境</button>
+                <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecKeyword">キーワード</button>
                 <button type="button" class="post-filter-overview-chip" data-filter-jump="#filterSecContent">投稿内容</button>
             </div>
         </div>
@@ -613,6 +613,19 @@
                     <div id="postFilterEnvironmentArea" class="filter-group" data-key="環境">
                         <!-- JS で .filter-btn.post-filter-env-btn を並べる -->
                     </div>
+                </div>
+
+                <!-- キーワードで絞り込み -->
+                <div class="filter-section post-keyword-filter" id="filterSecKeyword">
+                    <div class="filter-section-title">
+                        <span>キーワード検索</span>
+                        <button type="button" class="filter-help-button" aria-label="キーワード検索の説明">?</button>
+                    </div>
+                    <p class="filter-help">投稿デッキ名、投稿者名、X名に含まれる文字で絞り込めます。</p>
+                    <label class="post-keyword-filter-box" for="postFilterKeywordQuery">
+                        <span class="post-keyword-filter-label">検索キーワード</span>
+                        <input id="postFilterKeywordQuery" class="ctrl-input post-keyword-filter-input" type="search" placeholder="例：ゴーゴン / 投稿者名 / @username" autocomplete="off">
+                    </label>
                 </div>
 
                 <!-- 投稿内容で絞り込み -->
@@ -905,7 +918,7 @@
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
 <script src="js/common/core/defs.js?v=2026-05-05-008"></script>
-<script src="js/common/core/card-core.js?v=2026-05-05-008"></script>
+<script src="js/common/core/card-core.js?v=2026-06-03-001"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-008"></script>
 <script src="js/common/core/card-sort.js?v=2026-05-05-008"></script>
 <script src="js/common/storage/owned.js?v=2026-05-05-008"></script>
@@ -919,7 +932,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-008"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-008"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-31-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-06-03-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-008"></script>
@@ -946,7 +959,7 @@
 </div>
 
 <!-- ページ固有 -->
-<script src="js/pages/deck-post/deck-post-page-loader.js?v=2026-05-20-002"></script>
+<script src="js/pages/deck-post/deck-post-page-loader.js?v=2026-06-03-001"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
 <script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
 

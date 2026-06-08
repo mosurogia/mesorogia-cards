@@ -752,6 +752,8 @@
     const isMine = (listMode === 'mine');
     const bg = D.raceBg?.(item.races) || '';
 
+    const titleBadge = item.titleBadge || item.titleTags || item.tagsTitle;
+    const tagsTitle = window.DeckPostFilter?.tagChipsTitleBadge?.(titleBadge) || '';
     const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
     const tagsUser = window.DeckPostFilter?.tagChipsUser?.(item.tagsUser) || '';
 
@@ -829,6 +831,7 @@
         </div>
 
         <div class="post-tags-wrap">
+          <div class="post-tags post-tags-title">${tagsTitle}</div>
           <div class="post-tags post-tags-main">${tagsMain}</div>
           <div class="post-tags post-tags-user">${tagsUser}</div>
         </div>
@@ -849,6 +852,8 @@
     const oldGod = D.getOldGodNameFromItem?.(item) || '';
 
     if (opts.deferDetail && !isMine) {
+      const titleBadge = item.titleBadge || item.titleTags || item.tagsTitle;
+      const tagsTitle = window.DeckPostFilter?.tagChipsTitleBadge?.(titleBadge) || '';
       const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
       const tagsUser = window.DeckPostFilter?.tagChipsUser?.(item.tagsUser) || '';
       const posterXRaw = String(item.posterX || '').trim();
@@ -908,6 +913,7 @@
           </div>
 
           <div class="post-tags-wrap">
+            <div class="post-tags post-tags-title">${tagsTitle}</div>
             <div class="post-tags post-tags-main">${tagsMain}</div>
             <div class="post-tags post-tags-user">${tagsUser}</div>
           </div>
@@ -936,6 +942,8 @@
     const scope = listMode;
     const spPaneId = `sp-${scope}-${pidSan}`;
 
+    const titleBadge = item.titleBadge || item.titleTags || item.tagsTitle;
+    const tagsTitle = window.DeckPostFilter?.tagChipsTitleBadge?.(titleBadge) || '';
     const tagsMain = window.DeckPostFilter?.tagChipsMain?.(item.tagsAuto, item.tagsPick) || '';
     const tagsUser = window.DeckPostFilter?.tagChipsUser?.(item.tagsUser) || '';
     const deckList = D.buildDeckListHtml?.(item) || '';
@@ -1077,6 +1085,7 @@
         </div>
 
         <div class="post-tags-wrap">
+          <div class="post-tags post-tags-title">${tagsTitle}</div>
           <div class="post-tags post-tags-main">${tagsMain}</div>
           <div class="post-tags post-tags-user">${tagsUser}</div>
         </div>
@@ -2125,7 +2134,8 @@ document.addEventListener('click', async (e) => {
       !!fs.selectedCardCds?.size ||
       !!String(fs.selectedPosterKey || '').trim() ||
       !!String(fs.selectedPoster || '').trim() ||
-      !!String(fs.selectedPostId || '').trim()
+      !!String(fs.selectedPostId || '').trim() ||
+      !!String(fs.keywordQuery || '').trim()
     );
   }
 

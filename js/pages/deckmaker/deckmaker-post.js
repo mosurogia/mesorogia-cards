@@ -2043,7 +2043,6 @@
         return Array.isArray(tags) ? tags.slice(0, 3) : [];
       } catch (_) { return []; }
     })();
-
     const gameUserId = (() => {
       try {
         return String(window.CampaignUI?.readCampaignGameUserId_?.() || '').trim();

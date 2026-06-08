@@ -985,12 +985,22 @@ body.is-pwa-standalone .list-footer--bottom {
     padding: 3px 0;
     display: flex;
     flex-direction: column;
+    gap: 4px;
     margin-bottom: 4px;
 }
 
 /* メインタグ*/
 .post-tags-main {
     grid-area: main-tags;
+}
+
+/* 代表称号タグ行 */
+.post-tags-title {
+    grid-area: title-tags;
+}
+
+.post-tags-title:empty {
+    display: none;
 }
 
 /* ユーザータグ */
@@ -2708,20 +2718,15 @@ body.is-pwa-standalone .list-footer--bottom {
     padding-top: 4px;
 }
 
-
 /* ===== メインタグ（メーカー方向のオレンジ→ピンク） ===== */
 .post-tags-main .chip {
     background: linear-gradient(90deg, #ff9a54, #ff6d3f);
     border: 1px solid #ff6a3d;
     color: #fff;
     font-weight: 700;
-
-    /* シャドウ弱め（一覧でうるさくならない） */
     box-shadow:
         inset 0 0 3px rgba(255, 255, 255, 0.25),
         0 0 4px rgba(255, 110, 60, 0.35);
-
-    /* 文字の縁取り（背景色とぶつからない） */
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -2735,15 +2740,88 @@ body.is-pwa-standalone .list-footer--bottom {
     border-style: dashed;
 }
 
-/* 開催中（任意：少し強調） */
-.chip.is-campaign-active {
-    font-weight: 800;
-}
-
+/* 開催中 */
+.chip.is-campaign-active,
 .post-filter-tag-btn.is-campaign-active {
     font-weight: 800;
 }
 
+/* 代表称号タグ：投稿カード側 */
+.post-tags-title .chip.chip-title-badge {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .45), rgba(255, 255, 255, 0) 45%),
+        linear-gradient(135deg,
+            #a78bfa 0%,
+            #8b5cf6 50%,
+            #7c3aed 100%);
+
+    border-color: #7c3aed;
+    color: #fff;
+
+    font-weight: 800;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .25),
+        0 2px 6px rgba(124, 58, 237, .22);
+
+    text-shadow:
+        0 1px 2px rgba(0, 0, 0, .18);
+}
+
+.post-tags-title .chip.chip-title-badge::before {
+    content: "✦";
+    margin-right: 2px;
+    color: #facc15;
+}
+
+/* 代表称号フィルター：未選択 */
+.post-filter-title-badge-btn {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0) 45%),
+        linear-gradient(135deg, #faf5ff 0%, #f3e8ff 48%, #ede9fe 100%);
+    border-color: #d8b4fe;
+    color: #6d28d9;
+    font-weight: 900;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .85),
+        0 2px 6px rgba(109, 40, 217, .12);
+}
+
+.post-filter-title-badge-btn::before {
+    content: "✦";
+    color: #facc15;
+    margin-right: 4px;
+}
+
+/* 代表称号フィルター：ホバー */
+.post-filter-title-badge-btn:hover,
+.post-filter-title-badge-btn:focus-visible {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .65), rgba(255, 255, 255, 0) 45%),
+        linear-gradient(135deg, #f3e8ff 0%, #ede9fe 48%, #ddd6fe 100%);
+    border-color: #c084fc;
+    color: #581c87;
+}
+
+/* 代表称号フィルター：選択時 */
+.post-filter-title-badge-btn.selected {
+    background:
+        linear-gradient(180deg,
+            #a78bfa 0%,
+            #8b5cf6 100%);
+
+    border-color: #7c3aed;
+    color: #fff;
+
+    box-shadow:
+        0 2px 8px rgba(124, 58, 237, .25);
+}
+
+.post-filter-title-badge-btn.selected::before {
+    color: #facc15;
+}
+
+/* 終了済みキャンペーン表示 */
 .chip.is-campaign-ended::before {
     content: "終了";
     display: inline-block;
@@ -5181,6 +5259,22 @@ textarea.is-char-limit-over {
     width: 100%;
 }
 
+.post-keyword-filter-box {
+    display: grid;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.post-keyword-filter-label {
+    color: #475569;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.post-keyword-filter-input {
+    width: 100%;
+}
+
 /* スマホ：OR/AND を少し詰める */
 @media (max-width: 768px) {
     .post-filter-header {
@@ -5273,3 +5367,4 @@ textarea.is-char-limit-over {
         transition: none;
     }
 }
+

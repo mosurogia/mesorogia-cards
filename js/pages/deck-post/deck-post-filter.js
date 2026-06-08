@@ -10,6 +10,7 @@
 
     const extractDeckMap = (...args) => window.DeckPostDetail?.extractDeckMap?.(...args);
     const RICH_DECK_NOTE_MIN_LENGTH = 500;
+    const TITLE_BADGE_FILTER_TAG = 'キャンペーン入賞';
     const CONTENT_FILTER_LABELS = {
       hasCardNotes: 'カード解説あり',
       richDeckNote: `デッキ解説豊富（${RICH_DECK_NOTE_MIN_LENGTH}文字以上）`,
@@ -86,7 +87,8 @@
 
   const arr = s.split(',')
     .map(x => x.trim())
-    .filter(shouldShowTag_);
+    .filter(shouldShowTag_)
+    .filter((x, i, list) => list.indexOf(x) === i);
 
   // ✅ キャンペーンタグを末尾に寄せる（相対順は維持）
   const normal = arr.filter(t => !isCamp(t));
@@ -97,6 +99,12 @@
     .map(x => `<span class="chip ${campaignTagClass_(x)}">${escapeHtml(x)}</span>`)
     .join('');
 }
+
+  function tagChipsTitleBadge(titleBadge){
+    const label = String(titleBadge || '').trim();
+    if (!shouldShowTag_(label)) return '';
+    return `<span class="chip chip-title-badge">${escapeHtml(label)}</span>`;
+  }
 
   /** タグチップ生成（ユーザータグ） */
   function tagChipsUser(tagsUser){
@@ -125,6 +133,10 @@
 
   function quickFilterReady_() {
     return true;
+  }
+
+  function getTitleBadgeValue_(item) {
+    return String(item?.titleBadge || item?.titleTags || item?.tagsTitle || '').trim();
   }
 
   function showQuickFilterPreparing_() {
@@ -203,6 +215,7 @@
 
     (items || []).forEach((it) => {
       const all = [it?.tagsAuto, it?.tagsPick].filter(Boolean).join(',');
+      if (getTitleBadgeValue_(it)) set.add(TITLE_BADGE_FILTER_TAG);
       if (!all) return;
 
       all
@@ -249,6 +262,7 @@
   function classifyTag_(t) {
     const s = String(t || '').trim();
     if (!s) return 'other';
+    if (s === TITLE_BADGE_FILTER_TAG) return 'deckinfo';
 
     if ((window.RACE_ORDER || []).includes(s)) return 'race';
 
@@ -291,8 +305,10 @@
     const cand = window.POST_TAG_CANDIDATES || [];
     const candSet = new Set(cand);
 
-    const head = cand.filter((t) => arr.includes(t));
-    const tail = arr.filter((t) => !candSet.has(t)).sort((a, b) => a.localeCompare(b, 'ja'));
+    const head = cand.filter((t) => arr.includes(t) && t !== TITLE_BADGE_FILTER_TAG);
+    const tail = arr
+      .filter((t) => !candSet.has(t) && t !== TITLE_BADGE_FILTER_TAG)
+      .sort((a, b) => a.localeCompare(b, 'ja'));
 
     const isCamp = (t) => {
       const set = window.__campaignTagSet;
@@ -303,7 +319,8 @@
     const tailCamp = tail.filter((t) => isCamp(t));
 
     const out = [];
-    for (const t of [...head, ...tailNormal, ...tailCamp]) {
+    const titleBadgeFilter = arr.includes(TITLE_BADGE_FILTER_TAG) ? [TITLE_BADGE_FILTER_TAG] : [];
+    for (const t of [...head, ...tailNormal, ...tailCamp, ...titleBadgeFilter]) {
       if (!out.includes(t)) out.push(t);
     }
     return out;
@@ -330,6 +347,9 @@
       btn.dataset.tag = t;
 
       const kind = classifyTag_(t);
+      if (t === TITLE_BADGE_FILTER_TAG) {
+        btn.classList.add('post-filter-title-badge-btn');
+      }
       if (kind === 'race') {
         btn.classList.add('is-ring');
         btn.dataset.race = t;
@@ -574,6 +594,7 @@
     selectedFilterMode: 'or',
     selectedPostId: '',
     selectedPostLabel: '',
+    keywordQuery: '',
   };
 
   /** モーダル編集中のフィルター */
@@ -588,12 +609,15 @@
     selectedFilterMode: 'or',
     selectedPostId: '',
     selectedPostLabel: '',
+    keywordQuery: '',
   };
 
   window.PostFilterState.selectedEnvironmentIds ??= new Set();
   window.PostFilterDraft.selectedEnvironmentIds ??= new Set();
   window.PostFilterState.selectedContentFilters ??= new Set();
   window.PostFilterDraft.selectedContentFilters ??= new Set();
+  window.PostFilterState.keywordQuery ??= '';
+  window.PostFilterDraft.keywordQuery ??= '';
 
   /** state → draft 同期 */
   function syncDraftFromApplied_() {
@@ -610,6 +634,7 @@
     draft.selectedFilterMode = String(applied?.selectedFilterMode || applied?.selectedCardMode || 'or');
     draft.selectedPostId = String(applied?.selectedPostId || '');
     draft.selectedPostLabel = String(applied?.selectedPostLabel || '');
+    draft.keywordQuery = String(applied?.keywordQuery || '');
   }
 
   /** 全体タグ検索モード */
@@ -722,6 +747,7 @@
       const posterLabel = String(st.selectedPosterLabel || '').trim();
       const postLabel = String(st.selectedPostLabel || '').trim();
       const postId = String(st.selectedPostId || '').trim();
+      const keywordQuery = String(st.keywordQuery || '').trim();
       const cards = Array.from(st.selectedCardCds || []);
 
       const chips = [];
@@ -846,6 +872,23 @@
           });
       }
 
+      if (keywordQuery) {
+          chips.push({
+              label: `キーワード:${keywordQuery}`,
+              className: 'chip-keyword',
+              onRemove: () => {
+                  window.PostFilterState.keywordQuery = '';
+                  window.PostFilterDraft.keywordQuery = '';
+
+                  const input = document.getElementById('postFilterKeywordQuery');
+                  if (input) input.value = '';
+
+                  window.DeckPostFilter?.updateActiveChipsBar?.();
+                  window.DeckPostList?.applySortAndRerenderList?.(false);
+              }
+          });
+      }
+
       if (postId) {
           chips.push({
               label: `🔗投稿:${postLabel || postId}`,
@@ -897,11 +940,14 @@
               window.PostFilterState.selectedPostLabel = '';
               window.PostFilterDraft.selectedPostId = '';
               window.PostFilterDraft.selectedPostLabel = '';
+              window.PostFilterState.keywordQuery = '';
+              window.PostFilterDraft.keywordQuery = '';
               if (hadSharedPost) window.DeckPostList?.clearSharedPostView?.();
 
               try {
                   window.__renderSelectedCards_?.();
                   window.__renderContentFilterButtons_?.();
+                  window.__renderKeywordFilterInput_?.();
               } catch (_) {}
 
               try {
@@ -980,6 +1026,10 @@
     );
 
     const kind = classifyTag_(t);
+
+    if (t === TITLE_BADGE_FILTER_TAG) {
+      return !!getTitleBadgeValue_(item);
+    }
 
     // 通常タグ
     if (kind === 'deckinfo') {
@@ -1086,6 +1136,37 @@
     return false;
   }
 
+  function normalizeKeywordQuery_(value) {
+    return normalizeUserTagSearch_(value).replace(/\s+/g, ' ');
+  }
+
+  function getKeywordSearchText_(item) {
+    const values = [
+      item?.title,
+      item?.deckName,
+      item?.name,
+      item?.posterName,
+      item?.username,
+      item?.posterX,
+    ];
+
+    return normalizeKeywordQuery_(values.map((v) => String(v || '')).join(' '));
+  }
+
+  function matchesKeywordFilter_(item, query) {
+    const words = normalizeKeywordQuery_(query)
+      .split(' ')
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    if (!words.length) return true;
+
+    const haystack = getKeywordSearchText_(item);
+    if (!haystack) return false;
+
+    return words.every((word) => haystack.includes(word));
+  }
+
   /** 投稿者の選択条件に一致するか */
   function matchesPosterFilter_(item, posterKey, posterName) {
     const key = String(posterKey || '').trim();
@@ -1181,6 +1262,11 @@ function rebuildFilteredItems(){
     });
   }
 
+  const keywordQuery = String(fs?.keywordQuery || '').trim();
+  if (keywordQuery) {
+    filtered = filtered.filter((item) => matchesKeywordFilter_(item, keywordQuery));
+  }
+
   // ★ 投稿1件だけ表示（共有リンク用）
   const selPid = String(fs?.selectedPostId || '').trim();
   if (selPid) {
@@ -1212,6 +1298,10 @@ function rebuildFilteredItems(){
   async function applyPostFilter_() {
     const draft = window.PostFilterDraft;
     const applied = window.PostFilterState;
+    const keywordInput = document.getElementById('postFilterKeywordQuery');
+    if (keywordInput) {
+      draft.keywordQuery = String(keywordInput.value || '').trim();
+    }
 
     applied.selectedTags = new Set(Array.from(draft?.selectedTags || []));
     applied.selectedUserTags = new Set(Array.from(draft?.selectedUserTags || []));
@@ -1223,6 +1313,7 @@ function rebuildFilteredItems(){
     applied.selectedFilterMode = String(draft?.selectedFilterMode || draft?.selectedCardMode || 'or');
     applied.selectedPostId = String(draft?.selectedPostId || '');
     applied.selectedPostLabel = String(draft?.selectedPostLabel || '');
+    applied.keywordQuery = String(draft?.keywordQuery || '').trim();
 
     window.DeckPostFilter?.closePostFilter?.();
     window.DeckPostFilter?.updateActiveChipsBar?.();
@@ -1242,6 +1333,7 @@ function rebuildFilteredItems(){
       selectedFilterMode: 'or',
       selectedPostId: '',
       selectedPostLabel: '',
+      keywordQuery: '',
     };
 
     window.PostFilterDraft.selectedTags.clear();
@@ -1254,10 +1346,12 @@ function rebuildFilteredItems(){
     window.PostFilterDraft.selectedPostLabel = '';
     window.PostFilterDraft.selectedCardCds?.clear?.();
     window.PostFilterDraft.selectedFilterMode = 'or';
+    window.PostFilterDraft.keywordQuery = '';
 
     window.__renderSelectedCards_?.();
     window.__renderFilterModeToggle_?.();
     window.__renderContentFilterButtons_?.();
+    window.__renderKeywordFilterInput_?.();
 
     try {
       document.querySelectorAll('.post-filter-tag-btn.selected').forEach((b) => b.classList.remove('selected'));
@@ -1301,6 +1395,7 @@ function rebuildFilteredItems(){
     window.PostFilterState.selectedPosterKey = '';
     window.PostFilterState.selectedPosterLabel = '';
     window.PostFilterState.selectedPostId = String(pid);
+    window.PostFilterState.keywordQuery = '';
 
     let label = '';
     try {
@@ -1312,6 +1407,7 @@ function rebuildFilteredItems(){
     window.PostFilterState.selectedPostLabel = label || '共有リンク';
     window.PostFilterDraft.selectedPostId = window.PostFilterState.selectedPostId;
     window.PostFilterDraft.selectedPostLabel = window.PostFilterState.selectedPostLabel;
+    window.PostFilterDraft.keywordQuery = '';
 
     window.DeckPostFilter?.updateActiveChipsBar?.();
   }
@@ -1349,6 +1445,8 @@ function rebuildFilteredItems(){
     window.PostFilterState.selectedPostLabel = '';
     window.PostFilterDraft.selectedPostId = '';
     window.PostFilterDraft.selectedPostLabel = '';
+    window.PostFilterState.keywordQuery = '';
+    window.PostFilterDraft.keywordQuery = '';
     window.PostFilterState.selectedFilterMode = 'or';
     window.PostFilterDraft.selectedFilterMode = 'or';
     window.PostFilterState.selectedCardCds = new Set([cd]);
@@ -1661,6 +1759,7 @@ function rebuildFilteredItems(){
     campaignTagClass: campaignTagClass_,
     refreshCampaignTagChips: refreshCampaignTagChips_,
     tagChipsMain,
+    tagChipsTitleBadge,
     tagChipsUser,
     quickFilterReady: quickFilterReady_,
     rebuildFilteredItems,
@@ -1990,6 +2089,28 @@ function rebuildFilteredItems(){
 
     window.__renderContentFilterButtons_ = renderContentFilterButtons_;
 
+    function renderKeywordFilterInput_() {
+      const input = document.getElementById('postFilterKeywordQuery');
+      if (!input) return;
+      input.value = String(window.PostFilterDraft?.keywordQuery || '');
+    }
+
+    window.__renderKeywordFilterInput_ = renderKeywordFilterInput_;
+
+    const keywordInput = document.getElementById('postFilterKeywordQuery');
+    if (keywordInput && !keywordInput.dataset.wiredKeywordFilter) {
+      keywordInput.dataset.wiredKeywordFilter = '1';
+      keywordInput.addEventListener('input', () => {
+        window.PostFilterDraft ??= {};
+        window.PostFilterDraft.keywordQuery = String(keywordInput.value || '').trim();
+      });
+      keywordInput.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        applyPostFilter_();
+      });
+    }
+
     document.querySelectorAll('.post-filter-content-btn[data-content-filter]').forEach((btn) => {
       if (btn.dataset.wiredContentFilter === '1') return;
       btn.dataset.wiredContentFilter = '1';
@@ -2122,6 +2243,7 @@ function rebuildFilteredItems(){
         window.__renderSelectedCards_?.();
         window.__renderFilterModeToggle_?.();
         window.__renderContentFilterButtons_?.();
+        window.__renderKeywordFilterInput_?.();
         window.__renderSelectedUserTags_?.();
         window.__renderUserTagSuggest_?.(document.getElementById('userTagQuery')?.value || '');
 
