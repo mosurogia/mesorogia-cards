@@ -21,7 +21,7 @@
     <!-- ===== OGP ===== -->
     <meta property="og:title" content="神託のメソロギア デッキメーカー・デッキ構築・カード検索｜モスロギア">
     <meta property="og:description" content="神託のメソロギアのデッキメーカー。カード検索をしながらデッキ構築、デッキ分析、デッキ投稿ができます。スマホ対応。">
-    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerOGP.webp">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerOGP.png">
     <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/deckmaker.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="モスロギア">
@@ -30,7 +30,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="神託のメソロギア デッキメーカー・デッキ構築・カード検索｜モスロギア">
     <meta name="twitter:description" content="神託のメソロギアのデッキメーカー。カード検索をしながらデッキ構築、デッキ分析、デッキ投稿ができます。スマホ対応。">
-    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerOGP.webp">
+    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerOGP.png">
 
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
@@ -412,7 +412,7 @@
         <!-- サブタブ -->
         <div class="tab-bar subtab-bar">
                 <div class="info-tab-bar tab active" onclick="switchTab('info-tab', this)">
-                    <span>📋 デッキ情報</span>
+                    <span>📋 デッキ分析・マリガン</span>
                 </div>
                 <div class="post-tab-bar tab" onclick="switchTab('post-tab', this)">
                     <span>📤 デッキ投稿</span>
@@ -427,7 +427,7 @@
         <!--タブ内-->
         <div class="tab-contents-group">
 
-        <!-- デッキ情報タブ -->
+        <!-- デッキ分析タブ -->
         <div class=" tab-content active" id="info-tab">
             <div class="info-section">
 
@@ -502,38 +502,6 @@
                     <div class="info-value"><span id="avg-charge">-</span></div>
                 </div>
 
-                <!--グラフ分布-->
-                <div class="deckmaker-charts">
-
-                    <!-- コスト分布 -->
-                    <div class="chartbox">
-                        <div class="charthead">
-                            <div class="charttitle">コスト分布</div>
-                            <div class="chartchips" id="cost-summary-deckmaker">
-                                <!-- JSで差し替え -->
-                            </div>
-                        </div>
-                        <div class="chartcanvas">
-                            <canvas id="costChart-deckmaker"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- パワー分布 -->
-                    <div class="chartbox">
-                        <div class="charthead">
-                            <div class="charttitle">パワー分布</div>
-                            <div class="chartchips" id="power-summary-deckmaker">
-                                <!-- JSで差し替え -->
-                            </div>
-                        </div>
-                        <div class="chartcanvas">
-                            <canvas id="powerChart-deckmaker"></canvas>
-                        </div>
-                    </div>
-
-                </div>
-
-
                 <!--マリガン練習 -->
                 <div class="mulligan-trainer" id="mulligan-trainer">
                     <div class="mull-remaining-title">マリガンシミュレーション</div>
@@ -577,6 +545,37 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!--グラフ分布-->
+                <div class="deckmaker-charts">
+
+                    <!-- コスト分布 -->
+                    <div class="chartbox">
+                        <div class="charthead">
+                            <div class="charttitle">コスト分布</div>
+                            <div class="chartchips" id="cost-summary-deckmaker">
+                                <!-- JSで差し替え -->
+                            </div>
+                        </div>
+                        <div class="chartcanvas">
+                            <canvas id="costChart-deckmaker"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- パワー分布 -->
+                    <div class="chartbox">
+                        <div class="charthead">
+                            <div class="charttitle">パワー分布</div>
+                            <div class="chartchips" id="power-summary-deckmaker">
+                                <!-- JSで差し替え -->
+                            </div>
+                        </div>
+                        <div class="chartcanvas">
+                            <canvas id="powerChart-deckmaker"></canvas>
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -1227,7 +1226,7 @@
 
         <ol class="help-modal-steps">
             <li>「🃏 デッキ構築」タブで、デッキを組みましょう。</li>
-            <li>「📋 デッキ情報」内で枚数・種族・レアリティなどを確認しましょう。</li>
+            <li>「📋 デッキ分析」内で枚数・種族・レアリティなどを確認しましょう。</li>
             <li>「📤 デッキ投稿」サブタブに進みます。投稿内のデッキ名・投稿コメント・タグなどの記入欄を埋めていきましょう。</li>
             <li>最後に、投稿チェック」にチェックを入れてから、一番下の「デッキを投稿する」ボタンを押したら投稿完了です！</li>
         </ol>
