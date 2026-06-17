@@ -850,17 +850,6 @@
             return calendar;
         }
 
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'home-event-calendar-button';
-        button.setAttribute('aria-haspopup', 'dialog');
-
-        const month = createTextElement('span', calendar.monthLabel, 'home-event-calendar-button__month');
-        const text = createTextElement('span', 'カレンダーで見る', 'home-event-calendar-button__text');
-        const count = createTextElement('span', `${calendar.eventCount}件`, 'home-event-calendar-button__count');
-        button.append(month, text, count);
-        button.addEventListener('click', () => openEventCalendarModal_(items));
-
         const inline = document.createElement('div');
         inline.className = 'home-event-calendar-inline';
         inline.append(
@@ -874,7 +863,7 @@
             root.dataset.calendarJumpBound = 'true';
         }
 
-        root.replaceChildren(button, inline);
+        root.replaceChildren(inline);
         return calendar;
     }
 
