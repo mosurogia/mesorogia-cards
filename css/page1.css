@@ -49,6 +49,19 @@
 .list-row .card {
     width: 92px;
     flex: 0 0 92px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.list-owned-editor-slot {
+    display: none;
+}
+
+.grid.is-list .list-owned-editor-slot {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 4px;
 }
 
 /* 右：詳細（既存 .card-detail を常時表示） */
@@ -88,6 +101,7 @@
 
 /* 一覧表示の詳細操作 */
 .grid.is-list .card-detail-actions {
+    display: none;
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     grid-template-areas:
         "owned owned"
@@ -115,9 +129,50 @@
 }
 
 .grid.is-list .owned-editor {
-    display: inline-flex;
-    flex-wrap: nowrap;
+    display: inline-grid;
+    grid-template-areas:
+        "label label toggle"
+        "minus num plus";
+    grid-template-columns: 22px minmax(0, 1fr) 30px;
+    grid-auto-rows: 22px;
+    gap: 4px;
     max-width: 100%;
+    width: 88px;
+    padding: 4px;
+    align-items: center;
+    justify-content: stretch;
+}
+
+.grid.is-list .owned-editor-label {
+    align-self: center;
+    justify-self: center;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.grid.is-list .owned-editor-num {
+    min-width: 0;
+    font-size: 12px;
+    line-height: 1;
+    justify-self: center;
+    align-self: center;
+}
+
+.grid.is-list .owned-editor-toggle {
+    height: 22px;
+    min-width: 0;
+    padding: 0 5px;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.grid.is-list .owned-editor-btn {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1;
 }
 
 .grid.is-list .card-detail-action-btn {
@@ -139,27 +194,23 @@
     }
 
     .grid.is-list .owned-editor {
-        display: inline-grid;
         grid-template-areas:
             "label label toggle"
             "minus num plus";
-        grid-template-columns: 30px 1.4em 30px;
-        gap: 3px 4px;
-        align-self: stretch;
-        justify-content: start;
-        padding: 4px 5px;
+        grid-template-columns: 22px minmax(0, 1fr) 30px;
+        grid-auto-rows: 22px;
+        gap: 4px;
+        align-self: center;
+        justify-content: stretch;
+        padding: 4px;
     }
 
     .grid.is-list .owned-editor-label {
         grid-area: label;
-        font-size: 10px;
     }
 
     .grid.is-list .owned-editor-toggle {
         grid-area: toggle;
-        height: 22px;
-        padding: 0 5px;
-        font-size: 11px;
     }
 
     .grid.is-list .owned-editor-minus {
@@ -176,8 +227,6 @@
     }
 
     .grid.is-list .owned-editor-btn {
-        width: 22px;
-        height: 22px;
     }
 }
 
@@ -552,7 +601,7 @@
         position: relative;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
-        padding: 10px 12px;
+        padding: 0px 12px 10px;
     }
 
     .sp-group-drawer-body .cg-list.is-sync-locked {

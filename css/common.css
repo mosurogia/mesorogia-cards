@@ -334,6 +334,9 @@ button,
         background: rgba(255, 255, 255, .95);
         border: 1px solid rgba(0, 0, 0, .14);
         box-shadow: 0 10px 22px rgba(0, 0, 0, .16);
+        min-width: 0;
+        transition: padding .2s ease, border-radius .2s ease, min-width .2s ease, transform .2s ease;
+        will-change: transform;
     }
 
     .floating-btn .shot-btn-ico {
@@ -345,6 +348,30 @@ button,
         font-size: 18px;
         font-weight: 900;
         line-height: 1;
+    }
+
+    .floating-btn.is-collapsed {
+        justify-content: center;
+        gap: 0;
+        min-width: 42px;
+        min-height: 42px;
+        padding: 10px;
+        border-radius: 50%;
+    }
+
+    .floating-btn.is-collapsed .shot-btn-txt {
+        display: none;
+    }
+
+    .floating-btn.is-scroll-away {
+        pointer-events: none;
+        transform: translateX(calc(-100% - 14px));
+    }
+}
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+    .floating-btn {
+        transition: none;
     }
 }
 
@@ -898,9 +925,10 @@ button,
         position: fixed;
         top: 2.7rem;
         right: 6px;
-        left: 6px;
+        left: auto;
+        width: clamp(190px, 64vw, 260px);
         min-width: 0;
-        max-width: none;
+        max-width: calc(100vw - 12px);
     }
 }
 
@@ -1749,7 +1777,7 @@ button,
 ========================= */
 #scrollTopFixed {
     position: fixed;
-    z-index: 1500;
+    z-index: var(--z-floating-control, 3000);
 
     bottom: 20px;
     right: 20px;
@@ -1794,7 +1822,6 @@ footer a:hover {
     Compact Footer (site-footer)
 ========================= */
 .site-footer {
-    margin-top: 18px;
     border-top: 1px solid rgba(0, 0, 0, .08);
     background: rgba(255, 255, 255, .92);
     backdrop-filter: blur(6px);

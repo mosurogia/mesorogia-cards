@@ -566,7 +566,7 @@
 .tier-guide-deck {
     display: grid;
     align-content: start;
-    gap: 8px;
+    gap: 6px;
     padding: 10px;
     border: 1px solid rgba(15, 23, 42, .1);
     border-radius: 8px;
@@ -609,31 +609,41 @@
 
 .tier-guide-deck-head {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
+    gap: 4px 8px;
 }
 
 .tier-guide-deck-title {
+    flex: 0 1 auto;
+    min-width: 0;
     margin: 0;
     color: #111827;
     font-size: 15px;
     font-weight: 900;
     line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tier-guide-deck-meta {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
     gap: 6px;
-    margin: 0px 0 10px;
+    margin-left: auto;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .tier-guide-deck-meta-item {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     min-height: 22px;
     padding: 0 8px;
     border: 1px solid rgba(15, 23, 42, .08);
@@ -643,6 +653,7 @@
     font-size: 12px;
     font-weight: 800;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 .tier-guide-deck-actions {
@@ -802,7 +813,7 @@
     position: absolute;
     right: 2px;
     top: 2px;
-    min-width: 22px;
+    min-width: 15px;
     padding: 2px 4px;
     border-radius: 999px;
     background: rgba(15, 23, 42, .9);
@@ -811,7 +822,7 @@
     font-weight: 900;
     line-height: 1;
     text-align: center;
-}
+}                   
 
 .tier-post-detail-empty {
     color: #64748b;
@@ -819,9 +830,294 @@
     font-weight: 800;
 }
 
+#cardDetailDrawer {
+    position: fixed;
+    inset: 0;
+    bottom: 0;
+    z-index: 1900;
+    background: rgba(0, 0, 0, .15);
+}
+
+#cardDetailDrawer .carddetail-drawer-inner {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: min(72dvh, 72vh);
+    overflow: auto;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+    border-radius: 18px 18px 0 0;
+    background: #fff;
+    box-shadow: 0 -18px 50px rgba(0, 0, 0, .22);
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+#cardDetailDrawer .carddetail-inner {
+    padding: 5px;
+}
+
+#cardDetailDrawer .carddetail-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#cardDetailDrawer .carddetail-thumb {
+    flex: 0 0 85px;
+    width: 85px;
+}
+
+#cardDetailDrawer .carddetail-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 424 / 532;
+    border-radius: 6px;
+    background: #f3f4f6;
+    object-fit: cover;
+}
+
+#cardDetailDrawer .carddetail-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+#cardDetailDrawer .card-title-row {
+    align-items: flex-start;
+    gap: 6px;
+    justify-content: normal;
+}
+
+#cardDetailDrawer .carddetail-name {
+    margin-bottom: 6px;
+    font-size: 1.02rem;
+    font-weight: 800;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+#cardDetailDrawer .carddetail-sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    color: #4b5563;
+    font-size: .85rem;
+}
+
+#cardDetailDrawer .carddetail-pack,
+#cardDetailDrawer .carddetail-cat,
+#cardDetailDrawer .carddetail-race,
+#cardDetailDrawer .carddetail-rarity {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 12px;
+    border: 1px solid rgba(15, 23, 42, .1);
+    border-radius: 999px;
+    background: #f9fafb;
+}
+
+#cardDetailDrawer .carddetail-pack {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    max-width: 100%;
+    background: rgba(var(--pack-bg, 248, 250, 252), .18);
+    border-color: var(--pack-stroke, rgba(15, 23, 42, .1));
+    line-height: 1.2;
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="A"] {
+    --pack-bg: var(--pack-a-rgb);
+    --pack-stroke: rgba(var(--pack-a-accent-rgb), .6);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="B"] {
+    --pack-bg: var(--pack-b-rgb);
+    --pack-stroke: rgba(var(--pack-b-accent-rgb), .6);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="C"] {
+    --pack-bg: var(--pack-c-rgb);
+    --pack-stroke: rgba(var(--pack-c-accent-rgb), .6);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="D"] {
+    --pack-bg: var(--pack-d-rgb);
+    --pack-stroke: rgba(var(--pack-d-accent-rgb), .6);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="E"] {
+    --pack-bg: var(--pack-e-rgb);
+    --pack-stroke: rgba(var(--pack-e-accent-rgb), .6);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="F"] {
+    --pack-bg: var(--pack-f-rgb);
+    --pack-stroke: rgba(var(--pack-f-accent-rgb), .7);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="G"] {
+    --pack-bg: var(--pack-g-rgb);
+    --pack-stroke: rgba(var(--pack-g-accent-rgb), .7);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="H"] {
+    --pack-bg: var(--pack-h-rgb);
+    --pack-stroke: rgba(var(--pack-h-accent-rgb), .7);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="SPECIAL"] {
+    --pack-bg: var(--pack-special-rgb);
+    --pack-stroke: rgba(var(--pack-special-accent-rgb), .7);
+}
+
+#cardDetailDrawer .carddetail-pack[data-pack="COLLAB"] {
+    --pack-bg: var(--pack-collab-rgb);
+    --pack-stroke: rgba(var(--pack-collab-accent-rgb), .75);
+}
+
+#cardDetailDrawer .carddetail-pack-en {
+    color: #111827;
+    font-size: .88rem;
+    font-weight: 600;
+    opacity: .85;
+    word-break: break-word;
+}
+
+#cardDetailDrawer .carddetail-pack-jp {
+    color: #6b7280;
+    font-size: .7rem;
+    font-weight: 650;
+    opacity: .75;
+    word-break: break-word;
+}
+
+#cardDetailDrawer .carddetail-cat-rarity {
+    display: flex;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+#cardDetailDrawer .carddetail-cat {
+    border: 1.5px solid rgba(0, 0, 0, .10);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-ドラゴン {
+    background: color-mix(in srgb, var(--race-dragon) 18%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-アンドロイド {
+    background: color-mix(in srgb, var(--race-android) 18%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-エレメンタル {
+    background: color-mix(in srgb, var(--race-elemental) 18%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-ルミナス {
+    background: color-mix(in srgb, var(--race-luminous) 20%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-シェイド {
+    background: color-mix(in srgb, var(--race-shade) 18%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-イノセント {
+    background: color-mix(in srgb, var(--race-innocent) 22%, #fff);
+}
+
+#cardDetailDrawer .carddetail-cat.cat-旧神 {
+    background: var(--old-god);
+}
+
+#cardDetailDrawer .stat-chip.carddetail-rarity {
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 0;
+    padding: 4px 10px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55);
+}
+
+#cardDetailDrawer .carddetail-rarity.carddetail-rarity--legend {
+    border-image: var(--rarity-border-legend) 1;
+}
+
+#cardDetailDrawer .carddetail-rarity.carddetail-rarity--gold {
+    border-image: var(--rarity-border-gold) 1;
+}
+
+#cardDetailDrawer .carddetail-rarity.carddetail-rarity--silver {
+    border-image: var(--rarity-border-silver) 1;
+}
+
+#cardDetailDrawer .carddetail-rarity.carddetail-rarity--bronze {
+    border-image: var(--rarity-border-bronze) 1;
+}
+
+#cardDetailDrawer .carddetail-close {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    margin-left: auto;
+    border: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .06);
+    color: #334155;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#cardDetailDrawer .carddetail-close:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .35);
+    outline-offset: 2px;
+}
+
+#cardDetailDrawer .carddetail-body {
+    padding-top: 8px;
+}
+
+#cardDetailDrawer .carddetail-effect {
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+}
+
+#cardDetailDrawer .carddetail-effect-name {
+    margin-bottom: 6px;
+    font-weight: 800;
+}
+
+#cardDetailDrawer .carddetail-effect-text {
+    color: #111827;
+    font-size: .92rem;
+    line-height: 1.55;
+}
+
+#cardDetailDrawer .carddetail-empty {
+    padding: 10px 0;
+    color: #6b7280;
+    font-size: .92rem;
+}
+
+body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
+    bottom: 0;
+}
+
 .tier-guide-deck-list-comment {
     position: relative;
-    margin: 10px 0;
+    margin: 10px 0 0;
     padding: 9px 12px;
     border-radius: 10px;
 
@@ -904,25 +1200,19 @@
     }
 
     .tier-row {
-        grid-template-columns: 44px minmax(0, 1fr);
-        min-height: 74px;
+        grid-template-columns: 36px minmax(0, 1fr);
+        min-height: 60px;
     }
 
     .tier-label {
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .tier-items {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 3px;
-        padding: 4px;
-    }
-
-    /* Sだけ大きめ */
-    .tier-row:has(.tier-label.is-s) .tier-items {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 4px;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 2px;
+        padding: 3px;
     }
 
     .tier-card {
@@ -982,7 +1272,7 @@
     }
 
     .tier-guide-deck-head {
-        gap: 8px;
+        gap: 6px;
     }
 
     .tier-guide-deck-title {
@@ -991,7 +1281,6 @@
 
     .tier-guide-deck-meta {
         gap: 5px;
-        margin-bottom: 8px;
     }
 
     .tier-guide-deck-meta-item {

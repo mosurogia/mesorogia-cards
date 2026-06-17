@@ -110,21 +110,28 @@
         3.メニューバー
 ==========================*/
 
-/*使用不可種族非表示ボタン*/
+/* 4ボタン全体：スマホでも潰れにくく */
 .deck-filter-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: .9fr .9fr .9fr 1.25fr;
+    gap: 3px;
+    padding: 3px 4px 0;
+    position: relative;
 }
-@media (max-width: 768px) {
 
-    /* 使用不可種族ボタンを deck-bar-wrapper より下に強制的に配置 */
-    .deck-filter-bar {
-        position: relative;
-        z-index: 1;
-        /* サマリーより下のレイヤーにする */
-    }
+/* 共通 */
+.deck-filter-action {
+    min-width: 0;
+    min-height: 30px;
+    padding: 0 4px;
+    border-radius: 8px;
+    font-size: clamp(10px, 2.8vw, 13px);
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .filter-toggle-button {
     width: 100%;
     background-color: #e0e0e0;
@@ -136,10 +143,122 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
+.deck-filter-action {
+    width: auto;
+    min-width: 0;
+    min-height: 32px;
+    flex: 1 1 0;
+    margin-top: 0;
+    padding: .38rem .45rem;
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(10.5px, 2.8vw, 13px);
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: transform 0.06s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.deck-filter-action-hand {
+    background: linear-gradient(90deg, #34d399, #a7f3d0);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(6, 78, 59, .45), 0 0 1px rgba(6, 78, 59, .75);
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+.deck-filter-action-post {
+    background: linear-gradient(90deg, #68a6ff, #a4d0ff);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(30, 64, 175, .45), 0 0 1px rgba(30, 64, 175, .75);
+    box-shadow: 0 2px 6px rgba(104, 166, 255, 0.25);
+}
+.deck-filter-action-danger {
+    background: linear-gradient(90deg, #fb7185, #fecdd3);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(159, 18, 57, .45), 0 0 1px rgba(159, 18, 57, .75);
+    box-shadow: 0 2px 6px rgba(244, 63, 94, 0.25);
+}
+/* 表示切替だけチェックボックス風 */
+.deck-filter-action-invalid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    box-shadow: none;
+}
+
+/* OFF時：全種族表示 */
+.deck-filter-action-invalid::before {
+    content: "□";
+    font-weight: 900;
+    font-size: 1em;
+}
+
+/* ON時：使用種族のみ */
+.deck-filter-action-invalid.active {
+    background: #f5f3ff;
+    border-color: #8b5cf6;
+    color: #6d28d9;
+}
+
+.deck-filter-action-invalid.active::before {
+    content: "☑";
+}
 .filter-toggle-button.active {
     background-color: #6a5acd;
     color: white;
     border-color: #5a4cb5;
+}
+.deck-filter-action-invalid.active {
+    background: linear-gradient(90deg, #8b5cf6, #c4b5fd);
+    border-color: transparent;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(76, 29, 149, .45), 0 0 1px rgba(76, 29, 149, .75);
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.25);
+}
+.deck-filter-action:hover {
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+}
+.deck-filter-action:active {
+    transform: scale(.98);
+}
+.invalid-race-guide {
+    position: absolute;
+    right: 4px;
+    top: calc(100% + 9px);
+    padding: 7px 10px;
+    border-radius: 9px;
+    border: 1px solid #8b5cf6;
+    background: #ede9fe;
+    color: #5b21b6;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.3;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(91, 33, 182, .22);
+    z-index: 1800;
+    pointer-events: none;
+}
+.invalid-race-guide::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 24px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #8b5cf6;
+}
+.invalid-race-guide::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: 26px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #ede9fe;
 }
 
 /*=======デッキバー=========*/
@@ -169,7 +288,7 @@
 }
 
 .deck-bar-top {
-    min-height: 105px;
+    min-height: 0;
     display: flex;
     gap: 4px;
     padding: 4px 4px 0px 4px;
@@ -184,7 +303,6 @@
 }
 @media (max-width: 410px) {
     .deck-bar-top {
-        min-height: 95px;
         gap: 2px;
     }
 }
@@ -237,58 +355,107 @@
 
 
 .deck-summary {
-    width: 180px;
+    width: max-content;
+    max-width: min(240px, calc(100vw - 48px));
+    box-sizing: border-box;
     text-align: right;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 1.55;
     background: #fff;
     border-left: 1px solid #ccc;
-    padding: 0 4px;
+    padding: 2px 6px;
     flex-shrink: 0;
     /* 🔑 固定幅として右に居座る */
     z-index: 1500;
+}
+.deck-info {
+    font-weight: 700;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+.deck-summary-line,
+.deck-summary-type-line,
+.deck-summary-type-count {
+    display: inline-flex;
+    align-items: center;
+}
+.deck-summary-line {
+    gap: 4px;
+}
+.deck-summary-type-line {
+    gap: 8px;
+}
+.deck-summary-type-count {
+    gap: 3px;
+}
+.deck-summary-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+.deck-summary-type-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    vertical-align: middle;
 }
 @media (max-width: 768px) {
     .deck-summary {
         width: 0;
         max-width: 0;
+        margin-right: 0;
         height: 0;
         flex: 0 0 0;
         align-self: flex-start;
         background: #fff;
         border-left: 0 solid #ccc;
         padding: 0;
-        font-size: 10px;
-        line-height: 1.3;
+        font-size: 13px;
+        line-height: 1.5;
         overflow: hidden;
         visibility: hidden;
         transition: flex-basis 0.3s ease, width 0.3s ease, max-width 0.3s ease, padding 0.3s ease, border-left-width 0.3s ease;
         z-index: 1500;
     }
+    .deck-summary-type-line {
+        gap: 5px;
+    }
 }
 @media (max-width: 410px) {
 .deck-summary {
-        font-size: 8.5px;
+        font-size: 12px;
         width: 0;
+    }
+    .deck-summary-type-line {
+        gap: 4px;
+    }
+    .deck-summary-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .deck-summary-type-icon {
+        width: 14px;
+        height: 14px;
     }
 }
 @media (max-width: 768px) {
     .deck-summary.open {
-        width: 150px;
-        max-width: 150px;
+        width: max-content;
+        max-width: calc(100vw - 52px);
         height: auto;
-        flex-basis: 150px;
-        align-self: stretch;
+        flex-basis: auto;
+        align-self: flex-start;
         border-left-width: 1px;
-        padding: 0 4px;
+        padding: 4px 8px;
         visibility: visible;
     }
 }
 @media (max-width: 410px) {
     .deck-summary.open {
-        width: 130px;
-        max-width: 130px;
-        flex-basis: 130px;
+        width: max-content;
+        max-width: calc(100vw - 44px);
+        flex-basis: auto;
     }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -820,7 +987,7 @@
 .dm-toast {
     position: fixed;
     left: 50%;
-    bottom: 16px;
+    bottom: calc(16px + var(--app-bottom-nav-offset, 0px));
     transform: translateX(-50%) translateY(10px);
     background: rgba(0, 0, 0, .85);
     color: #fff;
@@ -849,7 +1016,7 @@
 #saved-deck-code-copy-toast.dm-toast {
     position: fixed;
     left: 50%;
-    bottom: 16px;
+    bottom: calc(16px + var(--app-bottom-nav-offset, 0px));
     transform: translateX(-50%) translateY(10px);
     z-index: 999999;
     display: inline-flex;
@@ -878,7 +1045,7 @@
 #saved-deck-code-copy-toast.dm-toast {
     position: fixed;
     left: 50%;
-    bottom: 16px;
+    bottom: calc(16px + var(--app-bottom-nav-offset, 0px));
     transform: translateX(-50%) translateY(10px);
     background: rgba(0, 0, 0, .85);
     color: #fff;
@@ -4701,6 +4868,7 @@ font-size: .8rem;
   .deck-code-controls button,
   .post-actions button,
   .analyze-button,
+  .deck-filter-action,
   .paste-code-controls button,
   .btn,
   .add-note-btn {

@@ -2624,14 +2624,14 @@ body.is-card-pick-open #deckpeek-button {
 
 /* スマホ下部の固定ボタンに隠れないよう、表示ページだけカード一覧の下に余白を作る */
 @media (max-width: 768px) {
-    body:has(#screenshot-save-btn.floating-btn) #grid.grid {
+    body.is-pwa-standalone:has(#screenshot-save-btn.floating-btn) #grid.grid {
         padding-bottom: calc(28px + env(safe-area-inset-bottom));
     }
 }
 
 @media (max-width: 700px) {
-    body:has(#sp-group-open.floating-btn) #grid.grid {
-        padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    body.is-pwa-standalone:has(#sp-group-open.floating-btn) #grid.grid {
+        padding-bottom: calc(88px + env(safe-area-inset-bottom));
     }
 
     body:has(#sp-group-done-fab.floating-btn:not([style*="display: none"])) #grid.grid {
@@ -3048,10 +3048,78 @@ body.is-card-pick-open #deckpeek-button {
     cursor: not-allowed;
 }
 
+body.is-pwa-standalone .card-detail-actions {
+    grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr);
+    gap: 4px;
+}
+
+body.is-pwa-standalone .card-detail-actions-owned {
+    min-width: 0;
+    width: fit-content;
+}
+
+body.is-pwa-standalone .owned-editor {
+    display: inline-grid;
+    grid-template-areas:
+        "label label toggle"
+        "minus num plus";
+    grid-template-columns: 30px 1.4em 30px;
+    gap: 3px 4px;
+    justify-content: start;
+    padding: 4px 5px;
+}
+
+body.is-pwa-standalone .owned-editor-label {
+    grid-area: label;
+    font-size: 10px;
+}
+
+body.is-pwa-standalone .owned-editor-toggle {
+    grid-area: toggle;
+    height: 22px;
+    padding: 0 5px;
+    font-size: 11px;
+}
+
+body.is-pwa-standalone .owned-editor-minus {
+    grid-area: minus;
+}
+
+body.is-pwa-standalone .owned-editor-num {
+    grid-area: num;
+    font-size: 12px;
+}
+
+body.is-pwa-standalone .owned-editor-plus {
+    grid-area: plus;
+}
+
+body.is-pwa-standalone .owned-editor-btn {
+    width: 22px;
+    height: 22px;
+}
+
+body.is-pwa-standalone .card-detail-actions-modal,
+body.is-pwa-standalone .card-detail-actions-side {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+body.is-pwa-standalone .card-detail-actions-side {
+    justify-items: stretch;
+}
+
+body.is-pwa-standalone .card-detail-action-btn {
+    min-height: 30px;
+    padding: 4px 6px;
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: normal;
+}
+
 @media (max-width: 480px) {
     .card-detail-actions {
         grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr);
-        gap: 2px;
+        gap: 4px;
     }
 
     .card-detail-actions-owned {
@@ -3101,18 +3169,21 @@ body.is-card-pick-open #deckpeek-button {
     }
 
     .card-detail-actions-modal {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         gap: 4px;
     }
 
     .card-detail-actions-side {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         justify-items: stretch;
     }
 
     .card-detail-action-btn {
-        min-height: 27px;
-        padding: 3px 6px;
+        min-height: 30px;
+        padding: 4px 6px;
+        font-size: 11px;
+        line-height: 1.25;
+        white-space: normal;
     }
 }
 
