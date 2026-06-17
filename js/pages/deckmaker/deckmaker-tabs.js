@@ -98,4 +98,32 @@
   window.goToAnalyzeTab ??= function goToAnalyzeTab() {
     goToAnalyzeSubtab('post-tab', 'post-tab-bar');
   };
+
+  function getDeckCardCount() {
+    return Object.values(window.deck || {}).reduce((sum, count) => sum + (count | 0), 0);
+  }
+
+  function showMulliganUnavailableMessage(count) {
+    const message = `マリガンシミュレーションを使うには、デッキが30枚以上になるようにしてください。（現在${count}枚）`;
+    if (typeof window.dmToast === 'function') {
+      window.dmToast(message, 2600);
+      return;
+    }
+    alert(message);
+  }
+
+  window.goToMulliganTrainer ??= function goToMulliganTrainer() {
+    const deckCount = getDeckCardCount();
+    if (deckCount < 30) {
+      showMulliganUnavailableMessage(deckCount);
+      return;
+    }
+
+    goToAnalyzeSubtab('info-tab', 'info-tab-bar');
+    requestAnimationFrame(() => {
+      const trainer = document.getElementById('mulligan-trainer');
+      if (!trainer) return;
+      trainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
 })();

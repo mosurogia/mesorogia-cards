@@ -342,6 +342,7 @@
         }
       }
       removeKeys.forEach(key => localStorage.removeItem(key));
+      localStorage.removeItem('deckmaker_invalid_race_guide_seen_at');
     } catch (_) {}
 
     const task = window.MesorogiaPwaMaintenance?.repairAndReload?.();

@@ -1,4 +1,4 @@
-var SW_BUILD_VERSION = '2026-06-03-001';
+var SW_BUILD_VERSION = '2026-06-15-001';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
@@ -49,6 +49,9 @@ self.addEventListener('activate', function (event) {
           if (cacheName.indexOf('mesorogia-static-') === 0 && cacheName !== staticCacheName) {
             return caches.delete(cacheName);
           }
+          if (cacheName.indexOf('mesorogia-runtime-') === 0 && cacheName !== runtimeCacheName) {
+            return caches.delete(cacheName);
+          }
           return Promise.resolve();
         })
       );
@@ -79,7 +82,7 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (event.request.mode === 'navigate') {
-    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs));
+    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs, { useCacheOnTimeout: false }));
     return;
   }
 
@@ -88,12 +91,12 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (shouldUseNetworkOnly(requestUrl)) {
-    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs));
+    event.respondWith(networkFirst(event.request, true, config.navigationNetworkTimeoutMs, { useCacheOnTimeout: false }));
     return;
   }
 
   if (shouldUseNetworkFirstAsset(requestUrl)) {
-    event.respondWith(networkFirst(event.request, false, config.assetNetworkTimeoutMs));
+    event.respondWith(networkFirst(event.request, false, config.assetNetworkTimeoutMs, { useCacheOnTimeout: false }));
     return;
   }
 
@@ -176,7 +179,9 @@ function staleWhileRevalidate(request) {
   });
 }
 
-function networkFirst(request, useFallbackPage, timeoutMs) {
+function networkFirst(request, useFallbackPage, timeoutMs, opts) {
+  opts = opts || {};
+  var useCacheOnTimeout = opts.useCacheOnTimeout !== false;
   var fetchPromise = fetch(request).then(function (networkResponse) {
     return putRuntimeCache(request, networkResponse);
   });
@@ -206,6 +211,22 @@ function networkFirst(request, useFallbackPage, timeoutMs) {
   return Promise.race([fetchPromise, timeoutPromise]).then(function (response) {
     if (response !== '__mesorogia_network_timeout__') {
       return response;
+    }
+
+    if (!useCacheOnTimeout) {
+      return fetchPromise.catch(function () {
+        return caches.match(request).then(function (cachedResponse) {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+
+          if (useFallbackPage) {
+            return caches.match(config.offlineFallbackPage);
+          }
+
+          return undefined;
+        });
+      });
     }
 
     return caches.match(request).then(function (cachedResponse) {

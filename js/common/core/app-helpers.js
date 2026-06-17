@@ -16,6 +16,10 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
 (function () {
     let tooltipEl = null;
     let tooltipTarget = null;
+    let longPressTimer = 0;
+    let longPressTarget = null;
+    let longPressPoint = null;
+    let suppressClickTarget = null;
 
     function ensureTooltipEl_() {
         if (tooltipEl && document.body.contains(tooltipEl)) return tooltipEl;
@@ -69,6 +73,15 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         el.classList.add('is-show');
     }
 
+    function clearLongPress_() {
+        if (longPressTimer) {
+            window.clearTimeout(longPressTimer);
+            longPressTimer = 0;
+        }
+        longPressTarget = null;
+        longPressPoint = null;
+    }
+
     function bindTooltip_() {
         if (document.body.dataset.dataSourceTooltipBound === '1') return;
         document.body.dataset.dataSourceTooltipBound = '1';
@@ -100,8 +113,47 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         });
 
         document.addEventListener('pointerdown', (e) => {
-            if (e.target.closest('.data-source-badge[data-tooltip]')) return;
+            const target = e.target.closest('.data-source-badge[data-tooltip]');
+            if (target) {
+                if (e.pointerType !== 'mouse') {
+                    clearLongPress_();
+                    longPressTarget = target;
+                    longPressPoint = { x: e.clientX, y: e.clientY };
+                    longPressTimer = window.setTimeout(() => {
+                        suppressClickTarget = target;
+                        showTooltip_(target);
+                        clearLongPress_();
+                    }, 560);
+                }
+                return;
+            }
             hideTooltip_();
+        });
+
+        document.addEventListener('pointermove', (e) => {
+            if (!longPressTarget || !longPressPoint) return;
+            const moved = Math.hypot(e.clientX - longPressPoint.x, e.clientY - longPressPoint.y);
+            if (moved > 10) clearLongPress_();
+        }, { passive: true });
+
+        document.addEventListener('pointerup', clearLongPress_);
+        document.addEventListener('pointercancel', clearLongPress_);
+
+        document.addEventListener('click', (e) => {
+            if (!suppressClickTarget) return;
+            if (!suppressClickTarget.contains(e.target)) {
+                suppressClickTarget = null;
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            suppressClickTarget = null;
+        }, true);
+
+        document.addEventListener('contextmenu', (e) => {
+            const target = e.target.closest('.data-source-badge[data-tooltip]');
+            if (!target || target !== tooltipTarget) return;
+            e.preventDefault();
         });
 
         document.addEventListener('scroll', () => {

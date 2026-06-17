@@ -17,6 +17,7 @@
         environments: [],
         currentEnvironmentIndex: 0,
         postCache: new Map(),
+        guideDeckListHtmlCache: new Map(),
         prefetchedPostPages: new Set(),
         guideObserver: null,
         guideLoadQueue: [],
@@ -484,12 +485,199 @@
         return match ? normalizeCd5(match[1]) : '';
     }
 
+    function isSmartphoneCardDetailDrawer() {
+        return window.matchMedia && window.matchMedia('(max-width: 1023px)').matches;
+    }
+
+    function closeTierCardDetailDrawer() {
+        const drawer = document.getElementById('cardDetailDrawer');
+        if (drawer) drawer.style.display = 'none';
+    }
+
+    function ensureTierCardDetailDrawer() {
+        let drawer = document.getElementById('cardDetailDrawer');
+        if (drawer) return drawer;
+
+        drawer = document.createElement('div');
+        drawer.id = 'cardDetailDrawer';
+        drawer.style.display = 'none';
+        drawer.innerHTML = `
+            <div class="carddetail-drawer-inner" role="dialog" aria-modal="true" aria-label="カード詳細">
+                <div class="carddetail-inner"></div>
+            </div>
+        `;
+        document.body.append(drawer);
+
+        drawer.addEventListener('click', (event) => {
+            const zoomButton = event.target.closest('.detail-zoom-btn');
+            if (zoomButton) {
+                const cd = normalizeCd5(zoomButton.dataset.cd);
+                if (cd) window.CardZoomModal?.open?.(cd);
+                return;
+            }
+
+            if (event.target === drawer || event.target.closest('.carddetail-close')) {
+                closeTierCardDetailDrawer();
+            }
+        });
+
+        return drawer;
+    }
+
+    function nl2br(value) {
+        return escapeHtml(value).replace(/\r?\n/g, '<br>');
+    }
+
+    function getTierCardPackHtml(card) {
+        const packRaw = card.pack_name || card.packName || '';
+        if (!packRaw) return '';
+
+        const pack = typeof window.splitPackName === 'function'
+            ? window.splitPackName(packRaw)
+            : { en: String(packRaw), jp: '' };
+        const packKey = getTierCardPackKey(packRaw, pack.en);
+        return `
+            <div class="carddetail-pack"${packKey ? ` data-pack="${escapeHtml(packKey)}"` : ''}>
+                ${pack.en ? `<div class="carddetail-pack-en">${escapeHtml(pack.en)}</div>` : ''}
+                ${pack.jp ? `<div class="carddetail-pack-jp">${escapeHtml(pack.jp)}</div>` : ''}
+            </div>
+        `;
+    }
+
+    function getTierCardPackKey(packRaw, packEn) {
+        const deckPostPackKey = window.DeckPostDetail && window.DeckPostDetail.packKeyFromAbbr_;
+        const enName = String(packEn || packRaw || '').trim();
+        const low = enName.toLowerCase();
+        let abbr = '';
+
+        if (low.includes('awakening the oracle') || low.includes('awaking the oracle')) abbr = 'Aパック';
+        else if (low.includes('beyond the sanctuary')) abbr = 'Bパック';
+        else if (low.includes('creeping souls')) abbr = 'Cパック';
+        else if (low.includes('drawn sword')) abbr = 'Dパック';
+        else if (low.includes('ensemble of silence') || low.includes('ensemble of slience')) abbr = 'Eパック';
+        else if (low.includes('fallen fate')) abbr = 'Fパック';
+        else if (low.includes('glory of the gods')) abbr = 'Gパック';
+        else if (low.includes('honor of the brave heart')) abbr = 'Hパック';
+        else if (enName.includes('コラボ') || low.includes('collab')) abbr = 'コラボ';
+        else if (enName.includes('その他特殊') || low.includes('special')) abbr = '特殊';
+        else abbr = enName;
+
+        if (typeof deckPostPackKey === 'function') return deckPostPackKey(abbr);
+        if (typeof window.packKeyFromAbbr === 'function') return window.packKeyFromAbbr(abbr);
+        if (/^([A-Z])パック/.test(abbr)) return abbr[0];
+        if (abbr.includes('コラボ')) return 'COLLAB';
+        if (abbr.includes('特殊')) return 'SPECIAL';
+        return '';
+    }
+
+    function getTierCardRarityKey(rarity) {
+        if (typeof window.DeckPostDetail?.rarityKeyForPage4_ === 'function') {
+            return window.DeckPostDetail.rarityKeyForPage4_(rarity);
+        }
+
+        const text = String(rarity || '').trim();
+        const low = text.toLowerCase();
+        if (text.includes('レジェンド') || low.includes('legend')) return 'legend';
+        if (text.includes('ゴールド') || low.includes('gold')) return 'gold';
+        if (text.includes('シルバー') || low.includes('silver')) return 'silver';
+        if (text.includes('ブロンズ') || low.includes('bronze')) return 'bronze';
+        return '';
+    }
+
+    function getTierCardRarityClass(rarity) {
+        if (typeof window.DeckPostDetail?.rarityPillClassForPage4_ === 'function') {
+            return window.DeckPostDetail.rarityPillClassForPage4_(rarity);
+        }
+
+        const key = getTierCardRarityKey(rarity);
+        return key ? `carddetail-rarity--${key}` : '';
+    }
+
+    function getTierCardEffectHtml(card) {
+        const effectItems = [
+            [card.effect_name1 || '', card.effect_text1 || ''],
+            [card.effect_name2 || '', card.effect_text2 || '']
+        ].filter(([name, text]) => name || text);
+
+        if (!effectItems.length) {
+            return '<div class="carddetail-empty">カードテキストが未登録です。</div>';
+        }
+
+        return effectItems.map(([name, text]) => `
+            <div class="carddetail-effect">
+                ${name ? `<div class="carddetail-effect-name">${escapeHtml(name)}</div>` : ''}
+                ${text ? `<div class="carddetail-effect-text">${nl2br(text)}</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    function buildTierCardDetailHtml(cd) {
+        const card = (window.cardMap || {})[cd] || { cd, name: cd };
+        const cardName = card.name || cd;
+        const race = card.race || (Array.isArray(card.races) ? card.races[0] : '') || '';
+        const rarity = card.rarity || '';
+        const rarityClass = getTierCardRarityClass(rarity);
+
+        return `
+            <div class="carddetail-head">
+                <div class="carddetail-thumb">
+                    <img
+                        src="${escapeHtml(getCardImageSrc(cd))}"
+                        alt="${escapeHtml(cardName)}"
+                        loading="lazy"
+                        class="carddetail-thumb-img"
+                        data-cd="${escapeHtml(cd)}"
+                    >
+                </div>
+
+                <div class="carddetail-meta">
+                    <div class="card-title-row">
+                        <button type="button" class="detail-zoom-btn" data-cd="${escapeHtml(cd)}" aria-label="画像を拡大" title="画像を拡大">
+                            <img class="zoom-ic" src="./img/zoom_in_24.svg" alt="" aria-hidden="true" decoding="async">
+                        </button>
+                        <div class="carddetail-name">${escapeHtml(cardName)}</div>
+                    </div>
+                    <div class="carddetail-sub">
+                        ${getTierCardPackHtml(card)}
+                        <div class="carddetail-cat-rarity">
+                            ${race ? `<span class="carddetail-cat cat-${escapeHtml(race)}">${escapeHtml(race)}</span>` : ''}
+                            ${rarity ? `<span class="stat-chip carddetail-rarity ${escapeHtml(rarityClass)}">${escapeHtml(rarity)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="carddetail-close" aria-label="閉じる">×</button>
+            </div>
+
+            <div class="carddetail-body">
+                ${getTierCardEffectHtml(card)}
+            </div>
+        `;
+    }
+
+    function openTierPostCardDetailDrawer(cd) {
+        const html = buildTierCardDetailHtml(cd);
+        if (!html) return false;
+
+        const drawer = ensureTierCardDetailDrawer();
+        const inner = drawer.querySelector('.carddetail-inner');
+        if (!inner) return false;
+
+        inner.innerHTML = html;
+        drawer.style.display = 'block';
+        return true;
+    }
+
     async function openTierPostCardDetail(card) {
         const cd = getCardIdFromTierPostCard(card);
         if (!cd) return;
 
         if (typeof window.ensureCardMapLoaded === 'function') {
             await window.ensureCardMapLoaded().catch(() => null);
+        }
+
+        if (isSmartphoneCardDetailDrawer() && openTierPostCardDetailDrawer(cd)) {
+            return;
         }
 
         const anchorRect = card.getBoundingClientRect();
@@ -502,16 +690,18 @@
         }
     }
 
-    async function renderDeckList(item, list) {
-        if (!list) return false;
+    function hasRenderedDeckList(list) {
+        return !!(list && list.querySelector('.tier-post-card'));
+    }
 
-        if (typeof window.ensureCardMapLoaded === 'function') {
-            await window.ensureCardMapLoaded().catch(() => null);
-        }
+    function renderDeckList(item, list) {
+        if (!list) return false;
 
         const deck = extractDeckMap(item);
         if (!deck) {
-            list.innerHTML = '<div class="tier-post-detail-empty">デッキリスト未登録</div>';
+            if (!hasRenderedDeckList(list)) {
+                list.innerHTML = '<div class="tier-post-detail-empty">デッキリスト未登録</div>';
+            }
             return false;
         }
 
@@ -521,6 +711,48 @@
 
         list.replaceChildren(...entries.map(([cd, count]) => createDeckListCard(normalizeCd5(cd), count)));
         return true;
+    }
+
+    function getGuideDeckListCacheKeyFromValues(postId, guideId) {
+        const pid = String(postId || '').trim();
+        if (pid) return `post:${pid}`;
+
+        const gid = String(guideId || '').trim();
+        return gid ? `guide:${gid}` : '';
+    }
+
+    function getGuideDeckListCacheKey(guideCard) {
+        if (!guideCard) return '';
+        return getGuideDeckListCacheKeyFromValues(guideCard.dataset.postId, guideCard.dataset.guideId);
+    }
+
+    function saveRenderedGuideDeckList(guideCard) {
+        const key = getGuideDeckListCacheKey(guideCard);
+        const list = guideCard && guideCard.querySelector('[data-tier-guide-list]');
+        if (!key || !hasRenderedDeckList(list)) return;
+
+        state.guideDeckListHtmlCache.set(key, list.innerHTML);
+    }
+
+    function getCachedGuideDeckListHtml(postId, guideId) {
+        const key = getGuideDeckListCacheKeyFromValues(postId, guideId);
+        return key ? state.guideDeckListHtmlCache.get(key) || '' : '';
+    }
+
+    function renderGuideDecksFromCache() {
+        document.querySelectorAll('.tier-guide-deck[data-post-id]').forEach((guideCard) => {
+            const postId = String(guideCard.dataset.postId || '').trim();
+            const item = postId ? state.postCache.get(postId) : null;
+            const list = guideCard.querySelector('[data-tier-guide-list]');
+            if (!item || !list) return;
+
+            applyGuideDeckRace(guideCard, item);
+            setGuideDeckCodeButton(guideCard, getDeckCode(item));
+            const rendered = renderDeckList(item, list);
+            guideCard.dataset.loaded = rendered ? '1' : '0';
+            setGuideDeckStatus(guideCard, rendered ? '' : 'デッキリスト未登録', !rendered);
+            if (rendered) saveRenderedGuideDeckList(guideCard);
+        });
     }
 
     function setGuideDeckStatus(card, text, isError) {
@@ -699,11 +931,15 @@
 
         try {
             const item = await fetchPostById(postId);
+            if (typeof window.ensureCardMapLoaded === 'function') {
+                await window.ensureCardMapLoaded().catch(() => null);
+            }
             applyGuideDeckRace(guideCard, item);
             setGuideDeckCodeButton(guideCard, getDeckCode(item));
-            const rendered = await renderDeckList(item, list);
+            const rendered = renderDeckList(item, list);
             guideCard.dataset.loaded = rendered ? '1' : '0';
             setGuideDeckStatus(guideCard, rendered ? '' : 'デッキリスト未登録', !rendered);
+            if (rendered) saveRenderedGuideDeckList(guideCard);
             if (rendered) {
                 setGuideEnvironmentLabel(state.environments[state.currentEnvironmentIndex], state.currentEnvironmentIndex);
             } else {
@@ -718,7 +954,7 @@
         }
     }
 
-    async function renderGuideDeckFromCache(guideCard) {
+    function renderGuideDeckFromCache(guideCard) {
         const postId = String(guideCard && guideCard.dataset.postId || '').trim();
         const list = guideCard && guideCard.querySelector('[data-tier-guide-list]');
         const item = postId ? state.postCache.get(postId) : null;
@@ -726,9 +962,10 @@
 
         applyGuideDeckRace(guideCard, item);
         setGuideDeckCodeButton(guideCard, getDeckCode(item));
-        const rendered = await renderDeckList(item, list);
+        const rendered = renderDeckList(item, list);
         guideCard.dataset.loaded = rendered ? '1' : '0';
         setGuideDeckStatus(guideCard, rendered ? '' : 'デッキリスト未登録', !rendered);
+        if (rendered) saveRenderedGuideDeckList(guideCard);
         return rendered;
     }
 
@@ -751,6 +988,9 @@
 
         try {
             await fetchPostsByIds(postIds);
+            if (typeof window.ensureCardMapLoaded === 'function') {
+                await window.ensureCardMapLoaded().catch(() => null);
+            }
             await Promise.all(targetCards.map(renderGuideDeckFromCache));
             setGuideEnvironmentLabel(state.environments[state.currentEnvironmentIndex], state.currentEnvironmentIndex);
         } catch (error) {
@@ -859,10 +1099,12 @@
         const postId = getPostIdFromUrl(postUrl);
         const detailHref = getPostDetailHref(postUrl);
         const deckCode = getDeckCode(item);
+        const guideId = getDeckGuideId(item);
+        const cachedListHtml = getCachedGuideDeckListHtml(postId, guideId);
         const card = document.createElement('article');
 
         card.className = 'tier-guide-deck';
-        card.dataset.guideId = getDeckGuideId(item);
+        card.dataset.guideId = guideId;
         if (postId) card.dataset.postId = postId;
 
         const head = document.createElement('div');
@@ -871,9 +1113,6 @@
         const title = document.createElement('h5');
         title.className = 'tier-guide-deck-title';
         title.textContent = deckName;
-
-        head.append(title);
-        card.append(head);
 
         const metaItems = getGuideDeckMetaItems(item);
         if (metaItems.length) {
@@ -885,8 +1124,11 @@
                 metaItem.textContent = text;
                 meta.append(metaItem);
             });
-            card.append(meta);
+            head.append(title, meta);
+        } else {
+            head.append(title);
         }
+        card.append(head);
 
         const wideActions = document.createElement('div');
         wideActions.className = 'tier-guide-deck-actions-wide';
@@ -896,6 +1138,7 @@
         detailLink.textContent = 'デッキを詳しく見る';
         if (detailHref) {
             detailLink.href = detailHref;
+            detailLink.target = '_blank';
             detailLink.rel = 'noopener';
             if (postId) detailLink.dataset.postId = postId;
         } else {
@@ -915,11 +1158,12 @@
         const status = document.createElement('div');
         status.className = 'tier-guide-deck-status';
         status.dataset.tierGuideStatus = '1';
-        status.textContent = postId ? '' : 'まだ参考デッキがありません';
+        status.textContent = cachedListHtml || postId ? '' : 'まだ参考デッキがありません';
 
         const list = document.createElement('div');
         list.className = 'tier-post-decklist';
         list.dataset.tierGuideList = '1';
+        if (cachedListHtml) list.innerHTML = cachedListHtml;
 
         card.append(status, list);
 
@@ -976,6 +1220,7 @@
         guide.hidden = !sections.length;
         if (!guideMatchesItems(items)) {
             body.replaceChildren(...sections);
+            renderGuideDecksFromCache();
         }
         setGuideEnvironmentLabel(environment, index);
         state.guideLoadQueue = [];
@@ -1528,6 +1773,7 @@
 
     window.clearTierListBrowserCache_ = async function () {
         state.postCache.clear();
+        state.guideDeckListHtmlCache.clear();
         state.prefetchedPostPages.clear();
         try {
             localStorage.removeItem(TIER_CACHE_KEY);

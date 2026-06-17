@@ -374,7 +374,11 @@
 
     const range = {
       start: target.selectionStart ?? target.value.length,
-      end: target.selectionEnd ?? target.value.length
+      end: target.selectionEnd ?? target.value.length,
+      scrollTop: target.scrollTop ?? 0,
+      scrollLeft: target.scrollLeft ?? 0,
+      pageX: window.scrollX ?? window.pageXOffset ?? 0,
+      pageY: window.scrollY ?? window.pageYOffset ?? 0
     };
 
     if (typeof window.openCardPickModal !== 'function') {
@@ -2097,6 +2101,22 @@
     }
     isPostingDeck = true;
 
+    const btn = document.getElementById('post-submit');
+    const spinner = document.getElementById('post-loading');
+    const resetPostButton_ = () => {
+      if (btn){
+        btn.disabled = false;
+        btn.textContent = '投稿';
+      }
+      if (spinner) spinner.style.display = 'none';
+      isPostingDeck = false;
+    };
+    if (btn){
+      btn.disabled = true;
+      btn.textContent = '確認中…';
+    }
+    if (spinner) spinner.style.display = 'block';
+
     const form = document.getElementById('deck-post-form');
     clearPostAuxiliaryValidity_();
     hasDeckNoteLimitIssue_();
@@ -2107,7 +2127,7 @@
       const firstInvalid = invalidItems[0]?.el;
       scrollToPostField_(firstInvalid);
       setTimeout(() => firstInvalid?.reportValidity?.(), 320);
-      isPostingDeck = false;
+      resetPostButton_();
       return false;
     }
 
@@ -2124,7 +2144,7 @@
         scrollToPostField_(document.getElementById('post-agree'));
         showPostSubmitTooltipOnce_();
       }
-      isPostingDeck = false;
+      resetPostButton_();
       return false;
     }
 
@@ -2141,7 +2161,7 @@
       normalizeXInput_();
     }catch(err){
       showPostToast(err?.message || '入力内容を確認してください', 'danger', true);
-      isPostingDeck = false;
+      resetPostButton_();
       return false;
     }
 
@@ -2155,7 +2175,7 @@
         showPostValidationNotice_([{ el: repValidator, label: 'メインカード', message: 'カード名をタップして選択してください' }]);
         scrollToPostField_(document.getElementById('post-representative') || repValidator);
         setTimeout(() => repValidator.reportValidity(), 320);
-        isPostingDeck = false;
+        resetPostButton_();
         return false;
       }
     }
@@ -2169,18 +2189,14 @@
         showPostValidationNotice_([{ el: cardnoteValidator, label: 'カード解説', message: 'カードを選んだ行の解説を入力してください' }]);
         scrollToPostField_(document.getElementById('post-card-notes') || cardnoteValidator);
         setTimeout(() => cardnoteValidator.reportValidity(), 320);
-        isPostingDeck = false;
+        resetPostButton_();
         return false;
       }
     }
 
-    const btn = document.getElementById('post-submit');
-    const spinner = document.getElementById('post-loading');
     if (btn){
-      btn.disabled = true;
       btn.textContent = '投稿中…';
     }
-    if (spinner) spinner.style.display = 'block';
 
     // representativeCd が空なら保険で自動補完
     if (!window.representativeCd){
@@ -2236,7 +2252,7 @@
     })();
     if (joinCampaign && isActive && rules.requireGameUserId && !/^\d{16}$/.test(payload.gameUserId)){
       showPostToast('ゲーム内ユーザーIDは16桁で入力してください', 'danger', true);
-      isPostingDeck = false;
+      resetPostButton_();
       return false;
     }
 

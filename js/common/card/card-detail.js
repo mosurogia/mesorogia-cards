@@ -611,6 +611,7 @@
   function attachOwnedEditor_(detailEl, cd) {
     // 二重挿入防止
     if (detailEl.querySelector('.owned-editor')) return;
+    if (detailEl.closest('.list-row')?.querySelector('.list-owned-editor-slot > .owned-editor')) return;
 
     const nameEl = detailEl.querySelector('.card-name');
 

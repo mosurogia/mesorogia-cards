@@ -2,11 +2,11 @@
   'use strict';
 
   var config = {
-    version: '2026-06-03-001',
-    staticCacheName: 'mesorogia-static-2026-06-03-001',
-    runtimeCacheName: 'mesorogia-runtime-2026-06-03-001',
-    navigationNetworkTimeoutMs: 1200,
-    assetNetworkTimeoutMs: 900,
+    version: '2026-06-15-001',
+    staticCacheName: 'mesorogia-static-2026-06-15-001',
+    runtimeCacheName: 'mesorogia-runtime-2026-06-15-001',
+    navigationNetworkTimeoutMs: 4000,
+    assetNetworkTimeoutMs: 4000,
     appShell: [
       './img/mosurogia_favicon.ico',
       './manifest.webmanifest',

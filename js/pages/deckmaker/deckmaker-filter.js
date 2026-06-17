@@ -36,6 +36,11 @@
   // 1) 使用不可種族カードを「非表示」反映（grayscale → hidden-by-grayscale）
   // =====================================================
   let hideInvalidRace = false;
+  const INVALID_RACE_GUIDE_KEY = 'deckmaker_invalid_race_guide_seen_at';
+  const INVALID_RACE_GUIDE_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
+  const INVALID_RACE_GUIDE_HIDE_MS = 10000;
+  const INVALID_RACE_GUIDE_DISABLE_RECENT_CHECK = false;
+  let invalidRaceGuideTimer = 0;
 
   // ✅ 新：役割名（hidden-by-grayscale の付け外し）
   function applyHideInvalidRaceView() {
@@ -46,11 +51,60 @@
     });
   }
 
+  function syncInvalidRaceToggleState() {
+    const btn = document.getElementById('toggle-invalid-race');
+    if (!btn) return;
+    btn.textContent = hideInvalidRace ? '使用種族表示' : '全種族表示';
+  }
+
+  function hasMainRace_() {
+    try {
+      const races = window.getMainRacesInDeck?.();
+      return Array.isArray(races) && races.length > 0;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function hasRecentlyShownInvalidRaceGuide_() {
+    if (INVALID_RACE_GUIDE_DISABLE_RECENT_CHECK) return false;
+    try {
+      const last = Number(localStorage.getItem(INVALID_RACE_GUIDE_KEY) || 0);
+      return last > 0 && Date.now() - last < INVALID_RACE_GUIDE_INTERVAL_MS;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  function markInvalidRaceGuideShown_() {
+    try { localStorage.setItem(INVALID_RACE_GUIDE_KEY, String(Date.now())); } catch (_) {}
+  }
+
+  function updateInvalidRaceGuide() {
+    const guide = document.getElementById('invalid-race-guide');
+    if (!guide) return;
+
+    const shouldShow = hasMainRace_() && !hideInvalidRace && !hasRecentlyShownInvalidRaceGuide_();
+    if (invalidRaceGuideTimer) {
+      clearTimeout(invalidRaceGuideTimer);
+      invalidRaceGuideTimer = 0;
+    }
+    guide.hidden = !shouldShow;
+    if (shouldShow) {
+      markInvalidRaceGuideShown_();
+      invalidRaceGuideTimer = window.setTimeout(() => {
+        guide.hidden = true;
+        invalidRaceGuideTimer = 0;
+      }, INVALID_RACE_GUIDE_HIDE_MS);
+    }
+  }
+
   function toggleInvalidRace_(btn) {
     hideInvalidRace = !hideInvalidRace;
     btn.classList.toggle('active', hideInvalidRace);
-    btn.textContent = hideInvalidRace ? '🚫使用不可種族を非表示' : '✅使用不可種族を表示(モノクロ)';
+    syncInvalidRaceToggleState();
     applyHideInvalidRaceView();
+    updateInvalidRaceGuide();
   }
 
   // ✅ deckmaker ではこれを「正式API」にする（cardFilter.js が呼ぶため）
@@ -138,6 +192,8 @@
     try { window.OwnedUI?.bind?.('#grid', { skipSummary: true, skipOwnedTotal: true }); } catch {}
 
     applyFilters();
+    syncInvalidRaceToggleState();
+    updateInvalidRaceGuide();
   });
 
   // =====================================================
@@ -147,6 +203,8 @@
   window.DeckmakerFilter.applyFilters = applyFilters;
   window.DeckmakerFilter.toggleInvalidRace = toggleInvalidRace_;
   window.DeckmakerFilter.applyHideInvalidRaceView = applyHideInvalidRaceView;
+  window.DeckmakerFilter.syncInvalidRaceToggleState = syncInvalidRaceToggleState;
+  window.DeckmakerFilter.updateInvalidRaceGuide = updateInvalidRaceGuide;
 
   // ✅ 互換：旧 page2.js が applyFilters 前提でも動くように --- IGNORE ---
   window.applyFilters ??= applyFilters;

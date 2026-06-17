@@ -34,7 +34,7 @@
 
     <!-- ===== スタイル ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-05-28-001">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-06-14-001">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
     <link rel="stylesheet" href="css/page0.css?v=2026-05-31-003">
     <!-- ===== 構造化データ ===== -->
@@ -180,15 +180,41 @@
     </section>
 
     <section class="home-section-grid" aria-label="更新情報とイベント情報">
+        <section class="home-panel" id="events" aria-labelledby="events-title">
+            <div class="home-section-head">
+                <div>
+                    <h2 id="events-title">イベントカレンダー</h2>
+                </div>
+                <a class="home-event-request-mini data-source-badge" href="https://docs.google.com/forms/d/e/1FAIpQLSdqEqpC9Lqwdw_alra2WDprr7wZNGrddV6AZpML_yC-r1LmQg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" data-tooltip="ユーザー大会や配信など、メソロギア関連イベントの掲載を申請できます。" aria-label="イベント申請。ユーザー大会や配信などのイベント掲載を申請できます。">イベント申請</a>
+            </div>
+
+            <div class="home-event-mobile-overview" data-home-event-mobile-overview></div>
+
+            <div class="home-event-layout">
+                <div class="home-event-calendar" data-home-event-calendar aria-label="月間イベントカレンダー"></div>
+
+                <div class="home-event-list-column">
+                    <div class="home-event-desktop-panel" data-home-event-desktop-panel></div>
+                </div>
+            </div>
+
+            <div class="home-event-submit home-event-submit--wide">
+                <p>ユーザー大会や配信など、メソロギアに関するユーザーイベントを登録できます。</p>
+                <a class="home-more-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdqEqpC9Lqwdw_alra2WDprr7wZNGrddV6AZpML_yC-r1LmQg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">イベント申請はこちら</a>
+            </div>
+        </section>
+
         <section class="home-panel" aria-labelledby="news-title">
             <div class="home-section-head">
                 <div>
                     <h2 id="news-title">更新履歴</h2>
                 </div>
-                <span class="home-section-note">最新3件</span>
+                <div class="home-section-actions">
+                    <a class="home-section-action-link" href="#" data-home-news-list-open>一覧へ</a>
+                </div>
             </div>
 
-            <div class="home-list" id="home-news-list" data-home-news-list>
+            <div class="home-list" id="home-news-list" data-home-news-list data-home-news-limit="1">
                 <article class="home-list-item">
                     <time datetime="2026-05-29">2026.05.29</time>
                     <div>
@@ -196,87 +222,8 @@
                         <p>イノセント＆旧神ピックアップパックのバナーを追加して、カード図鑑ページに専用フィルターとカードグループを追加しました。</p>
                     </div>
                 </article>
-                <article class="home-list-item">
-                    <time datetime="2026-05-29">2026.05.29</time>
-                    <div>
-                        <h3>所持率チェッカー不具合調整他</h3>
-                        <p>所持率チェッカーの送信を強化しました。</p>
-                    </div>
-                </article>
-                <article class="home-list-item">
-                    <time datetime="2026-05-29">2026.05.29</time>
-                    <div>
-                        <h3>新ページ作成！！！</h3>
-                        <p>モスロギアに新しく「Tier表」ページと「ホーム」ページを追加しました。その他機能改善しました。</p>
-                    </div>
-                </article>
             </div>
 
-            <a class="home-more-link" href="#" data-home-news-list-open>更新履歴一覧へ</a>
-        </section>
-
-        <section class="home-panel" id="events" aria-labelledby="events-title">
-            <div class="home-section-head">
-                <div>
-                    <h2 id="events-title">イベントカレンダー</h2>
-                </div>
-                <span class="home-section-note">直近イベント</span>
-            </div>
-
-            <div class="home-event-layout">
-                <div class="home-event-calendar" data-home-event-calendar aria-label="月間イベントカレンダー"></div>
-
-                <div class="home-event-list-column">
-                    <h3 class="home-event-list-title" data-home-event-list-title>5月のイベント</h3>
-                    <div class="home-list home-event-list" id="home-event-list" data-home-event-list>
-                        <article class="home-list-item">
-                            <time datetime="2026-05-30">2026.05.30</time>
-                            <div>
-                                <span class="home-label home-label--official">ゲームイベント</span>
-                                <h3>ストーリーイベント開始</h3>
-                                <p>ストーリーイベント「かすかな星詠み、旧き神を辿りて」が開催。</p>
-                            </div>
-                        </article>
-                        <article class="home-list-item">
-                            <time datetime="2026-05-30">2026.05.30</time>
-                            <div>
-                                <span class="home-label home-label--pack">カードパック</span>
-                                <h3>ピックアップパック開始</h3>
-                                <p>「1周年記念！イノセント＆旧神ピックアップパック」がパックショップで販売開始。</p>
-                            </div>
-                        </article>
-                        <article class="home-list-item">
-                            <time datetime="2026-05-30">2026.05.30</time>
-                            <div>
-                                <span class="home-label home-label--site">その他</span>
-                                <h3>公式企画動画</h3>
-                                <p>5/30 20:00からアルディTV様のYouTubeチャンネルにて『神託のメソロギア』の企画動画が公開。</p>
-                            </div>
-                        </article>
-                        <article class="home-list-item">
-                            <time datetime="2026-05-30">2026.05.30</time>
-                            <div>
-                                <span class="home-label home-label--site">販売</span>
-                                <h3>SPセット・アイコン再販</h3>
-                                <p>過去に登場したSPセット・アイコンが再版。</p>
-                            </div>
-                        </article>
-                        <article class="home-list-item">
-                            <time datetime="2026-05-30">2026.05.30</time>
-                            <div>
-                                <span class="home-label home-label--site">宝箱</span>
-                                <h3>虹宝箱出現率２倍</h3>
-                                <p>虹宝箱出現率２倍。</p>
-                            </div>
-                        </article>
-                    </div>
-
-                    <div class="home-event-submit">
-                        <p>ユーザー大会や配信など、メソロギアに関するユーザーイベントを登録できます。</p>
-                        <a class="home-more-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdqEqpC9Lqwdw_alra2WDprr7wZNGrddV6AZpML_yC-r1LmQg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">イベント申請はこちら</a>
-                    </div>
-                </div>
-            </div>
         </section>
     </section>
 
@@ -586,9 +533,9 @@
 <script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
 <script src="js/pages/home/home.js?v=2026-05-31-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-05-31-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-06-15-001"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
-<script src="js/common/pwa/register.js?v=2026-05-16-001"></script>
+<script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 
 </body>
 </html>

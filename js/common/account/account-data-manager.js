@@ -1028,10 +1028,12 @@
       }
 
       if (window.MesorogiaPwaMaintenance?.repairAndReload) {
+        try { localStorage.removeItem('deckmaker_invalid_race_guide_seen_at'); } catch (_) {}
         await window.MesorogiaPwaMaintenance.repairAndReload();
         return;
       }
 
+      try { localStorage.removeItem('deckmaker_invalid_race_guide_seen_at'); } catch (_) {}
       window.location.reload();
     } catch (err) {
       console.error('再読み込み処理に失敗しました。', err);

@@ -18,6 +18,7 @@
   'use strict';
 
   const BASE = 'js/pages/cards/';
+  const ASSET_VERSION = '2026-06-15-001';
 
   const BASE_FILES = [
     'cards-list.js',
@@ -81,7 +82,7 @@
   function loadSeq(files, i, done, fail){
     if (i >= files.length) return done && done();
     const s = document.createElement('script');
-    s.src = BASE + files[i];
+    s.src = BASE + files[i] + '?v=' + ASSET_VERSION;
     s.async = false;
     s.onload = () => loadSeq(files, i + 1, done, fail);
     s.onerror = () => {

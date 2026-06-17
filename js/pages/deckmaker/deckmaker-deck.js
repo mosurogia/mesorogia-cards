@@ -471,6 +471,7 @@
   function syncAfterDeckUpdate_(deckCards) {
 
     updateCardDisabling();
+    window.DeckmakerFilter?.updateInvalidRaceGuide?.();
     syncGeneratedDeckCode_();
     syncPostRaceFields_();
 
@@ -496,10 +497,16 @@
     })();
 
     info.innerHTML = `
-      デッキ枚数：${total}/30~40<br>
-      使用種族：${races.size > 0 ? Array.from(races).join('/') : 'なし'}<br>
+      <span class="deck-summary-line">
+        <img class="deck-summary-icon" src="img/deckicon.webp" alt="デッキ枚数">${total}/30~40
+      </span><br>
+      種族：${races.size > 0 ? Array.from(races).join('/') : '未定'}<br>
       旧神：${hasOldGod ? '採用中' : '未採用'}<br>
-      🔵 ${(typeCount['チャージャー']|0)} 🟣 ${(typeCount['アタッカー']|0)} ⚪️ ${(typeCount['ブロッカー']|0)}
+      <span class="deck-summary-type-line">
+        <span class="deck-summary-type-count"><img class="deck-summary-type-icon" src="img/type-charger.webp" alt="チャージャー">${(typeCount['チャージャー']|0)}</span>
+        <span class="deck-summary-type-count"><img class="deck-summary-type-icon" src="img/type-attacker.webp" alt="アタッカー">${(typeCount['アタッカー']|0)}</span>
+        <span class="deck-summary-type-count"><img class="deck-summary-type-icon" src="img/type-blocker.webp" alt="ブロッカー">${(typeCount['ブロッカー']|0)}</span>
+      </span>
     `;
   }
 

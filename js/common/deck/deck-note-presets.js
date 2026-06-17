@@ -219,10 +219,25 @@
     const v = el.value || '';
     const start = Number.isFinite(range?.start) ? range.start : (el.selectionStart ?? v.length);
     const end = Number.isFinite(range?.end) ? range.end : (el.selectionEnd ?? v.length);
+    const scrollTop = Number.isFinite(range?.scrollTop) ? range.scrollTop : el.scrollTop;
+    const scrollLeft = Number.isFinite(range?.scrollLeft) ? range.scrollLeft : el.scrollLeft;
+    const pageX = Number.isFinite(range?.pageX) ? range.pageX : null;
+    const pageY = Number.isFinite(range?.pageY) ? range.pageY : null;
+    const restoreScroll = () => {
+      try {
+        el.scrollTop = scrollTop;
+        el.scrollLeft = scrollLeft;
+      } catch (_) {}
+      if (pageX !== null && pageY !== null) {
+        try { window.scrollTo(pageX, pageY); } catch (_) {}
+      }
+    };
     el.value = v.slice(0, start) + text + v.slice(end);
-    el.focus();
-    try { el.selectionStart = el.selectionEnd = start + text.length; } catch (_) {}
+    try { el.focus({ preventScroll: true }); } catch (_) { el.focus(); }
+    try { el.setSelectionRange(start + text.length, start + text.length); } catch (_) {}
+    restoreScroll();
     el.dispatchEvent(new Event('input', { bubbles: true }));
+    requestAnimationFrame(restoreScroll);
   }
 
   function appendText(el, text) {

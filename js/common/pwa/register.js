@@ -121,7 +121,7 @@
       }
     } catch (_) {}
 
-    return deleteCaches_({ all: false, keepRuntime: true }).then(function () {
+    return deleteCaches_({ all: false }).then(function () {
       try {
         localStorage.setItem(markerKey, String(Date.now()));
       } catch (_) {}
@@ -132,7 +132,7 @@
 
   window.MesorogiaPwaMaintenance = {
     repairAndReload: function () {
-      return repairAndReload_({ all: true, unregister: true, keepRuntime: true });
+      return repairAndReload_({ all: true, unregister: true });
     },
     clearOldCaches: function () {
       return deleteCaches_({ all: false });
