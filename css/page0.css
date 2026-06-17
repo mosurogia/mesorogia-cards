@@ -787,6 +787,9 @@
 
 .home-event-desktop-panel {
     display: grid;
+    grid-template-rows: auto minmax(0, 310px);
+    align-content: start;
+    align-items: start;
     min-width: 0;
     min-height: 310px;
     gap: 10px;
@@ -795,6 +798,7 @@
 .home-event-desktop-tabs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
     gap: 6px;
 }
 
@@ -833,6 +837,9 @@
 
 .home-event-desktop-list {
     display: grid;
+    align-content: start;
+    align-items: start;
+    height: 310px;
     max-height: 310px;
     overflow-y: auto;
     gap: 7px;
@@ -841,6 +848,7 @@
 
 .home-event-desktop-card {
     position: relative;
+    align-self: start;
     min-width: 0;
     padding: 9px 10px;
     border: 1px solid var(--home-event-mobile-border, var(--home-border));
