@@ -242,6 +242,18 @@
         return getMonthEvents_(entries, monthBase).filter(isTournamentEvent_);
     }
 
+    function addTournamentTabBadge_(button, key, entries, monthBase) {
+        if (key !== 'tournament') return;
+
+        const count = getMonthTournamentEvents_(entries, monthBase).length;
+        if (!count) return;
+
+        const label = button.textContent;
+        button.classList.add('has-events');
+        button.append(createTextElement('span', String(count), 'home-event-tab-badge'));
+        button.setAttribute('aria-label', `${label}、${count}件掲載`);
+    }
+
     function formatUpcomingMobileDate_(entry) {
         const startText = formatMonthDay_(entry?.startDate);
         if (!startText) return '';
@@ -933,6 +945,7 @@
         const tabs = document.createElement('div');
         tabs.className = 'home-event-desktop-tabs home-event-modal-tabs home-event-calendar-summary__tabs';
         const monthLabels = getCalendarMonthTabLabels_(calendar?.monthBase);
+        const entries = getEventEntries_(currentEventItems_);
         [
             ['ongoing', '開催中'],
             ['upcoming', '今後７日間'],
@@ -943,6 +956,7 @@
             button.type = 'button';
             button.classList.toggle('is-active', summaryEventTab_ === key);
             button.setAttribute('aria-pressed', String(summaryEventTab_ === key));
+            addTournamentTabBadge_(button, key, entries, calendar?.monthBase || getToday_());
             button.addEventListener('click', () => setSummaryEventTab_(key));
             tabs.append(button);
         });
@@ -1349,6 +1363,8 @@
         const root = document.querySelector('[data-home-event-mobile-overview]');
         if (!root) return;
 
+        const entries = getEventEntries_(items);
+        const monthBase = getToday_();
         const tabs = document.createElement('div');
         tabs.className = 'home-event-desktop-tabs home-event-mobile-tabs';
         tabs.setAttribute('role', 'tablist');
@@ -1366,6 +1382,7 @@
             button.setAttribute('role', 'tab');
             button.classList.toggle('is-active', isActive);
             button.setAttribute('aria-selected', String(isActive));
+            addTournamentTabBadge_(button, key, entries, monthBase);
             button.addEventListener('click', () => setMobileEventTab_(key));
             tabs.append(button);
         });
@@ -1565,6 +1582,7 @@
             button.type = 'button';
             button.classList.toggle('is-active', desktopEventTab_ === key);
             button.setAttribute('aria-pressed', String(desktopEventTab_ === key));
+            addTournamentTabBadge_(button, key, entries, calendar?.monthBase || getToday_());
             button.addEventListener('click', () => setDesktopEventTab_(key));
             tabs.append(button);
         });
@@ -1690,6 +1708,7 @@
             button.type = 'button';
             button.classList.toggle('is-active', modalEventTab_ === key);
             button.setAttribute('aria-pressed', String(modalEventTab_ === key));
+            addTournamentTabBadge_(button, key, entries, calendar?.monthBase || getToday_());
             button.addEventListener('click', () => setModalEventTab_(key));
             tabs.append(button);
         });
