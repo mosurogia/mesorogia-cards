@@ -1221,6 +1221,28 @@ body.is-card-pick-open #deckpeek-button {
     border-top: 1px solid rgba(0, 0, 0, .12);
 }
 
+/* 画像保存時のURL表記は端末の自動文字サイズ調整を受けないよう固定する */
+.card-detail-modal-export-footer {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 3px;
+    padding: 0 4px;
+    color: rgba(15, 23, 42, .72);
+    font-family: Arial, "Helvetica Neue", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 10px;
+    letter-spacing: 0;
+    text-align: right;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+}
+
 @media (max-width: 768px) {
     .card-detail-modal {
         width: min(88vw, 360px);

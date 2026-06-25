@@ -1245,7 +1245,7 @@
     position: fixed;
     top: auto;
     right: auto;
-    z-index: 3000;
+    z-index: var(--z-menu, 5000);
 }
 
 #deck-layout .deck-list-menu-panel[hidden] {

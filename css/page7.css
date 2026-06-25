@@ -210,17 +210,27 @@
 
 @media (max-width: 640px) {
 
-    .info-action-card__link,
+    .info-action-card__link {
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 12px;
+    }
+
     .info-mini-action-card {
         grid-template-columns: 1fr;
     }
 
     .info-action-card__icon {
-        display: none;
+        display: block;
+        width: 44px;
+    }
+
+    .info-action-card__arrow {
+        grid-column: 1 / -1;
     }
 
     .info-action-card__arrow,
-    .info-mini-action-card .info-card__button {
+    .info-mini-action-card .info-card__button,
+    .info-card__button[data-home-news-list-open] {
         width: 100%;
         max-width: none;
     }
