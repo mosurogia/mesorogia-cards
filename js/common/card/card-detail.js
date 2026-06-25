@@ -1314,16 +1314,27 @@
           footer.className = 'card-detail-modal-export-footer';
           footer.textContent = location.origin + location.pathname;
           Object.assign(footer.style, {
-            marginTop: '10px',
-            padding: '6px 8px 2px',
+            display: 'block',
+            width: '100%',
+            maxWidth: '100%',
+            marginTop: '3px',
+            padding: '0 4px',
             color: 'rgba(15,23,42,0.72)',
-            fontSize: '13px',
-            lineHeight: '1.35',
+            fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+            fontSize: '9px',
+            lineHeight: '10px',
+            fontWeight: '500',
+            letterSpacing: '0',
             textAlign: 'right',
+            whiteSpace: 'normal',
             overflowWrap: 'anywhere',
             wordBreak: 'break-word',
             boxSizing: 'border-box',
+            textSizeAdjust: 'none',
+            WebkitTextSizeAdjust: 'none',
           });
+          footer.style.setProperty('text-size-adjust', 'none');
+          footer.style.setProperty('-webkit-text-size-adjust', 'none');
           modalContent.appendChild(footer);
         }
       },

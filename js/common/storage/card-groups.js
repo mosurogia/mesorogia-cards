@@ -71,6 +71,22 @@
     return String(id || '') === INNOCENT_OLDGOD_MISSING_GROUP_ID;
   }
 
+  function isInnocentOldgodPickupEnabled_() {
+    if (typeof window.isMesorogiaEventFeatureEnabled !== 'function') return false;
+    return window.isMesorogiaEventFeatureEnabled('innocentOldgodPickup');
+  }
+
+  function removeInnocentOldgodMissingGroup_(st) {
+    if (!st || typeof st !== 'object') return;
+    st.groups = st.groups || {};
+    st.order = Array.isArray(st.order) ? st.order : [];
+
+    delete st.groups[INNOCENT_OLDGOD_MISSING_GROUP_ID];
+    st.order = st.order.filter(id => id !== INNOCENT_OLDGOD_MISSING_GROUP_ID);
+    if (st.activeId === INNOCENT_OLDGOD_MISSING_GROUP_ID) st.activeId = '';
+    if (st.editingId === INNOCENT_OLDGOD_MISSING_GROUP_ID) st.editingId = '';
+  }
+
   function countUserGroups_(st) {
     const order = Array.isArray(st?.order) ? st.order : [];
     const groups = st?.groups || {};
@@ -139,6 +155,11 @@
   function applyInnocentOldgodMissingGroup_(st) {
     st.groups = st.groups || {};
     st.order = Array.isArray(st.order) ? st.order : [];
+
+    if (!isInnocentOldgodPickupEnabled_()) {
+      removeInnocentOldgodMissingGroup_(st);
+      return;
+    }
 
     const cards = buildInnocentOldgodMissingCards_();
     st.groups[INNOCENT_OLDGOD_MISSING_GROUP_ID] = {

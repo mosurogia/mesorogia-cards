@@ -26,6 +26,8 @@
     };
     const TIER_CACHE_KEY = 'tier-list-cache-v1';
     const TIER_CACHE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+    const TIER_FETCH_MAX_ATTEMPTS = 3;
+    const TIER_FETCH_RETRY_BASE_DELAY_MS = 1000;
     const GUIDE_LOAD_CONCURRENCY = 2;
 
     function setStatus(text) {
@@ -1737,11 +1739,14 @@
         }
     }
 
-    async function fetchLatestTier(options = {}) {
-        setStatus('最新リスト確認中');
-        setGuideEnvironmentStatus('最新リスト確認中', false);
+    function wait(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
-        try {
+    async function requestLatestTier(options = {}) {
+        let lastError = null;
+
+        for (let attempt = 1; attempt <= TIER_FETCH_MAX_ATTEMPTS; attempt += 1) {
             const url = new URL(TIER_API_URL);
             url.searchParams.set('mode', 'tierList');
             if (options.force) {
@@ -1749,14 +1754,37 @@
                 url.searchParams.set('_', String(Date.now()));
             }
 
-            const response = await fetch(url.toString(), { cache: 'no-store' });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            try {
+                const response = await fetch(url.toString(), { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            const data = await response.json();
-            if (!data || data.ok !== true || !Array.isArray(data.items)) {
-                throw new Error('Tierデータの形式が不正です');
+                const data = await response.json();
+                if (!data || data.ok !== true || !Array.isArray(data.items)) {
+                    throw new Error('Tierデータの形式が不正です');
+                }
+
+                return data;
+            } catch (error) {
+                lastError = error;
+                if (attempt >= TIER_FETCH_MAX_ATTEMPTS) break;
+
+                const nextAttempt = attempt + 1;
+                setStatus(`最新リスト再取得中（${nextAttempt}/${TIER_FETCH_MAX_ATTEMPTS}）`);
+                setGuideEnvironmentStatus(`最新リスト再取得中（${nextAttempt}/${TIER_FETCH_MAX_ATTEMPTS}）`, false);
+                console.warn(`[tier] Tierデータ取得に失敗しました。${nextAttempt}回目を試します。`, error);
+                await wait(TIER_FETCH_RETRY_BASE_DELAY_MS * attempt);
             }
+        }
 
+        throw lastError || new Error('Tierデータを取得できませんでした');
+    }
+
+    async function fetchLatestTier(options = {}) {
+        setStatus('最新リスト確認中');
+        setGuideEnvironmentStatus('最新リスト確認中', false);
+
+        try {
+            const data = await requestLatestTier(options);
             saveTierCache(data);
             applyTierData(data);
         } catch (error) {
@@ -1779,18 +1807,7 @@
             localStorage.removeItem(TIER_CACHE_KEY);
         } catch (_) {}
 
-        const url = new URL(TIER_API_URL);
-        url.searchParams.set('mode', 'tierList');
-        url.searchParams.set('force', '1');
-        url.searchParams.set('_', String(Date.now()));
-
-        const response = await fetch(url.toString(), { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        const data = await response.json();
-        if (!data || data.ok !== true || !Array.isArray(data.items)) {
-            throw new Error('Tierデータの形式が不正です');
-        }
+        const data = await requestLatestTier({ force: true });
 
         saveTierCache(data);
         applyTierData(data);

@@ -34,10 +34,10 @@
 
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-06-14-001">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-06-22-003">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
-    <link rel="stylesheet" href="css/page2.css?v=2026-06-02-001">
+    <link rel="stylesheet" href="css/page2.css?v=2026-06-21-001">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -155,7 +155,7 @@
     <div class="header-account" data-header-auth></div>
 </header>
 
-<a class="home-event-banner" href="cards.html?pack=innocent_oldgod" aria-label="イノセント旧神ピックアップパックの対象カードをカード図鑑で見る">
+<a class="home-event-banner" href="cards.html?pack=innocent_oldgod" aria-label="イノセント旧神ピックアップパックの対象カードをカード図鑑で見る" data-event-feature="innocent-oldgod-pickup" hidden>
     <div class="home-event-banner__text">
         <span>1周年記念ピックアップ</span>
         <strong>イノセント＆旧神</strong>
@@ -1255,20 +1255,21 @@
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
 <script src="js/common/core/defs.js?v=2026-05-05-007"></script>
+<script src="js/common/core/event-features.js?v=2026-06-23-001"></script>
 <script src="js/common/core/card-core.js?v=2026-05-05-007"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-007"></script>
 <script src="js/common/core/card-sort.js?v=2026-05-05-007"></script>
 
 <!-- データストレージ -->
 <script src="js/common/storage/owned.js?v=2026-05-05-007"></script>
-<script src="js/common/storage/card-groups.js?v=2026-05-05-007"></script>
+<script src="js/common/storage/card-groups.js?v=2026-06-22-001"></script>
 
 <!-- アカウント関係 -->
 <script src="js/common/account/auth-core.js?v=2026-05-05-007"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-06-15-001"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-06-25-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
@@ -1281,13 +1282,13 @@
 
 <!-- カード共通 -->
 <script src="js/common/card/cardGrid.js?v=2026-05-05-007"></script>
-<script src="js/common/card/card-detail.js?v=2026-05-05-007"></script>
+<script src="js/common/card/card-detail.js?v=2026-06-22-003"></script>
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-007"></script>
 <script src="js/common/card/card-pick-modal.js?v=2026-05-05-007"></script>
 
 <script src="js/common/filter/keyword-filter.js?v=2026-05-05-007"></script>
 <script src="js/common/filter/chip-bar.js?v=2026-05-05-007"></script>
-<script src="js/common/card/cardFilter.js?v=2026-06-01-001"></script>
+<script src="js/common/card/cardFilter.js?v=2026-06-22-001"></script>
 
 
 <!-- デッキ保存 -->

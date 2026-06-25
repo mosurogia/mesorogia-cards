@@ -1,6 +1,6 @@
 /* =========================
  * ホームページ用データ描画
- * home-data.json から更新履歴・イベント情報を取得する
+     * home-data.json から更新履歴・イベント情報・便利機能を取得する
  * ========================= */
 (function () {
     'use strict';
@@ -9,6 +9,7 @@
 
     const FALLBACK_NEWS_ITEMS = [];
     const FALLBACK_EVENT_ITEMS = [];
+    const FALLBACK_FEATURE_ITEMS = [];
     const NEWS_CATEGORIES = ['すべて', 'サイト更新', '不具合修正', 'その他'];
     let currentNewsItems_ = [];
     let newsModalMode_ = 'list';
@@ -20,6 +21,8 @@
     let desktopSelectedDayKey_ = '';
     let modalEventTab_ = 'ongoing';
     let modalSelectedDayKey_ = '';
+    let summaryEventTab_ = 'ongoing';
+    let mobileEventTab_ = 'ongoing';
 
     function getInitialHomeData_() {
         const dataElement = document.getElementById('home-initial-data');
@@ -27,6 +30,7 @@
             return {
                 news: FALLBACK_NEWS_ITEMS,
                 events: FALLBACK_EVENT_ITEMS,
+                features: FALLBACK_FEATURE_ITEMS,
             };
         }
 
@@ -35,19 +39,21 @@
             return {
                 news: Array.isArray(json.news) ? json.news : FALLBACK_NEWS_ITEMS,
                 events: Array.isArray(json.events) ? json.events : FALLBACK_EVENT_ITEMS,
+                features: Array.isArray(json.features) ? json.features : FALLBACK_FEATURE_ITEMS,
             };
         } catch (error) {
             console.warn(error);
             return {
                 news: FALLBACK_NEWS_ITEMS,
                 events: FALLBACK_EVENT_ITEMS,
+                features: FALLBACK_FEATURE_ITEMS,
             };
         }
     }
 
     function formatDate(dateText) {
-        const date = new Date(`${dateText}T00:00:00`);
-        if (Number.isNaN(date.getTime())) return dateText || '';
+        const date = parseDate_(dateText);
+        if (!date) return dateText || '';
 
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -57,7 +63,12 @@
 
     function parseDate_(dateText) {
         if (!dateText) return null;
-        const date = new Date(`${dateText}T00:00:00`);
+        const normalized = String(dateText).trim();
+        const date = new Date(
+            /^\d{4}-\d{2}-\d{2}$/.test(normalized)
+                ? `${normalized}T00:00:00`
+                : normalized
+        );
         return Number.isNaN(date.getTime()) ? null : date;
     }
 
@@ -113,6 +124,28 @@
         return `${date.getMonth() + 1}/${date.getDate()}`;
     }
 
+    function formatMonthEventDateRange_(entry) {
+        const startText = formatMonthDay_(entry?.startDate);
+        if (!startText) return '';
+
+        const endDate = entry?.endDate;
+        if (!endDate || endDate <= entry.startDate) return startText;
+        return `${startText}〜${formatMonthDay_(endDate)}`;
+    }
+
+    function getCalendarMonthTabLabels_(monthBase) {
+        const target = monthBase || visibleCalendarMonth_ || getToday_();
+        const today = getToday_();
+        const isCurrentMonth = target.getFullYear() === today.getFullYear()
+            && target.getMonth() === today.getMonth();
+        const monthText = isCurrentMonth ? '今月' : `${target.getMonth() + 1}月`;
+
+        return {
+            month: monthText,
+            tournament: `${monthText}の大会`,
+        };
+    }
+
     function compareEventEntries_(a, b) {
         const startDiff = (a.startDate || 0) - (b.startDate || 0);
         if (startDiff !== 0) return startDiff;
@@ -151,6 +184,15 @@
             .sort(compareEventEntries_);
     }
 
+    function getMonthEventsForDisplay_(entries, monthBase, today = getToday_()) {
+        return getMonthEvents_(entries, monthBase).sort((a, b) => {
+            const aEnded = Boolean(a.endDate && a.endDate < today);
+            const bEnded = Boolean(b.endDate && b.endDate < today);
+            if (aEnded !== bEnded) return aEnded ? 1 : -1;
+            return compareEventEntries_(a, b);
+        });
+    }
+
     function getOngoingEvents_(entries, today) {
         return entries
             .filter((entry) => isOngoingEvent_(entry, today))
@@ -182,6 +224,18 @@
             || normalizedType === 'user'
             || String(item.type || '').includes('大会')
             || String(label || '').includes('大会');
+    }
+
+    function isTournamentItem_(item) {
+        return isTournamentEvent_({ item });
+    }
+
+    function getTournamentTimeText_(item) {
+        const startTime = String(item?.startTime || '').trim();
+        const endTime = String(item?.endTime || '').trim();
+        if (startTime && endTime) return `開催時間 ${startTime}〜${endTime}`;
+        if (startTime) return `開催時間 ${startTime}〜`;
+        return String(item?.time || '').trim();
     }
 
     function getMonthTournamentEvents_(entries, monthBase) {
@@ -307,6 +361,197 @@
         if (newsModalMode_ === 'list' && document.getElementById('homeNewsModal')) {
             renderNewsModalList_();
         }
+    }
+
+    function renderFeatures(items) {
+        const featureItems = Array.isArray(items) ? items : [];
+        const list = document.querySelector('[data-home-feature-list]');
+        if (!list) return;
+        const stage = list.closest('.home-feature-stage') || list.parentElement;
+
+        if (list.__homeFeatureScroller) {
+            list.__homeFeatureScroller.stop();
+            list.__homeFeatureScroller = null;
+        }
+        stage?.querySelectorAll('.home-feature-nav').forEach((button) => button.remove());
+
+        if (featureItems.length === 0) {
+            list.replaceChildren(createEmptyFeatureItem_('現在表示できる機能紹介はありません。'));
+            return;
+        }
+
+        const limit = Number(list.dataset.homeFeatureLimit || 0);
+        const visibleItems = Number.isFinite(limit) && limit > 0 ? featureItems.slice(0, limit) : featureItems;
+
+        const cards = visibleItems.map((item) => {
+            const article = document.createElement('article');
+            article.className = 'home-feature-card';
+            const url = String(item?.url || '').trim();
+
+            const imageUrl = getFeatureImageUrl_(item);
+            if (imageUrl) {
+                const imageWrap = document.createElement(url ? 'a' : 'div');
+                imageWrap.className = 'home-feature-card__image';
+                if (url) {
+                    imageWrap.href = url;
+                    imageWrap.setAttribute('aria-label', `${item?.title || '便利機能'}へ移動`);
+                }
+
+                const image = document.createElement('img');
+                image.src = imageUrl;
+                image.alt = item?.title || '';
+                image.loading = 'lazy';
+                image.decoding = 'async';
+                imageWrap.append(image);
+                article.append(imageWrap);
+            }
+
+            const body = document.createElement('div');
+            body.className = 'home-feature-card__body';
+            body.append(
+                createTextElement('h3', item?.title || '便利機能'),
+                createTextElement('p', item?.description || '')
+            );
+            article.append(body);
+
+            return article;
+        });
+
+        const track = document.createElement('div');
+        track.className = 'home-feature-track';
+        track.append(...cards);
+
+        const prevButton = createTextElement('button', '←', 'home-feature-nav home-feature-nav--prev');
+        prevButton.type = 'button';
+        prevButton.setAttribute('aria-label', '前の便利機能を見る');
+
+        const nextButton = createTextElement('button', '→', 'home-feature-nav home-feature-nav--next');
+        nextButton.type = 'button';
+        nextButton.setAttribute('aria-label', '次の便利機能を見る');
+
+        if (cards.length > 3) {
+            const clones = cards.map((card) => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                clone.querySelectorAll('a, button, input, select, textarea').forEach((element) => {
+                    element.tabIndex = -1;
+                });
+                return clone;
+            });
+            track.append(...clones);
+            list.classList.add('is-slide');
+        } else {
+            list.classList.remove('is-slide');
+        }
+
+        list.replaceChildren(track);
+        stage?.append(prevButton, nextButton);
+        setupFeatureScroller_(list, track, cards.length > 3, prevButton, nextButton);
+    }
+
+    function setupFeatureScroller_(list, track, enabled, prevButton, nextButton) {
+        if (list.__homeFeatureScroller) {
+            list.__homeFeatureScroller.stop();
+            list.__homeFeatureScroller = null;
+        }
+
+        if (!enabled || !track) {
+            if (prevButton) prevButton.hidden = true;
+            if (nextButton) nextButton.hidden = true;
+            return;
+        }
+
+        if (prevButton) prevButton.hidden = false;
+        if (nextButton) nextButton.hidden = false;
+
+        list.scrollLeft = 0;
+        let timerId = 0;
+        let isPaused = false;
+        const isReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const autoSlideInterval = 7000;
+
+        const getStepWidth = () => {
+            const firstCard = track.querySelector('.home-feature-card');
+            if (!firstCard) return list.clientWidth;
+
+            const style = window.getComputedStyle(track);
+            const gap = Number.parseFloat(style.columnGap || style.gap || '0') || 0;
+            return firstCard.getBoundingClientRect().width + gap;
+        };
+
+        const getResetPosition = () => {
+            const originalCards = Array.from(track.querySelectorAll('.home-feature-card:not([aria-hidden="true"])'));
+            const firstCard = originalCards[0];
+            const lastCard = originalCards[originalCards.length - 1];
+            if (!firstCard || !lastCard) return track.scrollWidth / 2;
+
+            const style = window.getComputedStyle(track);
+            const gap = Number.parseFloat(style.columnGap || style.gap || '0') || 0;
+            return (lastCard.offsetLeft + lastCard.offsetWidth + gap) - firstCard.offsetLeft;
+        };
+
+        const scrollByFeatureCard = (direction) => {
+            const resetAt = getResetPosition();
+            const stepWidth = getStepWidth();
+            let nextLeft = list.scrollLeft + (stepWidth * direction);
+
+            if (resetAt > 0 && nextLeft >= resetAt) {
+                nextLeft = 0;
+            } else if (nextLeft < 0) {
+                nextLeft = Math.max(0, resetAt - stepWidth);
+            }
+
+            list.scrollTo({ left: nextLeft, behavior: isReducedMotion ? 'auto' : 'smooth' });
+        };
+
+        const slideNext = () => {
+            if (isPaused) return;
+            scrollByFeatureCard(1);
+        };
+
+        const pause = () => {
+            isPaused = true;
+        };
+        const resume = () => {
+            isPaused = false;
+        };
+        const handlePrevClick = () => scrollByFeatureCard(-1);
+        const handleNextClick = () => scrollByFeatureCard(1);
+
+        list.addEventListener('mouseenter', pause);
+        list.addEventListener('mouseleave', resume);
+        list.addEventListener('focusin', pause);
+        list.addEventListener('focusout', resume);
+        prevButton?.addEventListener('click', handlePrevClick);
+        nextButton?.addEventListener('click', handleNextClick);
+
+        if (!isReducedMotion) {
+            timerId = window.setInterval(slideNext, autoSlideInterval);
+        }
+
+        list.__homeFeatureScroller = {
+            stop() {
+                if (timerId) window.clearInterval(timerId);
+                list.removeEventListener('mouseenter', pause);
+                list.removeEventListener('mouseleave', resume);
+                list.removeEventListener('focusin', pause);
+                list.removeEventListener('focusout', resume);
+                prevButton?.removeEventListener('click', handlePrevClick);
+                nextButton?.removeEventListener('click', handleNextClick);
+            },
+        };
+    }
+
+    function getFeatureImageUrl_(item) {
+        const image = String(item?.image || '').trim();
+        if (image) return image;
+
+        const url = String(item?.url || '').trim();
+        if (url.includes('deckmaker')) return 'img/deckmakerOGP.webp';
+        if (url.includes('deck-post')) return 'img/deck-postOGP.webp';
+        if (url.includes('cards')) return 'img/cardOGP.webp';
+        if (url.includes('tier')) return 'img/ogp.png';
+        return 'img/homeOGP.png';
     }
 
     function ensureNewsModal_() {
@@ -638,27 +883,105 @@
         };
     }
 
-    function buildEventCalendarSummary_(entries) {
+    function getSummaryTabEntries_(items, calendar) {
+        const entries = getEventEntries_(items);
+        const today = getToday_();
+        const monthBase = calendar?.monthBase || visibleCalendarMonth_ || today;
+        let tabEntries = [];
+
+        if (summaryEventTab_ === 'upcoming') {
+            tabEntries = getUpcomingEvents_(entries, today, 7);
+        } else if (summaryEventTab_ === 'tournament') {
+            tabEntries = getMonthTournamentEvents_(entries, monthBase);
+        } else if (summaryEventTab_ === 'month') {
+            const eventIdByItem = new Map(
+                (Array.isArray(calendar?.events) ? calendar.events : [])
+                    .map((entry) => [entry.item, entry.id])
+            );
+            return getMonthEventsForDisplay_(entries, monthBase, today).map((entry, index) => ({
+                item: entry.item,
+                startDate: entry.startDate,
+                endDate: entry.endDate,
+                id: eventIdByItem.get(entry.item)
+                    || getEventSummaryId_(toDateKey_(entry.startDate), index, 'home-event-summary-month'),
+            }));
+        } else {
+            tabEntries = getOngoingEvents_(entries, today);
+        }
+
+        return tabEntries.map((entry, index) => ({
+            item: entry.item,
+            id: getEventSummaryId_(toDateKey_(entry.startDate), index, `home-event-summary-${summaryEventTab_}`),
+        }));
+    }
+
+    function getSummaryEmptyText_(calendar) {
+        if (summaryEventTab_ === 'upcoming') return '今後７日間に開始するイベントはありません。';
+        if (summaryEventTab_ === 'tournament') {
+            return `${getCalendarMonthTabLabels_(calendar?.monthBase).tournament}はまだありません。`;
+        }
+        if (summaryEventTab_ === 'month') return 'この月のイベントはありません。';
+        return '現在開催中のイベントはありません。';
+    }
+
+    function setSummaryEventTab_(tabName) {
+        summaryEventTab_ = tabName || 'ongoing';
+        renderEvents(currentEventItems_);
+    }
+
+    function buildSummaryEventTabs_(calendar) {
+        const tabs = document.createElement('div');
+        tabs.className = 'home-event-desktop-tabs home-event-modal-tabs home-event-calendar-summary__tabs';
+        const monthLabels = getCalendarMonthTabLabels_(calendar?.monthBase);
+        [
+            ['ongoing', '開催中'],
+            ['upcoming', '今後７日間'],
+            ['month', monthLabels.month],
+            ['tournament', monthLabels.tournament],
+        ].forEach(([key, labelText]) => {
+            const button = createTextElement('button', labelText, 'home-event-desktop-tab');
+            button.type = 'button';
+            button.classList.toggle('is-active', summaryEventTab_ === key);
+            button.setAttribute('aria-pressed', String(summaryEventTab_ === key));
+            button.addEventListener('click', () => setSummaryEventTab_(key));
+            tabs.append(button);
+        });
+
+        return tabs;
+    }
+
+    function buildEventCalendarSummary_(items, calendar) {
         const summary = document.createElement('div');
         summary.className = 'home-event-calendar-summary';
+        const entries = getSummaryTabEntries_(items, calendar);
 
-        const title = createTextElement('h4', 'この月のイベント');
-        summary.append(title);
+        const title = createTextElement('h4', 'イベント一覧');
+        summary.append(title, buildSummaryEventTabs_(calendar));
 
         if (!entries.length) {
-            summary.append(createTextElement('p', '表示できるイベントはありません。', 'home-event-calendar-summary__empty'));
+            summary.append(createTextElement('p', getSummaryEmptyText_(calendar), 'home-event-calendar-summary__empty'));
             return summary;
         }
 
         const list = document.createElement('div');
         list.className = 'home-event-calendar-summary__list';
 
-        entries.forEach((entry) => {
+        const isAppMonthList = document.body.classList.contains('is-pwa-standalone')
+            && summaryEventTab_ === 'month';
+        const visibleEntries = isAppMonthList ? entries.slice(0, 5) : entries;
+
+        const appendEntries = (targetEntries) => targetEntries.forEach((entry) => {
             const item = entry.item;
-            const row = document.createElement('article');
-            row.className = 'home-event-calendar-summary__item';
+            const type = normalizeEventType_(item.type);
+            const isEnded = Boolean(
+                summaryEventTab_ === 'month'
+                && entry.endDate
+                && entry.endDate < getToday_()
+            );
+            const row = createEventCardRoot_(item, `home-event-calendar-summary__item home-event-mobile-card--${type}`);
+            row.classList.toggle('is-ended', isEnded);
             row.id = entry.id;
-            row.tabIndex = -1;
+            if (!item.url) row.tabIndex = -1;
 
             const meta = document.createElement('div');
             meta.className = 'home-event-calendar-summary__meta';
@@ -666,16 +989,38 @@
                 createTextElement('time', formatEventRange_(item)),
                 createTextElement('span', getEventTypeLabel_(item), `home-label home-label--${normalizeEventType_(item.type)}`)
             );
+            if (isEnded) {
+                meta.append(createTextElement('span', '終了', 'home-event-ended-label'));
+            }
 
             const body = document.createElement('div');
+            body.className = 'home-event-calendar-summary__body';
             body.append(
                 createTextElement('strong', item.title || ''),
                 createTextElement('p', item.description || '')
             );
+            appendEventLinkAction_(body, item);
 
             row.append(meta, body);
             list.append(row);
         });
+
+        appendEntries(visibleEntries);
+
+        if (isAppMonthList && entries.length > visibleEntries.length) {
+            const remainingEntries = entries.slice(visibleEntries.length);
+            const button = createTextElement(
+                'button',
+                `さらに表示（残り${remainingEntries.length}件）`,
+                'home-event-show-more'
+            );
+            button.type = 'button';
+            button.addEventListener('click', () => {
+                button.remove();
+                appendEntries(remainingEntries);
+            });
+            list.append(button);
+        }
 
         summary.append(list);
         return summary;
@@ -743,6 +1088,13 @@
         if (day.closest('#homeEventCalendarModal')) {
             modalSelectedDayKey_ = day.dataset.eventDateKey || '';
             openEventCalendarModal_(currentEventItems_);
+            return true;
+        }
+
+        if (summaryEventTab_ !== 'month') {
+            summaryEventTab_ = 'month';
+            renderEvents(currentEventItems_);
+            window.requestAnimationFrame(() => jumpToEventSummary_(day.dataset.eventSummaryTargets));
             return true;
         }
 
@@ -838,7 +1190,7 @@
             root.replaceChildren(
                 controls,
                 calendar.table,
-                buildEventCalendarSummary_(calendar.events)
+                buildEventCalendarSummary_(items, calendar)
             );
 
             if (!root.dataset.calendarJumpBound) {
@@ -867,42 +1219,37 @@
         return calendar;
     }
 
-    function createMobileEventSection_(titleText) {
-        const section = document.createElement('section');
-        section.className = 'home-event-mobile-section';
-
-        const title = createTextElement('h3', titleText, 'home-event-mobile-section__title');
-        const list = document.createElement('div');
-        list.className = 'home-event-mobile-section__list';
-        section.append(title, list);
-
-        return { section, list };
-    }
-
     function createMobileEventLabel_(item) {
         return createTextElement('span', getEventTypeLabel_(item), `home-label home-label--${normalizeEventType_(item?.type)}`);
     }
 
-    function makeEventDescriptionTrigger_(element, item) {
-        const description = String(item?.description || '').trim();
-        if (!description) return element;
+    function createEventCardRoot_(item, className) {
+        const url = String(item?.url || '').trim();
+        const element = document.createElement(url ? 'a' : 'article');
+        element.className = className;
 
-        element.classList.add('home-event-description-trigger');
-        element.tabIndex = 0;
-        element.setAttribute('role', 'button');
-        element.setAttribute('aria-label', `${item?.title || 'イベント'}の説明を表示`);
-        element.dataset.homeEventDescription = description;
-        element.dataset.homeEventTitle = item?.title || 'イベント';
-        element.dataset.homeEventLabel = getEventTypeLabel_(item);
-        element.dataset.homeEventType = normalizeEventType_(item?.type);
+        if (url) {
+            element.classList.add('home-event-link');
+            element.href = url;
+            element.setAttribute('aria-label', `${item?.title || 'イベント'}の詳細を開く`);
+            if (/^https?:\/\//i.test(url)) {
+                element.target = '_blank';
+                element.rel = 'noopener noreferrer';
+            }
+        }
+
         return element;
+    }
+
+    function appendEventLinkAction_(container, item) {
+        if (!String(item?.url || '').trim()) return;
+        container.append(createTextElement('span', '詳細を見る ↗', 'home-event-link__action'));
     }
 
     function createMobileOngoingEvent_(entry) {
         const item = entry.item || {};
         const type = normalizeEventType_(item.type);
-        const row = document.createElement('article');
-        row.className = `home-event-mobile-card home-event-mobile-card--${type}`;
+        const row = createEventCardRoot_(item, `home-event-mobile-card home-event-mobile-card--${type}`);
 
         const meta = document.createElement('div');
         meta.className = 'home-event-mobile-card__meta';
@@ -918,16 +1265,19 @@
             meta,
             createMobileEventLabel_(item)
         );
+        if (item.description) {
+            body.append(createTextElement('p', item.description, 'home-event-mobile-description'));
+        }
+        appendEventLinkAction_(body, item);
 
         row.append(body);
-        return makeEventDescriptionTrigger_(row, item);
+        return row;
     }
 
     function createMobileUpcomingEvent_(entry) {
         const item = entry.item || {};
         const type = normalizeEventType_(item.type);
-        const row = document.createElement('article');
-        row.className = `home-event-mobile-row home-event-mobile-card--${type}`;
+        const row = createEventCardRoot_(item, `home-event-mobile-row home-event-mobile-card--${type}`);
 
         const body = document.createElement('div');
         body.className = 'home-event-mobile-row__body';
@@ -944,48 +1294,92 @@
             meta,
             createMobileEventLabel_(item)
         );
+        if (item.description) {
+            body.append(createTextElement('p', item.description, 'home-event-mobile-description'));
+        }
+        appendEventLinkAction_(body, item);
 
         row.append(body);
-        return makeEventDescriptionTrigger_(row, item);
+        return row;
+    }
+
+    function renderMobileEventTabContent_(list, items) {
+        const today = getToday_();
+        const entries = getEventEntries_(items);
+
+        if (mobileEventTab_ === 'upcoming') {
+            appendCompactEventList_(list, getUpcomingEvents_(entries, today, 7), {
+                emptyText: '今後7日間に開始するイベントはありません。',
+                getDateText: formatUpcomingMobileDate_,
+            });
+            return;
+        }
+
+        if (mobileEventTab_ === 'month') {
+            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, today), {
+                limit: 5,
+                showMoreButton: true,
+                markEnded: true,
+                emptyText: '今月のイベントはありません。',
+                getDateText: formatMonthEventDateRange_,
+            });
+            return;
+        }
+
+        if (mobileEventTab_ === 'tournament') {
+            appendCompactEventList_(list, getMonthTournamentEvents_(entries, today), {
+                emptyText: '今月の大会はまだありません。',
+                getDateText: (entry) => formatMonthDay_(entry.startDate),
+            });
+            return;
+        }
+
+        appendCompactEventList_(list, getOngoingEvents_(entries, today), {
+            emptyText: '現在開催中のイベントはありません。',
+            getDateText: (entry) => (entry.endDate ? `${formatMonthDay_(entry.endDate)}まで` : ''),
+        });
+    }
+
+    function setMobileEventTab_(tabName) {
+        mobileEventTab_ = tabName || 'ongoing';
+        renderMobileEventOverview_(currentEventItems_);
     }
 
     function renderMobileEventOverview_(items) {
         const root = document.querySelector('[data-home-event-mobile-overview]');
         if (!root) return;
 
-        const today = getToday_();
-        const entries = getEventEntries_(items);
+        const tabs = document.createElement('div');
+        tabs.className = 'home-event-desktop-tabs home-event-mobile-tabs';
+        tabs.setAttribute('role', 'tablist');
+        tabs.setAttribute('aria-label', 'イベント一覧の表示切り替え');
 
-        const ongoing = entries
-            .filter((entry) => isOngoingEvent_(entry, today))
-            .sort((a, b) => {
-                const endDiff = (a.endDate || a.startDate) - (b.endDate || b.startDate);
-                return endDiff || compareEventEntries_(a, b);
-            });
-        const upcoming = entries
-            .filter((entry) => isUpcomingWithinDays_(entry, today, 7))
-            .sort(compareEventEntries_);
+        [
+            ['ongoing', '開催中'],
+            ['upcoming', '今後7日間'],
+            ['month', '今月'],
+            ['tournament', '大会'],
+        ].forEach(([key, labelText]) => {
+            const button = createTextElement('button', labelText, 'home-event-desktop-tab');
+            const isActive = mobileEventTab_ === key;
+            button.type = 'button';
+            button.setAttribute('role', 'tab');
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-selected', String(isActive));
+            button.addEventListener('click', () => setMobileEventTab_(key));
+            tabs.append(button);
+        });
 
-        const ongoingSection = createMobileEventSection_('現在開催中');
-        if (ongoing.length) {
-            ongoing.forEach((entry) => ongoingSection.list.append(createMobileOngoingEvent_(entry)));
-        } else {
-            ongoingSection.list.append(createTextElement('p', '現在開催中のイベントはありません。', 'home-event-mobile-empty'));
-        }
+        const list = document.createElement('div');
+        list.className = 'home-event-desktop-list home-event-mobile-tab-list';
+        renderMobileEventTabContent_(list, items);
 
-        const upcomingSection = createMobileEventSection_('今後7日間の予定');
-        if (upcoming.length) {
-            upcoming.slice(0, 3).forEach((entry) => upcomingSection.list.append(createMobileUpcomingEvent_(entry)));
-        } else {
-            upcomingSection.list.append(createTextElement('p', '今後7日間に開始するイベントはありません。', 'home-event-mobile-empty'));
-        }
-
-        const button = createTextElement('button', 'イベントカレンダーを見る', 'home-event-mobile-calendar-button');
+        const button = createTextElement('button', 'カレンダーで見る', 'home-event-mobile-calendar-button');
         button.type = 'button';
         button.setAttribute('aria-haspopup', 'dialog');
         button.addEventListener('click', () => openEventCalendarModal_(items));
 
-        root.replaceChildren(ongoingSection.section, upcomingSection.section, button);
+        root.replaceChildren(tabs, list, button);
     }
 
     function setDesktopEventTab_(tabName) {
@@ -997,8 +1391,9 @@
     function createCompactEventCard_(entry, options = {}) {
         const item = entry.item || {};
         const type = normalizeEventType_(item.type);
-        const card = document.createElement('article');
-        card.className = `home-event-desktop-card home-event-mobile-card--${type}`;
+        const isTournament = isTournamentItem_(item);
+        const card = createEventCardRoot_(item, `home-event-desktop-card home-event-mobile-card--${type}`);
+        card.classList.toggle('is-ended', Boolean(options.isEnded));
 
         const body = document.createElement('div');
         body.className = 'home-event-desktop-card__body';
@@ -1012,17 +1407,27 @@
             meta.append(time);
         }
 
-        body.append(
-            meta,
-            createMobileEventLabel_(item)
-        );
-
-        if (options.showDescription && item.description) {
-            body.append(createTextElement('p', item.description, 'home-event-desktop-card__description'));
+        const eventDetails = document.createElement('div');
+        eventDetails.className = 'home-event-desktop-card__details';
+        eventDetails.append(createMobileEventLabel_(item));
+        if (options.isEnded) {
+            eventDetails.append(createTextElement('span', '終了', 'home-event-ended-label'));
         }
 
+        const tournamentTimeText = isTournament ? getTournamentTimeText_(item) : '';
+        if (tournamentTimeText) {
+            eventDetails.append(createTextElement('time', tournamentTimeText, 'home-event-desktop-card__time'));
+        }
+
+        body.append(meta, eventDetails);
+
+        if (item.description) {
+            body.append(createTextElement('p', item.description, 'home-event-desktop-card__description'));
+        }
+        appendEventLinkAction_(body, item);
+
         card.append(body);
-        return makeEventDescriptionTrigger_(card, item);
+        return card;
     }
 
     function appendCompactEventList_(list, entries, options) {
@@ -1033,13 +1438,39 @@
             return;
         }
 
-        visibleEntries.forEach((entry) => {
-            list.append(createCompactEventCard_(entry, {
-                dateText: options.getDateText ? options.getDateText(entry) : '',
-                showDescription: options.showDescription,
-            }));
-        });
+        const appendEntries = (targetEntries) => {
+            targetEntries.forEach((entry) => {
+                const today = getToday_();
+                const isEnded = Boolean(options.markEnded && entry.endDate && entry.endDate < today);
+                list.append(createCompactEventCard_(entry, {
+                    dateText: options.getDateText ? options.getDateText(entry) : '',
+                    showDescription: options.showDescription,
+                    isEnded,
+                }));
+            });
+        };
 
+        appendEntries(visibleEntries);
+
+        if (entries.length > limit && options.showMoreButton) {
+            const remainingEntries = entries.slice(limit);
+            const button = createTextElement(
+                'button',
+                `さらに表示（残り${remainingEntries.length}件）`,
+                'home-event-show-more'
+            );
+            button.type = 'button';
+            button.addEventListener('click', () => {
+                button.remove();
+                appendEntries(remainingEntries);
+            });
+            list.append(button);
+            return;
+        }
+
+        /*
+         * PC表示など件数制限だけを使う一覧では、残り件数のみ表示する
+         */
         if (entries.length > limit) {
             list.append(createTextElement('p', `+${entries.length - limit}件`, 'home-event-desktop-more'));
         }
@@ -1057,10 +1488,10 @@
         }
 
         if (desktopEventTab_ === 'month') {
-            appendCompactEventList_(list, getMonthEvents_(entries, calendar?.monthBase || visibleCalendarMonth_ || today), {
-                limit: 8,
+            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, calendar?.monthBase || visibleCalendarMonth_ || today, today), {
+                markEnded: true,
                 emptyText: 'この月のイベントはありません。',
-                getDateText: (entry) => formatMonthDay_(entry.startDate),
+                getDateText: formatMonthEventDateRange_,
             });
             return;
         }
@@ -1117,16 +1548,18 @@
             });
 
             root.replaceChildren(head, list);
+            syncDesktopEventPanelHeight_();
             return;
         }
 
         const tabs = document.createElement('div');
         tabs.className = 'home-event-desktop-tabs';
+        const monthLabels = getCalendarMonthTabLabels_(calendar?.monthBase);
         [
             ['ongoing', '開催中'],
             ['upcoming', '今後7日'],
-            ['month', '今月'],
-            ['tournament', '今月の大会'],
+            ['month', monthLabels.month],
+            ['tournament', monthLabels.tournament],
         ].forEach(([key, labelText]) => {
             const button = createTextElement('button', labelText, 'home-event-desktop-tab');
             button.type = 'button';
@@ -1138,6 +1571,35 @@
 
         renderDesktopEventTabContent_(list, entries, calendar);
         root.replaceChildren(tabs, list);
+        syncDesktopEventPanelHeight_();
+    }
+
+    function syncDesktopEventPanelHeight_() {
+        const calendar = document.querySelector('[data-home-event-calendar]');
+        const column = document.querySelector('.home-event-list-column');
+        if (!calendar || !column) return;
+
+        if (window.matchMedia('(max-width: 1024px)').matches) {
+            column.style.removeProperty('--home-event-calendar-height');
+            return;
+        }
+
+        const height = Math.round(calendar.getBoundingClientRect().height);
+        if (height > 0) {
+            column.style.setProperty('--home-event-calendar-height', `${height}px`);
+        }
+    }
+
+    function bindDesktopEventPanelHeight_() {
+        const calendar = document.querySelector('[data-home-event-calendar]');
+        if (!calendar || calendar.dataset.desktopHeightBound === '1') return;
+        calendar.dataset.desktopHeightBound = '1';
+
+        if ('ResizeObserver' in window) {
+            const observer = new ResizeObserver(syncDesktopEventPanelHeight_);
+            observer.observe(calendar);
+        }
+        window.addEventListener('resize', syncDesktopEventPanelHeight_);
     }
 
     function setModalEventTab_(tabName) {
@@ -1158,10 +1620,11 @@
         }
 
         if (modalEventTab_ === 'month') {
-            appendCompactEventList_(list, getMonthEvents_(entries, calendar?.monthBase || visibleCalendarMonth_ || today), {
+            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, calendar?.monthBase || visibleCalendarMonth_ || today, today), {
                 limit: 8,
+                markEnded: true,
                 emptyText: 'この月のイベントはありません。',
-                getDateText: (entry) => formatMonthDay_(entry.startDate),
+                getDateText: formatMonthEventDateRange_,
             });
             return;
         }
@@ -1216,11 +1679,12 @@
 
         const tabs = document.createElement('div');
         tabs.className = 'home-event-desktop-tabs home-event-modal-tabs';
+        const monthLabels = getCalendarMonthTabLabels_(calendar?.monthBase);
         [
             ['ongoing', '開催中'],
             ['upcoming', '今後7日'],
-            ['month', '今月'],
-            ['tournament', '今月の大会'],
+            ['month', monthLabels.month],
+            ['tournament', monthLabels.tournament],
         ].forEach(([key, labelText]) => {
             const button = createTextElement('button', labelText, 'home-event-desktop-tab');
             button.type = 'button';
@@ -1282,6 +1746,13 @@
         return article;
     }
 
+    function createEmptyFeatureItem_(message) {
+        const article = document.createElement('article');
+        article.className = 'home-feature-card home-feature-card--empty';
+        article.append(createTextElement('p', message));
+        return article;
+    }
+
     async function fetchHomeData() {
         const response = await fetch(HOME_DATA_URL, {
             method: 'GET',
@@ -1301,6 +1772,7 @@
         return {
             news: Array.isArray(json.news) ? json.news : [],
             events: Array.isArray(json.events) ? json.events : [],
+            features: Array.isArray(json.features) ? json.features : [],
         };
     }
 
@@ -1338,113 +1810,27 @@
         });
     }
 
-    function ensureEventDescriptionTooltip_() {
-        let tooltip = document.getElementById('homeEventDescriptionTooltip');
-        if (tooltip) return tooltip;
-
-        tooltip = document.createElement('div');
-        tooltip.id = 'homeEventDescriptionTooltip';
-        tooltip.className = 'home-event-description-tooltip';
-        tooltip.setAttribute('role', 'tooltip');
-        tooltip.innerHTML = `
-            <div class="home-event-description-tooltip__head">
-                <span class="home-event-description-tooltip__label"></span>
-                <strong></strong>
-            </div>
-            <p></p>
-        `;
-        document.body.append(tooltip);
-        return tooltip;
-    }
-
-    function hideEventDescriptionTooltip_() {
-        const tooltip = document.getElementById('homeEventDescriptionTooltip');
-        if (!tooltip) return;
-        tooltip.classList.remove('is-show');
-    }
-
-    function showEventDescriptionTooltip_(target) {
-        const text = String(target?.dataset?.homeEventDescription || '').trim();
-        if (!text) return;
-
-        const tooltip = ensureEventDescriptionTooltip_();
-        const label = tooltip.querySelector('.home-event-description-tooltip__label');
-        const title = tooltip.querySelector('strong');
-        const body = tooltip.querySelector('p');
-        const type = normalizeEventType_(target.dataset.homeEventType);
-
-        tooltip.className = `home-event-description-tooltip home-event-description-tooltip--${type}`;
-        if (label) label.textContent = target.dataset.homeEventLabel || 'イベント';
-        if (title) title.textContent = target.dataset.homeEventTitle || 'イベント';
-        if (body) body.textContent = text;
-        tooltip.classList.add('is-show');
-
-        const rect = target.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        const margin = 12;
-        const gap = 8;
-        const left = Math.min(
-            Math.max(margin, rect.left + (rect.width / 2) - (tooltipRect.width / 2)),
-            Math.max(margin, window.innerWidth - tooltipRect.width - margin)
-        );
-        const topAbove = rect.top - tooltipRect.height - gap;
-        const top = topAbove >= margin
-            ? topAbove
-            : Math.min(rect.bottom + gap, Math.max(margin, window.innerHeight - tooltipRect.height - margin));
-
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
-    }
-
-    function bindEventDescriptionTooltip_() {
-        if (document.body.dataset.homeEventDescriptionTooltipBound === '1') return;
-        document.body.dataset.homeEventDescriptionTooltipBound = '1';
-
-        document.addEventListener('click', (event) => {
-            const target = event.target.closest('.home-event-description-trigger[data-home-event-description]');
-            if (!target) {
-                hideEventDescriptionTooltip_();
-                return;
-            }
-
-            event.preventDefault();
-            showEventDescriptionTooltip_(target);
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                hideEventDescriptionTooltip_();
-                return;
-            }
-
-            const target = event.target.closest?.('.home-event-description-trigger[data-home-event-description]');
-            if (!target || (event.key !== 'Enter' && event.key !== ' ')) return;
-            event.preventDefault();
-            showEventDescriptionTooltip_(target);
-        });
-
-        document.addEventListener('scroll', hideEventDescriptionTooltip_, { passive: true, capture: true });
-        window.addEventListener('resize', hideEventDescriptionTooltip_);
-    }
-
     async function init() {
         bindDisabledLinks();
         bindNewsModalKeys_();
         bindNewsListModal_();
-        bindEventDescriptionTooltip_();
+        bindDesktopEventPanelHeight_();
 
         const initialData = getInitialHomeData_();
         renderNews(initialData.news);
         renderEvents(initialData.events);
+        renderFeatures(initialData.features);
 
         try {
             const data = await fetchHomeData();
             renderNews(data.news);
             renderEvents(data.events);
+            renderFeatures(data.features);
         } catch (error) {
             console.warn(error);
             renderNews(initialData.news);
             renderEvents(initialData.events);
+            renderFeatures(initialData.features);
         }
     }
 

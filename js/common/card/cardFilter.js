@@ -1183,9 +1183,18 @@
     const URL_PACK_FILTERS = {
         innocent_oldgod: {
         label: 'イノセント＆旧神ピックアップパック',
+        featureKey: 'innocentOldgodPickup',
         races: ['イノセント', '旧神'],
         },
     };
+
+    function isPackPickupEnabled_(key) {
+        const setting = URL_PACK_FILTERS[String(key || '').trim()];
+        if (!setting) return false;
+        if (!setting.featureKey) return true;
+        if (typeof window.isMesorogiaEventFeatureEnabled !== 'function') return false;
+        return window.isMesorogiaEventFeatureEnabled(setting.featureKey);
+    }
 
     function isCardsPage_() {
         const file = String(location.pathname || '').split('/').pop() || 'index.html';
@@ -1196,6 +1205,7 @@
         try {
         const params = new URLSearchParams(window.location.search || '');
         const key = String(params.get('pack') || '').trim();
+        if (!isPackPickupEnabled_(key)) return null;
         return URL_PACK_FILTERS[key] || null;
         } catch {
         return null;
@@ -1295,7 +1305,7 @@
         uniq.forEach(sp => addPackBtn(sp.en, sp.jp));
         }
 
-        if (isCardsPage_()) {
+        if (isCardsPage_() && isPackPickupEnabled_('innocent_oldgod')) {
         const pickupBtn = document.createElement('button');
         pickupBtn.type = 'button';
         pickupBtn.className = 'filter-btn is-ring';
@@ -1520,7 +1530,7 @@
         document.querySelectorAll('.filter-btn.selected[data-pack-pickup]').forEach(btn => {
             const val = String(btn.dataset.packPickup || '').trim();
             const setting = URL_PACK_FILTERS[val];
-            if (!setting) return;
+            if (!setting || !isPackPickupEnabled_(val)) return;
 
             chips.push({
                 label: setting.label || 'ピックアップパック',
@@ -1895,6 +1905,7 @@
         // ピックアップ：複数条件をパック欄の専用ボタンで扱う
         if (key === 'pickup') {
             return selectedValues.some(value => {
+            if (!isPackPickupEnabled_(value)) return false;
             const setting = URL_PACK_FILTERS[value];
             return setting?.races?.includes(cardData.race);
             });

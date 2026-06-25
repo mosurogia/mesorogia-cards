@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-06-14-001">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
-    <link rel="stylesheet" href="css/page0.css?v=2026-06-17-004">
+    <link rel="stylesheet" href="css/page0.css?v=2026-06-25-011">
     <!-- ===== 構造化データ ===== -->
     <script type="application/ld+json">
     {
@@ -140,7 +140,7 @@
     <div class="header-account" data-header-auth></div>
 </header>
 
-<a class="home-event-banner" href="cards.html?pack=innocent_oldgod" aria-label="イノセント旧神ピックアップパックの対象カードをカード図鑑で見る">
+<a class="home-event-banner" href="cards.html?pack=innocent_oldgod" aria-label="イノセント旧神ピックアップパックの対象カードをカード図鑑で見る" data-event-feature="innocent-oldgod-pickup" hidden>
     <div class="home-event-banner__text">
         <span>1周年記念ピックアップ</span>
         <strong>イノセント＆旧神</strong>
@@ -225,6 +225,18 @@
             </div>
 
         </section>
+    </section>
+
+    <section class="home-panel home-feature-panel" aria-labelledby="home-feature-title">
+        <div class="home-section-head">
+            <div>
+                <h2 id="home-feature-title">モスロギアの便利機能</h2>
+                <p>知っておくと便利な機能をピックアップして紹介します。</p>
+            </div>
+        </div>
+        <div class="home-feature-stage">
+            <div class="home-feature-list" data-home-feature-list></div>
+        </div>
     </section>
 
     <section class="home-page-guide" id="page-guide" aria-labelledby="page-guide-title">
@@ -526,14 +538,15 @@
 }
 </script>
 <script src="js/common/core/defs.js?v=2026-05-05-006"></script>
+<script src="js/common/core/event-features.js?v=2026-06-23-001"></script>
 <script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
-<script src="js/pages/home/home.js?v=2026-06-17-004"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-06-17-004"></script>
+<script src="js/pages/home/home.js?v=2026-06-25-010"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-06-25-015"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 
