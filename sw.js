@@ -1,4 +1,4 @@
-var SW_BUILD_VERSION = '2026-06-25-015';
+var SW_BUILD_VERSION = '2026-06-25-016';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
