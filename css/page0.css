@@ -911,6 +911,11 @@
 }
 
 .home-event-desktop-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     min-width: 0;
     min-height: 34px;
     padding: 7px 8px;
@@ -922,6 +927,25 @@
     font-size: .82rem;
     font-weight: 900;
     cursor: pointer;
+}
+
+.home-event-tab-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #dc2626;
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 900;
+    line-height: 1;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.home-event-desktop-tab.is-active .home-event-tab-badge {
+    box-shadow: 0 0 0 2px #eef2ff;
 }
 
 .home-event-desktop-tab:hover {
