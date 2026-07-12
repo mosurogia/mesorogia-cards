@@ -28,12 +28,13 @@
     <meta name="twitter:title" content="神託のメソロギア 戦績管理・対戦記録・勝率チェック｜モスロギア">
     <meta name="twitter:description" content="神託のメソロギアの戦績管理ページです。保存デッキごとの勝率、対戦結果、全体戦績を記録・確認できます。スマホ対応。">
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/homeOGP.png">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-06-14-001">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-006">
-    <link rel="stylesheet" href="css/page5.css?v=2026-05-05-006">
+    <link rel="stylesheet" href="css/page5.css?v=2026-07-12-016">
     <!-- ===== 構造化データ ===== -->
     <script type="application/ld+json">
     {
@@ -233,6 +234,52 @@
                             <textarea name="memo" rows="2" maxlength="200" placeholder="試合メモ"></textarea>
                         </label>
 
+                        <details class="match-tournament-panel match-entry-wide" data-match-tournament-panel>
+                            <summary>大会情報（任意）</summary>
+                            <div class="match-tournament-body">
+                                <label class="match-tournament-field">
+                                    <span>大会名</span>
+                                    <div class="match-tournament-add">
+                                        <input type="text" maxlength="40" placeholder="大会名" data-tournament-name-input>
+                                        <button type="button" data-tournament-name-add>+追加</button>
+                                    </div>
+                                    <div class="match-tournament-name-list" data-tournament-name-list aria-live="polite"></div>
+                                    <div class="match-tournament-name-history" data-tournament-name-history></div>
+                                </label>
+
+                                <fieldset class="match-tournament-field">
+                                    <legend>ラウンド</legend>
+                                    <div class="match-tournament-rounds">
+                                        <label><input type="checkbox" name="tournamentRound" value="R1"><span>R1</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="R2"><span>R2</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="R3"><span>R3</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="R4"><span>R4</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="R5"><span>R5</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="TOP16"><span>TOP16</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="TOP8"><span>TOP8</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="準々決勝"><span>準々決勝</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="準決勝"><span>準決勝</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="決勝"><span>決勝</span></label>
+                                        <label><input type="checkbox" name="tournamentRound" value="その他"><span>その他</span></label>
+                                    </div>
+                                </fieldset>
+
+                                <label class="match-tournament-field">
+                                    <span>対戦相手</span>
+                                    <input type="text" name="tournamentOpponent" maxlength="40" placeholder="対戦相手">
+                                </label>
+
+                                <fieldset class="match-tournament-field">
+                                    <legend>勝敗詳細</legend>
+                                    <div class="match-tournament-format">
+                                        <label><input type="radio" name="tournamentFormat" value="bo1" checked><span>BO1</span></label>
+                                        <label><input type="radio" name="tournamentFormat" value="bo3"><span>BO3</span></label>
+                                    </div>
+                                    <div class="match-tournament-games" data-tournament-games></div>
+                                </fieldset>
+                            </div>
+                        </details>
+
                         <div class="match-entry-actions">
                             <button type="submit" class="btn primary" id="matchEntrySubmit">登録</button>
                         </div>
@@ -241,7 +288,101 @@
                     <div class="match-workspace-panel" data-match-view-panel="history" hidden>
                         <div class="match-history-section" aria-labelledby="matchHistoryRateTitle">
                             <div class="match-history-heading" id="matchHistoryTitle"></div>
-                            <div id="matchSummary"></div>
+                            <div id="matchSummary">
+                                <div class="match-summary-grid">
+                                    <span class="match-summary-thumb" role="button" tabindex="0" data-match-summary-deck-select aria-haspopup="dialog" aria-label="表示するデッキを選択">
+                                        <img src="img/00000.webp" alt="" loading="lazy" onerror="this.src='img/00000.webp'">
+                                        <span class="match-summary-thumb-empty">未選択</span>
+                                    </span>
+                                    <div class="match-summary-info">
+                                        <div class="match-summary-title">全体</div>
+                                        <div class="match-summary-stat">
+                                            <span>試合数</span>
+                                            <strong>--</strong>
+                                        </div>
+                                        <div class="match-summary-result">
+                                            <strong>--勝--敗</strong>
+                                            <span>（--%）</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="match-summary-chart-tabs">
+                                    <div class="match-summary-chart-tools">
+                                        <div class="match-summary-filter-group">
+                                            <div class="match-summary-date-filter">
+                                                <button type="button" class="match-summary-date-filter-button" data-match-summary-date-toggle aria-expanded="false">
+                                                    <span>期間</span>
+                                                    <strong>全期間</strong>
+                                                </button>
+                                                <div class="match-summary-date-filter-panel" hidden>
+                                                    <div class="match-summary-date-fields">
+                                                        <label>
+                                                            <span>開始</span>
+                                                            <button type="button" class="match-summary-date-value" data-match-summary-date-open="from">開始日</button>
+                                                        </label>
+                                                        <label>
+                                                            <span>終了</span>
+                                                            <button type="button" class="match-summary-date-value" data-match-summary-date-open="to">終了日</button>
+                                                        </label>
+                                                    </div>
+                                                    <label class="match-summary-environment-field">
+                                                        <span>環境から選ぶ</span>
+                                                        <select class="match-summary-environment-select" data-match-summary-environment-select disabled>
+                                                            <option value="">環境を選択</option>
+                                                        </select>
+                                                    </label>
+                                                    <div class="match-summary-date-filter-actions">
+                                                        <button type="button" data-match-summary-date-apply>適用</button>
+                                                        <button type="button" data-match-summary-date-reset>解除</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="match-summary-tournament-filter">
+                                                <button type="button" class="match-summary-date-filter-button match-summary-tournament-filter-button" data-match-summary-tournament-toggle aria-expanded="false">
+                                                    <span>大会戦績</span>
+                                                    <strong>指定なし</strong>
+                                                </button>
+                                                <div class="match-summary-date-filter-panel match-summary-tournament-filter-panel" hidden>
+                                                    <div class="match-summary-tournament-empty">大会情報がある戦績がありません</div>
+                                                    <div class="match-summary-date-filter-actions">
+                                                        <button type="button" data-match-summary-tournament-apply>適用</button>
+                                                        <button type="button" data-match-summary-tournament-reset>解除</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="match-summary-chart-tool-actions">
+                                            <button type="button" class="match-summary-tool-button match-summary-refresh" id="matchHistoryRefresh" disabled aria-disabled="true">戦績取得</button>
+                                            <button type="button" class="match-summary-tool-button match-summary-image-save" disabled aria-disabled="true">画像保存</button>
+                                        </div>
+                                    </div>
+                                    <div class="match-summary-chart-tab-list" role="tablist" aria-label="対面デッキタイプグラフの表示切り替え">
+                                        <button type="button" class="match-summary-chart-tab is-active" data-match-summary-chart-tab="usage" role="tab" aria-selected="true">
+                                            <span>対面率</span>
+                                            <strong>--</strong>
+                                        </button>
+                                        <button type="button" class="match-summary-chart-tab" data-match-summary-chart-tab="rate" role="tab" aria-selected="false">
+                                            <span>勝率</span>
+                                            <strong>--</strong>
+                                        </button>
+                                        <button type="button" class="match-summary-chart-tab" data-match-summary-chart-tab="win" role="tab" aria-selected="false">
+                                            <span>勝利</span>
+                                            <strong>--</strong>
+                                        </button>
+                                        <button type="button" class="match-summary-chart-tab" data-match-summary-chart-tab="lose" role="tab" aria-selected="false">
+                                            <span>敗北</span>
+                                            <strong>--</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="match-summary-chart-panels">
+                                    <div class="match-summary-chart-panel is-active">
+                                        <div class="match-summary-chart-card is-empty">
+                                            <div class="match-summary-bar-empty">戦績を読み込み中...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="matchHistoryBody" aria-live="polite"></div>
                         </div>
                     </div>
@@ -337,20 +478,23 @@
 <iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
 
 <!-- スクリプト群 -->
-<script src="js/common/core/defs.js?v=2026-05-05-006"></script>
+<script src="js/common/core/defs.js?v=2026-07-12-009"></script>
+<script src="js/common/core/card-core.js?v=2026-06-03-001"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-006"></script>
+<script src="js/common/core/card-sort.js?v=2026-05-05-008"></script>
 <script src="js/common/storage/deck-saved-store.js?v=2026-05-05-006"></script>
 <script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-006"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-06-25-001"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-07-12-016"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
-<script src="js/common/account/account-match-results.js?v=2026-05-05-006"></script>
+<script src="js/common/account/account-match-results.js?v=2026-07-12-008"></script>
+<script src="js/common/deck/image-export.js?v=2026-07-10-001"></script>
 <script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
-<script src="js/pages/match-results/match-results.js?v=2026-06-04-001"></script>
+<script src="js/pages/match-results/match-results.js?v=2026-07-12-016"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 </body>

@@ -2,6 +2,14 @@
   "ok": true,
   "news": [
     {
+      "date": "2026-06-29",
+      "title": "イベントカレンダー不具合修正",
+      "category": "不具合修正",
+      "description": "細部の修正をしました",
+      "note": "・開催終了大会のアイコン表示を消して終了表記を追加\n\n・ずれていた日程を修正",
+      "sortOrder": 9999
+    },
+    {
       "date": "2026-06-25",
       "title": "イベントカレンダー更新",
       "category": "サイト更新",
@@ -199,6 +207,105 @@
       "startAt": "2026-06-27T19:30",
       "endAt": "2026-06-27T22:00",
       "url": "https://tonamel.com/competition/SNqTz",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-08",
+      "title": "初心者限定ビンゴミッション",
+      "type": "ゲームイベント",
+      "label": "ゲームイベント",
+      "description": "最大パック３０連の豪華なミッション開始！",
+      "startAt": "2026-07-08T00:00",
+      "endAt": "2026-07-08T23:59",
+      "url": "https://note.com/mosurogia_manmos/n/n13609c3a452c?sub_rt=share_pb",
+      "sortOrder": 1
+    },
+    {
+      "date": "2026-07-08",
+      "title": "デッキ販売開始",
+      "type": "ゲームイベント",
+      "label": "ゲームイベント",
+      "description": "構築済みデッキ販売開始",
+      "startAt": "2026-07-08T00:00",
+      "endAt": "2026-07-08T23:59",
+      "url": "",
+      "sortOrder": 2
+    },
+    {
+      "date": "2026-07-08",
+      "title": "イベントデッキ販売開始",
+      "type": "ゲームイベント",
+      "label": "ゲームイベント",
+      "description": "モスロギアコラボキャンペーンで入賞した２デッキの販売が開始\nデッキチケット無料配布中",
+      "startAt": "2026-07-08T00:00",
+      "endAt": "2026-08-31T00:00",
+      "url": "",
+      "sortOrder": 3
+    },
+    {
+      "date": "2026-07-11",
+      "title": "狂気のわくわく大実験",
+      "type": "ゲームイベント",
+      "label": "ゲームイベント",
+      "description": "コインを集めてダイヤや砂など\n豪華な景品をゲットしましょう！！",
+      "startAt": "2026-07-11T00:00",
+      "endAt": "2026-07-21T00:00",
+      "url": "",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-12",
+      "title": "第二回碧野杯",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "Tonamel開催",
+      "startAt": "2026-07-12T20:00",
+      "endAt": "2026-07-12T23:59",
+      "url": "https://tonamel.com/competition/SQsXH",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-16",
+      "title": "Iパック追加",
+      "type": "新パック",
+      "label": "新パック",
+      "description": "7/16 16時からメインパック第5弾\n「Illustrated Illusion ～描画された幻想～」パックショップにて販売開始",
+      "startAt": "2026-07-16T00:00",
+      "endAt": "2026-07-16T23:59",
+      "url": "",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-19",
+      "title": "第三回碧野杯",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "Tonamel開催",
+      "startAt": "2026-07-19T20:00",
+      "endAt": "2026-07-19T23:59",
+      "url": "https://tonamel.com/competition/UmZYh",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-25",
+      "title": "分解生成イベント",
+      "type": "分解生成",
+      "label": "分解生成",
+      "description": "",
+      "startAt": "2026-07-25T00:00",
+      "endAt": "2026-08-01T00:00",
+      "url": "",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-07-25",
+      "title": "分解生成イベント",
+      "type": "分解生成",
+      "label": "分解生成",
+      "description": "",
+      "startAt": "2026-07-25T00:00",
+      "endAt": "2026-08-01T00:00",
+      "url": "",
       "sortOrder": 9999
     }
   ],

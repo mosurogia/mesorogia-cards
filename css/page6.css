@@ -670,6 +670,22 @@
     width: 100%;
 }
 
+.tier-guide-deck-actions-wide.has-sample-controls {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+
+.tier-guide-sample-controls {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    min-width: 64px;
+}
+
+.tier-guide-sample-button {
+    flex: 0 0 auto;
+}
+
 .tier-guide-detail-link,
 .tier-guide-copy-code-button {
     box-sizing: border-box;
@@ -822,7 +838,7 @@
     font-weight: 900;
     line-height: 1;
     text-align: center;
-}                   
+}
 
 .tier-post-detail-empty {
     color: #64748b;
