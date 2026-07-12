@@ -781,10 +781,10 @@
 }
 
 .home-event-mobile-card--user {
-    --home-event-mobile-accent: rgba(219, 39, 119, .72);
-    --home-event-mobile-border: rgba(219, 39, 119, .24);
-    --home-event-mobile-bg-start: rgba(252, 231, 243, .86);
-    --home-event-mobile-bg-soft: rgba(219, 39, 119, .1);
+    --home-event-mobile-accent: rgba(37, 99, 235, .72);
+    --home-event-mobile-border: rgba(37, 99, 235, .24);
+    --home-event-mobile-bg-start: rgba(219, 234, 254, .86);
+    --home-event-mobile-bg-soft: rgba(37, 99, 235, .1);
 }
 
 .home-event-mobile-card--craft {
@@ -1992,8 +1992,8 @@ body.is-pwa-standalone .home-event-calendar-summary__item:first-child {
 }
 
 .home-label--user {
-    background: rgba(219, 39, 119, .14);
-    color: #be185d;
+    background: rgba(37, 99, 235, .14);
+    color: #1d4ed8;
 }
 
 .home-label--pack {
