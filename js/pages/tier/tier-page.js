@@ -5,7 +5,7 @@
 (function () {
     'use strict';
 
-    const TIER_API_URL = 'https://script.google.com/macros/s/AKfycbwB2DTjmeaaVA1nJvGmUIFMnI1M66WakN3LSOiOk7ECekS4-sBkQqYR0xVERopXeZWQDA/exec';
+    const TIER_API_URL = 'https://script.google.com/macros/s/AKfycbww_gGboqJK5g5Fw3wLXSQO0uGw9Zx8pRG9F9falVfb_aVkwb_KcVmr6sK2RpjOw8mS3Q/exec';
     const TIER_ORDER = ['S', 'A', 'B', 'C', 'D', 'E'];
     const MAIN_RACES = ['ドラゴン', 'アンドロイド', 'エレメンタル', 'ルミナス', 'シェイド'];
     const RACE_BG_CLASS_NAMES = [
@@ -203,10 +203,16 @@
         return mainRace || normalized.find((race) => race === '旧神' || race === 'イノセント') || '';
     }
 
+    function getTierItemRace(item) {
+        return getMainRaceFromRaces(item && (item.race || item.races));
+    }
+
     function applyGuideDeckRace(guideCard, item) {
         if (!guideCard) return;
 
-        const race = getMainRaceFromRaces(item && item.races);
+        const columnRace = String(guideCard.dataset.tierColumnRace || '').trim();
+        const fallbackRace = String(guideCard.dataset.race || '').trim();
+        const race = columnRace || getTierItemRace(item) || fallbackRace;
         guideCard.classList.remove(...RACE_BG_CLASS_NAMES);
         guideCard.dataset.race = race;
         if (race) guideCard.classList.add(`race-bg-${race}`);
@@ -328,6 +334,61 @@
         }, new Map());
     }
 
+    function getTierDeckKey(item) {
+        const deckName = String(item && item.deckName || '').trim();
+        return deckName || getDeckGuideId(item);
+    }
+
+    function getTierDeckGroupId(item) {
+        const tier = normalizeTier(item && item.tier);
+        const key = getTierDeckKey(item);
+        return `deck-group-${encodeURIComponent(`${tier}-${key}`)}`;
+    }
+
+    function mergeTierBoardItems(items) {
+        const mergedMap = new Map();
+
+        items
+            .slice()
+            .sort((a, b) => getTierScore(a) - getTierScore(b))
+            .forEach((item) => {
+                const key = getTierDeckKey(item);
+                if (!key) return;
+
+                const existing = mergedMap.get(key);
+                if (!existing) {
+                    mergedMap.set(key, {
+                        item,
+                        sampleCount: 1
+                    });
+                    return;
+                }
+
+                existing.sampleCount += 1;
+            });
+
+        return Array.from(mergedMap.values()).map(({ item, sampleCount }) => ({
+            ...item,
+            tierSampleCount: sampleCount,
+            tierGuideGroupId: sampleCount > 1 ? getTierDeckGroupId(item) : ''
+        }));
+    }
+
+    function groupGuideItemsByDeck(items) {
+        const groups = new Map();
+
+        items
+            .slice()
+            .sort((a, b) => getTierScore(a) - getTierScore(b))
+            .forEach((item) => {
+                const groupId = getTierDeckGroupId(item);
+                if (!groups.has(groupId)) groups.set(groupId, []);
+                groups.get(groupId).push(item);
+            });
+
+        return Array.from(groups.values());
+    }
+
     function getOrderedTiers(groups) {
         const knownTiers = TIER_ORDER.filter((tier) => groups.has(tier));
         const otherTiers = Array.from(groups.keys())
@@ -345,7 +406,7 @@
         const card = document.createElement(detailHref ? 'a' : 'article');
 
         card.className = 'tier-card';
-        card.dataset.guideId = getDeckGuideId(item);
+        card.dataset.guideId = item.tierGuideGroupId || getDeckGuideId(item);
         if (detailHref) {
             card.href = detailHref;
             card.rel = 'noopener';
@@ -933,9 +994,11 @@
 
         try {
             const item = await fetchPostById(postId);
+            if (String(guideCard.dataset.postId || '').trim() !== postId) return;
             if (typeof window.ensureCardMapLoaded === 'function') {
                 await window.ensureCardMapLoaded().catch(() => null);
             }
+            if (String(guideCard.dataset.postId || '').trim() !== postId) return;
             applyGuideDeckRace(guideCard, item);
             setGuideDeckCodeButton(guideCard, getDeckCode(item));
             const rendered = renderDeckList(item, list);
@@ -952,7 +1015,9 @@
             setGuideDeckStatus(guideCard, 'デッキリストの取得に失敗しました。投稿リンクから確認してください。', true);
             setGuideEnvironmentStatus('デッキリスト取得失敗', true);
         } finally {
-            delete guideCard.dataset.loading;
+            if (String(guideCard.dataset.postId || '').trim() === postId) {
+                delete guideCard.dataset.loading;
+            }
         }
     }
 
@@ -1064,9 +1129,7 @@
         itemList.className = 'tier-items';
 
         if (items.length) {
-            items
-                .slice()
-                .sort((a, b) => getTierScore(a) - getTierScore(b))
+            mergeTierBoardItems(items)
                 .forEach((item) => itemList.append(createDeckCard(item)));
         } else {
             const empty = document.createElement('div');
@@ -1108,6 +1171,8 @@
         card.className = 'tier-guide-deck';
         card.dataset.guideId = guideId;
         if (postId) card.dataset.postId = postId;
+        card.dataset.tierColumnRace = getTierItemRace(item);
+        applyGuideDeckRace(card, item);
 
         const head = document.createElement('div');
         head.className = 'tier-guide-deck-head';
@@ -1179,6 +1244,158 @@
         return card;
     }
 
+    function createGuideDeckGroupCard(variants) {
+        const sampleItems = Array.isArray(variants) ? variants.filter(Boolean) : [];
+        if (sampleItems.length <= 1) return createGuideDeckCard(sampleItems[0]);
+
+        let activeIndex = 0;
+        const groupId = getTierDeckGroupId(sampleItems[0]);
+        const card = document.createElement('article');
+
+        card.className = 'tier-guide-deck';
+        card.dataset.guideId = groupId;
+
+        const head = document.createElement('div');
+        head.className = 'tier-guide-deck-head';
+
+        const title = document.createElement('h5');
+        title.className = 'tier-guide-deck-title';
+
+        const meta = document.createElement('div');
+        meta.className = 'tier-guide-deck-meta';
+        head.append(title, meta);
+        card.append(head);
+
+        const wideActions = document.createElement('div');
+        wideActions.className = 'tier-guide-deck-actions-wide has-sample-controls';
+
+        const detailLink = document.createElement('a');
+        detailLink.className = 'tier-guide-detail-link';
+        detailLink.textContent = 'デッキを詳しく見る';
+
+        const copyButton = document.createElement('button');
+        copyButton.type = 'button';
+        copyButton.className = 'tier-guide-copy-code-button btn-copy-code-wide';
+        copyButton.dataset.tierGuideCopyCode = '1';
+
+        const sampleControls = document.createElement('div');
+        sampleControls.className = 'tier-guide-sample-controls';
+
+        const prevButton = document.createElement('button');
+        prevButton.type = 'button';
+        prevButton.className = 'tier-env-button tier-guide-sample-button';
+        prevButton.setAttribute('aria-label', '前のサンプル');
+        prevButton.textContent = '◀';
+
+        const nextButton = document.createElement('button');
+        nextButton.type = 'button';
+        nextButton.className = 'tier-env-button tier-guide-sample-button';
+        nextButton.setAttribute('aria-label', '次のサンプル');
+        nextButton.textContent = '▶';
+
+        sampleControls.append(prevButton, nextButton);
+        wideActions.append(detailLink, copyButton, sampleControls);
+        card.append(wideActions);
+
+        const status = document.createElement('div');
+        status.className = 'tier-guide-deck-status';
+        status.dataset.tierGuideStatus = '1';
+
+        const list = document.createElement('div');
+        list.className = 'tier-post-decklist';
+        list.dataset.tierGuideList = '1';
+
+        const deckComment = document.createElement('p');
+        deckComment.className = 'tier-guide-deck-list-comment';
+        card.append(status, list, deckComment);
+
+        function renderSample(index, options = {}) {
+            activeIndex = Math.min(Math.max(index, 0), sampleItems.length - 1);
+            const sample = sampleItems[activeIndex];
+            const deckName = String(sample.deckName || '名称未設定').trim() || '名称未設定';
+            const comment = String(sample.comment || '').trim();
+            const postUrl = String(sample.postUrl || '').trim();
+            const postId = getPostIdFromUrl(postUrl);
+            const detailHref = getPostDetailHref(postUrl);
+            const guideId = getDeckGuideId(sample);
+            const cachedListHtml = getCachedGuideDeckListHtml(postId, guideId);
+
+            card.dataset.guideId = groupId;
+            card.dataset.activeGuideId = guideId;
+            card.dataset.sampleIndex = String(activeIndex);
+            card.dataset.tierColumnRace = getTierItemRace(sample);
+            if (postId) {
+                card.dataset.postId = postId;
+            } else {
+                delete card.dataset.postId;
+            }
+            delete card.dataset.loaded;
+            delete card.dataset.loading;
+
+            applyGuideDeckRace(card, sample);
+            title.textContent = deckName;
+
+            meta.replaceChildren(...getGuideDeckMetaItems(sample).map((text) => {
+                const metaItem = document.createElement('span');
+                metaItem.className = 'tier-guide-deck-meta-item';
+                metaItem.textContent = text;
+                return metaItem;
+            }));
+
+            if (detailHref) {
+                detailLink.href = detailHref;
+                detailLink.target = '_blank';
+                detailLink.rel = 'noopener';
+                detailLink.tabIndex = 0;
+                detailLink.removeAttribute('aria-disabled');
+                if (postId) {
+                    detailLink.dataset.postId = postId;
+                } else {
+                    delete detailLink.dataset.postId;
+                }
+            } else {
+                detailLink.removeAttribute('href');
+                detailLink.removeAttribute('target');
+                detailLink.rel = 'noopener';
+                detailLink.setAttribute('aria-disabled', 'true');
+                detailLink.tabIndex = -1;
+                delete detailLink.dataset.postId;
+            }
+
+            setGuideDeckCodeButton({ querySelector: () => copyButton }, getDeckCode(sample));
+
+            if (cachedListHtml) {
+                list.innerHTML = cachedListHtml;
+                card.dataset.loaded = '1';
+                setGuideDeckStatus(card, '', false);
+            } else {
+                list.replaceChildren();
+                setGuideDeckStatus(card, postId ? '' : 'まだ参考デッキがありません', !postId);
+            }
+
+            deckComment.textContent = comment;
+            deckComment.hidden = !comment;
+
+            prevButton.disabled = activeIndex <= 0;
+            nextButton.disabled = activeIndex >= sampleItems.length - 1;
+
+            if (options.load && postId && card.dataset.loaded !== '1') {
+                loadGuideDeckList(card);
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            renderSample(activeIndex - 1, { load: true });
+        });
+
+        nextButton.addEventListener('click', () => {
+            renderSample(activeIndex + 1, { load: true });
+        });
+
+        renderSample(0);
+        return card;
+    }
+
     function createGuideTierSection(tier, items) {
         const section = document.createElement('section');
         section.className = 'tier-guide-rank';
@@ -1190,10 +1407,8 @@
         const list = document.createElement('div');
         list.className = 'tier-guide-rank-list';
 
-        items
-            .slice()
-            .sort((a, b) => getTierScore(a) - getTierScore(b))
-            .forEach((item) => list.append(createGuideDeckCard(item)));
+        groupGuideItemsByDeck(items)
+            .forEach((groupItems) => list.append(createGuideDeckGroupCard(groupItems)));
 
         section.append(title, list);
         return section;
@@ -1201,7 +1416,9 @@
 
     function guideMatchesItems(items) {
         const guideCards = Array.from(document.querySelectorAll('.tier-guide-deck[data-guide-id]'));
-        const nextIds = (items || []).map(getDeckGuideId);
+        const nextIds = groupGuideItemsByDeck(items || []).map((groupItems) => (
+            groupItems.length > 1 ? getTierDeckGroupId(groupItems[0]) : getDeckGuideId(groupItems[0])
+        ));
         if (!guideCards.length || guideCards.length !== nextIds.length) return false;
 
         return nextIds.every((guideId, index) => String(guideCards[index].dataset.guideId || '') === String(guideId));

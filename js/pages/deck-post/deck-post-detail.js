@@ -8,6 +8,8 @@
 (function () {
   'use strict';
 
+  let deckNoteLatestCardMap_ = null;
+
   // =========================
   // 0) 小物
   // =========================
@@ -135,11 +137,15 @@
       .replace(/\n/g, '<br>');
   }
 
-  function resolveCardByName_(name) {
-    const target = String(name || '').trim();
-    if (!target) return null;
+  function normalizeCardRefName_(name) {
+    return String(name || '').replace(/[\s\u3000]+/g, ' ').trim();
+  }
 
-    const map = window.cardMap || window.allCardsMap || {};
+  function findCardByNameInMap_(map, name, options = {}) {
+    const target = String(name || '').trim();
+    const normalizedTarget = normalizeCardRefName_(target);
+    if (!target && !normalizedTarget) return null;
+
     for (const [cd, card] of Object.entries(map)) {
       if (String(card?.name || '').trim() === target) {
         return {
@@ -148,6 +154,31 @@
         };
       }
     }
+
+    if (!options.normalized || !normalizedTarget) return null;
+
+    for (const [cd, card] of Object.entries(map)) {
+      if (normalizeCardRefName_(card?.name) === normalizedTarget) {
+        return {
+          cd: normCd5_(card.cd || cd),
+          name: String(card.name || target)
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function resolveCardByName_(name) {
+    const target = String(name || '').trim();
+    if (!target) return null;
+
+    const map = window.cardMap || window.allCardsMap || {};
+    const current = findCardByNameInMap_(map, target, { normalized: true });
+    if (current) return current;
+
+    const latest = findCardByNameInMap_(deckNoteLatestCardMap_ || {}, target, { normalized: true });
+    if (latest) return latest;
 
     return null;
   }
@@ -1449,6 +1480,19 @@
     return loadCardMapFile_('cards_latest.json');
   }
 
+  async function ensureDeckNoteLatestCardMap_() {
+    if (hasUsableCardMap_(deckNoteLatestCardMap_)) return deckNoteLatestCardMap_;
+
+    try {
+      const map = await loadLatestCardMap_();
+      if (hasUsableCardMap_(map)) deckNoteLatestCardMap_ = map;
+    } catch (e) {
+      console.warn('ensureDeckNoteLatestCardMap_ failed:', e);
+    }
+
+    return deckNoteLatestCardMap_;
+  }
+
   function hasUsableCardMap_(map) {
     return !!(map && typeof map === 'object' && Object.keys(map).length);
   }
@@ -1689,6 +1733,7 @@
       if (!file) return runWithLatestCardMapIfNeeded_(fn);
 
       const map = await loadCardMapFile_(file);
+      await ensureDeckNoteLatestCardMap_();
       return runWithTemporaryCardMap_(map, fn);
     } catch (e) {
       console.warn('withCardMapForPostDate_ failed:', e);

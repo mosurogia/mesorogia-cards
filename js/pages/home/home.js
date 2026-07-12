@@ -93,8 +93,24 @@
         return parseDate_(item?.startAt || item?.date);
     }
 
+    function isMidnightDate_(date) {
+        return date
+            && date.getHours() === 0
+            && date.getMinutes() === 0
+            && date.getSeconds() === 0
+            && date.getMilliseconds() === 0;
+    }
+
     function getEventEndDate_(item) {
-        return parseDate_(item?.endAt || item?.startAt || item?.date);
+        const startDate = getEventStartDate_(item);
+        const endDate = parseDate_(item?.endAt || item?.startAt || item?.date);
+        if (!startDate || !endDate) return endDate;
+        if (item?.endAt && endDate > startDate && isMidnightDate_(endDate)) {
+            const displayEndDate = new Date(endDate);
+            displayEndDate.setDate(displayEndDate.getDate() - 1);
+            return displayEndDate;
+        }
+        return endDate;
     }
 
     function getToday_() {
@@ -106,6 +122,10 @@
     function isOngoingEvent_(entry, today) {
         if (!entry?.startDate || !entry?.endDate) return false;
         return entry.startDate <= today && today <= entry.endDate;
+    }
+
+    function isEndedEvent_(entry, today = getToday_()) {
+        return Boolean(entry?.endDate && entry.endDate < today);
     }
 
     function isUpcomingWithinDays_(entry, today, days) {
@@ -242,10 +262,15 @@
         return getMonthEvents_(entries, monthBase).filter(isTournamentEvent_);
     }
 
+    function getActiveMonthTournamentEvents_(entries, monthBase, today = getToday_()) {
+        return getMonthTournamentEvents_(entries, monthBase)
+            .filter((entry) => !isEndedEvent_(entry, today));
+    }
+
     function addTournamentTabBadge_(button, key, entries, monthBase) {
         if (key !== 'tournament') return;
 
-        const count = getMonthTournamentEvents_(entries, monthBase).length;
+        const count = getActiveMonthTournamentEvents_(entries, monthBase).length;
         if (!count) return;
 
         const label = button.textContent;
@@ -270,7 +295,11 @@
         const start = item?.startAt || item?.date || '';
         const end = item?.endAt || '';
         if (!end || end === start) return formatDate(start);
-        return `${formatDate(start)} ～ ${formatDate(end)}`;
+        const startDate = getEventStartDate_(item);
+        const endDate = getEventEndDate_(item);
+        if (!startDate) return formatDate(start);
+        if (!endDate || toDateKey_(endDate) === toDateKey_(startDate)) return formatDate(toDateKey_(startDate));
+        return `${formatDate(toDateKey_(startDate))} ～ ${formatDate(toDateKey_(endDate))}`;
     }
 
     function getEventSummaryId_(dateKey, index, prefix = 'home-event-summary') {
@@ -988,9 +1017,8 @@
             const item = entry.item;
             const type = normalizeEventType_(item.type);
             const isEnded = Boolean(
-                summaryEventTab_ === 'month'
-                && entry.endDate
-                && entry.endDate < getToday_()
+                (summaryEventTab_ === 'month' || summaryEventTab_ === 'tournament')
+                && isEndedEvent_(entry)
             );
             const row = createEventCardRoot_(item, `home-event-calendar-summary__item home-event-mobile-card--${type}`);
             row.classList.toggle('is-ended', isEnded);
@@ -1343,7 +1371,8 @@
         if (mobileEventTab_ === 'tournament') {
             appendCompactEventList_(list, getMonthTournamentEvents_(entries, today), {
                 emptyText: '今月の大会はまだありません。',
-                getDateText: (entry) => formatMonthDay_(entry.startDate),
+                markEnded: true,
+                getDateText: formatMonthEventDateRange_,
             });
             return;
         }
@@ -1458,7 +1487,7 @@
         const appendEntries = (targetEntries) => {
             targetEntries.forEach((entry) => {
                 const today = getToday_();
-                const isEnded = Boolean(options.markEnded && entry.endDate && entry.endDate < today);
+                const isEnded = Boolean(options.markEnded && isEndedEvent_(entry, today));
                 list.append(createCompactEventCard_(entry, {
                     dateText: options.getDateText ? options.getDateText(entry) : '',
                     showDescription: options.showDescription,
@@ -1517,7 +1546,8 @@
             appendCompactEventList_(list, getMonthTournamentEvents_(entries, calendar?.monthBase || visibleCalendarMonth_ || today), {
                 limit: 8,
                 emptyText: '今月の大会はまだありません。',
-                getDateText: (entry) => formatMonthDay_(entry.startDate),
+                markEnded: true,
+                getDateText: formatMonthEventDateRange_,
             });
             return;
         }
@@ -1651,7 +1681,8 @@
             appendCompactEventList_(list, getMonthTournamentEvents_(entries, calendar?.monthBase || visibleCalendarMonth_ || today), {
                 limit: 8,
                 emptyText: '今月の大会はまだありません。',
-                getDateText: (entry) => formatMonthDay_(entry.startDate),
+                markEnded: true,
+                getDateText: formatMonthEventDateRange_,
             });
             return;
         }

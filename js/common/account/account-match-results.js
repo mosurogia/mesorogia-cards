@@ -10,6 +10,8 @@
   const Auth = window.Auth;
   const postJSON = window.postJSON;
   const MATCH_MEMO_MAX_LENGTH = 200;
+  const MATCH_TOURNAMENT_NAME_MAX_COUNT = 8;
+  const MATCH_TOURNAMENT_TEXT_MAX_LENGTH = 80;
 
   function isLoggedIn_() {
     return !!(Auth?.user && Auth?.token && Auth?.verified);
@@ -45,6 +47,55 @@
     return /^\d{5}$/.test(s) ? s : '';
   }
 
+  function normalizeTournamentResult_(value) {
+    const v = String(value || '').trim().toLowerCase();
+    return (v === 'win' || v === 'lose') ? v : '';
+  }
+
+  function normalizeTournament_(value) {
+    let data = value;
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (_) {
+        data = null;
+      }
+    }
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
+
+    const names = (Array.isArray(data.names) ? data.names : [data.name])
+      .map(name => String(name || '').trim().slice(0, MATCH_TOURNAMENT_TEXT_MAX_LENGTH))
+      .filter(Boolean)
+      .slice(0, MATCH_TOURNAMENT_NAME_MAX_COUNT);
+    const rounds = (Array.isArray(data.rounds) ? data.rounds : [data.round])
+      .map(round => String(round || '').trim().slice(0, 20))
+      .filter(Boolean);
+    const opponent = String(data.opponent || '').trim().slice(0, MATCH_TOURNAMENT_TEXT_MAX_LENGTH);
+    const format = String(data.format || '').trim().toUpperCase();
+    const games = (Array.isArray(data.games) ? data.games : [])
+      .map(item => {
+        const game = Math.max(1, Math.min(3, Number(item?.game || 0) || 0));
+        const result = normalizeTournamentResult_(item?.result);
+        if (!game || !result) return null;
+        return {
+          game,
+          label: String(item?.label || `${game}試合目`).trim().slice(0, 20),
+          result,
+        };
+      })
+      .filter(Boolean);
+
+    if (!names.length && !rounds.length && !opponent && !games.length) return null;
+
+    return {
+      names,
+      rounds,
+      opponent,
+      format: format === 'BO3' ? 'BO3' : 'BO1',
+      games,
+    };
+  }
+
   function normalizeAddInput_(data = {}) {
     return {
       deckId: String(data.deckId || '').trim(),
@@ -54,6 +105,7 @@
       rating: normalizeRating_(data.rating),
       priority: normalizePriority_(data.priority),
       memo: String(data.memo || '').trim().slice(0, MATCH_MEMO_MAX_LENGTH),
+      tournament: normalizeTournament_(data.tournament),
     };
   }
 
