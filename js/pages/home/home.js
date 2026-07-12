@@ -103,7 +103,7 @@
 
     function getEventEndDate_(item) {
         const startDate = getEventStartDate_(item);
-        const endDate = parseDate_(item?.endAt || item?.startAt || item?.date);
+        const endDate = parseDate_(item?.endAt);
         if (!startDate || !endDate) return endDate;
         if (item?.endAt && endDate > startDate && isMidnightDate_(endDate)) {
             const displayEndDate = new Date(endDate);
@@ -1043,6 +1043,11 @@
             );
             appendEventLinkAction_(body, item);
 
+            const eventImageUrl = getEventImageCssUrl_(item);
+            if (eventImageUrl) {
+                row.classList.add('has-summary-image');
+                row.style.setProperty('--home-event-summary-image', `url("${eventImageUrl}")`);
+            }
             row.append(meta, body);
             list.append(row);
         });
@@ -1283,6 +1288,33 @@
         return element;
     }
 
+    function getEventImageUrl_(item) {
+        return String(item?.image || '').trim();
+    }
+
+    function getEventImageCssUrl_(item) {
+        const imageUrl = getEventImageUrl_(item);
+        if (!imageUrl) return '';
+        return new URL(encodeURI(imageUrl), document.baseURI).href.replace(/"/g, '\\"');
+    }
+
+    function createEventImageElement_(item, className = 'home-event-image') {
+        const imageUrl = getEventImageUrl_(item);
+        if (!imageUrl) return null;
+
+        const imageWrap = document.createElement('div');
+        imageWrap.className = className;
+
+        const image = document.createElement('img');
+        image.src = encodeURI(imageUrl);
+        image.alt = `${item?.title || 'イベント'}の画像`;
+        image.loading = 'lazy';
+        image.decoding = 'async';
+
+        imageWrap.append(image);
+        return imageWrap;
+    }
+
     function appendEventLinkAction_(container, item) {
         if (!String(item?.url || '').trim()) return;
         container.append(createTextElement('span', '詳細を見る ↗', 'home-event-link__action'));
@@ -1472,6 +1504,11 @@
         }
         appendEventLinkAction_(body, item);
 
+        const eventImageUrl = getEventImageCssUrl_(item);
+        if (eventImageUrl) {
+            card.classList.add('has-card-image');
+            card.style.setProperty('--home-event-card-image', `url("${eventImageUrl}")`);
+        }
         card.append(body);
         return card;
     }
