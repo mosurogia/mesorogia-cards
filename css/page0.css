@@ -178,11 +178,14 @@
     width: fit-content;
     min-height: 24px;
     padding: 3px 8px;
+    border: 1px solid var(--home-label-border, rgba(15, 23, 42, .1));
     border-radius: 999px;
+    background: var(--home-label-bg, rgba(255, 255, 255, .94));
     font-size: .75rem;
     font-weight: 800;
     line-height: 1.2;
     white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, .08);
 }
 
 .home-section-actions {
@@ -809,10 +812,10 @@
 }
 
 .home-event-mobile-card--sale {
-    --home-event-mobile-accent: rgba(249, 115, 22, .72);
-    --home-event-mobile-border: rgba(249, 115, 22, .22);
-    --home-event-mobile-bg-start: rgba(255, 237, 213, .84);
-    --home-event-mobile-bg-soft: rgba(249, 115, 22, .1);
+    --home-event-mobile-accent: rgba(14, 165, 233, .72);
+    --home-event-mobile-border: rgba(14, 165, 233, .22);
+    --home-event-mobile-bg-start: rgba(224, 242, 254, .86);
+    --home-event-mobile-bg-soft: rgba(14, 165, 233, .1);
 }
 
 .home-event-mobile-card--site {
@@ -1072,12 +1075,19 @@ body.is-pwa-standalone .home-event-calendar-summary__item.has-summary-image:firs
 }
 
 .home-event-desktop-card__date {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border: 1px solid rgba(14, 165, 233, .18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
     justify-self: end;
     color: var(--home-accent-strong);
     font-size: .82rem;
     font-weight: 900;
     text-align: right;
     white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, .08);
 }
 
 .home-event-desktop-card .home-label {
@@ -2014,52 +2024,52 @@ body.is-pwa-standalone .home-event-calendar-summary__item.has-summary-image:firs
 }
 
 .home-label--official {
-    background: rgba(226, 69, 69, .14);
+    --home-label-border: rgba(226, 69, 69, .22);
     color: #b91c1c;
 }
 
 .home-label--tournament {
-    background: rgba(124, 58, 237, .14);
+    --home-label-border: rgba(124, 58, 237, .22);
     color: #6d28d9;
 }
 
 .home-label--prediction {
-    background: rgba(232, 200, 43, .2);
+    --home-label-border: rgba(232, 200, 43, .3);
     color: #854d0e;
 }
 
 .home-label--user {
-    background: rgba(37, 99, 235, .14);
+    --home-label-border: rgba(37, 99, 235, .24);
     color: #1d4ed8;
 }
 
 .home-label--pack {
-    background: rgba(14, 165, 233, .15);
+    --home-label-border: rgba(14, 165, 233, .22);
     color: #0369a1;
 }
 
 .home-label--login {
-    background: rgba(20, 184, 166, .15);
+    --home-label-border: rgba(20, 184, 166, .22);
     color: #0f766e;
 }
 
 .home-label--sale {
-    background: rgba(249, 115, 22, .16);
-    color: #c2410c;
+    --home-label-border: rgba(14, 165, 233, .22);
+    color: #0369a1;
 }
 
 .home-label--craft {
-    background: rgba(16, 185, 129, .15);
+    --home-label-border: rgba(16, 185, 129, .22);
     color: #047857;
 }
 
 .home-label--site {
-    background: rgba(79, 70, 229, .14);
+    --home-label-border: rgba(79, 70, 229, .22);
     color: var(--home-accent-strong);
 }
 
 .home-label--other {
-    background: rgba(100, 116, 139, .16);
+    --home-label-border: rgba(100, 116, 139, .22);
     color: #475569;
 }
 

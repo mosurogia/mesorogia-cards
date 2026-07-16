@@ -1189,6 +1189,11 @@
         featureKey: 'innocentOldgodPickup',
         races: ['イノセント', '旧神'],
         },
+        'illustrated-illusion': {
+        label: 'Iパック',
+        featureKey: 'illustratedIllusionPack',
+        pack: 'Illustrated Illusion',
+        },
     };
 
     function isPackPickupEnabled_(key) {
@@ -1229,10 +1234,13 @@
 
         const params = new URLSearchParams(window.location.search || '');
         const key = String(params.get('pack') || '').trim();
-        const pickupBtn = document.querySelector(`.filter-btn[data-pack-pickup="${CSS.escape(key)}"]`);
-        if (!pickupBtn) return false;
+        const targetSelector = setting.pack
+        ? `.filter-btn[data-pack="${CSS.escape(setting.pack)}"]`
+        : `.filter-btn[data-pack-pickup="${CSS.escape(key)}"]`;
+        const targetBtn = document.querySelector(targetSelector);
+        if (!targetBtn) return false;
 
-        pickupBtn.classList.add('selected');
+        targetBtn.classList.add('selected');
 
         window.__cardFilterInitialUrlPackApplied = true;
         return true;

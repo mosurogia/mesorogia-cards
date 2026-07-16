@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-07-17-002',
-    staticCacheName: 'mesorogia-static-2026-07-17-002',
-    runtimeCacheName: 'mesorogia-runtime-2026-07-17-002',
+    version: '2026-07-17-017',
+    staticCacheName: 'mesorogia-static-2026-07-17-017',
+    runtimeCacheName: 'mesorogia-runtime-2026-07-17-017',
     navigationNetworkTimeoutMs: 4000,
     assetNetworkTimeoutMs: 4000,
     appShell: [

@@ -2390,11 +2390,16 @@ document.addEventListener('click', async (e) => {
   /**
    * フィルター・並び替えを再計算して一覧を再描画
    */
-  async function applySortAndRerenderList(resetToFirstPage = false) {
+  async function applySortAndRerenderList(resetToFirstPage = false, opts = {}) {
     const state = getDeckPostState_();
     const page = resetToFirstPage ? 1 : (state?.list?.currentPage || 1);
     stopSlowBackgroundListFetch_('裏読み停止中');
     normalizeCompleteAllItemsState_();
+
+    if (opts.useLatestSnapshot !== false && listLatestSnapshot_ && !applyingLatestSnapshot_) {
+      await applyLatestListSnapshot_(page);
+      return;
+    }
 
     if (!shouldUseAllItemsForList_()) {
       loadListPage(page);
@@ -2914,7 +2919,7 @@ document.addEventListener('click', async (e) => {
   /**
    * 一覧用：指定ページを描画
    */
-  async function loadListPage(page) {
+  async function loadListPage(page, opts = {}) {
     const state = getDeckPostState_();
     stopCurrentPageDetailPrefetch_();
     normalizeCompleteAllItemsState_();
@@ -2923,7 +2928,7 @@ document.addEventListener('click', async (e) => {
     if (!listEl) return;
 
     const requestedPage = Math.max(Number(page || 1), 1);
-    if (listLatestSnapshot_ && !applyingLatestSnapshot_) {
+    if (opts.useLatestSnapshot && listLatestSnapshot_ && !applyingLatestSnapshot_) {
       await applyLatestListSnapshot_(requestedPage);
       return;
     }
@@ -3471,14 +3476,14 @@ document.addEventListener('click', async (e) => {
     const onPrev = () => {
       const state = getDeckPostState_();
       const page = Number(state?.list?.currentPage || 1);
-      if (page > 1) window.DeckPostList?.loadListPage?.(page - 1);
+      if (page > 1) window.DeckPostList?.loadListPage?.(page - 1, { useLatestSnapshot: true });
     };
 
     const onNext = () => {
       const state = getDeckPostState_();
       const page = Number(state?.list?.currentPage || 1);
       const total = Number(state?.list?.totalPages || 1);
-      if (page < total) window.DeckPostList?.loadListPage?.(page + 1);
+      if (page < total) window.DeckPostList?.loadListPage?.(page + 1, { useLatestSnapshot: true });
     };
 
     document.getElementById('pagePrevTop')?.addEventListener('click', onPrev);
@@ -3730,7 +3735,7 @@ document.addEventListener('click', async (e) => {
             if (minePage && !minePage.hidden) {
               window.DeckPostList?.loadMinePage?.(1);
             } else {
-              window.DeckPostList?.applySortAndRerenderList?.();
+              window.DeckPostList?.applySortAndRerenderList?.(false, { useLatestSnapshot: false });
             }
           }
         }, 120);
@@ -3767,9 +3772,6 @@ document.addEventListener('click', async (e) => {
       setToMineButtonLoading_(true);
 
       try {
-        if (listLatestSnapshot_) {
-          await applyLatestListSnapshot_(getDeckPostState_()?.list?.currentPage || 1);
-        }
         updateMineLoginStatus();
 
         if (getMineActiveTab_() === 'posts') {
@@ -3786,9 +3788,6 @@ document.addEventListener('click', async (e) => {
     });
 
     document.getElementById('backToListBtn')?.addEventListener('click', async () => {
-      if (listLatestSnapshot_) {
-        await applyLatestListSnapshot_(getDeckPostState_()?.list?.currentPage || 1);
-      }
       window.DeckPostList?.showList?.();
     });
   }

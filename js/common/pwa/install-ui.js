@@ -71,9 +71,14 @@
     const viewport = window.visualViewport;
     if (!viewport) return 0;
 
-    const layoutHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const layoutHeight = Math.max(
+      window.innerHeight || 0,
+      document.documentElement.clientHeight || 0,
+      viewport.height || 0
+    );
     const visualBottom = viewport.offsetTop + viewport.height;
-    return Math.max(0, Math.round((layoutHeight - visualBottom) * 100) / 100);
+    const gap = Math.max(0, layoutHeight - visualBottom);
+    return Math.min(320, Math.round(gap * 100) / 100);
   }
 
   function refreshAppViewportGap_() {
@@ -87,14 +92,18 @@
 
     const refreshLater = () => {
       refreshAppViewportGap_();
-      window.setTimeout(refreshAppViewportGap_, 120);
+      window.setTimeout(refreshAppViewportGap_, 80);
+      window.setTimeout(refreshAppViewportGap_, 240);
+      window.setTimeout(refreshAppViewportGap_, 700);
     };
 
     refreshAppViewportGap_();
     window.addEventListener('resize', refreshLater, { passive: true });
     window.addEventListener('orientationchange', refreshLater, { passive: true });
+    window.addEventListener('pageshow', refreshLater, { passive: true });
     document.addEventListener('focusin', refreshLater);
     document.addEventListener('focusout', refreshLater);
+    document.addEventListener('visibilitychange', refreshLater);
 
     window.visualViewport?.addEventListener?.('resize', refreshLater, { passive: true });
     window.visualViewport?.addEventListener?.('scroll', refreshLater, { passive: true });

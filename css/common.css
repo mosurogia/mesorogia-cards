@@ -2023,6 +2023,53 @@ footer a:hover {
     pointer-events: none;
 }
 
+.home-event-banner--illustrated {
+    background:
+        linear-gradient(90deg,
+            rgba(var(--pack-i-rgb), .98) 0%,
+            rgba(34, 56, 138, .96) 42%,
+            rgba(18, 28, 82, .97) 100%),
+        url("../img/header.webp") center / auto 55px repeat-x;
+    border-top-color: rgba(var(--pack-i-accent-rgb), .62);
+    border-bottom-color: rgba(var(--pack-i-rgb), .78);
+}
+
+.home-event-banner--illustrated::before {
+    background:
+        radial-gradient(circle at 28% 45%, rgba(var(--pack-i-accent-rgb), .24), transparent 31%),
+        linear-gradient(90deg, rgba(var(--pack-i-accent-rgb), .10), transparent 44%);
+}
+
+.home-event-banner--illustrated::after {
+    background:
+        radial-gradient(circle at 80% 46%, rgba(var(--pack-i-accent-rgb), .34), transparent 39%),
+        linear-gradient(270deg, rgba(var(--pack-i-rgb), .22), transparent);
+}
+
+.home-event-banner--illustrated .home-event-banner__text > span {
+    color: rgb(var(--pack-i-accent-rgb));
+}
+
+.home-event-banner--illustrated .home-event-banner__text strong {
+    color: #f8fbff;
+    text-shadow:
+        0 2px 0 rgba(16, 28, 88, .92),
+        0 4px 10px rgba(0, 0, 0, .5),
+        0 0 14px rgba(var(--pack-i-accent-rgb), .42);
+}
+
+.home-event-banner--illustrated img {
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: min(42vw, 420px);
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+    opacity: .9;
+    transform: none;
+}
+
 .home-event-banner:hover {
     color: #fff;
     text-decoration: none;
@@ -2148,6 +2195,14 @@ footer a:hover {
         height: 175%;
         max-width: 190px;
     }
+
+    .home-event-banner--illustrated img {
+        right: 0;
+        bottom: 0;
+        height: 100%;
+        width: min(38vw, 240px);
+        max-width: none;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2190,6 +2245,14 @@ footer a:hover {
         min-width: 0;
         max-width: 170px;
     }
+
+    .home-event-banner--illustrated img {
+        right: 0;
+        bottom: 0;
+        height: 100%;
+        width: 132px;
+        max-width: none;
+    }
 }
 
 @media (max-width: 414px) {
@@ -2218,6 +2281,13 @@ footer a:hover {
     .home-event-banner img {
         right: -25px;
         max-width: 168px;
+    }
+
+    .home-event-banner--illustrated img {
+        right: 0;
+        bottom: 0;
+        width: 112px;
+        max-width: none;
     }
 }
 

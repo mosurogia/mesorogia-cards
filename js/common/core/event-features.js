@@ -9,6 +9,10 @@
       enabled: false,
       domKey: 'innocent-oldgod-pickup',
     },
+    illustratedIllusionPack: {
+      enabled: true,
+      domKey: 'illustrated-illusion-pack',
+    },
   };
 
   function normalizeKey_(key) {

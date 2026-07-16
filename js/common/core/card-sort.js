@@ -145,6 +145,7 @@
     if (value === 'power-asc' || value === 'power-desc') return 'power';
     if (value === 'category-order') return 'category';
     if (value === 'rarity-order') return 'rarity';
+    if (value === 'pack-order') return 'pack';
     return value;
   }
 
@@ -156,6 +157,33 @@
     if (value.endsWith('-desc')) return 'desc';
     if (value.endsWith('-asc')) return 'asc';
     return sortOrder === 'desc' ? 'desc' : 'asc';
+  }
+
+  function normalizePackLabel_(value) {
+    return String(value || '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase();
+  }
+
+  function getPackSortRank_(rawPack) {
+    const raw = String(rawPack || '').trim();
+    const split = typeof window.splitPackName === 'function'
+      ? window.splitPackName(raw)
+      : { en: raw, jp: '' };
+    const en = String(split?.en || raw).trim();
+
+    const order = Array.isArray(window.PACK_ORDER)
+      ? window.PACK_ORDER
+      : (Array.isArray(window.__PackCatalog?.order) ? window.__PackCatalog.order : []);
+    const target = normalizePackLabel_(en);
+
+    let rank = 0;
+    for (const packName of order) {
+      if (normalizePackLabel_(packName) === target) return rank;
+      rank += 1;
+    }
+
+    const first = en.charAt(0).toUpperCase();
+    if (first >= 'A' && first <= 'Z') return first.charCodeAt(0) - 65;
+    return 1002;
   }
 
   /**
@@ -217,8 +245,9 @@
       'ブロンズ': 3,
     };
     const rarity = rarityOrder[cardEl?.dataset?.rarity] ?? 99;
+    const pack = getPackSortRank_(cardEl?.dataset?.pack);
 
-    return { type, cost, power, cd, cat, rarity };
+    return { type, cost, power, cd, cat, rarity, pack };
   }
 
   /**
@@ -264,6 +293,9 @@
 
         case 'rarity':
           return (a.rarity - b.rarity) * dir || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
+
+        case 'pack':
+          return (a.pack - b.pack) * dir || a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja');
 
         default:
           return (a.type - b.type || a.cost - b.cost || a.power - b.power || a.cd.localeCompare(b.cd, 'ja')) * dir;

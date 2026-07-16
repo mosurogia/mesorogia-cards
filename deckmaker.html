@@ -33,7 +33,7 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/deckmakerOGP.png">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
+    <link rel="stylesheet" href="css/common.css?v=2026-07-17-005">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-07-17-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
@@ -164,6 +164,15 @@
     <img src="img/innocent_oldgod_pack.webp" alt="" loading="eager">
 </a>
 
+<a class="home-event-banner home-event-banner--illustrated" href="cards.html?pack=illustrated-illusion" aria-label="Iパックの対象カードをカード図鑑で見る" data-event-feature="illustrated-illusion-pack" hidden>
+    <div class="home-event-banner__text">
+        <span>新カードパック</span>
+        <strong>Illustrated Illusion</strong>
+        <small><span>対象カードを見に行く👀</span><span>Illustrated Illusion を一発検索</span></small>
+    </div>
+    <img src="img/イベントカレンダー/Iパック追加.jpg" alt="" loading="eager">
+</a>
+
 <!--タブ切り替え-->
 <div class="tab-bar">
     <div id="tab1" class="tab active" onclick="switchTab('build', this)">
@@ -222,6 +231,7 @@
                         <option value="default">通常順</option>
                         <option value="cost">コスト順</option>
                         <option value="power">パワー順</option>
+                        <option value="pack">パック順</option>
                         <option value="category">カテゴリ順</option>
                         <option value="rarity">レアリティ順</option>
                     </select>
@@ -1255,10 +1265,10 @@
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
 <script src="js/common/core/defs.js?v=2026-07-12-009"></script>
-<script src="js/common/core/event-features.js?v=2026-06-23-001"></script>
+<script src="js/common/core/event-features.js?v=2026-07-17-001"></script>
 <script src="js/common/core/card-core.js?v=2026-05-05-007"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-007"></script>
-<script src="js/common/core/card-sort.js?v=2026-05-05-007"></script>
+<script src="js/common/core/card-sort.js?v=2026-07-17-005"></script>
 
 <!-- データストレージ -->
 <script src="js/common/storage/owned.js?v=2026-05-05-007"></script>
@@ -1269,7 +1279,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-07-17-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-07-17-005"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
@@ -1288,7 +1298,7 @@
 
 <script src="js/common/filter/keyword-filter.js?v=2026-05-05-007"></script>
 <script src="js/common/filter/chip-bar.js?v=2026-05-05-007"></script>
-<script src="js/common/card/cardFilter.js?v=2026-07-17-001"></script>
+<script src="js/common/card/cardFilter.js?v=2026-07-17-002"></script>
 
 
 <!-- デッキ保存 -->
@@ -1305,7 +1315,7 @@
 
 <!-- デッキメーカーページ専用 -->
 <script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-05-20-002"></script>
-<script src="js/common/pwa/install-ui.js?v=2026-05-30-003"></script>
+<script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 
 </body>

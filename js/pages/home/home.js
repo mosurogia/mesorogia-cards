@@ -219,6 +219,120 @@
             .sort(compareEventEntriesByEnd_);
     }
 
+    function isSaleEvent_(entryOrItem) {
+        const item = entryOrItem?.item || entryOrItem || {};
+        const typeText = String(item.type || '').trim();
+        const labelText = String(item.label || '').trim();
+        return normalizeEventType_(typeText) === 'sale'
+            || typeText.includes('販売')
+            || labelText.includes('販売');
+    }
+
+    function getGeneralEventEntries_(entries) {
+        return entries.filter((entry) => !isSaleEvent_(entry));
+    }
+
+    function getMonthSaleEvents_(entries, monthBase, today = getToday_()) {
+        if (!monthBase) return [];
+        const firstDate = new Date(monthBase.getFullYear(), monthBase.getMonth(), 1);
+        const lastDate = new Date(monthBase.getFullYear(), monthBase.getMonth() + 1, 0);
+        return entries
+            .filter(isSaleEvent_)
+            .filter((entry) => {
+                const permanentStart = getPermanentSaleStartDate_(entry);
+                if (permanentStart) return firstDate <= permanentStart && permanentStart <= lastDate;
+                const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
+                return entry.startDate <= lastDate && end >= firstDate;
+            })
+            .sort((a, b) => {
+                const aEnded = Boolean(a.endDate && a.endDate < today);
+                const bEnded = Boolean(b.endDate && b.endDate < today);
+                if (aEnded !== bEnded) return aEnded ? 1 : -1;
+                return compareEventEntries_(a, b);
+            });
+    }
+
+    function getPermanentSaleStartDate_(entry) {
+        const item = entry?.item || {};
+        if (String(item.endAt || '').trim()) return null;
+        return entry?.startDate || null;
+    }
+
+    function isPermanentSaleEntry_(entry) {
+        return isSaleEvent_(entry) && Boolean(getPermanentSaleStartDate_(entry));
+    }
+
+    function getPermanentSaleEntries_(entries) {
+        return entries.filter(isPermanentSaleEntry_).sort(compareEventEntries_);
+    }
+
+    function getLimitedSaleEntries_(entries) {
+        return entries.filter((entry) => isSaleEvent_(entry) && !isPermanentSaleEntry_(entry));
+    }
+
+    function getOngoingSaleEvents_(entries, today = getToday_()) {
+        return entries
+            .filter(isSaleEvent_)
+            .filter((entry) => {
+                const permanentStart = getPermanentSaleStartDate_(entry);
+                if (permanentStart) return toDateKey_(permanentStart) === toDateKey_(today);
+                return isOngoingEvent_(entry, today);
+            })
+            .sort(compareEventEntriesByEnd_);
+    }
+
+    function getSaleEventsForContext_(entries, context, monthBase, today = getToday_()) {
+        if (context === 'upcoming') return getUpcomingEvents_(entries.filter(isSaleEvent_), today, 7);
+        if (context === 'month') return getMonthSaleEvents_(entries, monthBase || today, today);
+        return getOngoingSaleEvents_(entries, today);
+    }
+
+    function getSaleEventsOnDate_(entries, dateKey) {
+        const date = parseDate_(dateKey);
+        if (!date) return [];
+        return entries
+            .filter(isSaleEvent_)
+            .filter((entry) => {
+                const permanentStart = getPermanentSaleStartDate_(entry);
+                if (permanentStart) return toDateKey_(permanentStart) === toDateKey_(date);
+                const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
+                return entry.startDate <= date && date <= end;
+            })
+            .sort(compareSaleLineupEntries_);
+    }
+
+    function isSaleEndCalendarDate_(entry, date) {
+        if (!isSaleEvent_(entry) || isPermanentSaleEntry_(entry)) return false;
+        if (!entry?.startDate || !entry?.endDate || entry.endDate <= entry.startDate) return false;
+        return toDateKey_(entry.endDate) === toDateKey_(date);
+    }
+
+    function getCalendarEventLabel_(entry, date) {
+        if (isSaleEndCalendarDate_(entry, date)) return '販売終了';
+        return getEventTypeLabel_(entry?.item || entry);
+    }
+
+    function compareSaleLineupEntries_(a, b) {
+        const aPermanent = Boolean(getPermanentSaleStartDate_(a));
+        const bPermanent = Boolean(getPermanentSaleStartDate_(b));
+        if (aPermanent !== bPermanent) return aPermanent ? -1 : 1;
+        return compareEventEntriesByEnd_(a, b);
+    }
+
+    function formatSaleEventDateText_(entry) {
+        if (getPermanentSaleStartDate_(entry)) {
+            const startText = formatMonthDay_(entry?.startDate);
+            return startText ? `${startText}開始` : '';
+        }
+        return formatMonthEventDateRange_(entry);
+    }
+
+    function shouldShowEventInCalendarDay_(entry, date) {
+        if (!isSaleEvent_(entry)) return true;
+        return toDateKey_(entry.startDate) === toDateKey_(date)
+            || isSaleEndCalendarDate_(entry, date);
+    }
+
     function getUpcomingEvents_(entries, today, days) {
         return entries
             .filter((entry) => isUpcomingWithinDays_(entry, today, days))
@@ -231,7 +345,7 @@
         return entries
             .filter((entry) => {
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= date && date <= end;
+                return entry.startDate <= date && date <= end && shouldShowEventInCalendarDay_(entry, date);
             })
             .sort(compareEventEntries_);
     }
@@ -829,6 +943,7 @@
 
             for (const cursor = new Date(start); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
                 if (cursor.getFullYear() !== year || cursor.getMonth() !== month) continue;
+                if (!shouldShowEventInCalendarDay_(entry, cursor)) continue;
                 const key = toDateKey_(cursor);
                 if (!byDate.has(key)) byDate.set(key, []);
                 byDate.get(key).push(entry);
@@ -869,21 +984,22 @@
 
                 const date = new Date(year, month, day);
                 const key = toDateKey_(date);
-                const dayEvents = (byDate.get(key) || [])
+                const dayEntries = (byDate.get(key) || [])
                     .slice()
-                    .sort(compareCalendarDayEvents_)
-                    .map((entry) => entry.item);
+                    .sort(compareCalendarDayEvents_);
                 cell.className = 'home-event-calendar__day';
                 cell.dataset.eventDateKey = key;
                 if (key === todayKey) cell.classList.add('is-today');
-                if (dayEvents.length) cell.classList.add('has-event');
-                if (dayEvents.length) {
-                    cell.title = dayEvents.map((item) => `${getEventTypeLabel_(item)}：${item.title || ''}`).join('\n');
+                if (dayEntries.length) cell.classList.add('has-event');
+                if (dayEntries.length) {
+                    cell.title = dayEntries
+                        .map((entry) => `${getCalendarEventLabel_(entry, date)}：${entry.item?.title || ''}`)
+                        .join('\n');
                     cell.tabIndex = 0;
                     cell.setAttribute('role', 'button');
                     cell.setAttribute('aria-label', `${formatDate(key)}のイベント一覧へ移動`);
-                    cell.dataset.eventSummaryTargets = dayEvents
-                        .map((item) => eventSummaryIdByItem.get(item))
+                    cell.dataset.eventSummaryTargets = dayEntries
+                        .map((entry) => eventSummaryIdByItem.get(entry.item))
                         .filter(Boolean)
                         .join(',');
                 }
@@ -892,14 +1008,16 @@
                 const eventList = document.createElement('div');
                 eventList.className = 'home-event-calendar__events';
 
-                dayEvents.slice(0, 4).forEach((item) => {
-                    const event = createTextElement('span', getEventTypeLabel_(item), `home-event-calendar__event home-label--${normalizeEventType_(item.type)}`);
-                    event.title = `${getEventTypeLabel_(item)}：${item.title || ''}`;
+                dayEntries.slice(0, 4).forEach((entry) => {
+                    const item = entry.item;
+                    const label = getCalendarEventLabel_(entry, date);
+                    const event = createTextElement('span', label, `home-event-calendar__event home-label--${normalizeEventType_(item.type)}`);
+                    event.title = `${label}：${item.title || ''}`;
                     eventList.append(event);
                 });
 
-                if (dayEvents.length > 4) {
-                    eventList.append(createTextElement('span', `+${dayEvents.length - 4}`, 'home-event-calendar__more'));
+                if (dayEntries.length > 4) {
+                    eventList.append(createTextElement('span', `+${dayEntries.length - 4}`, 'home-event-calendar__more'));
                 }
 
                 cell.append(dayNumber, eventList);
@@ -931,7 +1049,7 @@
         let tabEntries = [];
 
         if (summaryEventTab_ === 'upcoming') {
-            tabEntries = getUpcomingEvents_(entries, today, 7);
+            tabEntries = getUpcomingEvents_(getGeneralEventEntries_(entries), today, 7);
         } else if (summaryEventTab_ === 'tournament') {
             tabEntries = getMonthTournamentEvents_(entries, monthBase);
         } else if (summaryEventTab_ === 'month') {
@@ -939,7 +1057,7 @@
                 (Array.isArray(calendar?.events) ? calendar.events : [])
                     .map((entry) => [entry.item, entry.id])
             );
-            return getMonthEventsForDisplay_(entries, monthBase, today).map((entry, index) => ({
+            return getMonthEventsForDisplay_(getGeneralEventEntries_(entries), monthBase, today).map((entry, index) => ({
                 item: entry.item,
                 startDate: entry.startDate,
                 endDate: entry.endDate,
@@ -947,7 +1065,7 @@
                     || getEventSummaryId_(toDateKey_(entry.startDate), index, 'home-event-summary-month'),
             }));
         } else {
-            tabEntries = getOngoingEvents_(entries, today);
+            tabEntries = getOngoingEvents_(getGeneralEventEntries_(entries), today);
         }
 
         return tabEntries.map((entry, index) => ({
@@ -997,11 +1115,21 @@
         const summary = document.createElement('div');
         summary.className = 'home-event-calendar-summary';
         const entries = getSummaryTabEntries_(items, calendar);
+        const summaryAllSaleEntries = ['ongoing', 'upcoming', 'month'].includes(summaryEventTab_)
+            ? getSaleEventsForContext_(
+                getEventEntries_(items),
+                summaryEventTab_,
+                calendar?.monthBase || visibleCalendarMonth_ || getToday_(),
+                getToday_()
+            )
+            : [];
+        const summaryPermanentSaleEntries = getPermanentSaleEntries_(summaryAllSaleEntries);
+        const summarySaleEntries = getLimitedSaleEntries_(summaryAllSaleEntries);
 
         const title = createTextElement('h4', 'イベント一覧');
         summary.append(title, buildSummaryEventTabs_(calendar));
 
-        if (!entries.length) {
+        if (!entries.length && !summarySaleEntries.length) {
             summary.append(createTextElement('p', getSummaryEmptyText_(calendar), 'home-event-calendar-summary__empty'));
             return summary;
         }
@@ -1028,7 +1156,7 @@
             const meta = document.createElement('div');
             meta.className = 'home-event-calendar-summary__meta';
             meta.append(
-                createTextElement('time', formatEventRange_(item)),
+                createTextElement('time', isSaleEvent_(entry) ? formatSaleEventDateText_(entry) : formatEventRange_(item)),
                 createTextElement('span', getEventTypeLabel_(item), `home-label home-label--${normalizeEventType_(item.type)}`)
             );
             if (isEnded) {
@@ -1053,6 +1181,9 @@
         });
 
         appendEntries(visibleEntries);
+        if (!entries.length) {
+            list.append(createTextElement('p', getSummaryEmptyText_(calendar), 'home-event-desktop-empty'));
+        }
 
         if (isAppMonthList && entries.length > visibleEntries.length) {
             const remainingEntries = entries.slice(visibleEntries.length);
@@ -1067,6 +1198,37 @@
                 appendEntries(remainingEntries);
             });
             list.append(button);
+        }
+
+        appendEntries(summaryPermanentSaleEntries);
+
+        if (summarySaleEntries.length) {
+            const saleButton = createTextElement(
+                'button',
+                `販売ラインナップ（${summarySaleEntries.length}件）`,
+                'home-event-show-more home-event-sale-toggle'
+            );
+            const saleNodes = [];
+            saleButton.type = 'button';
+            saleButton.setAttribute('aria-expanded', 'false');
+            saleButton.addEventListener('click', () => {
+                const isExpanded = saleButton.getAttribute('aria-expanded') === 'true';
+                if (isExpanded) {
+                    saleNodes.splice(0).forEach((node) => node.remove());
+                    saleButton.textContent = `販売ラインナップ（${summarySaleEntries.length}件）`;
+                    saleButton.setAttribute('aria-expanded', 'false');
+                    return;
+                }
+                summarySaleEntries.slice().sort(compareSaleLineupEntries_).forEach((entry) => {
+                    const beforeLength = list.children.length;
+                    appendEntries([entry]);
+                    const node = list.children[beforeLength];
+                    if (node) saleNodes.push(node);
+                });
+                saleButton.textContent = '販売ラインナップを閉じる';
+                saleButton.setAttribute('aria-expanded', 'true');
+            });
+            list.append(saleButton);
         }
 
         summary.append(list);
@@ -1382,20 +1544,22 @@
         const entries = getEventEntries_(items);
 
         if (mobileEventTab_ === 'upcoming') {
-            appendCompactEventList_(list, getUpcomingEvents_(entries, today, 7), {
+            appendCompactEventList_(list, getUpcomingEvents_(getGeneralEventEntries_(entries), today, 7), {
                 emptyText: '今後7日間に開始するイベントはありません。',
                 getDateText: formatUpcomingMobileDate_,
+                saleEntries: getSaleEventsForContext_(entries, 'upcoming', today, today),
             });
             return;
         }
 
         if (mobileEventTab_ === 'month') {
-            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, today), {
+            appendCompactEventList_(list, getMonthEventsForDisplay_(getGeneralEventEntries_(entries), today), {
                 limit: 5,
                 showMoreButton: true,
                 markEnded: true,
                 emptyText: '今月のイベントはありません。',
                 getDateText: formatMonthEventDateRange_,
+                saleEntries: getSaleEventsForContext_(entries, 'month', today, today),
             });
             return;
         }
@@ -1409,9 +1573,10 @@
             return;
         }
 
-        appendCompactEventList_(list, getOngoingEvents_(entries, today), {
+        appendCompactEventList_(list, getOngoingEvents_(getGeneralEventEntries_(entries), today), {
             emptyText: '現在開催中のイベントはありません。',
             getDateText: (entry) => (entry.endDate ? `${formatMonthDay_(entry.endDate)}まで` : ''),
+            saleEntries: getSaleEventsForContext_(entries, 'ongoing', today, today),
         });
     }
 
@@ -1479,8 +1644,9 @@
         const meta = document.createElement('div');
         meta.className = 'home-event-desktop-card__meta';
         meta.append(createTextElement('strong', item.title || 'イベント'));
-        if (options.dateText) {
-            const time = createTextElement('time', options.dateText, 'home-event-desktop-card__date');
+        const dateText = options.dateText || formatMonthEventDateRange_(entry);
+        if (dateText) {
+            const time = createTextElement('time', dateText, 'home-event-desktop-card__date');
             time.dateTime = item.startAt || item.date || '';
             meta.append(time);
         }
@@ -1513,11 +1679,59 @@
         return card;
     }
 
-    function appendCompactEventList_(list, entries, options) {
+    function appendSaleListToggle_(list, saleEntries, options = {}) {
+        if (!Array.isArray(saleEntries) || !saleEntries.length) return;
+
+        const button = createTextElement(
+            'button',
+            `販売ラインナップ（${saleEntries.length}件）`,
+            'home-event-show-more home-event-sale-toggle'
+        );
+        const saleNodes = [];
+        button.type = 'button';
+        button.setAttribute('aria-expanded', 'false');
+        button.addEventListener('click', () => {
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                saleNodes.splice(0).forEach((node) => node.remove());
+                button.textContent = `販売ラインナップ（${saleEntries.length}件）`;
+                button.setAttribute('aria-expanded', 'false');
+                return;
+            }
+            saleEntries.slice().sort(compareSaleLineupEntries_).forEach((entry) => {
+                const today = getToday_();
+                const card = createCompactEventCard_(entry, {
+                    dateText: formatSaleEventDateText_(entry),
+                    isEnded: Boolean(options.markEnded && isEndedEvent_(entry, today)),
+                });
+                saleNodes.push(card);
+                list.append(card);
+            });
+            button.textContent = '販売ラインナップを閉じる';
+            button.setAttribute('aria-expanded', 'true');
+        });
+        list.append(button);
+    }
+
+    function appendPermanentSaleEntries_(list, saleEntries, options = {}) {
+        getPermanentSaleEntries_(Array.isArray(saleEntries) ? saleEntries : []).forEach((entry) => {
+            const today = getToday_();
+            list.append(createCompactEventCard_(entry, {
+                dateText: formatSaleEventDateText_(entry),
+                isEnded: Boolean(options.markEnded && isEndedEvent_(entry, today)),
+            }));
+        });
+    }
+
+    function appendCompactEventList_(list, entries, options = {}) {
         const limit = options.limit || entries.length;
+        const saleEntries = Array.isArray(options.saleEntries) ? options.saleEntries : [];
+        const limitedSaleEntries = getLimitedSaleEntries_(saleEntries);
         const visibleEntries = entries.slice(0, limit);
         if (!visibleEntries.length) {
             list.append(createTextElement('p', options.emptyText || '表示できるイベントはありません。', 'home-event-desktop-empty'));
+            appendPermanentSaleEntries_(list, saleEntries, options);
+            appendSaleListToggle_(list, limitedSaleEntries, options);
             return;
         }
 
@@ -1548,6 +1762,8 @@
                 appendEntries(remainingEntries);
             });
             list.append(button);
+            appendPermanentSaleEntries_(list, saleEntries, options);
+            appendSaleListToggle_(list, limitedSaleEntries, options);
             return;
         }
 
@@ -1557,24 +1773,29 @@
         if (entries.length > limit) {
             list.append(createTextElement('p', `+${entries.length - limit}件`, 'home-event-desktop-more'));
         }
+
+        appendPermanentSaleEntries_(list, saleEntries, options);
+        appendSaleListToggle_(list, limitedSaleEntries, options);
     }
 
     function renderDesktopEventTabContent_(list, entries, calendar) {
         const today = getToday_();
         if (desktopEventTab_ === 'upcoming') {
-            appendCompactEventList_(list, getUpcomingEvents_(entries, today, 7), {
+            appendCompactEventList_(list, getUpcomingEvents_(getGeneralEventEntries_(entries), today, 7), {
                 limit: 5,
                 emptyText: '今後7日間に開始するイベントはありません。',
                 getDateText: formatUpcomingMobileDate_,
+                saleEntries: getSaleEventsForContext_(entries, 'upcoming', calendar?.monthBase || visibleCalendarMonth_ || today, today),
             });
             return;
         }
 
         if (desktopEventTab_ === 'month') {
-            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, calendar?.monthBase || visibleCalendarMonth_ || today, today), {
+            appendCompactEventList_(list, getMonthEventsForDisplay_(getGeneralEventEntries_(entries), calendar?.monthBase || visibleCalendarMonth_ || today, today), {
                 markEnded: true,
                 emptyText: 'この月のイベントはありません。',
                 getDateText: formatMonthEventDateRange_,
+                saleEntries: getSaleEventsForContext_(entries, 'month', calendar?.monthBase || visibleCalendarMonth_ || today, today),
             });
             return;
         }
@@ -1589,10 +1810,11 @@
             return;
         }
 
-        appendCompactEventList_(list, getOngoingEvents_(entries, today), {
+        appendCompactEventList_(list, getOngoingEvents_(getGeneralEventEntries_(entries), today), {
             limit: 5,
             emptyText: '現在開催中のイベントはありません。',
             getDateText: (entry) => (entry.endDate ? `${formatMonthDay_(entry.endDate)}まで` : ''),
+            saleEntries: getSaleEventsForContext_(entries, 'ongoing', calendar?.monthBase || visibleCalendarMonth_ || today, today),
         });
     }
 
@@ -1627,8 +1849,9 @@
                 createTextElement('h3', `${formatDate(desktopSelectedDayKey_)} のイベント`, 'home-event-desktop-title')
             );
 
-            appendCompactEventList_(list, getEventsOnDate_(entries, desktopSelectedDayKey_), {
+            appendCompactEventList_(list, getGeneralEventEntries_(getEventsOnDate_(entries, desktopSelectedDayKey_)), {
                 emptyText: 'この日のイベントはありません。',
+                saleEntries: getSaleEventsOnDate_(entries, desktopSelectedDayKey_),
             });
 
             root.replaceChildren(head, list);
@@ -1696,20 +1919,22 @@
     function renderModalEventTabContent_(list, entries, calendar) {
         const today = getToday_();
         if (modalEventTab_ === 'upcoming') {
-            appendCompactEventList_(list, getUpcomingEvents_(entries, today, 7), {
+            appendCompactEventList_(list, getUpcomingEvents_(getGeneralEventEntries_(entries), today, 7), {
                 limit: 5,
                 emptyText: '今後7日間に開始するイベントはありません。',
                 getDateText: formatUpcomingMobileDate_,
+                saleEntries: getSaleEventsForContext_(entries, 'upcoming', calendar?.monthBase || visibleCalendarMonth_ || today, today),
             });
             return;
         }
 
         if (modalEventTab_ === 'month') {
-            appendCompactEventList_(list, getMonthEventsForDisplay_(entries, calendar?.monthBase || visibleCalendarMonth_ || today, today), {
+            appendCompactEventList_(list, getMonthEventsForDisplay_(getGeneralEventEntries_(entries), calendar?.monthBase || visibleCalendarMonth_ || today, today), {
                 limit: 8,
                 markEnded: true,
                 emptyText: 'この月のイベントはありません。',
                 getDateText: formatMonthEventDateRange_,
+                saleEntries: getSaleEventsForContext_(entries, 'month', calendar?.monthBase || visibleCalendarMonth_ || today, today),
             });
             return;
         }
@@ -1724,10 +1949,11 @@
             return;
         }
 
-        appendCompactEventList_(list, getOngoingEvents_(entries, today), {
+        appendCompactEventList_(list, getOngoingEvents_(getGeneralEventEntries_(entries), today), {
             limit: 5,
             emptyText: '現在開催中のイベントはありません。',
             getDateText: (entry) => (entry.endDate ? `${formatMonthDay_(entry.endDate)}まで` : ''),
+            saleEntries: getSaleEventsForContext_(entries, 'ongoing', calendar?.monthBase || visibleCalendarMonth_ || today, today),
         });
     }
 
@@ -1755,8 +1981,9 @@
                 createTextElement('h3', `${formatDate(modalSelectedDayKey_)} のイベント`, 'home-event-desktop-title')
             );
 
-            appendCompactEventList_(list, getEventsOnDate_(entries, modalSelectedDayKey_), {
+            appendCompactEventList_(list, getGeneralEventEntries_(getEventsOnDate_(entries, modalSelectedDayKey_)), {
                 emptyText: 'この日のイベントはありません。',
+                saleEntries: getSaleEventsOnDate_(entries, modalSelectedDayKey_),
             });
 
             panel.append(head, list);

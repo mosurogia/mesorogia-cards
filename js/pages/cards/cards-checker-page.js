@@ -223,7 +223,6 @@ window.jumpToPack = function jumpToPack(packSlug) {
 
     if (!force && tabsRoot.dataset.built === '1') return true;
 
-    reorderCollabAndSpecialSections_(); // ✅ tabs生成前に順番補正
     const sections = Array.from(document.querySelectorAll('#packs-root .pack-section[id^="pack-"]'));
     if (!sections.length) return false;
 
@@ -312,26 +311,6 @@ window.jumpToPack = function jumpToPack(packSlug) {
   }
 
     // =====================================================
-  // 4.1) pack-section の並び順を補正（コラボを特殊より上に）
-  // =====================================================
-  function reorderCollabAndSpecialSections_() {
-    const root = document.getElementById('packs-root');
-    if (!root) return;
-
-    // packs.json の slug/id をそのまま使ってる前提
-    const collab  = root.querySelector(`#pack-${CSS.escape('コラボカード')}`);
-    const special = root.querySelector(`#pack-${CSS.escape('その他特殊カード')}`);
-
-    if (!collab || !special) return;
-
-    // ✅ いま special が先、collab が後なら入れ替える（collab を special の前へ）
-    const collabIsAfter = !!(special.compareDocumentPosition(collab) & Node.DOCUMENT_POSITION_FOLLOWING);
-    if (collabIsAfter) {
-      root.insertBefore(collab, special);
-    }
-  }
-
-    // =====================================================
   // 4.5) SP：パックタブとセレクション（select）の表示順を入れ替える
   // =====================================================
   function swapPackJumpTabAndSelectOrder_() {
@@ -367,10 +346,6 @@ window.jumpToPack = function jumpToPack(packSlug) {
 
 
 function initPackJumpUi_(){
-  // ✅ まず pack-section を入れ替える（＝タブの元になる順番を直す）
-  reorderCollabAndSpecialSections_();
-
-  // ✅ 次にタブ生成（sectionsの順で作られるので、タブも入れ替わる）
   initPackJumpTabsWithRetry_();
 }
 
