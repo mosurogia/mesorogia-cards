@@ -2065,7 +2065,7 @@ footer a:hover {
     width: min(42vw, 420px);
     max-width: none;
     object-fit: cover;
-    object-position: center;
+    object-position: right center;
     opacity: .9;
     transform: none;
 }
@@ -2200,7 +2200,7 @@ footer a:hover {
         right: 0;
         bottom: 0;
         height: 100%;
-        width: min(38vw, 240px);
+        width: min(42vw, 420px);
         max-width: none;
     }
 }
