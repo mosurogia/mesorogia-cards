@@ -171,7 +171,7 @@ function bootMulliganTrainer(){
     if (!chips){
     chips = document.createElement('div');
     chips.className = 'mull-hand-chips';
-    chips.setAttribute('aria-label', '残りの山札（タイプ別）');
+    chips.setAttribute('aria-label', '残りの山札（役割別）');
 
     const ul = document.createElement('ul');
     ul.id = 'mull-remaining-by-type';

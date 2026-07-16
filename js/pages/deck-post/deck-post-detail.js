@@ -2406,7 +2406,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
           <dt>旧神</dt><dd>${escHtml_(oldGod || 'なし')}</dd>
 
           ${typeChipsPane
-            ? `<dt>タイプ構成</dt><dd><div class="post-detail-chips">${typeChipsPane}</div></dd>`
+            ? `<dt>役割構成</dt><dd><div class="post-detail-chips">${typeChipsPane}</div></dd>`
             : ''
           }
 

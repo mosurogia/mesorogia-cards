@@ -44,6 +44,9 @@
     { key: 'mana_up',   label: 'マナ獲得', test: c => inSet_(normEnum_(c.mana_effect), ['UP','BOTH']) },
     { key: 'mana_down', label: 'マナ削減', test: c => inSet_(normEnum_(c.mana_effect), ['DOWN','BOTH']) },
 
+    { key: 'cost_up',   label: 'コスト増', test: c => inSet_(normEnum_(c.cost_effect), ['UP','BOTH']) },
+    { key: 'cost_down', label: 'コスト減', test: c => inSet_(normEnum_(c.cost_effect), ['DOWN','BOTH']) },
+
     // ⑬ 奪う：life/power/mana のいずれかが STEAL
     { key: 'steal', label: '奪う', test: c => {
         const le = normEnum_(c.life_effect);
@@ -523,7 +526,7 @@
             <li>カードグループの作成・編集は、図鑑ページで行えます</li>
         </ul>
         `,
-    'タイプ': `
+    '役割': `
         <ul>
             <li>チャージャー / アタッカー / ブロッカー で絞り込み</li>
             <li>複数選択も可能</li>
@@ -690,14 +693,14 @@
         return wrapper;
     }
 
-    // 2択/複数の横並び（タイプ・レア・BP・特殊効果など）
-    function createRangeStyleWrapper_(title, list, filterKey) {
+    // 2択/複数の横並び（役割・レア・BP・特殊効果など）
+    function createRangeStyleWrapper_(title, list, filterKey, groupKey = title) {
     const { wrapper } = createFilterBlock_(title);
     wrapper.classList.add('filter-range-wrapper');
 
     const groupDiv = document.createElement('div');
     groupDiv.className = 'filter-group';
-    groupDiv.dataset.key = title;
+    groupDiv.dataset.key = groupKey;
 
     list.forEach(item => {
         const btn = document.createElement('button');
@@ -1354,7 +1357,7 @@
         personalFilters.appendChild(createOwnedFilter4Buttons_()); // 所持フィルター（所持データがある時だけ）
         }
         personalFilters.appendChild(createCardGroupFilterBlock_()); // カードグループフィルター
-        mainFilters.appendChild(createRangeStyleWrapper_('タイプ', types, 'type'));
+        mainFilters.appendChild(createRangeStyleWrapper_('役割', types, 'type', 'タイプ'));
         mainFilters.appendChild(createRangeStyleWrapper_('レアリティ', rarities, 'rarity'));
         mainFilters.appendChild(packWrapper);
         mainFilters.appendChild(createButtonGroup_('種族', races, 'race'));
@@ -1885,6 +1888,7 @@
         life_effect:    card.dataset.life_effect,
         power_effect:   card.dataset.power_effect,
         mana_effect:    card.dataset.mana_effect,
+        cost_effect:    card.dataset.cost_effect,
 
         cost: parseInt(card.dataset.cost),
         power: parseInt(card.dataset.power),

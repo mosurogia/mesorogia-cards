@@ -1117,7 +1117,7 @@
               <dt>旧神</dt><dd>${escapeHtml(oldGod || 'なし')}</dd>
 
               ${typeChipsHtml
-                ? `<dt>タイプ構成</dt><dd><div class="post-detail-chips">${typeChipsHtml}</div></dd>`
+                ? `<dt>役割構成</dt><dd><div class="post-detail-chips">${typeChipsHtml}</div></dd>`
                 : ''
               }
 

@@ -70,7 +70,7 @@
     panel.id = 'cardPickFilters';
     panel.className = 'card-pick-filters';
     panel.innerHTML = `
-      <div class="type-quick-filter card-pick-type-filter" aria-label="タイプで絞り込み">
+      <div class="type-quick-filter card-pick-type-filter" aria-label="役割で絞り込み">
         ${makeTypeButtonHtml_('', 'img/type-all.webp', 'All', true)}
         ${makeTypeButtonHtml_('チャージャー', 'img/type-charger.webp', 'Charger', false)}
         ${makeTypeButtonHtml_('アタッカー', 'img/type-attacker.webp', 'Attacker', false)}

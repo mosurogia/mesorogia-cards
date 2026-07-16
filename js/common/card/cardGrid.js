@@ -81,6 +81,7 @@
         setData_(cardDiv, 'data-life_effect', card.life_effect ?? '');
         setData_(cardDiv, 'data-power_effect', card.power_effect ?? '');
         setData_(cardDiv, 'data-mana_effect', card.mana_effect ?? '');
+        setData_(cardDiv, 'data-cost_effect', card.cost_effect ?? '');
 
         // --- 新列（ability_*）---（個別でも持たせる：後で絞り込みに使える）
         setData_(cardDiv, 'data-ability_burn', flagToStr_(card.ability_burn));

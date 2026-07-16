@@ -536,7 +536,7 @@
             </div>
           </div>
         </div>
-        <div class="saved-deck-summary" aria-label="デッキ枚数とタイプ別枚数">
+        <div class="saved-deck-summary" aria-label="デッキ枚数と役割別枚数">
           <div class="saved-deck-summary-head">
             <span class="saved-deck-count-label">${escapeHtml_(count)}</span>
             ${codeStatus}
