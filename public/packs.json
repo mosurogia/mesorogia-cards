@@ -57,6 +57,13 @@
       "selector": "#pack-honor-of-the-brave-heart"
     },
     {
+      "en": "Illustrated Illusion",
+      "jp": "描画された幻想",
+      "slug": "illustrated-illusion",
+      "key": "illustrated-illusion",
+      "selector": "#pack-illustrated-illusion"
+    },
+    {
       "en": "その他特殊カード",
       "jp": "",
       "slug": "その他特殊カード",
@@ -80,6 +87,7 @@
     "Fallen Fate",
     "Glory of the Gods",
     "Honor of the Brave Heart",
+    "Illustrated Illusion",
     "その他特殊カード",
     "コラボカード"
   ]

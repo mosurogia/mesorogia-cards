@@ -988,6 +988,11 @@
     --pack-stroke: rgba(var(--pack-h-accent-rgb), .7);
 }
 
+#cardDetailDrawer .carddetail-pack[data-pack="I"] {
+    --pack-bg: var(--pack-i-rgb);
+    --pack-stroke: rgba(var(--pack-i-accent-rgb), .7);
+}
+
 #cardDetailDrawer .carddetail-pack[data-pack="SPECIAL"] {
     --pack-bg: var(--pack-special-rgb);
     --pack-stroke: rgba(var(--pack-special-accent-rgb), .7);

@@ -132,7 +132,7 @@
     transition: filter .15s ease, transform .06s ease, box-shadow .15s ease;
 }
 
-/* 0.2) タイプ即時フィルター（PC基本） */
+/* 0.2) 役割（タイプ）即時フィルター（PC基本） */
 .type-quick-filter {
     order: 2;
     display: flex;
@@ -522,6 +522,11 @@ body.is-card-pick-open #deckpeek-button {
 .card-pick-option[data-pack="Honor of the Brave Heart"] {
     --ring: rgb(var(--pack-h-rgb));
     --ring-accent: rgb(var(--pack-h-accent-rgb));
+}
+
+.card-pick-option[data-pack="Illustrated Illusion"] {
+    --ring: rgb(var(--pack-i-rgb));
+    --ring-accent: rgb(var(--pack-i-accent-rgb));
 }
 
 .card-pick-option[data-pack="その他特殊カード"] {
@@ -1982,6 +1987,11 @@ body.is-card-pick-open #deckpeek-button {
 .filter-group[data-key="パック名"] .filter-btn[data-pack="Honor of the Brave Heart"] {
     --ring: rgb(var(--pack-h-rgb));
     --ring-accent: rgb(var(--pack-h-accent-rgb));
+}
+
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Illustrated Illusion"] {
+    --ring: rgb(var(--pack-i-rgb));
+    --ring-accent: rgb(var(--pack-i-accent-rgb));
 }
 
 

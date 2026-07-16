@@ -76,6 +76,9 @@
     /*Hパック*/
     --pack-h-rgb: 95, 115, 145;
     --pack-h-accent-rgb: 225, 175, 95;
+    /*Iパック*/
+    --pack-i-rgb: 58, 90, 185;
+    --pack-i-accent-rgb: 205, 225, 255;
     /* 特殊：ダークパープル（異質・限定感） */
     --pack-special-rgb: 200, 170, 70;
     --pack-special-accent-rgb: 255, 220, 120;

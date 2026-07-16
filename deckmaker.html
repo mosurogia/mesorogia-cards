@@ -34,7 +34,7 @@
 
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-05-30-005">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-06-22-003">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-07-17-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/page2.css?v=2026-06-21-001">
@@ -200,7 +200,7 @@
             <div class="search-bar-left">
                 <!-- キーワード検索 -->
                 <input id="keyword" oninput="applyFilters()" placeholder="カード検索" type="text">
-                <!-- タイプ即時フィルター -->
+                <!-- 役割（タイプ）即時フィルター -->
                 <div class="type-quick-filter">
                     <button type="button" class="type-icon-btn is-active" data-type="">
                         <img src="img/type-all.webp" alt="All">
@@ -460,9 +460,9 @@
                     <div class="info-value" id="rarity-summary">🌈レジェンド0枚 🟡ゴールド0枚 ⚪️シルバー0枚 🟤ブロンズ0枚</div>
                 </div>
 
-                <!-- 使用タイプ内訳 -->
+                <!-- 使用役割（タイプ）内訳 -->
                 <div class="info-row">
-                    <div class="info-label">タイプ構成</div>
+                    <div class="info-label">役割構成</div>
                     <div class="info-value">
                         <div id="type-summary" class="type-summary">
                             <!-- JSでチップを自動挿入 -->
@@ -506,7 +506,7 @@
 
                     <div class="mull-layout">
                         <!-- 残り山札（枚数） -->
-                        <div class="mull-hand-chips" aria-label="残りの山札（タイプ別）">
+                        <div class="mull-hand-chips" aria-label="残りの山札（役割別）">
                             <span class="mull-hand-chips-label">残りの山札：</span>
                             <ul id="mull-remaining-by-type" class="mull-remaining-list"></ul>
                         </div>
@@ -1269,7 +1269,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-07-12-009"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-07-17-002"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
@@ -1281,14 +1281,14 @@
 <script src="js/common/ui/tabs.js?v=2026-05-05-007"></script>
 
 <!-- カード共通 -->
-<script src="js/common/card/cardGrid.js?v=2026-05-05-007"></script>
+<script src="js/common/card/cardGrid.js?v=2026-07-17-001"></script>
 <script src="js/common/card/card-detail.js?v=2026-06-22-003"></script>
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-007"></script>
 <script src="js/common/card/card-pick-modal.js?v=2026-05-05-007"></script>
 
 <script src="js/common/filter/keyword-filter.js?v=2026-05-05-007"></script>
 <script src="js/common/filter/chip-bar.js?v=2026-05-05-007"></script>
-<script src="js/common/card/cardFilter.js?v=2026-06-22-001"></script>
+<script src="js/common/card/cardFilter.js?v=2026-07-17-001"></script>
 
 
 <!-- デッキ保存 -->
