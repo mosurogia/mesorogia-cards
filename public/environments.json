@@ -71,6 +71,15 @@
       "kind": "pack",
       "note": "Honor of the Brave Heart 「不屈の誇り」実装",
       "is_enabled": true
+    },
+    {
+      "env_id": "2026-07-i-pack",
+      "label": "Iパック環境",
+      "start_at": "2026-07-16",
+      "end_at": "",
+      "kind": "pack",
+      "note": "Illustrated Illusion 「描画された幻想」実装",
+      "is_enabled": true
     }
   ]
 }

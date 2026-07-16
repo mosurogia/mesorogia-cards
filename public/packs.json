@@ -64,18 +64,18 @@
       "selector": "#pack-illustrated-illusion"
     },
     {
-      "en": "その他特殊カード",
-      "jp": "",
-      "slug": "その他特殊カード",
-      "key": "その他特殊カード",
-      "selector": "#pack-その他特殊カード"
-    },
-    {
       "en": "コラボカード",
       "jp": "",
       "slug": "コラボカード",
       "key": "コラボカード",
       "selector": "#pack-コラボカード"
+    },
+    {
+      "en": "その他特殊カード",
+      "jp": "",
+      "slug": "その他特殊カード",
+      "key": "その他特殊カード",
+      "selector": "#pack-その他特殊カード"
     }
   ],
   "order": [
@@ -88,7 +88,7 @@
     "Glory of the Gods",
     "Honor of the Brave Heart",
     "Illustrated Illusion",
-    "その他特殊カード",
-    "コラボカード"
+    "コラボカード",
+    "その他特殊カード"
   ]
 }
