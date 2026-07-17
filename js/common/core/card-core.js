@@ -265,6 +265,7 @@
         life_effect: (card.life_effect ?? '').trim(),
         power_effect: (card.power_effect ?? '').trim(),
         mana_effect: (card.mana_effect ?? '').trim(),
+        cost_effect: (card.cost_effect ?? '').trim(),
 
         ability_burn: !!card.ability_burn,
         ability_bind: !!card.ability_bind,
