@@ -352,6 +352,18 @@
       "sortOrder": 9999
     },
     {
+      "date": "2026-07-24",
+      "title": "エマちー杯練習大会",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "20時開催\nTonamel開催\n構築済みデッキ限定！",
+      "startAt": "2026-07-24T20:00",
+      "endAt": "2026-07-25T00:00",
+      "url": "https://t.co/1iVmkfubUf",
+      "image": "img/イベントカレンダー/エマちー杯練習大会.png",
+      "sortOrder": 9999
+    },
+    {
       "date": "2026-07-25",
       "title": "分解生成イベント",
       "type": "分解生成",
