@@ -24,6 +24,45 @@
         return String(v ?? '').toLowerCase();
     }
 
+    // リーサルプランで使用する打点を種類別に整理する
+    function getLethalValues_(lethalEntry){
+        if (!lethalEntry) return [];
+        const values = Array.isArray(lethalEntry.values) ? lethalEntry.values : [];
+        const repeatValue = lethalEntry.repeat?.value;
+        return [...values, repeatValue]
+        .map(Number)
+        .filter(value => Number.isFinite(value) && value > 0);
+    }
+
+    // 旧形式の lethal_burn（数値・カンマ区切り・「*」付き）にも対応する
+    function getLegacyLethalBurnValues_(value){
+        return String(value ?? '')
+        .split(',')
+        .map(item => Number(item.replace('*', '').trim()))
+        .filter(item => Number.isFinite(item) && item > 0);
+    }
+
+    function getCardLethalFilterValues_(card){
+        const attackValues = getLethalValues_(card.lethal?.attack);
+        const lethalBurnValues = getLethalValues_(card.lethal?.lethalBurn);
+        const combinedAttackValues = attackValues.flatMap(attack =>
+        lethalBurnValues.map(burn => attack + burn)
+        );
+
+        return {
+        attack: [...new Set([...attackValues, ...combinedAttackValues])].sort((a, b) => a - b),
+        burn: [...new Set([
+            ...getLethalValues_(card.lethal?.freeBurn),
+            ...lethalBurnValues,
+            ...getLegacyLethalBurnValues_(card.lethal_burn),
+        ])].sort((a, b) => a - b),
+        buff: [...new Set([
+            ...getLethalValues_(card.lethal?.freeBuff),
+            ...getLethalValues_(card.lethal?.lethalBuff),
+        ])].sort((a, b) => a - b),
+        };
+    }
+
     function buildKeywords_(card){
         return [
         card.name, card.race, card.category, card.type,
@@ -67,6 +106,11 @@
         setData_(cardDiv, 'data-pack', (card.packName ?? card.pack_name ?? ''));
         setData_(cardDiv, 'data-cv', (card.CV ?? ''));
         setData_(cardDiv, 'data-cv-kana', (card.cv_kana ?? ''));
+
+        const lethalValues = getCardLethalFilterValues_(card);
+        setData_(cardDiv, 'data-lethal-attack', lethalValues.attack.join(','));
+        setData_(cardDiv, 'data-lethal-burn', lethalValues.burn.join(','));
+        setData_(cardDiv, 'data-lethal-buff', lethalValues.buff.join(','));
 
         // 効果まとめ（検索用）
         const effectJoined = [card.effect_name1, card.effect_text1, card.effect_name2, card.effect_text2]

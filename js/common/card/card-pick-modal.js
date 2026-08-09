@@ -13,6 +13,7 @@
   let cardPickDeckOverride_ = null;
   const cardPickFilters_ = {
     type: '',
+    race: '',
     category: '',
     pack: '',
     deckOnly: false,
@@ -70,7 +71,7 @@
     panel.id = 'cardPickFilters';
     panel.className = 'card-pick-filters';
     panel.innerHTML = `
-      <div class="type-quick-filter card-pick-type-filter" aria-label="役割で絞り込み">
+      <div class="type-quick-filter card-pick-type-filter" aria-label="タイプで絞り込み">
         ${makeTypeButtonHtml_('', 'img/type-all.webp', 'All', true)}
         ${makeTypeButtonHtml_('チャージャー', 'img/type-charger.webp', 'Charger', false)}
         ${makeTypeButtonHtml_('アタッカー', 'img/type-attacker.webp', 'Attacker', false)}
@@ -78,8 +79,8 @@
       </div>
 
       <div class="card-pick-folder-row">
-        <details class="card-pick-folder" id="cardPickCategoryFolder" data-card-pick-folder="category">
-          <summary>カテゴリ</summary>
+        <details class="card-pick-folder" id="cardPickCategoryFolder" data-card-pick-folder="raceCategory">
+          <summary>種族・カテゴリ</summary>
           <div class="card-pick-option-list" id="cardPickCategoryOptions"></div>
         </details>
         <details class="card-pick-folder" id="cardPickPackFolder" data-card-pick-folder="pack">
@@ -145,6 +146,7 @@
           cd5,
           name,
           type: String(card.type || '').trim(),
+          race: String(card.race || '').trim(),
           category: String(card.category || '').trim(),
           pack: getCardPackLabel_(card),
         } : null;
@@ -156,6 +158,7 @@
         const q = String(query || '').trim().toLowerCase();
         const rows = Array.isArray(window.__cardNameIndex) ? window.__cardNameIndex : [];
         const type = String(filters.type || '').trim();
+        const race = String(filters.race || '').trim();
         const category = String(filters.category || '').trim();
         const pack = String(filters.pack || '').trim();
         const deckOnly = !!filters.deckOnly;
@@ -165,6 +168,7 @@
           if (deckCds && !deckCds.has(normCd5_(row.cd5 || row.cd))) return false;
           if (q && !String(row.name || '').toLowerCase().includes(q)) return false;
           if (type && String(row.type || '') !== type) return false;
+          if (race && String(row.race || '') !== race) return false;
           if (category && String(row.category || '') !== category) return false;
           if (pack && String(row.pack || '') !== pack) return false;
           return true;
@@ -205,6 +209,7 @@
 
     function filterOptionAttrs_(key, value) {
       if (key === 'pack') return ` data-pack="${escHtml_(value)}"`;
+      if (key === 'race') return ` data-race="${escHtml_(value)}" data-cat-race="${escHtml_(value)}"`;
       if (key === 'category') {
         const race = typeof window.getCategoryRace === 'function'
           ? window.getCategoryRace(value)
@@ -214,17 +219,50 @@
       return '';
     }
 
-    function fillOptions(el, values, key) {
-      if (!el) return;
+    function makeOptionButtonHtml_(value, key) {
       const current = cardPickFilters_[key];
-      const buttons = values.map((value) => `
+      return `
         <button type="button" class="card-pick-option is-ring${value === current ? ' is-active' : ''}" data-card-pick-filter="${escHtml_(key)}" data-value="${escHtml_(value)}"${filterOptionAttrs_(key, value)}>
           ${escHtml_(value)}
         </button>
-      `);
+      `;
+    }
+
+    function fillOptions(el, values, key) {
+      if (!el) return;
+      const buttons = values.map((value) => makeOptionButtonHtml_(value, key));
       el.innerHTML = buttons.length
         ? buttons.join('')
         : '<div class="card-pick-option-empty">選択できる項目がありません</div>';
+    }
+
+    function buildRaceCategoryOptions_(categories, races) {
+      const categorySet = new Set(categories);
+      const raceSet = new Set(races);
+      const html = [];
+      const usedCategories = new Set();
+      const groups = Array.isArray(window.CATEGORY_GROUPS) ? window.CATEGORY_GROUPS : [];
+      const raceOrder = Array.isArray(window.RACE_ORDER_all) ? window.RACE_ORDER_all : [];
+
+      raceOrder.forEach((race) => {
+        if (!raceSet.has(race)) return;
+        html.push(makeOptionButtonHtml_(race, 'race'));
+
+        const group = groups.find((item) => String(item?.race || '') === race);
+        const groupCategories = Array.isArray(group?.list) ? group.list : [];
+        groupCategories.forEach((category) => {
+          if (!categorySet.has(category)) return;
+          usedCategories.add(category);
+          html.push(makeOptionButtonHtml_(category, 'category'));
+        });
+      });
+
+      categories.forEach((category) => {
+        if (usedCategories.has(category)) return;
+        html.push(makeOptionButtonHtml_(category, 'category'));
+      });
+
+      return html;
     }
 
     const categories = [...new Set(rows.map(row => row.category).filter(Boolean))]
@@ -234,10 +272,25 @@
         if (orderA !== orderB) return orderA - orderB;
         return a.localeCompare(b, 'ja');
       });
+    const races = [...new Set(rows.map(row => row.race).filter(Boolean))]
+      .sort((a, b) => {
+        const order = Array.isArray(window.RACE_ORDER_all) ? window.RACE_ORDER_all : [];
+        const orderA = order.indexOf(a);
+        const orderB = order.indexOf(b);
+        const rankA = orderA === -1 ? 9999 : orderA;
+        const rankB = orderB === -1 ? 9999 : orderB;
+        if (rankA !== rankB) return rankA - rankB;
+        return a.localeCompare(b, 'ja');
+      });
     const packs = [...new Set(rows.map(row => row.pack).filter(Boolean))]
       .sort((a, b) => a.localeCompare(b, 'ja'));
 
-    fillOptions(categoryEl, categories, 'category');
+    if (categoryEl) {
+      const raceCategoryButtons = buildRaceCategoryOptions_(categories, races);
+      categoryEl.innerHTML = raceCategoryButtons.length
+        ? raceCategoryButtons.join('')
+        : '<div class="card-pick-option-empty">選択できる項目がありません</div>';
+    }
     fillOptions(packEl, packs, 'pack');
   }
 
@@ -278,7 +331,10 @@
 
     document.querySelectorAll('.card-pick-folder').forEach((folder) => {
       const key = folder.dataset.cardPickFolder || '';
-      folder.classList.toggle('is-active', !!cardPickFilters_[key]);
+      const active = key === 'raceCategory'
+        ? !!cardPickFilters_.race || !!cardPickFilters_.category
+        : !!cardPickFilters_[key];
+      folder.classList.toggle('is-active', active);
     });
 
     const deckCds = getCurrentDeckCdSet_();
@@ -334,6 +390,7 @@
 
   function resetCardPickFilters_() {
     cardPickFilters_.type = '';
+    cardPickFilters_.race = '';
     cardPickFilters_.category = '';
     cardPickFilters_.pack = '';
     cardPickFilters_.deckOnly = false;
@@ -441,7 +498,10 @@
           const key = filterBtn.dataset.cardPickFilter;
           if (!Object.prototype.hasOwnProperty.call(cardPickFilters_, key)) return;
           const value = String(filterBtn.dataset.value || '').trim();
-          cardPickFilters_[key] = cardPickFilters_[key] === value ? '' : value;
+          const nextValue = cardPickFilters_[key] === value ? '' : value;
+          cardPickFilters_[key] = nextValue;
+          if (key === 'race' && nextValue) cardPickFilters_.category = '';
+          if (key === 'category' && nextValue) cardPickFilters_.race = '';
           filterBtn.closest('.card-pick-folder')?.removeAttribute('open');
           syncCardPickFilterUi_();
           renderCardPickResult_(queryEl?.value || '');

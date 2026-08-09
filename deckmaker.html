@@ -34,7 +34,7 @@
 
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-07-17-006">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-07-17-002">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-07-18-001">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/page2.css?v=2026-06-21-001">
@@ -282,7 +282,10 @@
 
 <!--使用不可種族表示非表示ボタン-->
 <div class="deck-filter-bar">
-    <button type="button" class="filter-toggle-button deck-filter-action deck-filter-action-hand" onclick="goToMulliganTrainer()" aria-label="マリガンシミュレーションまで移動">マリガン</button>
+    <button type="button" class="filter-toggle-button deck-filter-action deck-filter-action-hand" onclick="goToDeckInfoTab()" aria-label="デッキ分析タブへ移動">分析へ</button>
+    <div id="mulligan-analysis-guide" class="mulligan-analysis-guide" role="status" hidden>
+        マリガンを試してみよう！
+    </div>
     <button type="button" class="filter-toggle-button deck-filter-action deck-filter-action-post" onclick="goToAnalyzeTab()" aria-label="デッキ投稿タブへ移動">投稿へ</button>
     <button id="resetDeckButton" type="button" class="filter-toggle-button deck-filter-action deck-filter-action-danger">リセット</button>
     <button id="toggle-invalid-race" type="button" class="filter-toggle-button deck-filter-action deck-filter-action-invalid" aria-label="使用種族のみと全種族表示を切り替え">全種族表示</button>
@@ -543,6 +546,44 @@
                     </div>
                 </div>
 
+                <!-- リーサルプラン仮組 -->
+                <section class="lethal-planner" id="lethal-planner" aria-labelledby="lethal-planner-title">
+                    <div class="lethal-planner__header">
+                        <h3 class="lethal-planner__title" id="lethal-planner-title">
+                            リーサルプラン<span class="lethal-planner__title-badge">ベータ版</span>
+                        </h3>
+                        <button class="lethal-planner__auto-button" id="lethal-planner-auto" type="button">
+                            自動生成
+                        </button>
+                    </div>
+                    <div class="lethal-planner__auto-results" id="lethal-planner-auto-results"
+                        aria-live="polite"></div>
+                    <div class="lethal-planner__expression" id="lethal-planner-expression">
+                        = 0
+                    </div>
+                    <div class="lethal-planner__groups" id="lethal-planner-groups"></div>
+                    <div class="lethal-planner__cards">
+                        <h4 class="lethal-planner__cards-title">候補カード</h4>
+                        <div class="lethal-planner__card-list" id="lethal-planner-card-list">
+                            式に追加すると候補カードを表示します
+                        </div>
+                        <p class="lethal-planner__cards-guide">
+                            実際に使用するアタッカーなどを、カードの<span class="lethal-planner__operation lethal-planner__operation--mobile">タップ</span><span class="lethal-planner__operation lethal-planner__operation--desktop">クリック</span>で選択できます。
+                        </p>
+                    </div>
+                    <div class="lethal-planner__beta-report" aria-label="リーサル機能のβ報告">
+                        <span class="lethal-planner__beta-label">
+                            候補や計算が違う場合は、情報をコピーして報告できます。
+                        </span>
+                        <div class="lethal-planner__beta-actions">
+                            <button type="button" class="lethal-planner__beta-button"
+                                data-lethal-report>情報をコピーして報告</button>
+                        </div>
+                        <span class="lethal-planner__copy-status" data-lethal-copy-status
+                            role="status" aria-live="polite"></span>
+                    </div>
+                </section>
+
                 <!--グラフ分布-->
                 <div class="deckmaker-charts">
 
@@ -677,6 +718,30 @@
                         ※迷ったら「記事構成を追加」から選ぶと、必要な見出しをまとめて追加できます。
                     </div>
                     <textarea id="post-note" name="note" rows="10" placeholder="デッキの動きやプレイ方針を書いてください。記事構成や解説項目で見出しを追加でき、文中にカード名を入れたい時は「文中にカードを追加」から選べます。"required></textarea>
+                    </div>
+                </div>
+
+                <!-- 投稿用リーサルプラン -->
+                <div class="info-row post-lethal-row">
+                    <div class="info-label any post-lethal-label">
+                        <div class="post-lethal-label__title">リーサルプラン</div>
+                        <div class="any-text">(任意)</div>
+                        <span class="lethal-planner__title-badge">ベータ版</span>
+                    </div>
+                    <div class="info-value post-lethal-editor">
+                        <section class="lethal-planner post-lethal-planner" aria-labelledby="post-lethal-registered-title">
+                            <div class="lethal-planner__registration" id="lethal-planner-registration">
+                                <div class="lethal-planner__registered-header">
+                                    <h4 class="lethal-planner__registered-title" id="post-lethal-registered-title">登録済みリーサルプラン（<span
+                                            id="lethal-planner-registered-count">0/3</span>）</h4>
+                                    <button type="button" class="lethal-planner__register-button"
+                                        id="post-lethal-open-register">新規追加</button>
+                                </div>
+                                <div class="lethal-planner__registered-list" id="lethal-planner-registered-list">
+                                    <p class="lethal-planner__registered-empty">まだ登録されていません</p>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
 
@@ -1016,6 +1081,37 @@
         </div>
 </div>
 
+<!-- リーサル登録：使用カード選択モーダル -->
+<div id="post-lethal-card-modal" class="modal post-lethal-card-modal" style="display:none;" aria-hidden="true">
+    <div class="modal-content lethal-planner post-lethal-card-modal__content" role="dialog" aria-modal="true" aria-labelledby="post-lethal-card-modal-title">
+        <button type="button" class="modal-close-x" id="post-lethal-card-modal-close" aria-label="閉じる">×</button>
+        <div class="lethal-planner__header">
+            <h3 class="lethal-planner__title" id="post-lethal-card-modal-title">
+                リーサルプラン追加<span class="lethal-planner__title-badge">ベータ版</span>
+            </h3>
+            <button type="button" class="lethal-planner__auto-button" id="post-lethal-auto">自動生成</button>
+        </div>
+        <div class="lethal-planner__auto-results" id="post-lethal-auto-results" aria-live="polite"></div>
+        <div class="lethal-planner__expression" id="post-lethal-expression">= 0</div>
+        <div class="lethal-planner__groups" id="post-lethal-groups"></div>
+        <div class="post-lethal-modal-candidates">
+            <div class="post-lethal-modal-candidates__header">
+                <h4 class="lethal-planner__cards-title">アタッカー構成</h4>
+                <button type="button" class="post-lethal-candidate-toggle" id="post-lethal-candidate-toggle">全てにチェック</button>
+            </div>
+            <p class="post-hint">そのリーサルで使うアタッカー構成にチェックしてください</p>
+        </div>
+        <div id="post-lethal-card-modal-list" class="lethal-planner__card-list"></div>
+        <button type="button" class="lethal-planner__register-button" id="lethal-planner-register">選択した組み合わせを登録</button>
+        <div class="lethal-planner__beta-report" aria-label="リーサル機能のβ報告">
+            <span class="lethal-planner__beta-label">候補や計算が違う場合は、情報をコピーして報告できます。</span>
+            <div class="lethal-planner__beta-actions"><button type="button" class="lethal-planner__beta-button"
+                    data-lethal-report>情報をコピーして報告</button></div>
+            <span class="lethal-planner__copy-status" data-lethal-copy-status role="status" aria-live="polite"></span>
+        </div>
+    </div>
+</div>
+
 <!-- ▼ カード解説：候補選択モーダル -->
 <div class="modal" id="cardNoteSelectModal" style="display:none;">
     <div class="modal-content cardnote-modal">
@@ -1264,9 +1360,9 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/core/defs.js?v=2026-07-12-009"></script>
+<script src="js/common/core/defs.js?v=2026-08-06-001"></script>
 <script src="js/common/core/event-features.js?v=2026-07-17-001"></script>
-<script src="js/common/core/card-core.js?v=2026-07-17-019"></script>
+<script src="js/common/core/card-core.js?v=2026-07-24-020"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-007"></script>
 <script src="js/common/core/card-sort.js?v=2026-07-17-005"></script>
 
@@ -1279,7 +1375,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-07-17-018"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-07-18-001"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
@@ -1294,7 +1390,7 @@
 <script src="js/common/card/cardGrid.js?v=2026-07-17-001"></script>
 <script src="js/common/card/card-detail.js?v=2026-06-22-003"></script>
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-007"></script>
-<script src="js/common/card/card-pick-modal.js?v=2026-05-05-007"></script>
+<script src="js/common/card/card-pick-modal.js?v=2026-07-18-001"></script>
 
 <script src="js/common/filter/keyword-filter.js?v=2026-05-05-007"></script>
 <script src="js/common/filter/chip-bar.js?v=2026-05-05-007"></script>

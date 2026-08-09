@@ -14,6 +14,7 @@
   const FILES = [
     'deckmaker-entry.js',
     'deckmaker-deck.js',
+    'deckmaker-lethal-post.js',
     'deckmaker-filter.js',
     'deckmaker-ui.js',
     'deckmaker-shortage-ui.js',

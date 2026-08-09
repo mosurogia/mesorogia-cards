@@ -418,6 +418,9 @@
         : payload?.cardNotes
     );
     item.hasCardNotes = item.cardNotes.some((row) => row && (row.cd || row.text));
+    item.lethalPlans = Array.isArray(src.lethalPlans)
+      ? src.lethalPlans
+      : (Array.isArray(payload?.lethalPlans) ? payload.lethalPlans : []);
     item.deckNoteLength = Array.from(String(item.deckNote || '').trim()).length;
     item.__detailPayloadLoaded = true;
     return item;
@@ -948,6 +951,7 @@
     const tagsUser = window.DeckPostFilter?.tagChipsUser?.(item.tagsUser) || '';
     const deckList = D.buildDeckListHtml?.(item) || '';
     const cardNotesHtml = D.buildCardNotesHtml?.(item) || '';
+    const lethalPlansHtml = D.buildLethalPlansHtml_?.(item) || '';
 
     const posterXRaw = String(item.posterX || '').trim();
     const posterXLabel = posterXRaw;
@@ -1142,6 +1146,8 @@
                   （平均チャージ量：<span id="avg-charge-${escapeHtml(spPaneId)}">-</span>）
                 </span>
               </dd>
+
+              ${lethalPlansHtml ? `<dt class="lethal-plan-label">リーサルプラン<span class="lethal-planner__title-badge">ベータ版</span></dt><dd>${lethalPlansHtml}</dd>` : ''}
             </dl>
 
             <div class="deck-compare-block">

@@ -6,6 +6,54 @@
 (function () {
   'use strict';
 
+  const MULLIGAN_ANALYSIS_GUIDE_KEY = 'deckmaker_mulligan_analysis_guide_seen_at';
+  const MULLIGAN_ANALYSIS_GUIDE_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
+  const MULLIGAN_ANALYSIS_GUIDE_HIDE_MS = 10000;
+  const MULLIGAN_ANALYSIS_GUIDE_DISABLE_RECENT_CHECK = false;
+  const MULLIGAN_ANALYSIS_GUIDE_RESET_ON_RELOAD = true;
+  let mulliganAnalysisGuideTimer = 0;
+
+  if (MULLIGAN_ANALYSIS_GUIDE_RESET_ON_RELOAD) {
+    try { localStorage.removeItem(MULLIGAN_ANALYSIS_GUIDE_KEY); } catch (_) {}
+  }
+
+  function getDeckCardCount() {
+    return Object.values(window.deck || {}).reduce((sum, count) => sum + (count | 0), 0);
+  }
+
+  function hasRecentlyShownMulliganAnalysisGuide_() {
+    if (MULLIGAN_ANALYSIS_GUIDE_DISABLE_RECENT_CHECK) return false;
+    try {
+      const last = Number(localStorage.getItem(MULLIGAN_ANALYSIS_GUIDE_KEY) || 0);
+      return last > 0 && Date.now() - last < MULLIGAN_ANALYSIS_GUIDE_INTERVAL_MS;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  function updateMulliganAnalysisGuide_() {
+    const guide = document.getElementById('mulligan-analysis-guide');
+    if (!guide) return;
+
+    const isBuildVisible = document.getElementById('build')?.classList.contains('active');
+    const shouldShow = isBuildVisible
+      && getDeckCardCount() >= 30
+      && !hasRecentlyShownMulliganAnalysisGuide_();
+
+    if (mulliganAnalysisGuideTimer) {
+      clearTimeout(mulliganAnalysisGuideTimer);
+      mulliganAnalysisGuideTimer = 0;
+    }
+    guide.hidden = !shouldShow;
+    if (!shouldShow) return;
+
+    try { localStorage.setItem(MULLIGAN_ANALYSIS_GUIDE_KEY, String(Date.now())); } catch (_) {}
+    mulliganAnalysisGuideTimer = window.setTimeout(() => {
+      guide.hidden = true;
+      mulliganAnalysisGuideTimer = 0;
+    }, MULLIGAN_ANALYSIS_GUIDE_HIDE_MS);
+  }
+
   // タブ切替後の共通処理（タブ固有処理は tab:switched 内で分岐）
   window.afterTabSwitched ??= function (targetId) {};
 
@@ -21,6 +69,7 @@
       if (typeof window.updateExchangeSummary === 'function') window.updateExchangeSummary();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      requestAnimationFrame(updateMulliganAnalysisGuide_);
     }
 
     if (id === 'build') {
@@ -34,11 +83,13 @@
       // ✅ 旧互換：デッキ種族に応じたモノクロ/使用中ラベルを再適用
     if (typeof window.updateCardDisabling === 'function') window.updateCardDisabling();
     if (typeof window.applyGrayscaleFilter === 'function') window.applyGrayscaleFilter();
+      requestAnimationFrame(updateMulliganAnalysisGuide_);
     }
 
     if (id === 'info-tab') {
       if (typeof window.updateDeckSummaryDisplay === 'function') window.updateDeckSummaryDisplay();
       if (typeof window.updateExchangeSummary === 'function') window.updateExchangeSummary();
+      requestAnimationFrame(updateMulliganAnalysisGuide_);
     }
 
     if (id === 'info-tab' || id === 'post-tab') {
@@ -99,31 +150,5 @@
     goToAnalyzeSubtab('post-tab', 'post-tab-bar');
   };
 
-  function getDeckCardCount() {
-    return Object.values(window.deck || {}).reduce((sum, count) => sum + (count | 0), 0);
-  }
-
-  function showMulliganUnavailableMessage(count) {
-    const message = `マリガンシミュレーションを使うには、デッキが30枚以上になるようにしてください。（現在${count}枚）`;
-    if (typeof window.dmToast === 'function') {
-      window.dmToast(message, 2600);
-      return;
-    }
-    alert(message);
-  }
-
-  window.goToMulliganTrainer ??= function goToMulliganTrainer() {
-    const deckCount = getDeckCardCount();
-    if (deckCount < 30) {
-      showMulliganUnavailableMessage(deckCount);
-      return;
-    }
-
-    goToAnalyzeSubtab('info-tab', 'info-tab-bar');
-    requestAnimationFrame(() => {
-      const trainer = document.getElementById('mulligan-trainer');
-      if (!trainer) return;
-      trainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  };
+  window.updateMulliganAnalysisGuide = updateMulliganAnalysisGuide_;
 })();

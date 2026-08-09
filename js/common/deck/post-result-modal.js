@@ -28,7 +28,7 @@
     const deckText = name
       ? `「${name}」デッキを${action}！`
       : `デッキを${action}！`;
-    return `【神託のメソロギア】\n${deckText}\n\n#神託のメソロギア\n#メソロギアデッキ`;
+    return `【神託のメソロギア】\n${deckText}\n\n#神託のメソロギア\n#メソロギアデッキ\n#モスロギア`;
   }
 
   function openTweet_(opts = {}) {

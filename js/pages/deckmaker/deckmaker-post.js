@@ -1151,6 +1151,32 @@
       return false;
     }
 
+    function hasDeckCardMatching_(predicate) {
+      const d = window.deck || {};
+      const map = window.cardMap || window.allCardsMap || {};
+      for (const [cd, count] of Object.entries(d)) {
+        if (!(count | 0)) continue;
+        const normalizedCd = window.normCd5 ? window.normCd5(cd) : String(cd).padStart(5, '0');
+        const card = map[cd] || map[normalizedCd] || window.getCard?.(normalizedCd) || null;
+        if (card && predicate(card)) return true;
+      }
+      return false;
+    }
+
+    function hasBpCardInDeck_() {
+      return hasDeckCardMatching_(card => {
+        const flag = card.BP_flag ?? card.bp_flag;
+        return flag === true || flag === 1 || String(flag).toLowerCase() === 'true';
+      });
+    }
+
+    function hasFieldCardInDeck_() {
+      return hasDeckCardMatching_(card => {
+        const field = normalize_(card.field);
+        return Boolean(field) && !['フィールド関係なし', 'なし', '-'].includes(field);
+      });
+    }
+
     // 候補生成：基本 + カテゴリ（五十音） + campaign（先頭） + collab（末尾）
     function buildCandidates_() {
       const baseCandidates = Array.isArray(window.POST_TAG_CANDIDATES)
@@ -1184,6 +1210,17 @@
         merged.push('コラボカードあり');
       }
 
+      // 条件付きタグは「アグロデッキ」の直後にまとめて表示する
+      const conditionalTags = [];
+      if (hasFieldCardInDeck_()) conditionalTags.push('フィールドデッキ');
+      if (hasBpCardInDeck_()) conditionalTags.push('BPデッキ');
+      for (const tag of conditionalTags) {
+        const currentIndex = merged.indexOf(tag);
+        if (currentIndex >= 0) merged.splice(currentIndex, 1);
+      }
+      const aggroIndex = merged.indexOf('アグロデッキ');
+      merged.splice(aggroIndex >= 0 ? aggroIndex + 1 : merged.length, 0, ...conditionalTags);
+
       return merged;
     }
 
@@ -1200,6 +1237,14 @@
 
       const selected = readSet_();
       const candidates = buildCandidates_();
+      let selectedChanged = false;
+      for (const conditionalTag of ['フィールドデッキ', 'BPデッキ']) {
+        if (selected.has(conditionalTag) && !candidates.includes(conditionalTag)) {
+          selected.delete(conditionalTag);
+          selectedChanged = true;
+        }
+      }
+      if (selectedChanged) writeSet_(selected);
 
       // UI再構築
       root.innerHTML = '';
@@ -1309,6 +1354,7 @@
   // 5) リセット
   // =====================================================
   function resetDeckPostForm(){
+    window.DeckmakerLethalPost?.reset?.();
     const ok = window.confirm('入力内容を削除します。\n投稿者名とXアカウントは残します。\nよろしいですか？');
     if (!ok) return;
 
@@ -2058,6 +2104,7 @@
     return {
       title, comment, code, count, races, raceKey, mainRace, g, repImg,
       cardNotes,
+      lethalPlans: window.DeckmakerLethalPost?.getValid?.() || [],
       shareCode,
       ua: navigator.userAgent,
       autoTags,
@@ -2074,6 +2121,11 @@
   //  ※ CampaignUI があればそちらのモーダルを優先
   // =====================================================
   async function handlePostSubmit_(e){
+    if (window.DeckmakerLethalPost?.hasInvalid?.()) {
+      e?.preventDefault?.();
+      alert('登録済みリーサルプランに、現在のデッキでは成立しない組み合わせがあります。再登録または削除してください。');
+      return;
+    }
     e?.preventDefault();
 
     // ✅ deckmaker-campaign.js がいるならそっちに委譲（確認モーダル付き）
@@ -2290,6 +2342,7 @@
 
         const postId = String(json.postId || '');
         openPostSuccessModal({ deckName, postId, campaign: camp });
+        window.DeckmakerLethalPost?.reset?.();
         window.MesorogiaPwaInstall?.showNudge?.();
       }else{
         const failureDetails = {
@@ -2336,6 +2389,7 @@
               document.getElementById('post-deck-name')?.value ||
               '').trim();
           openPostUpdateSuccessModal({ deckName, postId: existingPostId });
+          window.DeckmakerLethalPost?.reset?.();
           window.MesorogiaPwaInstall?.showNudge?.();
         }else if (json.error === 'campaign_daily_limit'){
           showPostToast(

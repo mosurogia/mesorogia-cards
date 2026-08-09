@@ -57,6 +57,119 @@
     },
     ];
 
+    const LETHAL_FILTER_TYPES = [
+    { key: 'attack', label: '攻撃', icon: '⚔', prefix: '', featuredValues: [6, 7, 8, 9, 10, 12] },
+    { key: 'burn', label: 'バーン', icon: '🔥', prefix: '', featuredValues: [1, 2, 3, 4] },
+    { key: 'buff', label: 'バフ', icon: '💪', prefix: '+', featuredValues: [1, 2, 3, 4] },
+    ];
+
+    function formatLethalFilterLabel_(type, value){
+    const typeDef = LETHAL_FILTER_TYPES.find(def => def.key === type);
+    if (!typeDef) return value;
+    if (value === 'any') return `${typeDef.icon} ${typeDef.label}全般`;
+    return `${typeDef.icon} ${typeDef.prefix}${value}`;
+    }
+
+    // リーサルプランで表示している打点をフィルター用に取得する
+    function getLethalValues_(lethalEntry){
+    if (!lethalEntry) return [];
+    const values = Array.isArray(lethalEntry.values) ? lethalEntry.values : [];
+    return [...values, lethalEntry.repeat?.value]
+        .map(Number)
+        .filter(value => Number.isFinite(value) && value > 0);
+    }
+
+    // 旧形式の lethal_burn（数値・カンマ区切り・「*」付き）にも対応する
+    function getLegacyLethalBurnValues_(value){
+    return String(value ?? '')
+        .split(',')
+        .map(item => Number(item.replace('*', '').trim()))
+        .filter(item => Number.isFinite(item) && item > 0);
+    }
+
+    function getCardLethalFilterValues_(card){
+    const attackValues = getLethalValues_(card.lethal?.attack);
+    const lethalBurnValues = getLethalValues_(card.lethal?.lethalBurn);
+    const combinedAttackValues = attackValues.flatMap(attack =>
+        lethalBurnValues.map(burn => attack + burn)
+    );
+
+    return {
+        attack: [...new Set([...attackValues, ...combinedAttackValues])],
+        burn: [...new Set([
+        ...getLethalValues_(card.lethal?.freeBurn),
+        ...lethalBurnValues,
+        ...getLegacyLethalBurnValues_(card.lethal_burn),
+        ])],
+        buff: [...new Set([
+        ...getLethalValues_(card.lethal?.freeBuff),
+        ...getLethalValues_(card.lethal?.lethalBuff),
+        ])],
+    };
+    }
+
+    function createLethalFilterBlock_(cards){
+    const { wrapper } = createFilterBlock_('打点');
+    wrapper.classList.add('filter-range-wrapper');
+
+    const groups = document.createElement('div');
+    groups.className = 'lethal-filter-groups';
+
+    const featuredGroup = document.createElement('div');
+    featuredGroup.className = 'filter-group lethal-filter-values';
+    featuredGroup.dataset.key = '打点';
+
+    const otherGroup = document.createElement('div');
+    otherGroup.className = 'filter-group lethal-filter-values lethal-filter-values--other';
+    otherGroup.dataset.key = '打点';
+
+    LETHAL_FILTER_TYPES.forEach(type => {
+        const values = [...new Set(cards.flatMap(card =>
+        getCardLethalFilterValues_(card)[type.key]
+        ))].sort((a, b) => a - b);
+
+        if (values.length === 0) return;
+
+        const createValueButton = value => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'filter-btn';
+        btn.dataset.lethal = `${type.key}:${value}`;
+        btn.textContent = formatLethalFilterLabel_(type.key, value);
+        btn.setAttribute('aria-label', `${type.label} ${type.prefix}${value}`);
+        return btn;
+        };
+
+        const featuredSet = new Set(type.featuredValues);
+        const featuredValues = values.filter(value => featuredSet.has(value));
+        const otherValues = values.filter(value => !featuredSet.has(value));
+
+        if (type.key === 'burn' || type.key === 'buff') {
+        const allButton = createValueButton('any');
+        allButton.classList.add('lethal-filter-all-button');
+        allButton.setAttribute('aria-label', `${type.label}全般`);
+        featuredGroup.appendChild(allButton);
+        }
+        featuredValues.forEach(value => featuredGroup.appendChild(createValueButton(value)));
+        otherValues.forEach(value => otherGroup.appendChild(createValueButton(value)));
+    });
+
+    groups.appendChild(featuredGroup);
+
+    if (otherGroup.childElementCount > 0) {
+        const details = document.createElement('details');
+        details.className = 'lethal-filter-other';
+        const summary = document.createElement('summary');
+        summary.textContent = 'その他の値';
+        details.appendChild(summary);
+        details.appendChild(otherGroup);
+        groups.appendChild(details);
+    }
+
+    wrapper.appendChild(groups);
+    return wrapper;
+    }
+
     // 値ゆれ対策（TRUE/true/1など）
     function isTrue_(v){
     const s = String(v ?? '').trim().toLowerCase();
@@ -595,6 +708,16 @@
         <ul>
             <li>燃焼 / 拘束 / 沈黙 などで絞り込み</li>
             <li><b>特殊効果未所持</b>：特殊効果を持たないカード</li>
+        </ul>
+    `,
+    '打点': `
+        <ul>
+            <li><b>打点</b>とは、カードが相手のライフに与えられるダメージ量です</li>
+            <li><b>⚔ 攻撃</b>：アタッカーの攻撃によって与えるダメージ量</li>
+            <li><b>🔥 バーン</b>：カード効果によって相手のライフへ直接与えるダメージ量</li>
+            <li><b>💪 バフ</b>：アタッカーのパワーを増やし、攻撃のダメージを上乗せする量</li>
+            <li>複数の打点候補があるカードは、それぞれの値に登録されています</li>
+            <li>攻撃成功時に発生する打点も、攻撃の打点として登録されています</li>
         </ul>
     `,
     'その他': `
@@ -1390,6 +1513,8 @@
             detailFilters.appendChild(createRangeStyleWrapper_('特殊効果', abilities, 'ability'));
 
 
+        detailFilters.appendChild(createLethalFilterBlock_(cards));
+
         // その他（複合条件）を1ブロックに統合
         const { wrapper: otherWrap } = createFilterBlock_('その他');
         otherWrap.classList.add('filter-range-wrapper');
@@ -1563,6 +1688,7 @@
             ['フィールド', 'field'],
             ['BP', 'bp'],
             ['特効', 'ability'],
+            ['打点', 'lethal'],
             ['その他', 'misc'],
         ];
 
@@ -1581,12 +1707,15 @@
                 } else if (key === 'misc') {
                     const def = MISC_FILTERS.find(d => d.key === val);
                     labelText = def?.label || val;
+                } else if (key === 'lethal') {
+                    const [type, value] = val.split(':');
+                    labelText = formatLethalFilterLabel_(type, value);
                 } else {
                     labelText = (DISPLAY_LABELS && DISPLAY_LABELS[val] != null) ? DISPLAY_LABELS[val] : val;
                 }
 
                 chips.push({
-                    label: `${title}:${labelText}`,
+                    label: key === 'lethal' ? labelText : `${title}:${labelText}`,
                     onRemove: () => {
                         btn.classList.remove('selected');
                         applyFilters();
@@ -1803,6 +1932,7 @@
         field: getSelectedFilterValues('field'),
         bp: getSelectedFilterValues('bp'),
         ability: getSelectedFilterValues('ability'),
+        lethal: getSelectedFilterValues('lethal'),
 
         // その他
         misc: getSelectedFilterValues('misc'),
@@ -1897,6 +2027,11 @@
         power_effect:   card.dataset.power_effect,
         mana_effect:    card.dataset.mana_effect,
         cost_effect:    card.dataset.cost_effect,
+        lethal: {
+            attack: String(card.dataset.lethalAttack || '').split(',').filter(Boolean),
+            burn: String(card.dataset.lethalBurn || '').split(',').filter(Boolean),
+            buff: String(card.dataset.lethalBuff || '').split(',').filter(Boolean),
+        },
 
         cost: parseInt(card.dataset.cost),
         power: parseInt(card.dataset.power),
@@ -1946,6 +2081,15 @@
         return selectedValues.some(k => {
             const def = MISC_FILTERS.find(d => d.key === k);
             return def ? !!def.test(cardData) : false;
+        });
+        }
+
+        // 打点：選択した種類と数値のいずれかを持つカードを通す
+        if (key === 'lethal') {
+        return selectedValues.some(selected => {
+            const [type, value] = selected.split(':');
+            if (value === 'any') return (cardData.lethal[type]?.length || 0) > 0;
+            return cardData.lethal[type]?.includes(value) || false;
         });
         }
 

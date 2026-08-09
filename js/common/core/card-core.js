@@ -234,6 +234,7 @@
         effect_name2: card.effect_name2 || '',
         effect_text2: card.effect_text2 || '',
         field: card.field ?? '',
+        lethal: card.lethal ?? null,
         image_path: card.image_path ?? card.imagePath ?? '',
         image_variant: card.image_variant ?? card.imageVariant ?? '',
         has_pre_adjustment_image: !!(card.has_pre_adjustment_image ?? card.hasPreAdjustmentImage),

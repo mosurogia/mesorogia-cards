@@ -656,6 +656,7 @@
     if (low.includes('fallen fate')) return 'Fパック';
     if (low.includes('glory of the gods')) return 'Gパック';
     if (low.includes('honor of the brave heart')) return 'Hパック';
+    if (low.includes('illustrated illusion')) return 'Iパック';
 
     if (s.includes('コラボ') || low.includes('collab')) return 'コラボ';
     if (s.includes('その他特殊') || low.includes('special')) return '特殊';
@@ -1323,6 +1324,9 @@
         : payload?.cardNotes
     );
     if (!next.cardNotes.length) next.cardNotes = normalizeCardNotes_(base.cardNotes);
+    next.lethalPlans = Array.isArray(src.lethalPlans)
+      ? src.lethalPlans
+      : (Array.isArray(payload?.lethalPlans) ? payload.lethalPlans : (base.lethalPlans || []));
     next.hasCardNotes = next.cardNotes.some((row) => row && (row.cd || row.text));
     next.deckNoteLength = Array.from(String(next.deckNote || '').trim()).length;
     next.__detailPayloadLoaded = true;
@@ -2271,6 +2275,51 @@
     return `<div class="post-cardnotes">${rows}</div>`;
   }
 
+  function buildLethalPlansHtml_(item) {
+    const plans = Array.isArray(item?.lethalPlans) ? item.lethalPlans : [];
+    const validPlans = plans.filter(plan => Array.isArray(plan?.variants) && plan.variants.length);
+    if (!validPlans.length) return '';
+
+    const planRows = validPlans.map((plan, planIndex) => {
+      const values = (Array.isArray(plan.values) ? plan.values : [])
+        .map(Number)
+        .filter(Number.isFinite)
+        .sort((a, b) => a - b);
+      const total = Number(plan.total) || values.reduce((sum, value) => sum + value, 0);
+      const variants = plan.variants.map((variant, variantIndex) => {
+        const cards = (Array.isArray(variant?.steps) ? variant.steps : []).map((step, stepIndex) => {
+          const cd = normCd5_(step?.cardId || step?.cd);
+          const card = window.getCard?.(cd) || {};
+          const name = String(step?.cardName || card.name || cd);
+          const image = cardImageSrc_(card.cd ? card : { ...card, cd });
+          return `${stepIndex ? '<span class="lethal-plan-operator" aria-hidden="true">＋</span>' : ''}
+            <button type="button" class="lethal-plan-card" data-cd="${escHtml_(cd)}" aria-label="${escHtml_(name)}のカード詳細を開く" title="${escHtml_(name)}">
+              <img class="lethal-plan-card-image" src="${image}" alt="${escHtml_(name)}" loading="lazy" onerror="${cardImageErrorAttr_(card.cd ? card : { ...card, cd })}">
+            </button>`;
+        }).join('');
+        const variantLabel = plan.variants.length > 1
+          ? `<span class="lethal-plan-variant-label">${variantIndex + 1}</span>`
+          : '';
+        return `<div class="lethal-plan-variant">${variantLabel}${cards}</div>`;
+      }).join('');
+
+      return {
+        expression: `<div class="lethal-plan-expression">${planIndex + 1}. ${escHtml_(values.join(' + '))} = ${escHtml_(total)}</div>`,
+        detail: `<div class="lethal-plan-item"><div class="lethal-plan-detail-label">${planIndex + 1}. リーサル ${escHtml_(values.join(' + '))} = ${escHtml_(total)}</div>${variants}</div>`
+      };
+    });
+
+    const expressions = planRows.map(row => row.expression).join('');
+    const details = planRows.map(row => row.detail).join('');
+    return `<div class="lethal-plan-summary">
+      <div class="lethal-plan-values">${expressions}</div>
+      <details class="lethal-plan-details">
+        <summary>詳しく見る</summary>
+        <div class="lethal-plan-list">${details}</div>
+      </details>
+    </div>`;
+  }
+
   function buildDeckCodeBoxFallback_(postId, code) {
     const codeNorm = String(code || '').trim();
     if (!codeNorm) return '';
@@ -2338,6 +2387,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
   const deckListHtml = buildDeckListHtml(item);
   const deckNoteHtml = buildDeckNoteHtml(deckNote);
   const cardNotesHtml = buildCardNotesHtml(item);
+  const lethalPlansHtml = buildLethalPlansHtml_(item);
 
   const simpleStats = buildSimpleDeckStats(item);
   const typeChipsPane = buildTypeChipsHtml_(simpleStats);
@@ -2431,6 +2481,8 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
               （平均チャージ量：<span id="avg-charge-${escHtml_(paneUid)}">-</span>）
             </span>
           </dd>
+
+          ${lethalPlansHtml ? `<dt class="lethal-plan-label">リーサルプラン<span class="lethal-planner__title-badge">ベータ版</span></dt><dd>${lethalPlansHtml}</dd>` : ''}
         </div>
 
         <div class="deck-compare-block">
@@ -3329,6 +3381,17 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
       return;
     }
 
+    const lethalPlanCard = e.target.closest('.lethal-plan-card');
+    if (lethalPlanCard) {
+      const cd = normCd5_(lethalPlanCard.dataset.cd);
+      if (cd) {
+        e.preventDefault();
+        e.stopPropagation();
+        openCardDetailFromDeck_(cd, lethalPlanCard);
+      }
+      return;
+    }
+
     // -------------------------
     // 6) デッキ内カード → カード詳細
     // -------------------------
@@ -3496,6 +3559,7 @@ function renderDetailPaneForItem(item, basePaneId, opts = {}) {
 
   window.DeckPostDetail.buildDeckNoteHtml = buildDeckNoteHtml;
   window.DeckPostDetail.buildCardNotesHtml = buildCardNotesHtml;
+  window.DeckPostDetail.buildLethalPlansHtml_ = buildLethalPlansHtml_;
   window.DeckPostDetail.hasDetailPayload = hasDetailPayload_;
   window.DeckPostDetail.getCachedPostDetail = getCachedPostDetail_;
   window.DeckPostDetail.ensurePostDetailData = ensurePostDetailData_;
