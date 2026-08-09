@@ -439,6 +439,12 @@ body.is-card-pick-open #deckpeek-button {
     transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
 }
 
+.card-pick-option[data-card-pick-filter="race"] {
+    border-width: 2px;
+    background: #f7fbff;
+    font-weight: 900;
+}
+
 .card-pick-option:hover,
 .card-pick-option.is-active {
     background: #eef6ff;
@@ -2439,6 +2445,69 @@ body.is-card-pick-open #deckpeek-button {
 .filter-group[data-key="その他"] .filter-btn {
     padding: 6px 8px;
     white-space: nowrap;
+}
+
+/* 打点 */
+.lethal-filter-groups {
+    display: grid;
+    gap: 8px;
+}
+
+.lethal-filter-values {
+    grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+    grid-auto-flow: row;
+}
+
+.lethal-filter-values .filter-btn {
+    padding: 6px 8px;
+    white-space: nowrap;
+}
+
+.lethal-filter-values .lethal-filter-all-button {
+    grid-column: span 2;
+    min-width: 110px;
+    border-color: rgba(var(--type-attacker-rgb), .32);
+    background: rgba(var(--type-attacker-rgb), .07);
+    font-weight: 700;
+}
+
+.lethal-filter-values .lethal-filter-all-button:hover {
+    background: rgba(var(--type-attacker-rgb), .13);
+}
+
+.lethal-filter-values .lethal-filter-all-button.selected,
+.lethal-filter-values .lethal-filter-all-button.selected:hover {
+    border-color: #2b90ff;
+    background: #2b90ff;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .lethal-filter-values .lethal-filter-all-button {
+        grid-column: 1 / span 2;
+    }
+}
+
+.lethal-filter-other {
+    border-top: 1px solid #e7e9ee;
+    padding-top: 6px;
+}
+
+.lethal-filter-other summary {
+    width: fit-content;
+    color: #596579;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lethal-filter-other summary:focus-visible {
+    outline: 3px solid rgba(var(--type-attacker-rgb), .28);
+    outline-offset: 2px;
+}
+
+.lethal-filter-values--other {
+    margin-top: 7px;
 }
 
 

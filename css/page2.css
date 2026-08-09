@@ -261,6 +261,45 @@
     border-bottom: 8px solid #ede9fe;
 }
 
+.mulligan-analysis-guide {
+    position: absolute;
+    top: calc(100% + 9px);
+    left: 4px;
+    width: min(150px, 42%);
+    box-sizing: border-box;
+    padding: 7px 8px;
+    border: 1px solid #34d399;
+    border-radius: 9px;
+    background: #ecfdf5;
+    color: #065f46;
+    font-size: clamp(10px, 2.6vw, 12px);
+    font-weight: 800;
+    line-height: 1.45;
+    box-shadow: 0 4px 12px rgba(6, 95, 70, .14);
+    z-index: 1800;
+    pointer-events: none;
+}
+
+.mulligan-analysis-guide::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 11%;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #34d399;
+}
+
+.mulligan-analysis-guide::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: calc(11% + 2px);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #ecfdf5;
+}
+
 /*=======デッキバー=========*/
 .deck-bar-wrapper {
     display: flex;
@@ -5075,5 +5114,1517 @@ body.dm-restore-modal-open {
 @media (prefers-reduced-motion: reduce) {
     .dm-restore-modal__button {
         transition: none;
+    }
+}
+
+/* リーサルプラン仮組 */
+.lethal-planner {
+    --lethal-planner-accent: #b91c1c;
+    --lethal-planner-complete: #15803d;
+    --lethal-planner-over: #c2410c;
+    padding: 18px;
+    border: 1px solid rgba(15, 23, 42, .14);
+    border-radius: 14px;
+    background: #fff;
+    color: #1f2937;
+}
+
+.lethal-planner__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.lethal-planner__title,
+.lethal-planner__cards-title {
+    margin: 0;
+}
+
+.lethal-planner__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 1.1rem;
+}
+
+.lethal-planner__title-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid color-mix(in srgb, var(--lethal-planner-accent) 38%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--lethal-planner-accent) 7%, white);
+    color: var(--lethal-planner-accent);
+    font-size: .68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.lethal-planner__auto-button,
+.lethal-planner__auto-result,
+.lethal-planner__auto-toggle {
+    border: 1px solid color-mix(in srgb, var(--lethal-planner-accent) 45%, transparent);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--lethal-planner-accent);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lethal-planner__auto-button {
+    padding: 7px 14px;
+}
+
+.lethal-planner__auto-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.lethal-planner__auto-results:empty {
+    display: none;
+}
+
+.lethal-planner__auto-result {
+    padding: 5px 9px;
+    font-size: .82rem;
+    text-align: left;
+}
+
+.lethal-planner__auto-toggle {
+    padding: 5px 9px;
+    font-size: .78rem;
+}
+
+.lethal-planner__auto-result-row {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 4px;
+}
+
+.lethal-planner__auto-cards-control {
+    display: flex;
+    margin-left: auto;
+}
+
+.lethal-planner__auto-cards-button {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 3px;
+    border: 1px solid rgba(15, 23, 42, .16);
+    border-radius: 7px;
+    background: #fff;
+    color: #475569;
+    font: inherit;
+    cursor: pointer;
+}
+
+.lethal-planner__auto-cards-label {
+    color: #475569;
+    font-size: .75rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.lethal-planner__auto-cards-icon {
+    display: block;
+    width: auto;
+    height: 28px;
+    max-width: 100%;
+    border-radius: 3px;
+    object-fit: contain;
+}
+
+.lethal-planner__auto-cards-button:hover {
+    border-color: rgba(185, 28, 28, .35);
+    background: #fff7f7;
+    color: var(--lethal-planner-accent);
+}
+
+.lethal-planner__auto-cards-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 25%, transparent);
+    outline-offset: 2px;
+}
+
+.lethal-auto-cards-popup {
+    position: fixed;
+    z-index: 4600;
+    display: flex;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 16px));
+    max-height: min(220px, calc(100vh - 16px));
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 8px;
+    overflow-y: auto;
+    border: 1px solid rgba(15, 23, 42, .16);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .2);
+}
+
+.lethal-auto-cards-popup[hidden] {
+    display: none;
+}
+
+.lethal-auto-cards-popup__title {
+    width: 100%;
+    color: #475569;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.lethal-auto-cards-popup__card {
+    position: relative;
+    display: inline-flex;
+    padding: 2px;
+    border: 1px solid rgba(15, 23, 42, .1);
+    border-radius: 5px;
+    background: #f8fafc;
+}
+
+.lethal-auto-cards-popup__image {
+    display: block;
+    width: 42px;
+    height: auto;
+    border-radius: 3px;
+}
+
+.lethal-planner__auto-empty {
+    color: #64748b;
+    font-size: .82rem;
+}
+
+.lethal-planner__auto-button:hover,
+.lethal-planner__auto-result:hover,
+.lethal-planner__auto-toggle:hover {
+    background: color-mix(in srgb, var(--lethal-planner-accent) 7%, white);
+}
+
+.lethal-planner__auto-button:focus-visible,
+.lethal-planner__auto-result:focus-visible,
+.lethal-planner__auto-toggle:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 25%, transparent);
+    outline-offset: 2px;
+}
+
+.lethal-planner__expression {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    margin-top: 6px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.lethal-planner__term {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 5px 12px 4px;
+    border: 1px solid rgba(15, 23, 42, .16);
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #1f2937;
+    cursor: grab;
+    user-select: none;
+}
+
+.lethal-planner__term:active {
+    cursor: grabbing;
+}
+
+.lethal-planner__term.is-dragging {
+    opacity: .45;
+}
+
+.lethal-planner__term.is-drag-over {
+    border-color: var(--lethal-planner-accent);
+    box-shadow: 0 0 0 2px rgba(185, 28, 28, .14);
+}
+
+.lethal-planner__term-icon {
+    position: absolute;
+    top: -7px;
+    left: -5px;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.lethal-planner__term-value {
+    font-weight: 800;
+}
+
+.lethal-planner__term--buff {
+    border-color: rgba(37, 99, 235, .22);
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.lethal-planner__term-remove {
+    position: absolute;
+    top: -8px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    color: #dc2626;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.lethal-planner__term-remove:hover {
+    color: #991b1b;
+}
+
+.lethal-planner__term-remove:focus-visible {
+    outline: 2px solid rgba(185, 28, 28, .35);
+    outline-offset: 1px;
+}
+
+.lethal-planner__operator {
+    color: #64748b;
+}
+
+.lethal-planner__result {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 2px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    transition: color .2s ease, transform .2s ease;
+}
+
+.lethal-planner.is-complete {
+    border-color: color-mix(in srgb, var(--lethal-planner-complete) 55%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lethal-planner-complete) 12%, transparent);
+}
+
+.lethal-planner.is-just-lethal .lethal-planner__result {
+    color: var(--lethal-planner-complete);
+    animation: lethal-result-pop .4s ease-out;
+}
+
+.lethal-planner.is-just-lethal .lethal-planner__result::after,
+.lethal-planner.is-over-lethal .lethal-planner__result::after {
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: .65rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.lethal-planner.is-just-lethal .lethal-planner__result::after {
+    content: "リーサル";
+    background: color-mix(in srgb, var(--lethal-planner-complete) 12%, white);
+    color: var(--lethal-planner-complete);
+}
+
+.lethal-planner.is-over-lethal {
+    border-color: color-mix(in srgb, var(--lethal-planner-over) 45%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lethal-planner-over) 9%, transparent);
+}
+
+.lethal-planner.is-over-lethal .lethal-planner__result {
+    color: var(--lethal-planner-over);
+    animation: lethal-result-over .45s ease-out;
+}
+
+.lethal-planner.is-over-lethal .lethal-planner__result::after {
+    content: "オーバー";
+    background: color-mix(in srgb, var(--lethal-planner-over) 10%, white);
+    color: var(--lethal-planner-over);
+}
+
+@keyframes lethal-result-pop {
+    0% {
+        transform: scale(.94);
+    }
+
+    65% {
+        transform: scale(1.06);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lethal-result-over {
+    0% {
+        transform: translateY(1px);
+        opacity: .75;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.lethal-planner__groups {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin-top: 14px;
+}
+
+.lethal-planner__value {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    min-height: 36px;
+    padding: 6px 10px 5px 18px;
+    border: 1px solid rgba(15, 23, 42, .2);
+    border-radius: 7px;
+    background: #f8fafc;
+    color: #1f2937;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color .16s ease, border-color .16s ease, transform .16s ease;
+}
+
+.lethal-planner__value-icon {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.lethal-planner__value-number {
+    font-weight: 800;
+    line-height: 1;
+}
+
+.lethal-planner__value:hover:not(:disabled) {
+    border-color: var(--lethal-planner-accent);
+    background: #fff7f7;
+}
+
+.lethal-planner__value:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.lethal-planner__value:focus-visible {
+    outline: 3px solid rgba(185, 28, 28, .25);
+    outline-offset: 2px;
+}
+
+.lethal-planner__value:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .lethal-candidate-tooltip {
+        position: fixed;
+        z-index: 1200;
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        max-width: calc(100vw - 16px);
+        padding: 6px;
+        border: 1px solid rgba(15, 23, 42, .16);
+        border-radius: 7px;
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, .16);
+        pointer-events: none;
+    }
+
+    .lethal-candidate-tooltip[hidden] {
+        display: none;
+    }
+
+    .lethal-candidate-tooltip__image {
+        display: block;
+        width: 36px;
+        height: 50px;
+        flex: 0 0 auto;
+        border-radius: 3px;
+        object-fit: contain;
+    }
+
+    .lethal-candidate-tooltip__card {
+        display: inline-flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .lethal-candidate-tooltip__supplement {
+        color: #475569;
+        font-size: .62rem;
+        font-weight: 800;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    .lethal-candidate-tooltip__remainder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        min-height: 50px;
+        padding: 0 4px;
+        color: #475569;
+        font-size: .78rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+}
+
+.lethal-planner__empty {
+    padding: 8px 0;
+    color: #94a3b8;
+}
+
+.lethal-planner__cards {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(15, 23, 42, .1);
+}
+
+.lethal-planner__cards-title {
+    font-size: 1rem;
+}
+
+.lethal-planner__cards-guide {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: .72rem;
+    line-height: 1.5;
+}
+
+.lethal-planner__operation--mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .lethal-planner__operation--mobile {
+        display: inline;
+    }
+
+    .lethal-planner__operation--desktop {
+        display: none;
+    }
+}
+
+.lethal-planner__card-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 7px;
+    color: #475569;
+    line-height: 1.3;
+}
+
+.lethal-card-group {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lethal-card-group-title {
+    font-size: .9rem;
+    font-weight: 800;
+    color: #334155;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.lethal-card-group-title__value {
+    display: block;
+}
+
+.lethal-card-list {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 5px 8px;
+}
+
+.lethal-card-mini-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+}
+
+.lethal-card-mini {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    border: 1px solid rgba(15, 23, 42, .1);
+    border-radius: 6px;
+    background: #f8fafc;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color .16s ease, box-shadow .16s ease, opacity .16s ease;
+}
+
+.lethal-card-mini:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--lethal-planner-accent) 45%, transparent);
+}
+
+.lethal-card-mini:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 25%, transparent);
+    outline-offset: 2px;
+}
+
+.lethal-card-mini.is-selected {
+    border-color: var(--lethal-planner-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lethal-planner-accent) 18%, transparent);
+}
+
+.lethal-card-mini.is-unavailable {
+    cursor: not-allowed;
+    opacity: .48;
+    filter: grayscale(1);
+}
+
+.lethal-card-mini.is-group-complete:not(.is-selected) {
+    cursor: not-allowed;
+    opacity: .65;
+}
+
+.lethal-card-mini__image {
+    display: block;
+    width: 38px;
+    height: auto;
+    flex: 0 0 auto;
+    border-radius: 3px;
+}
+
+.lethal-card-mini__supplement {
+    margin-left: 5px;
+    color: #475569;
+    font-size: .68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.lethal-card-mini__check {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--lethal-planner-accent);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* リーサル候補のβ報告 */
+.lethal-planner__beta-report {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(15, 23, 42, .12);
+    color: #64748b;
+    font-size: .72rem;
+}
+
+.lethal-planner__beta-label {
+    flex: 0 0 100%;
+    text-align: right;
+}
+
+.lethal-planner__beta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+    margin-left: auto;
+}
+
+.lethal-planner__beta-button {
+    max-width: 100%;
+    padding: 4px 8px;
+    border: 1px solid rgba(100, 116, 139, .35);
+    border-radius: 5px;
+    background: #fff;
+    color: #475569;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.35;
+    cursor: pointer;
+}
+
+.lethal-planner__beta-button:hover {
+    background: #f8fafc;
+}
+
+.lethal-planner__beta-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 22%, transparent);
+    outline-offset: 2px;
+}
+
+.lethal-planner__copy-status {
+    flex: 0 0 100%;
+    min-height: 1em;
+    color: #15803d;
+    font-weight: 700;
+    text-align: right;
+}
+
+.lethal-planner__copy-status:empty {
+    display: none;
+}
+
+.lethal-planner__copy-status.is-error {
+    color: #b91c1c;
+}
+
+/* リーサル自動生成の手段選択 */
+body.lethal-auto-filter-open {
+    overflow: hidden;
+}
+
+.lethal-auto-filter-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(15, 23, 42, .48);
+}
+
+.lethal-auto-filter-modal[hidden] {
+    display: none;
+}
+
+.lethal-auto-filter-modal__dialog {
+    display: flex;
+    width: min(720px, 100%);
+    max-height: min(82vh, 760px);
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, .14);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 20px 55px rgba(15, 23, 42, .28);
+}
+
+.lethal-auto-filter-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px 12px;
+}
+
+.lethal-auto-filter-modal__header h3 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.2rem;
+}
+
+.lethal-auto-filter-modal__header p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: .86rem;
+}
+
+.lethal-auto-filter-modal__close {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #64748b;
+    font: inherit;
+    font-size: 1.35rem;
+    cursor: pointer;
+}
+
+.lethal-auto-filter-modal__bulk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 0 20px 12px;
+    border-bottom: 1px solid rgba(15, 23, 42, .1);
+}
+
+.lethal-auto-filter-modal__bulk button {
+    padding: 5px 9px;
+    border: 1px solid rgba(15, 23, 42, .16);
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #475569;
+    font: inherit;
+    font-size: .78rem;
+    cursor: pointer;
+}
+
+.lethal-auto-filter-modal__chips {
+    display: flex;
+    min-height: 43px;
+    max-height: 108px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    overflow-y: auto;
+    border-bottom: 1px solid rgba(15, 23, 42, .1);
+    background: #fff;
+    overscroll-behavior: contain;
+}
+
+.lethal-auto-filter-modal__chips-label,
+.lethal-auto-filter-modal__chips-empty {
+    color: #64748b;
+    font-size: .78rem;
+}
+
+.lethal-auto-filter-modal__chips-label {
+    margin-right: 2px;
+    font-weight: 800;
+}
+
+.lethal-auto-filter-modal__chips-empty {
+    opacity: .72;
+}
+
+.lethal-auto-filter-modal__selected-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    color: #334155;
+    font-size: .84rem;
+    font-weight: 800;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.lethal-auto-filter-modal__selected-count {
+    color: #64748b;
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+.lethal-auto-filter-modal__cards {
+    display: grid;
+    gap: 10px;
+    min-height: 0;
+    padding: 14px 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.lethal-auto-filter-card {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px;
+    border: 1px solid rgba(15, 23, 42, .11);
+    border-radius: 9px;
+    background: #f8fafc;
+}
+
+.lethal-auto-filter-card__image {
+    display: block;
+    width: 54px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.lethal-auto-filter-card__content {
+    min-width: 0;
+}
+
+.lethal-auto-filter-card__title {
+    margin: 0 0 7px;
+    color: #334155;
+    font-size: .9rem;
+}
+
+.lethal-auto-filter-card__options {
+    display: grid;
+    gap: 5px;
+}
+
+.lethal-auto-filter-card__option {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    color: #334155;
+    font-size: .84rem;
+    line-height: 1.35;
+    cursor: pointer;
+}
+
+.lethal-auto-filter-card__option input {
+    width: 16px;
+    height: 16px;
+    margin: 1px 0 0;
+    accent-color: var(--lethal-planner-accent, #b91c1c);
+}
+
+.lethal-auto-filter-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 13px 20px 16px;
+    border-top: 1px solid rgba(15, 23, 42, .1);
+}
+
+.lethal-auto-filter-modal__cancel,
+.lethal-auto-filter-modal__generate {
+    min-height: 38px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lethal-auto-filter-modal__cancel {
+    border: 1px solid rgba(15, 23, 42, .18);
+    background: #fff;
+    color: #475569;
+}
+
+.lethal-auto-filter-modal__generate {
+    border: 1px solid var(--lethal-planner-accent, #b91c1c);
+    background: var(--lethal-planner-accent, #b91c1c);
+    color: #fff;
+}
+
+.lethal-auto-filter-modal button:focus-visible,
+.lethal-auto-filter-card__option input:focus-visible {
+    outline: 3px solid rgba(185, 28, 28, .25);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .lethal-planner {
+        padding: 15px;
+    }
+
+    .lethal-planner__groups {
+        gap: 6px;
+    }
+
+    .lethal-planner__card-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lethal-card-mini__image {
+        width: 32px;
+    }
+
+    .lethal-planner__beta-actions {
+        width: 100%;
+    }
+
+    .lethal-planner__beta-button {
+        flex: 0 1 auto;
+    }
+
+    .lethal-planner__auto-cards-control {
+        order: -1;
+        flex: 0 0 100%;
+        justify-content: flex-end;
+    }
+
+    .lethal-auto-filter-modal {
+        align-items: stretch;
+        padding: 12px;
+    }
+
+    .lethal-auto-filter-modal__dialog {
+        max-height: calc(100vh - 24px);
+    }
+
+    .lethal-auto-filter-modal__header,
+    .lethal-auto-filter-modal__cards,
+    .lethal-auto-filter-modal__footer {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .lethal-auto-filter-modal__bulk {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .lethal-auto-filter-modal__chips {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lethal-planner__auto-button,
+    .lethal-planner__auto-result,
+    .lethal-planner__auto-toggle,
+    .lethal-planner__value,
+    .lethal-planner__result {
+        transition: none;
+    }
+
+    .lethal-card-mini {
+        transition: none;
+    }
+
+    .lethal-planner.is-just-lethal .lethal-planner__result,
+    .lethal-planner.is-over-lethal .lethal-planner__result {
+        animation: none;
+    }
+}
+
+/* リーサルプラン投稿登録 */
+.lethal-planner__registration {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color, #d7dce3);
+}
+
+.lethal-planner__register-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: .45rem .8rem;
+    border: 0;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #5b9cf5, #83baff);
+    box-shadow: 0 2px 6px rgba(91, 156, 245, .3);
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.lethal-planner__register-button:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(91, 156, 245, .4);
+}
+
+.lethal-planner__register-button:active {
+    transform: scale(.985);
+}
+
+.lethal-planner__register-button:focus-visible,
+.lethal-planner__registered-card:focus-visible,
+.lethal-planner__registered-expression-remove:focus-visible {
+    outline: 3px solid rgba(47, 128, 237, .35);
+    outline-offset: 2px;
+}
+
+.lethal-planner__registered-title {
+    margin: 0 0 .5rem;
+}
+
+.lethal-planner__registered-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: .5rem;
+}
+
+.lethal-planner__registered-header .lethal-planner__registered-title {
+    margin: 0;
+}
+
+.lethal-planner__registered-list {
+    display: grid;
+    gap: .4rem;
+}
+
+.lethal-planner__registered-empty {
+    margin: 0;
+    padding: .3rem .45rem;
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: .78rem;
+    line-height: 1.35;
+}
+
+.lethal-planner__registered-item {
+    padding: .5rem;
+    border: 1px solid var(--border-color, #d7dce3);
+    border-radius: 7px;
+}
+
+.lethal-planner__registered-item.is-invalid {
+    border-color: #b3261e;
+    background: #fff4f2;
+}
+
+.lethal-planner__registered-expression {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    font-weight: 700;
+}
+
+.lethal-planner__registered-expression-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: .3rem;
+}
+
+.lethal-planner__registered-expression-edit {
+    min-height: 38px;
+    padding: .45rem .8rem;
+    border: 1px solid #5b93df;
+    border-radius: 8px;
+    background: #fff;
+    color: #326fbe;
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.lethal-planner__registered-expression-edit:hover {
+    background: #eef6ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(91, 147, 223, .2);
+}
+
+.lethal-planner__registered-expression-edit:active {
+    transform: scale(.985);
+}
+
+.lethal-planner__registered-expression-edit:focus-visible {
+    outline: 3px solid rgba(47, 128, 237, .35);
+    outline-offset: 2px;
+}
+
+.lethal-planner__registered-expression-remove {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid #e08b87;
+    border-radius: 8px;
+    background: #fff;
+    color: #b3261e;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.lethal-planner__registered-expression-remove:hover {
+    background: #fff0ee;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(179, 38, 30, .14);
+}
+
+.lethal-planner__registered-expression-remove:active {
+    transform: scale(.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lethal-planner__register-button,
+    .lethal-planner__registered-expression-edit,
+    .lethal-planner__registered-expression-remove {
+        transition: none;
+    }
+}
+
+.lethal-planner__registered-cards {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .25rem;
+    margin: .35rem 0 0;
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.lethal-planner__registered-cards[hidden] {
+    display: none;
+}
+
+.lethal-planner__registered-variant-label {
+    display: inline-grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    border-radius: 50%;
+    background: #eef2f7;
+    color: #475569;
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+.lethal-planner__registered-card {
+    display: inline-flex;
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.lethal-planner__registered-card:hover {
+    border-color: var(--primary-color, #3659a7);
+}
+
+.lethal-planner__registered-card-image {
+    display: block;
+    width: 48px;
+    aspect-ratio: 424 / 532;
+    object-fit: cover;
+}
+
+.lethal-planner__registered-warning {
+    color: #9b1c15;
+    font-weight: 700;
+}
+
+.lethal-planner__variants-toggle,
+.post-lethal-candidates-more {
+    width: 100%;
+    margin-top: .4rem;
+    padding: .35rem .5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: .72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lethal-planner__variants-toggle:hover,
+.post-lethal-candidates-more:hover {
+    border-color: var(--primary-color, #3659a7);
+    color: var(--primary-color, #3659a7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lethal-planner__registration * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+/* 投稿タブのリーサル登録画面 */
+.post-lethal-label {
+    --lethal-planner-accent: #b91c1c;
+}
+
+.post-lethal-label__title {
+    display: block;
+}
+
+.post-lethal-label > .lethal-planner__title-badge {
+    display: inline-block;
+    flex: 0 0 auto;
+    margin-top: .2rem;
+    white-space: nowrap;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .info-label.any {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        width: 100%;
+        margin-bottom: .4rem;
+    }
+
+    .info-label.any > .any-text,
+    .post-lethal-label > .lethal-planner__title-badge {
+        margin: 0;
+    }
+}
+
+.post-lethal-row .post-lethal-editor {
+    width: 100%;
+}
+
+.post-lethal-planner {
+    box-sizing: border-box;
+    width: 100%;
+    padding: .75rem;
+}
+
+.post-lethal-planner .lethal-planner__registration {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.post-lethal-planner .lethal-planner__header {
+    gap: .5rem;
+    margin-bottom: .45rem;
+}
+
+.post-lethal-planner .lethal-planner__title {
+    font-size: 1rem;
+}
+
+.post-lethal-planner .lethal-planner__auto-button {
+    min-height: 34px;
+    padding: .4rem .65rem;
+    font-size: .78rem;
+    line-height: 1.2;
+}
+
+.post-lethal-planner .lethal-planner__expression {
+    margin-top: .4rem;
+    padding: .35rem 0;
+}
+
+.post-lethal-planner .lethal-planner__groups {
+    gap: 5px;
+    margin-top: .45rem;
+}
+
+.post-lethal-planner .lethal-planner__value {
+    min-width: 36px;
+    min-height: 32px;
+    padding: 4px 8px 4px 16px;
+    font-size: .86rem;
+}
+
+.post-lethal-planner .lethal-planner__beta-report {
+    gap: 4px 6px;
+    margin-top: .65rem;
+    padding-top: .55rem;
+}
+
+.post-lethal-planner .lethal-planner__beta-label {
+    line-height: 1.35;
+}
+
+.post-lethal-card-modal {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.post-lethal-card-modal__content {
+    width: min(760px, 100%);
+    max-height: min(86vh, 760px);
+    overflow: auto;
+}
+
+.post-lethal-card-modal__content > .lethal-planner__register-button {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.post-lethal-card-modal__content .lethal-planner__header {
+    padding-right: 2rem;
+}
+
+.post-lethal-modal-candidates {
+    margin-top: .75rem;
+    padding-top: .65rem;
+    border-top: 1px solid rgba(15, 23, 42, .1);
+}
+
+.post-lethal-modal-candidates__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.post-lethal-modal-candidates .lethal-planner__cards-title,
+.post-lethal-modal-candidates .post-hint {
+    margin: 0;
+}
+
+.post-lethal-candidate-toggle {
+    min-height: 30px;
+    padding: .3rem .6rem;
+    border: 1px solid #94a3b8;
+    border-radius: 6px;
+    background: #fff;
+    color: #334155;
+    font-size: .72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.post-lethal-candidate-toggle:hover:not(:disabled) {
+    border-color: var(--lethal-planner-accent);
+    color: var(--lethal-planner-accent);
+}
+
+.post-lethal-candidate-toggle:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 25%, transparent);
+    outline-offset: 2px;
+}
+
+.post-lethal-candidate-toggle:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+#post-lethal-card-modal-list {
+    grid-template-columns: 1fr;
+    min-height: 5rem;
+}
+
+.post-lethal-candidate-row {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .45rem;
+    border: 1px solid var(--border-color, #d7dce3);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.post-lethal-candidate-row[hidden] {
+    display: none;
+}
+
+.post-lethal-candidate-row.is-selected {
+    border-color: var(--lethal-planner-accent);
+    background: #fff8f8;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lethal-planner-accent) 12%, transparent);
+}
+
+.post-lethal-candidate-row .lethal-planner__registered-cards {
+    margin: 0;
+}
+
+.post-lethal-candidate-check {
+    display: grid;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    place-items: center;
+    border: 1.5px solid #94a3b8;
+    border-radius: 4px;
+    background: #fff;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.post-lethal-candidate-check[aria-pressed="true"] {
+    border-color: var(--lethal-planner-accent);
+    background: var(--lethal-planner-accent);
+}
+
+.post-lethal-candidate-check:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--lethal-planner-accent) 25%, transparent);
+    outline-offset: 2px;
+}
+
+.post-lethal-candidate-card {
+    cursor: default;
+}
+
+.post-lethal-candidate-card:hover {
+    border-color: transparent;
+}
+
+.post-lethal-value-cards-preview {
+    position: fixed;
+    z-index: 1400;
+    display: flex;
+    gap: 5px;
+    max-width: calc(100vw - 16px);
+    padding: 6px;
+    overflow-x: auto;
+    border: 1px solid rgba(15, 23, 42, .16);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .2);
+}
+
+.post-lethal-value-cards-preview img {
+    display: block;
+    width: 44px;
+    aspect-ratio: 424 / 532;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+#post-lethal-groups .lethal-planner__value,
+#post-lethal-expression .lethal-planner__term,
+#post-lethal-auto-results .lethal-planner__auto-result {
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .post-lethal-planner {
+        padding: .6rem;
+    }
+
+    .post-lethal-planner .lethal-planner__header {
+        align-items: flex-start;
+    }
+
+    .post-lethal-planner .lethal-planner__auto-button {
+        min-height: 32px;
+        padding: .35rem .5rem;
+        font-size: .72rem;
+    }
+
+    .lethal-planner__registered-card-image {
+        width: 42px;
     }
 }

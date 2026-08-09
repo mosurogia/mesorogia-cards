@@ -5381,3 +5381,24 @@ textarea.is-char-limit-over {
         transition: none;
     }
 }
+/* 投稿詳細のリーサルプラン */
+.lethal-plan-label .lethal-planner__title-badge { display: block; width: fit-content; margin-top: .2rem; padding: 2px 6px; border: 1px solid color-mix(in srgb, #b91c1c 38%, transparent); border-radius: 999px; background: color-mix(in srgb, #b91c1c 7%, white); color: #b91c1c; font-size: .68rem; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+.lethal-plan-summary { min-width: 0; }
+.lethal-plan-values { display: grid; gap: .15rem; }
+.lethal-plan-details { margin-top: .3rem; }
+.lethal-plan-details summary { width: fit-content; color: var(--primary-color, #3659a7); font-size: .82rem; font-weight: 700; cursor: pointer; }
+.lethal-plan-list { display: grid; gap: .4rem; margin-top: .4rem; }
+.lethal-plan-item { padding: .4rem; border: 1px solid var(--border-color, #d7dce3); border-radius: 7px; }
+.lethal-plan-expression { font-weight: 700; }
+.lethal-plan-detail-label { font-size: .78rem; font-weight: 700; }
+.lethal-plan-variant { display: flex; align-items: center; flex-wrap: wrap; gap: .25rem; margin-top: .35rem; }
+.lethal-plan-variant-label { display: inline-grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #eef2f7; color: #475569; font-size: .68rem; font-weight: 800; }
+.lethal-plan-card { display: inline-flex; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; }
+.lethal-plan-card:hover { border-color: var(--primary-color, #3659a7); }
+.lethal-plan-card-image { display: block; width: 48px; aspect-ratio: 424 / 532; object-fit: cover; }
+.lethal-plan-operator { font-size: .8rem; font-weight: 700; }
+.lethal-plan-card:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lethal-plan-card { transition: none; }
+}
