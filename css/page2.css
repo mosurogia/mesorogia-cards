@@ -5714,7 +5714,7 @@ body.dm-restore-modal-open {
 
 .lethal-card-mini__image {
     display: block;
-    width: 38px;
+    width: 44px;
     height: auto;
     flex: 0 0 auto;
     border-radius: 3px;
@@ -6053,7 +6053,7 @@ body.lethal-auto-filter-open {
     }
 
     .lethal-card-mini__image {
-        width: 32px;
+        width: 38px;
     }
 
     .lethal-planner__beta-actions {
