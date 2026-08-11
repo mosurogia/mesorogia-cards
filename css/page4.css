@@ -4626,17 +4626,74 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 .post-card-note {
     display: grid;
     grid-template-columns: 100px 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
         "left pick"
+        "left toolbar"
         "left note";
-    gap: .5rem .75rem;
+    gap: .25rem .75rem;
     align-items: stretch;
     padding: .5rem;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
     background: #fafafa;
     margin-bottom: .5rem;
+}
+
+/* カード解説の入力補助と文字数表示 */
+.post-card-note .card-note-editor-toolbar {
+    grid-area: toolbar;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.post-card-note .card-note-editor-toolbar .post-char-limit {
+    margin-top: 0;
+    margin-left: auto;
+    text-align: right;
+}
+
+.post-card-note .card-note-card-ref-btn {
+    flex: 0 0 auto;
+    min-width: 10.5rem;
+    min-height: 30px;
+    padding: .25rem .5rem;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: inherit;
+    border-radius: 8px;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.post-card-note .card-note-card-ref-btn:hover {
+    border-color: #9ca3af;
+    background: #f9fafb;
+    box-shadow: none;
+    transform: none;
+}
+
+.post-card-note .card-note-card-ref-btn:active {
+    background: #f3f4f6;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .post-card-note .card-note-card-ref-btn {
+        min-width: 7.25rem;
+        min-height: 26px;
+        padding: .2rem .35rem;
+        font-size: 10px;
+        line-height: 1.25;
+    }
+
+    .post-card-note .card-note-editor-toolbar .post-char-limit {
+        font-size: 10px;
+    }
 }
 
 @media (max-width:1023px) {
