@@ -155,6 +155,12 @@
 
   function ensureLimitStatus_(el, className){
     if (!el) return null;
+    if (className === 'post-card-note-char-limit') {
+      const cardNoteStatus = el
+        .closest('.post-card-note')
+        ?.querySelector(`.card-note-editor-toolbar .${className}`);
+      if (cardNoteStatus) return cardNoteStatus;
+    }
     const next = el.nextElementSibling;
     if (next?.classList?.contains(className)) return next;
 
@@ -395,6 +401,32 @@
     });
   }
 
+  function openCardNoteTextRefPicker_(target){
+    if (!target) return;
+
+    const range = {
+      start: target.selectionStart ?? target.value.length,
+      end: target.selectionEnd ?? target.value.length,
+      scrollTop: target.scrollTop ?? 0,
+      scrollLeft: target.scrollLeft ?? 0,
+      pageX: window.scrollX ?? window.pageXOffset ?? 0,
+      pageY: window.scrollY ?? window.pageYOffset ?? 0
+    };
+
+    if (typeof window.openCardPickModal !== 'function') {
+      alert('カード選択モーダルを読み込めませんでした');
+      return;
+    }
+
+    window.openCardPickModal({
+      onPicked: (picked) => {
+        const name = String(picked?.name || '').trim();
+        if (!name) return;
+        insertPresetToRange_(target, `[[${name}]]`, range);
+      }
+    });
+  }
+
   window.DeckNotePresets?.bindPresetUi?.({
     key: 'deckmakerPost',
     getTarget: getNotePresetTarget_,
@@ -562,6 +594,10 @@
             <div class="title-row">
               <button type="button" class="pick-btn">${cardName}</button>
             </div>
+            <div class="card-note-editor-toolbar">
+              <button type="button" class="note-card-ref-btn card-note-card-ref-btn">文中にカードを追加</button>
+              <div class="post-char-limit post-card-note-char-limit" aria-live="polite"></div>
+            </div>
             <textarea class="note" rows="2" placeholder="このカードの採用理由・使い方など"></textarea>
           </div>
         `;
@@ -574,6 +610,9 @@
           if (cardNotes[i]) cardNotes[i].text = ta.value;
           updateLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
           syncHidden();
+        });
+        item.querySelector('.card-note-card-ref-btn')?.addEventListener('click', () => {
+          openCardNoteTextRefPicker_(ta);
         });
 
         // 画像クリックでもピッカー

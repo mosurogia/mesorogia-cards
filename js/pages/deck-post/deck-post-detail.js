@@ -2254,7 +2254,7 @@
       const card = cardMap[cd5] || {};
       const name = card.name || 'カード名未登録';
       const img = cardImageSrc_(card.cd ? card : { ...card, cd: cd5 });
-      const textHtml = escHtml_(r.text || '').replace(/\n/g, '<br>');
+      const textHtml = renderDeckNoteText_(r.text || '');
 
       return `
         <div class="post-cardnote">

@@ -57,6 +57,12 @@
 
   function ensureLimitStatus_(el, className){
     if (!el) return null;
+    if (className === 'post-card-note-char-limit') {
+      const cardNoteStatus = el
+        .closest('.post-card-note')
+        ?.querySelector(`.card-note-editor-toolbar .${className}`);
+      if (cardNoteStatus) return cardNoteStatus;
+    }
     if (className === 'post-title-char-limit') {
       const editor = el.closest?.('.decktitle-editor');
       const existing = editor?.querySelector?.(`.${className}`);
@@ -148,6 +154,39 @@
 
   function openDeckNoteCardRefPicker_(btn) {
     const target = getDeckNotePresetTarget_(btn);
+    if (!target) return;
+
+    const range = {
+      start: target.selectionStart ?? target.value.length,
+      end: target.selectionEnd ?? target.value.length
+    };
+
+    if (typeof window.openCardPickModal !== 'function') {
+      window.showMiniToast_?.('カード選択モーダルを読み込めませんでした');
+      return;
+    }
+
+    const root = btn?.closest?.('.post-detail-inner') ||
+      target.closest?.('.post-detail-inner') ||
+      document.querySelector('.post-detail-inner');
+    const postId = String(root?.dataset?.postid || '').trim();
+    const item = postId ? findItemById_(postId) : null;
+    const deck = item && typeof window.DeckPostDetail?.extractDeckMap === 'function'
+      ? window.DeckPostDetail.extractDeckMap(item)
+      : null;
+
+    window.openCardPickModal({
+      showDeckActions: true,
+      deck,
+      onPicked: (picked) => {
+        const name = String(picked?.name || '').trim();
+        if (!name) return;
+        window.DeckNotePresets?.insertText?.(target, `[[${name}]]`, range);
+      }
+    });
+  }
+
+  function openCardNoteTextRefPicker_(btn, target) {
     if (!target) return;
 
     const range = {
@@ -627,6 +666,10 @@
         </div>
       </div>
       <button type="button" class="pick-btn">${window.escapeHtml?.(name) || name}</button>
+      <div class="card-note-editor-toolbar">
+        <button type="button" class="note-card-ref-btn card-note-card-ref-btn">文中にカードを追加</button>
+        <div class="post-char-limit post-card-note-char-limit" aria-live="polite"></div>
+      </div>
       <textarea class="note" placeholder="このカードの採用理由・使い方など"></textarea>
     `;
 
@@ -634,6 +677,8 @@
     if (ta) {
       ta.value = String(rowData?.text || '');
       bindLimitStatus_(ta, POST_CARD_NOTE_MAX_LENGTH, 'カード解説', 'post-card-note-char-limit');
+      const cardRefButton = div.querySelector('.card-note-card-ref-btn');
+      cardRefButton?.addEventListener('click', () => openCardNoteTextRefPicker_(cardRefButton, ta));
     }
 
     return div;
