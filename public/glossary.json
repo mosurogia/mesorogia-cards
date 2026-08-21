@@ -1,0 +1,967 @@
+{
+  "version": "2026-08-21-181244Z",
+  "generatedAt": "2026-08-21T18:12:44Z",
+  "sections": [
+    {
+      "id": "basic-rules",
+      "label": "基本ルール",
+      "sortOrder": 10
+    },
+    {
+      "id": "card-ability",
+      "label": "カード・能力",
+      "sortOrder": 20
+    },
+    {
+      "id": "battle-rules",
+      "label": "バトル・判定",
+      "sortOrder": 30
+    },
+    {
+      "id": "deck-strategy",
+      "label": "デッキ・戦術",
+      "sortOrder": 40
+    },
+    {
+      "id": "environment-community",
+      "label": "ゲーム環境・コミュニティ",
+      "sortOrder": 50
+    }
+  ],
+  "tags": [
+    {
+      "id": "system",
+      "label": "ゲームシステム",
+      "sortOrder": 10
+    },
+    {
+      "id": "card-role",
+      "label": "カードの役割",
+      "sortOrder": 20
+    },
+    {
+      "id": "ability",
+      "label": "特殊能力",
+      "sortOrder": 30
+    },
+    {
+      "id": "status",
+      "label": "状態異常",
+      "sortOrder": 40
+    },
+    {
+      "id": "strategy",
+      "label": "戦術",
+      "sortOrder": 50
+    }
+  ],
+  "terms": [
+    {
+      "id": "summon-effect",
+      "term": "召喚時効果",
+      "reading": "しょうかんじこうか",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "召喚時効果とは、\nカードを戦場に召喚した時に発動する特殊能力です。",
+      "note": "・一部の戦場効果では無効化されます。\n・BPを消費する召喚時効果でも、無効化されてもBPは消費されます。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 10,
+      "updatedAt": ""
+    },
+    {
+      "id": "hand-effect",
+      "term": "手札発動",
+      "reading": "てふだはつどう",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "手札発動とは、\nカードのコスト分のマナがある場合に発動する特殊能力です。",
+      "note": "発動タイミングはカードによって変わります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 20,
+      "updatedAt": ""
+    },
+    {
+      "id": "attack-success",
+      "term": "攻撃成功時",
+      "reading": "こうげきせいこうじ",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "攻撃成功時とは、\nアタッカーで相手のライフを1以上減少させた時に発動する特殊能力です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 30,
+      "updatedAt": ""
+    },
+    {
+      "id": "attack-failure",
+      "term": "攻撃失敗時",
+      "reading": "こうげきしっぱいじ",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "攻撃失敗時とは、\nアタッカーが戦場にいるのに相手のライフを1も減少させられなかった時に発動する特殊能力です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 40,
+      "updatedAt": ""
+    },
+    {
+      "id": "block-success",
+      "term": "防御成功時",
+      "reading": "ぼうぎょせいこうじ",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "防御成功時とは、\n相手の攻撃に対してブロッカーによって相手のライフを1以上減少させた時に発動する特殊能力です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 50,
+      "updatedAt": ""
+    },
+    {
+      "id": "block-failure",
+      "term": "防御失敗時",
+      "reading": "ぼうぎょしっぱいじ",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "防御失敗時とは、\n相手の攻撃に対してブロッカーによって自分のライフ減少を防げなかった時、又は相手が攻撃をしてこなかった時に発動する特殊能力です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 60,
+      "updatedAt": ""
+    },
+    {
+      "id": "field-effect",
+      "term": "戦場発動",
+      "reading": "せんじょうはつどう",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "戦場発動とは、\nカードが戦場にいる時に発動する特殊能力です。",
+      "note": "発動タイミングはカードによって変わります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 70,
+      "updatedAt": ""
+    },
+    {
+      "id": "trait",
+      "term": "特性",
+      "reading": "とくせい",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "特性とは、\n手札又は戦場で発動する特殊能力です。",
+      "note": "ターンの途中でも発動しているので条件が変われば効果も変わります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 80,
+      "updatedAt": ""
+    },
+    {
+      "id": "charger",
+      "term": "チャージャー",
+      "reading": "ちゃーじゃー",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "card-role"
+      ],
+      "description": "青色のカードで、\n召喚するとパワー分のマナを増やす役割を持つカードです。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 90,
+      "updatedAt": ""
+    },
+    {
+      "id": "attacker",
+      "term": "アタッカー",
+      "reading": "あたっかー",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "card-role"
+      ],
+      "description": "紫色のカードで、\n相手のライフを減らす役割を持つカードです。",
+      "note": "・攻撃が成功すると■攻撃成功時■効果が発動します。\n・攻撃が失敗すると■攻撃失敗時■効果が発動します。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 100,
+      "updatedAt": ""
+    },
+    {
+      "id": "blocker",
+      "term": "ブロッカー",
+      "reading": "ぶろっかー",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "card-role"
+      ],
+      "description": "白色のカードで、\n相手のアタッカーからライフを守る役割を持つカードです",
+      "note": "・防御が成功すると■防御成功時■効果が発動します。\n・防御が失敗すると■防御失敗時■効果が発動します。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 110,
+      "updatedAt": ""
+    },
+    {
+      "id": "card-role",
+      "term": "役割",
+      "reading": "やくわり",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "card-role"
+      ],
+      "description": "役割とは、\nチャージャー、アタッカー、ブロッカーの３種類のカードの事です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 120,
+      "updatedAt": ""
+    },
+    {
+      "id": "blessing-point",
+      "term": "BP",
+      "reading": "びーぴー",
+      "aliases": [],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "system"
+      ],
+      "description": "BP（ブレッシングポイント）とは、\nマナとは別で貯めたり消費することで強力な効果を発動できます。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 130,
+      "updatedAt": ""
+    },
+    {
+      "id": "field",
+      "term": "フィールド",
+      "reading": "ふぃーるど",
+      "aliases": [],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "system"
+      ],
+      "description": "フィールドとは、\n全体に影響を及ぼすものであり塗り替えることで強力な効果を発動できます。",
+      "note": "・各種族固有のフィールドがあります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 140,
+      "updatedAt": ""
+    },
+    {
+      "id": "mulligan",
+      "term": "マリガン",
+      "reading": "まりがん",
+      "aliases": [],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "system"
+      ],
+      "description": "マリガンとは、\n初期の手札4枚から任意の枚数を入れ替える事です。",
+      "note": "・入れ替えるカードは最初の4枚以外から選ばれます。\n・入れ替えた後残りのカードは山札としてシャッフルされます。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 150,
+      "updatedAt": ""
+    },
+    {
+      "id": "priority",
+      "term": "優先権",
+      "reading": "ゆうせんけん",
+      "aliases": [],
+      "sectionId": "battle-rules",
+      "tagIds": [
+        "system"
+      ],
+      "description": "優先権とは、\n相手と自分での効果の発動する順番です。",
+      "note": "・優先権は2ターンおきに変わります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 160,
+      "updatedAt": ""
+    },
+    {
+      "id": "burn",
+      "term": "燃焼",
+      "reading": "ねんしょう",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "status"
+      ],
+      "description": "燃焼とは、\n付与するすることで燃焼状態になり次のターンの終わりに手札に残っている場合破棄させる状態異常です。",
+      "note": "・ターン開始時に燃焼状態になった場合、破棄されるのは次のターンの終わりです。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 170,
+      "updatedAt": ""
+    },
+    {
+      "id": "bind",
+      "term": "拘束",
+      "reading": "こうそく",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "status"
+      ],
+      "description": "拘束とは、\n付与することで拘束状態になり次のターンの終わりまで召喚と特殊能力が封じられる状態異常です。",
+      "note": "・一部のカードは2ターン拘束できます。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 180,
+      "updatedAt": ""
+    },
+    {
+      "id": "silence",
+      "term": "沈黙",
+      "reading": "ちんもく",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "status"
+      ],
+      "description": "沈黙とは、\n付与することで沈黙状態になり次のターンの終わりまで特殊能力が発動できなくなる状態異常です。",
+      "note": "・ターン開始時に沈黙状態になった場合、解除されるのは次のターンの終わりです。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 190,
+      "updatedAt": ""
+    }
+  ],
+  "guides": [
+    {
+      "id": "win-loss",
+      "title": "勝敗",
+      "summary": "ライフ、手札切れ、ターン経過による勝敗条件を解説します。",
+      "searchTerms": [
+        "敗北条件",
+        "勝利条件",
+        "ライフ",
+        "手札切れ",
+        "山札切れ",
+        "40ターン",
+        "優先権"
+      ],
+      "sectionId": "battle-rules",
+      "tagIds": [
+        "system"
+      ],
+      "relatedTermIds": [
+        "priority"
+      ],
+      "thumbnail": "",
+      "sortOrder": 10,
+      "updatedAt": "2026-08-21",
+      "blocks": [
+        {
+          "id": "win-loss-00",
+          "type": "text",
+          "heading": "",
+          "text": "勝敗は、ライフ、手札切れ、または40ターン経過によって決まります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "win-loss-01",
+          "type": "heading",
+          "heading": "ライフによる勝敗",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "win-loss-02",
+          "type": "text",
+          "heading": "",
+          "text": "先に相手のライフを0にしたプレイヤーが勝利します。相手のライフが0になった時点で勝敗が決まります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "win-loss-03",
+          "type": "text",
+          "heading": "",
+          "text": "お互いのライフを減らす処理では、相手のライフから先に減少します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "win-loss-04",
+          "type": "note",
+          "heading": "",
+          "text": "例：お互いのライフが3のとき、「お互いのライフを3減らす」効果が発動した場合、相手のライフが先に0になるため、効果を発動した側が勝利します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "win-loss-05",
+          "type": "heading",
+          "heading": "手札切れによる勝敗",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "win-loss-06",
+          "type": "text",
+          "heading": "",
+          "text": "山札がなく、手札もない状態でターンが開始されたプレイヤーは敗北します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "win-loss-07",
+          "type": "heading",
+          "heading": "ターン経過による勝敗",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "win-loss-08",
+          "type": "text",
+          "heading": "",
+          "text": "40ターン目が終了した時点で、優先権を持っているプレイヤーが敗北します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
+        }
+      ]
+    },
+    {
+      "id": "turn-sequence",
+      "title": "ターンの処理順",
+      "summary": "ターン開始から状態異常の処理まで、1ターンの進行順を解説します。",
+      "searchTerms": [
+        "ターン処理",
+        "処理順",
+        "ターン開始",
+        "召喚時処理",
+        "攻撃処理",
+        "ターン終了",
+        "同時処理"
+      ],
+      "sectionId": "battle-rules",
+      "tagIds": [
+        "system",
+        "ability",
+        "status"
+      ],
+      "relatedTermIds": [
+        "priority",
+        "hand-effect",
+        "summon-effect",
+        "charger",
+        "attack-success",
+        "attack-failure",
+        "block-success",
+        "block-failure",
+        "burn",
+        "silence",
+        "bind"
+      ],
+      "thumbnail": "",
+      "sortOrder": 20,
+      "updatedAt": "2026-08-22",
+      "blocks": [
+        {
+          "id": "turn-sequence-00",
+          "type": "text",
+          "heading": "",
+          "text": "ターンは、ターン開始時の効果から状態異常の処理まで、決められた順番で進行します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "turn-sequence-01",
+          "type": "note",
+          "heading": "",
+          "text": "基本的に同時に処理する効果がある場合は優先権を持つ側から処理します。手札発動は手札の左側にあるカードから処理します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "turn-sequence-02",
+          "type": "heading",
+          "heading": "1. ターン開始時の手札発動効果",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "turn-sequence-03",
+          "type": "text",
+          "heading": "",
+          "text": "優先権を持つ側から、発動条件を満たしている手札発動効果が発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "turn-sequence-04",
+          "type": "heading",
+          "heading": "2. 戦場に出すカードの選択",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "turn-sequence-05",
+          "type": "text",
+          "heading": "",
+          "text": "お互いのプレイヤーが、戦場に出すカードを同時に選択します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "turn-sequence-06",
+          "type": "heading",
+          "heading": "3. カード召喚・手札ドロー",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "turn-sequence-07",
+          "type": "text",
+          "heading": "",
+          "text": "選択したカードが同時に戦場へ出ます。また、手札が3枚以下の場合は、手札が4枚になるように山札から同時にドローします。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "turn-sequence-08",
+          "type": "heading",
+          "heading": "4. 召喚時処理",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
+        },
+        {
+          "id": "turn-sequence-09",
+          "type": "text",
+          "heading": "",
+          "text": "①「○○を召喚した時」を条件とする手札発動効果が発動します。\n②戦場に出たカードの召喚時効果が発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 100
+        },
+        {
+          "id": "turn-sequence-10",
+          "type": "heading",
+          "heading": "5. 戦場チャージャーのマナ獲得",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 110
+        },
+        {
+          "id": "turn-sequence-11",
+          "type": "text",
+          "heading": "",
+          "text": "戦場にいるチャージャーによるマナ獲得を同時に処理します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 120
+        },
+        {
+          "id": "turn-sequence-12",
+          "type": "heading",
+          "heading": "6. 攻撃処理",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 130
+        },
+        {
+          "id": "turn-sequence-13",
+          "type": "text",
+          "heading": "",
+          "text": "アタッカーの攻撃判定を行います。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 140
+        },
+        {
+          "id": "turn-sequence-14",
+          "type": "heading",
+          "heading": "7. 攻撃処理後の効果発動",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 150
+        },
+        {
+          "id": "turn-sequence-15",
+          "type": "text",
+          "heading": "",
+          "text": "優先権を持つ側から、攻撃成功時、攻撃失敗時、防御成功時、防御失敗時のうち、条件を満たした効果が発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 160
+        },
+        {
+          "id": "turn-sequence-16",
+          "type": "heading",
+          "heading": "8. ターン終了時の手札発動効果",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 170
+        },
+        {
+          "id": "turn-sequence-17",
+          "type": "text",
+          "heading": "",
+          "text": "ターン終了時を条件とする手札発動効果を処理します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 180
+        },
+        {
+          "id": "turn-sequence-18",
+          "type": "heading",
+          "heading": "9. 状態異常の処理",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 190
+        },
+        {
+          "id": "turn-sequence-19",
+          "type": "text",
+          "heading": "",
+          "text": "前のターンから燃焼状態のカードを破棄します。前のターンから沈黙状態のカードは沈黙を解除します。指定されたターン数が経過した拘束状態のカードは拘束を解除します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 200
+        }
+      ]
+    },
+    {
+      "id": "turn-time-limit",
+      "title": "各ターンでの持ち時間",
+      "summary": "ソロ戦と対人戦における、ターンごとの持ち時間を解説します。",
+      "searchTerms": [
+        "持ち時間",
+        "制限時間",
+        "長考",
+        "30秒",
+        "60秒",
+        "ソロ戦",
+        "対人戦"
+      ],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "system"
+      ],
+      "relatedTermIds": [],
+      "thumbnail": "",
+      "sortOrder": 30,
+      "updatedAt": "2026-08-22",
+      "blocks": [
+        {
+          "id": "turn-time-limit-00",
+          "type": "text",
+          "heading": "",
+          "text": "持ち時間のルールは、ソロ戦と対人戦で異なります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "turn-time-limit-01",
+          "type": "heading",
+          "heading": "ソロ戦の場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "turn-time-limit-02",
+          "type": "text",
+          "heading": "",
+          "text": "持ち時間は無制限です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "turn-time-limit-03",
+          "type": "heading",
+          "heading": "対人戦の場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "turn-time-limit-04",
+          "type": "text",
+          "heading": "",
+          "text": "最初に持ち時間30秒が与えられ、毎ターン30秒分が回復します。1ターンで30秒を超えて消費した分は回復せず、持ち時間は最長60秒です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "turn-time-limit-05",
+          "type": "note",
+          "heading": "",
+          "text": "例：前のターンを持ち時間60秒で開始し、残り20秒まで長考した場合、次のターンは20秒＋30秒の50秒から開始します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        }
+      ]
+    },
+    {
+      "id": "added-to-hand",
+      "title": "「手札に加えた時」の処理",
+      "summary": "カードを手札に加えた時に発動する効果の条件と対象外となる処理を解説します。",
+      "searchTerms": [
+        "手札に加えた時",
+        "引いた時",
+        "ドロー",
+        "自動ドロー",
+        "獣王 リオン",
+        "機巧士・ヴァル",
+        "ビーストテイマー"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability",
+        "system"
+      ],
+      "relatedTermIds": [
+        "hand-effect"
+      ],
+      "thumbnail": "",
+      "sortOrder": 40,
+      "updatedAt": "2026-08-22",
+      "blocks": [
+        {
+          "id": "added-to-hand-00",
+          "type": "text",
+          "heading": "",
+          "text": "「手札に加えた時」や「引いた時」の効果は、ドローによってカードが手札に加わった場合に発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "added-to-hand-01",
+          "type": "heading",
+          "heading": "カードテキストの例",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "added-to-hand-02",
+          "type": "text",
+          "heading": "",
+          "text": "『獣王 リオン』：このカードを手札に加えた時、これのパワーを次のターンの終わりまで6増やす。\n『機巧士・ヴァル』：これを引いた時、次のターンの終わりまでこれのコストを6減らす。\nテキストは異なりますが、同じ条件で発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "added-to-hand-03",
+          "type": "heading",
+          "heading": "発動する条件",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "added-to-hand-04",
+          "type": "text",
+          "heading": "",
+          "text": "・手札が3枚以下のときの自動ドローによって手札に加わった場合\n・「カードを○枚引く」などのドローによって手札に加わった場合",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "added-to-hand-05",
+          "type": "note",
+          "heading": "",
+          "text": "『ビーストテイマー』など、カードを選んで手札に加える効果は対象外です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        }
+      ]
+    },
+    {
+      "id": "daily-chest",
+      "title": "デイリー宝箱",
+      "summary": "デイリー宝箱の更新時間、解放条件、主な報酬を解説します。",
+      "searchTerms": [
+        "デイリー宝箱",
+        "宝箱",
+        "午前4時",
+        "ランクマッチ",
+        "フリーマッチ",
+        "ルームマッチ",
+        "神秘の回廊",
+        "ダイヤ",
+        "スペシャルパック"
+      ],
+      "sectionId": "environment-community",
+      "tagIds": [
+        "system"
+      ],
+      "relatedTermIds": [],
+      "thumbnail": "",
+      "sortOrder": 50,
+      "updatedAt": "2026-08-22",
+      "blocks": [
+        {
+          "id": "daily-chest-00",
+          "type": "text",
+          "heading": "",
+          "text": "デイリー宝箱は毎日午前4時に更新されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "daily-chest-01",
+          "type": "heading",
+          "heading": "宝箱の解放",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "daily-chest-02",
+          "type": "text",
+          "heading": "",
+          "text": "4箱のうち1箱は無条件で解放済みです。残りの3箱は、対象となる対戦で勝利すると左側から1箱ずつ解放されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "daily-chest-03",
+          "type": "heading",
+          "heading": "対象となる対戦",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "daily-chest-04",
+          "type": "text",
+          "heading": "",
+          "text": "ランクマッチ、フリーマッチ、ルームマッチ、神秘の回廊での勝利が対象です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "daily-chest-05",
+          "type": "heading",
+          "heading": "報酬とレアリティ",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "daily-chest-06",
+          "type": "text",
+          "heading": "",
+          "text": "報酬としてダイヤ、スペシャルパック、パックチケットなどを獲得できます。宝箱のレアリティが高いほど、報酬の量や内容が良くなります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "daily-chest-07",
+          "type": "note",
+          "heading": "",
+          "text": "確認できている目安：銅はダイヤ10個、銀は30個、金は80個、虹は120個やスペシャルパックなど。詳しい報酬量は調査中で、各レアリティの出現率は不明です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        }
+      ]
+    }
+  ]
+}
