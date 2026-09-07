@@ -66,7 +66,7 @@
     function formatLethalFilterLabel_(type, value){
     const typeDef = LETHAL_FILTER_TYPES.find(def => def.key === type);
     if (!typeDef) return value;
-    if (value === 'any') return `${typeDef.icon} ${typeDef.label}全般`;
+    if (value === 'any') return `${typeDef.icon} ${typeDef.label}全て`;
     return `${typeDef.icon} ${typeDef.prefix}${value}`;
     }
 
@@ -115,13 +115,11 @@
     const groups = document.createElement('div');
     groups.className = 'lethal-filter-groups';
 
-    const featuredGroup = document.createElement('div');
-    featuredGroup.className = 'filter-group lethal-filter-values';
-    featuredGroup.dataset.key = '打点';
+    const featuredGroups = document.createElement('div');
+    featuredGroups.className = 'lethal-filter-sections';
 
-    const otherGroup = document.createElement('div');
-    otherGroup.className = 'filter-group lethal-filter-values lethal-filter-values--other';
-    otherGroup.dataset.key = '打点';
+    const otherGroups = document.createElement('div');
+    otherGroups.className = 'lethal-filter-sections lethal-filter-values--other';
 
     LETHAL_FILTER_TYPES.forEach(type => {
         const values = [...new Set(cards.flatMap(card =>
@@ -135,34 +133,61 @@
         btn.type = 'button';
         btn.className = 'filter-btn';
         btn.dataset.lethal = `${type.key}:${value}`;
-        btn.textContent = formatLethalFilterLabel_(type.key, value);
+        btn.textContent = value === 'any' ? '全て' : `${type.prefix}${value}`;
         btn.setAttribute('aria-label', `${type.label} ${type.prefix}${value}`);
         return btn;
+        };
+
+        const createTypeGroup = (groupValues, includeAll = false) => {
+        if (!includeAll && groupValues.length === 0) return null;
+
+        const section = document.createElement('div');
+        section.className = `lethal-filter-section lethal-filter-section--${type.key}`;
+
+        const label = document.createElement('span');
+        label.className = 'lethal-filter-label';
+        const icon = document.createElement('span');
+        icon.className = 'lethal-filter-label-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = type.icon;
+        label.append(icon, document.createTextNode(type.label));
+        section.appendChild(label);
+
+        const valueGroup = document.createElement('div');
+        valueGroup.className = 'filter-group lethal-filter-values';
+        valueGroup.dataset.key = '打点';
+
+        if (includeAll) {
+            const allButton = createValueButton('any');
+            allButton.classList.add('lethal-filter-all-button');
+            allButton.setAttribute('aria-label', `${type.label}全て`);
+            valueGroup.appendChild(allButton);
+        }
+        groupValues.forEach(value => valueGroup.appendChild(createValueButton(value)));
+        section.appendChild(valueGroup);
+        return section;
         };
 
         const featuredSet = new Set(type.featuredValues);
         const featuredValues = values.filter(value => featuredSet.has(value));
         const otherValues = values.filter(value => !featuredSet.has(value));
 
-        if (type.key === 'burn' || type.key === 'buff') {
-        const allButton = createValueButton('any');
-        allButton.classList.add('lethal-filter-all-button');
-        allButton.setAttribute('aria-label', `${type.label}全般`);
-        featuredGroup.appendChild(allButton);
-        }
-        featuredValues.forEach(value => featuredGroup.appendChild(createValueButton(value)));
-        otherValues.forEach(value => otherGroup.appendChild(createValueButton(value)));
+        const featuredSection = createTypeGroup(featuredValues, true);
+        if (featuredSection) featuredGroups.appendChild(featuredSection);
+
+        const otherSection = createTypeGroup(otherValues);
+        if (otherSection) otherGroups.appendChild(otherSection);
     });
 
-    groups.appendChild(featuredGroup);
+    groups.appendChild(featuredGroups);
 
-    if (otherGroup.childElementCount > 0) {
+    if (otherGroups.childElementCount > 0) {
         const details = document.createElement('details');
         details.className = 'lethal-filter-other';
         const summary = document.createElement('summary');
         summary.textContent = 'その他の値';
         details.appendChild(summary);
-        details.appendChild(otherGroup);
+        details.appendChild(otherGroups);
         groups.appendChild(details);
     }
 
@@ -776,7 +801,7 @@
     return { wrapper, titleEl: strong };
     }
 
-    function createButtonGroup_(title, list, filterKey) {
+    function createButtonGroup_(title, list, filterKey, itemCounts = null) {
         const { wrapper } = createFilterBlock_(title);
 
         const groupDiv = document.createElement('div');
@@ -799,9 +824,29 @@
             btn.dataset.catRace = r || 'none';
         }
 
-        // 表示（カテゴリだけ改行）
-        if (filterKey === 'category' && String(item).includes('（')) {
-            btn.innerHTML = String(item).replace('（', '<br>（');
+        // 表示（カテゴリは枚数をカテゴリ名の横に付け、読み仮名を改行）
+        if (filterKey === 'category') {
+            const label = String(item);
+            const readingIndex = label.indexOf('（');
+            const categoryName = readingIndex >= 0 ? label.slice(0, readingIndex) : label;
+            const categoryReading = readingIndex >= 0 ? label.slice(readingIndex) : '';
+            const count = itemCounts?.get(item) || 0;
+
+            const categoryNameEl = document.createElement('span');
+            categoryNameEl.className = 'filter-category-name';
+            categoryNameEl.textContent = categoryName;
+
+            const categoryCountEl = document.createElement('span');
+            categoryCountEl.className = 'filter-category-count';
+            categoryCountEl.textContent = `${count}枚`;
+
+            btn.append(categoryNameEl, categoryCountEl);
+            if (categoryReading) {
+            const categoryReadingEl = document.createElement('span');
+            categoryReadingEl.className = 'filter-category-reading';
+            categoryReadingEl.textContent = categoryReading;
+            btn.appendChild(categoryReadingEl);
+            }
         } else {
             btn.textContent =
             (window.DISPLAY_LABELS && window.DISPLAY_LABELS[item] != null)
@@ -1312,10 +1357,10 @@
         featureKey: 'innocentOldgodPickup',
         races: ['イノセント', '旧神'],
         },
-        'illustrated-illusion': {
-        label: 'Iパック',
-        featureKey: 'illustratedIllusionPack',
-        pack: 'Illustrated Illusion',
+        'juggernaut-incarnate': {
+        label: 'Jパック',
+        featureKey: 'juggernautIncarnatePack',
+        pack: 'Juggernaut Incarnate',
         },
     };
 
@@ -1394,6 +1439,11 @@
         : ((_) => 9999);
 
         const categories = getUniqueValues('category').sort((a, b) => catOrder(a) - catOrder(b));
+        const categoryCounts = cards.reduce((counts, card) => {
+        const category = String(card.category || '').trim();
+        if (category) counts.set(category, (counts.get(category) || 0) + 1);
+        return counts;
+        }, new Map());
         const races = getUniqueValues('race');
         const costs = [...new Set(cards.map(c => parseInt(c.cost)).filter(Number.isFinite))].sort((a, b) => a - b);
         const powers = [...new Set(cards.map(c => parseInt(c.power)).filter(Number.isFinite))].sort((a, b) => a - b);
@@ -1492,7 +1542,7 @@
         mainFilters.appendChild(createRangeStyleWrapper_('レアリティ', rarities, 'rarity'));
         mainFilters.appendChild(packWrapper);
         mainFilters.appendChild(createButtonGroup_('種族', races, 'race'));
-        mainFilters.appendChild(createButtonGroup_('カテゴリ', categories, 'category'));
+        mainFilters.appendChild(createButtonGroup_('カテゴリ', categories, 'category', categoryCounts));
         mainFilters.appendChild(createCvFilterBlock_(cards));
         mainFilters.appendChild(createRangeSelector_('コスト', 'cost', costs, () => applyFilters()));
         mainFilters.appendChild(createRangeSelector_('パワー', 'power', powers, () => applyFilters()));

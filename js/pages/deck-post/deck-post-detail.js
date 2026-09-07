@@ -657,6 +657,7 @@
     if (low.includes('glory of the gods')) return 'Gパック';
     if (low.includes('honor of the brave heart')) return 'Hパック';
     if (low.includes('illustrated illusion')) return 'Iパック';
+    if (low.includes('juggernaut incarnate')) return 'Jパック';
 
     if (s.includes('コラボ') || low.includes('collab')) return 'コラボ';
     if (s.includes('その他特殊') || low.includes('special')) return '特殊';

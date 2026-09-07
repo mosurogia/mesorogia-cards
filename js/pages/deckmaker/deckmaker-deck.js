@@ -111,6 +111,15 @@
     return window.cardMap?.[normCd5(cd)] || window.cardMap?.[String(cd)] || null;
   }
 
+  function getCardCopyGroupKey_(card, cd) {
+    const ownCd = normCd5(cd);
+    if (!card?.link) return ownCd;
+
+    // JSONの正式フィールドを優先し、旧形式にも対応する。
+    const linkCd = normCd5(card.link_cd ?? card.linkCd);
+    return linkCd && linkCd !== '00000' ? linkCd : ownCd;
+  }
+
   // デッキのカードをソートして返す（表示用）
   function getDeckEntriesSorted() {
     return window.sortCardEntries?.(Object.entries(deck), window.cardMap || {}) || Object.entries(deck);
@@ -337,13 +346,13 @@
     if (!card) return false;
 
     // 最大枚数判定（旧神は1枚、それ以外は最大3枚。ただしリンクカードは共有）
-    const groupKey = card.link ? String(card.linkCd) : String(normCd5(cd));
+    const groupKey = getCardCopyGroupKey_(card, cd);
     let totalGroupCount = 0;
 
     for (const [id, count] of Object.entries(deck)) {
       const other = getCard(id);
       if (!other) continue;
-      const otherGroup = other.link ? String(other.linkCd) : String(normCd5(id));
+      const otherGroup = getCardCopyGroupKey_(other, id);
       if (otherGroup === groupKey) totalGroupCount += count;
     }
     if (totalGroupCount >= 3) return false;
@@ -500,6 +509,8 @@
   // =========================
   const LETHAL_PLANNER_TARGET = 30;
   const LETHAL_PLANNER_REPEAT_TARGET = 40;
+  const LETHAL_PLANNER_MAX_REPEAT_COUNT = 15;
+  const LETHAL_PLANNER_DEFAULT_REPEAT_COUNT = 3;
   const lethalPlannerSelections = [];
   const lethalPlannerCardSelections = new Map();
   let lethalPlannerCandidates = new Map();
@@ -510,6 +521,7 @@
   let lethalPlannerAutoSearched = false;
   let lethalPlannerAutoExpanded = false;
   let allowedAutoLethalOptions = null;
+  let allowedAutoLethalRepeatCounts = new Map();
   let lethalPlannerAutoFilterActive = false;
   let lethalCandidateTooltip = null;
   let lethalCandidateTooltipTimer = null;
@@ -574,6 +586,20 @@
     return values;
   }
 
+  // 構造化前の lethal_burn（数値・カンマ区切り・「*」付き）を補完する
+  function getLegacyLethalPlannerBurnValues_(value) {
+    return String(value ?? '')
+      .split(',')
+      .map(item => {
+        const normalized = item.trim();
+        const burnValue = getLethalPlannerNumber_(normalized.replace('*', ''));
+        return burnValue === null
+          ? null
+          : { value: burnValue, isRepeat: normalized.includes('*') };
+      })
+      .filter(item => item !== null);
+  }
+
   function buildLethalPlannerCandidates_() {
     const candidates = new Map();
     let deckOrder = 0;
@@ -627,6 +653,30 @@
             defaultOff: lethal.defaultOff === true,
             deckOrder: currentDeckOrder,
           });
+        }
+      }
+
+      const hasStructuredBurn =
+        getLethalPlannerValues_(card.lethal?.freeBurn).length > 0 ||
+        getLethalPlannerValues_(card.lethal?.lethalBurn).length > 0;
+      if (!hasStructuredBurn) {
+        for (const legacyBurn of getLegacyLethalPlannerBurnValues_(card.lethal_burn)) {
+          addLethalPlannerCandidate_(
+            candidates,
+            'burn',
+            legacyBurn.value,
+            cd,
+            card,
+            count,
+            legacyBurn.isRepeat,
+            {
+              sourceKind: 'freeBurn',
+              valuesCount: 1,
+              isMinimumValue: true,
+              defaultOff: false,
+              deckOrder: currentDeckOrder,
+            }
+          );
         }
       }
 
@@ -712,7 +762,7 @@
         candidateKey: key,
         sourceVariantKey,
         count: isRepeat && !sourceMeta?.forceDeckCount
-          ? Math.ceil(LETHAL_PLANNER_REPEAT_TARGET / value)
+          ? LETHAL_PLANNER_MAX_REPEAT_COUNT
           : count,
         deckCount: count,
         valuesCount: sourceMeta?.valuesCount || 1,
@@ -842,6 +892,7 @@
         });
       }
       const card = cards.get(source.cardId);
+      if (source.isRepeat) card.count = Math.max(card.count, source.count);
       if (source.type === 'attack') {
         if (source.lethalBurnValue == null) card.hasPlainAttack = true;
         else card.attackBreakdowns.add(source.detailDisplay);
@@ -996,11 +1047,16 @@
           continue;
         }
         if (!groups.has(source.sourceKey)) {
+          const repeatCount = source.isRepeat
+            ? allowedAutoLethalRepeatCounts.get(getLethalPlannerAutoOptionKey_(source))
+            : null;
           groups.set(source.sourceKey, {
             sourceKey: source.sourceKey,
             sourceKind: source.sourceKind,
             cardId: source.cardId,
-            count: source.count,
+            count: Number.isInteger(repeatCount)
+              ? Math.min(source.count, Math.max(1, repeatCount))
+              : source.count,
             sources: [],
           });
         }
@@ -1110,13 +1166,24 @@
     const copyUseCounts = new Map();
     const triggerUseCounts = new Map();
     const deckCounts = new Map();
+    const countedRepeatCopies = new Set();
+    const countedRepeatTriggers = new Set();
     for (const item of items) {
       deckCounts.set(item.cardId, Math.max(deckCounts.get(item.cardId) || 0, item.deckCount || 0));
-      if (item.sourceKind !== 'lethalBuff') {
+      const repeatKey = item.isRepeat ? item.sourceKey : null;
+      if (
+        item.sourceKind !== 'lethalBuff' &&
+        (!repeatKey || !countedRepeatCopies.has(repeatKey))
+      ) {
         copyUseCounts.set(item.cardId, (copyUseCounts.get(item.cardId) || 0) + 1);
+        if (repeatKey) countedRepeatCopies.add(repeatKey);
       }
-      if (item.sourceKind === 'lethalBuff' || item.lethalBurnValue != null) {
+      if (
+        (item.sourceKind === 'lethalBuff' || item.lethalBurnValue != null) &&
+        (!repeatKey || !countedRepeatTriggers.has(repeatKey))
+      ) {
         triggerUseCounts.set(item.cardId, (triggerUseCounts.get(item.cardId) || 0) + 1);
+        if (repeatKey) countedRepeatTriggers.add(repeatKey);
       }
       const counts = item.sourceKind === 'attack' && item.lethalBurnValue == null
         ? attackCounts
@@ -1366,7 +1433,11 @@
     chips.appendChild(heading);
     const selectedCounts = new Map();
     for (const input of checkedInputs) {
-      const label = input.dataset.chipLabel;
+      const repeatSelect = input.closest('.lethal-auto-filter-card__option')
+        ?.querySelector('[data-lethal-auto-repeat-count]');
+      const label = repeatSelect
+        ? `${input.dataset.chipLabel}（最大${repeatSelect.value}回）`
+        : input.dataset.chipLabel;
       if (!selectedCounts.has(label)) {
         selectedCounts.set(label, {
           label,
@@ -1404,7 +1475,17 @@
       else if (mode === 'none') input.checked = false;
       else input.checked = input.dataset.defaultChecked === 'true';
     });
+    syncLethalAutoRepeatSelects_();
     renderLethalAutoFilterChips_();
+  }
+
+  function syncLethalAutoRepeatSelects_() {
+    if (!lethalAutoFilterModal) return;
+    lethalAutoFilterModal.querySelectorAll('[data-lethal-auto-repeat-count]').forEach(select => {
+      const input = select.closest('.lethal-auto-filter-card__option')
+        ?.querySelector('[data-lethal-auto-option]');
+      select.disabled = !input?.checked;
+    });
   }
 
   function ensureLethalAutoFilterModal_() {
@@ -1453,6 +1534,15 @@
         [...modal.querySelectorAll('[data-lethal-auto-option]:checked')]
           .map(input => input.value)
       );
+      allowedAutoLethalRepeatCounts = new Map(
+        [...modal.querySelectorAll('[data-lethal-auto-option]:checked')]
+          .map(input => {
+            const select = input.closest('.lethal-auto-filter-card__option')
+              ?.querySelector('[data-lethal-auto-repeat-count]');
+            return select ? [input.value, Number(select.value)] : null;
+          })
+          .filter(item => item !== null)
+      );
       closeLethalAutoFilterModal_();
       allowedAutoLethalOptions = new Set(enabledOptionKeys);
       lethalPlannerAutoFilterActive = true;
@@ -1464,6 +1554,10 @@
     });
     modal.addEventListener('change', event => {
       if (event.target.matches('[data-lethal-auto-option]')) {
+        syncLethalAutoRepeatSelects_();
+        renderLethalAutoFilterChips_();
+      }
+      if (event.target.matches('[data-lethal-auto-repeat-count]')) {
         renderLethalAutoFilterChips_();
       }
     });
@@ -1520,12 +1614,33 @@
         input.dataset.summaryValue = String(summaryOrder.value);
         input.setAttribute('data-lethal-auto-option', '');
         label.append(input, document.createTextNode(option.label));
+        if (option.source.isRepeat) {
+          const repeatControl = document.createElement('span');
+          repeatControl.className = 'lethal-auto-filter-card__repeat-control';
+          repeatControl.appendChild(document.createTextNode('最大'));
+          const repeatSelect = document.createElement('select');
+          repeatSelect.setAttribute('data-lethal-auto-repeat-count', '');
+          repeatSelect.setAttribute('aria-label', `${group.cardName} ${option.label}の最大繰り返し回数`);
+          for (let repeatCount = 1; repeatCount <= option.source.count; repeatCount += 1) {
+            const repeatOption = document.createElement('option');
+            repeatOption.value = String(repeatCount);
+            repeatOption.textContent = String(repeatCount);
+            repeatSelect.appendChild(repeatOption);
+          }
+          repeatSelect.value = String(
+            allowedAutoLethalRepeatCounts.get(option.key) ||
+            Math.min(LETHAL_PLANNER_DEFAULT_REPEAT_COUNT, option.source.count)
+          );
+          repeatControl.append(repeatSelect, document.createTextNode('回'));
+          label.appendChild(repeatControl);
+        }
         options.appendChild(label);
       }
       content.appendChild(options);
       cardRow.appendChild(content);
       cardsContainer.appendChild(cardRow);
     }
+    syncLethalAutoRepeatSelects_();
     renderLethalAutoFilterChips_();
 
     lethalAutoFilterLastFocus = trigger || document.activeElement;
@@ -2007,10 +2122,17 @@
           requiredCount: 0,
           stepIds: [],
           cardsById: new Map(),
+          physicalUseKeys: new Set(),
         });
       }
       const group = groups.get(selection.key);
-      group.requiredCount += 1;
+      const physicalUseKey = selection.isRepeat
+        ? `repeat:${selection.sourceKey}:${selection.cardId}`
+        : `step:${selection.stepId}`;
+      if (!group.physicalUseKeys.has(physicalUseKey)) {
+        group.physicalUseKeys.add(physicalUseKey);
+        group.requiredCount += 1;
+      }
       group.stepIds.push(selection.stepId);
       for (const card of [...(resolved?.fixedCards || []), ...(resolved?.candidateCards || [])]) {
         const cardId = normCd5(card.cd);
@@ -2068,7 +2190,10 @@
 
     const stepIndexes = new Map(lethalPlannerSelections.map((step, index) => [step.stepId, index]));
     const steps = lethalPlannerSelections.map(selection => {
-      const cardId = assignedByGroup.get(selection.key)?.shift() || '';
+      const assignedCards = assignedByGroup.get(selection.key) || [];
+      const cardId = selection.isRepeat
+        ? assignedCards.find(id => id === selection.cardId) || assignedCards[0] || ''
+        : assignedCards.shift() || '';
       const card = getCard(cardId);
       return {
         cardId,
@@ -2097,7 +2222,10 @@
     const stepIndexes = new Map(lethalPlannerSelections.map((step, index) => [step.stepId, index]));
     return {
       steps: lethalPlannerSelections.map(selection => {
-        const cardId = queues.get(selection.key)?.shift() || '';
+        const assignedCards = queues.get(selection.key) || [];
+        const cardId = selection.isRepeat
+          ? assignedCards.find(id => id === selection.cardId) || assignedCards[0] || ''
+          : assignedCards.shift() || '';
         const card = getCard(cardId);
         return {
           cardId,
@@ -2668,6 +2796,7 @@
     lethalPlannerAutoSearched = false;
     lethalPlannerAutoExpanded = false;
     allowedAutoLethalOptions = null;
+    allowedAutoLethalRepeatCounts = new Map();
     lethalPlannerAutoFilterActive = false;
     lethalPlannerCandidates = buildLethalPlannerCandidates_();
     bindLethalPlannerEvents_();

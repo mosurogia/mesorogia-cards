@@ -34,7 +34,14 @@
         const status = document.querySelector('.tier-board-status');
         if (!status) return;
 
-        status.textContent = text;
+        if (status instanceof HTMLSelectElement) {
+            const option = document.createElement('option');
+            option.textContent = text;
+            status.replaceChildren(option);
+            status.disabled = true;
+        } else {
+            status.textContent = text;
+        }
         status.classList.remove('is-error');
     }
 
@@ -42,7 +49,14 @@
         const status = document.querySelector('.tier-board-status');
         if (!status) return;
 
-        status.textContent = text;
+        if (status instanceof HTMLSelectElement) {
+            const option = document.createElement('option');
+            option.textContent = text;
+            status.replaceChildren(option);
+            status.disabled = true;
+        } else {
+            status.textContent = text;
+        }
         status.classList.add('is-error');
     }
 
@@ -274,12 +288,30 @@
         return name || `環境${index + 1}`;
     }
 
+    function setEnvironmentSelectOptions(select, index) {
+        const options = state.environments.map((environment, optionIndex) => {
+            const option = document.createElement('option');
+            option.value = String(optionIndex);
+            option.textContent = `${optionIndex === 0 ? '最新：' : ''}${getEnvironmentName(environment, optionIndex)}`;
+            return option;
+        });
+        select.replaceChildren(...options);
+        select.value = String(index);
+        select.disabled = state.environments.length < 2;
+        select.classList.remove('is-error');
+    }
+
     function setBoardTitle(environment, index) {
         const title = document.getElementById('tierBoardTitle');
         if (!title || !environment) return;
 
         title.textContent = `${index === 0 ? '最新Tier表' : 'Tier表'}《${getEnvironmentName(environment, index)}》`;
-        setStatus(`${index === 0 ? '最新' : '表示中'}：${getEnvironmentName(environment, index)}`);
+        const status = document.querySelector('.tier-board-status');
+        if (status instanceof HTMLSelectElement) {
+            setEnvironmentSelectOptions(status, index);
+        } else {
+            setStatus(`${index === 0 ? '最新' : '表示中'}：${getEnvironmentName(environment, index)}`);
+        }
     }
 
     function setGuideEnvironmentLabel(environment, index) {
@@ -289,14 +321,25 @@
         }
 
         document.querySelectorAll('[data-tier-guide-environment]').forEach((label) => {
-            label.textContent = `${index === 0 ? '最新' : '表示中'}：${getEnvironmentName(environment, index)}`;
+            if (label instanceof HTMLSelectElement) {
+                setEnvironmentSelectOptions(label, index);
+            } else {
+                label.textContent = `${index === 0 ? '最新' : '表示中'}：${getEnvironmentName(environment, index)}`;
+            }
             label.classList.remove('is-error');
         });
     }
 
     function setGuideEnvironmentStatus(text, isError) {
         document.querySelectorAll('[data-tier-guide-environment]').forEach((label) => {
-            label.textContent = text;
+            if (label instanceof HTMLSelectElement) {
+                const option = document.createElement('option');
+                option.textContent = text;
+                label.replaceChildren(option);
+                label.disabled = true;
+            } else {
+                label.textContent = text;
+            }
             label.classList.toggle('is-error', !!isError);
         });
     }
@@ -1463,6 +1506,17 @@
 
 
     function bindEnvironmentControls() {
+        document.querySelectorAll('[data-tier-board-environment], [data-tier-guide-environment]').forEach((select) => {
+            if (!(select instanceof HTMLSelectElement) || select.dataset.tierEnvBound) return;
+            select.dataset.tierEnvBound = '1';
+            select.addEventListener('change', () => {
+                const index = Number(select.value);
+                if (Number.isInteger(index) && state.environments[index]) {
+                    renderEnvironment(index);
+                }
+            });
+        });
+
         document.querySelectorAll('[data-tier-env-prev]').forEach((prevButton) => {
             if (prevButton.dataset.tierEnvBound) return;
             prevButton.dataset.tierEnvBound = '1';

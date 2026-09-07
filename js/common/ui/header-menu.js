@@ -5,6 +5,36 @@
 (function () {
     'use strict';
 
+    // =========================
+    // 用語集の初回閲覧と新着表示
+    // =========================
+    const GLOSSARY_SEEN_KEY = 'mesorogia:glossary:launch-seen';
+    let glossarySeen = false;
+
+    // 用語集を開いた記録を保存し、保存できない環境でもページを利用可能にする。
+    function updateGlossaryNotice() {
+        const isGlossary = window.location.pathname.split('/').pop() === 'glossary.html';
+        glossarySeen = glossarySeen || isGlossary;
+        try {
+            glossarySeen = glossarySeen || window.localStorage.getItem(GLOSSARY_SEEN_KEY) === '1';
+            if (isGlossary) window.localStorage.setItem(GLOSSARY_SEEN_KEY, '1');
+        } catch (_) {
+            // 保存が制限されている場合は、このページ内の閲覧状態を使う。
+        }
+        document.documentElement.classList.toggle('has-glossary-news', !glossarySeen);
+        const label = document.querySelector('.header-menu-button--new .sr-only');
+        if (label) label.textContent = glossarySeen
+            ? '探索・情報メニュー'
+            : '探索・情報メニュー（新着：用語集）';
+    }
+
+    // 初期描画、履歴からの復帰、別タブの閲覧記録を同じ表示に揃える。
+    updateGlossaryNotice();
+    window.addEventListener('pageshow', updateGlossaryNotice);
+    window.addEventListener('storage', (event) => {
+        if (event.key === GLOSSARY_SEEN_KEY || event.key === null) updateGlossaryNotice();
+    });
+
     function getMenu(root) {
         return root?.querySelector('.header-menu-panel');
     }

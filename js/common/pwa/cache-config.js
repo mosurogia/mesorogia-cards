@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-08-12-005',
-    staticCacheName: 'mesorogia-static-2026-08-12-005',
-    runtimeCacheName: 'mesorogia-runtime-2026-08-12-005',
+    version: '2026-09-07-005',
+    staticCacheName: 'mesorogia-static-2026-09-07-005',
+    runtimeCacheName: 'mesorogia-runtime-2026-09-07-005',
     navigationNetworkTimeoutMs: 4000,
     assetNetworkTimeoutMs: 4000,
     appShell: [
@@ -16,6 +16,8 @@
       './match-results.html',
       './tier.html',
       './info.html',
+      './glossary.html',
+      './img/header_icon_6.webp',
       './img/appicon_1024.webp',
       './img/appicon_192.webp',
       './img/appicon_512.webp',
@@ -25,6 +27,7 @@
       './public/cv.json',
       './public/environments.json',
       './public/home-data.json',
+      './public/glossary.json',
       './public/packs.json'
     ],
     offlineFallbackPage: './deckmaker.html',

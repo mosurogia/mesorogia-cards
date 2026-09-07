@@ -23,6 +23,44 @@
     window.API = API;
 
     const LS_TOKEN = 'mos_auth_token_v1';
+    const LS_USER = 'mos_auth_user_v1';
+    const LS_VERIFIED_AT = 'mos_auth_verified_at_v1';
+    const LS_EXPIRES_AT = 'mos_auth_expires_at_v1';
+    const LEGACY_AUTH_KEEP_MS = 7 * 24 * 60 * 60 * 1000;
+
+    function getRequestedSessionDays(){
+        const isStandalone = !!(
+            window.matchMedia?.('(display-mode: standalone)').matches ||
+            window.navigator?.standalone === true
+        );
+        return isStandalone ? 30 : 7;
+    }
+
+    function normalizeExpiresAt(value){
+        const time = new Date(value || '').getTime();
+        return Number.isFinite(time) ? new Date(time).toISOString() : '';
+    }
+
+    function readStorage(key){
+        try { return localStorage.getItem(key); }
+        catch(_) { return null; }
+    }
+
+    function writeStorage(key, value){
+        try {
+            if (value == null) localStorage.removeItem(key);
+            else localStorage.setItem(key, String(value));
+        } catch(_) {}
+    }
+
+    function readCachedUser(){
+        try {
+            const user = JSON.parse(readStorage(LS_USER) || 'null');
+            return user && typeof user === 'object' ? user : null;
+        } catch(_) {
+            return null;
+        }
+    }
 
     async function postJSON(url, payload){
         const r = await fetch(url, {
@@ -42,6 +80,7 @@
     const Auth = {
         user: null,
         token: null,
+        expAt: '',
         verified: false,
 
         setDisplayName(name){
@@ -70,19 +109,32 @@
             window.reflectLoginUI?.();
             return { ok:false };
             }
-            this._save(res.user, this.token);
+            this._save(res.user, this.token, res.expAt);
             this.verified = true;
             window.reflectLoginUI?.();
-            return { ok:true, user: res.user };
+            return { ok:true, user: res.user, expAt: this.expAt };
+        } catch(error) {
+            // 通信失敗では保存済みセッションを破棄せず、オンライン復帰後に再確認する
+            window.reflectLoginUI?.();
+            return { ok:false, offline:true, error };
         } finally {
             window.setAuthChecking?.(false);
         }
         },
 
         async init(){
-        this.user = null;
-        this.token = localStorage.getItem(LS_TOKEN) || null;
-        this.verified = false;
+        const token = readStorage(LS_TOKEN);
+        const cachedUser = readCachedUser();
+        const expAt = normalizeExpiresAt(readStorage(LS_EXPIRES_AT));
+        const expAtMs = new Date(expAt || '').getTime();
+        const verifiedAt = Number(readStorage(LS_VERIFIED_AT) || 0);
+        const legacyCacheIsFresh = !expAt && verifiedAt > 0 && Date.now() - verifiedAt < LEGACY_AUTH_KEEP_MS;
+        const cacheIsFresh = (Number.isFinite(expAtMs) && expAtMs > Date.now()) || legacyCacheIsFresh;
+
+        this.user = token && cacheIsFresh ? cachedUser : null;
+        this.token = token || null;
+        this.expAt = expAt;
+        this.verified = !!(this.user && this.token);
         window.reflectLoginUI?.();
 
         if (this.token) {
@@ -91,9 +143,15 @@
         },
 
         async signup(username, password, displayName='', x=''){
-        const res = await postJSON(`${API}?mode=signup`, {username, password, displayName, x});
+        const res = await postJSON(`${API}?mode=signup`, {
+            username,
+            password,
+            displayName,
+            x,
+            sessionDays: getRequestedSessionDays(),
+        });
         if (!res?.ok) throw new Error(res?.error || 'signup failed');
-        this._save(res.user, res.token);
+        this._save(res.user, res.token, res.expAt);
         window.reflectLoginUI?.();
         return res.user;
         },
@@ -102,14 +160,11 @@
         const res = await postJSON(`${API}?mode=login`, {
             username,
             password,
+            sessionDays: getRequestedSessionDays(),
         });
         if (!res?.ok) throw new Error(res?.error || 'login failed');
 
-        this.user = res.user;
-        this.token = res.token;
-        this.verified = true;
-
-        localStorage.setItem(LS_TOKEN, this.token);
+        this._save(res.user, res.token, res.expAt);
         window.reflectLoginUI?.();
 
         return res.user;
@@ -123,24 +178,46 @@
 
         attachToken(body){ return Object.assign({}, body, { token: this.token || '' }); },
 
-        _save(user, token){
+        _save(user, token, expAt){
         this.user = user || null;
         this.token = token || null;
+        if (expAt !== undefined) this.expAt = normalizeExpiresAt(expAt);
         this.verified = !!(user && token);
 
-        if (this.token) localStorage.setItem(LS_TOKEN, this.token);
-        else localStorage.removeItem(LS_TOKEN);
+        this._persist();
+        },
+
+        _persist(){
+        if (this.user && this.token) {
+            writeStorage(LS_TOKEN, this.token);
+            writeStorage(LS_USER, JSON.stringify(this.user));
+            writeStorage(LS_VERIFIED_AT, Date.now());
+            if (this.expAt) writeStorage(LS_EXPIRES_AT, this.expAt);
+            return;
+        }
+        writeStorage(LS_TOKEN, null);
+        writeStorage(LS_USER, null);
+        writeStorage(LS_VERIFIED_AT, null);
+        writeStorage(LS_EXPIRES_AT, null);
         },
 
         _clear(){
         this.user = null;
         this.token = null;
+        this.expAt = '';
         this.verified = false;
-        localStorage.removeItem(LS_TOKEN);
+        writeStorage(LS_TOKEN, null);
+        writeStorage(LS_USER, null);
+        writeStorage(LS_VERIFIED_AT, null);
+        writeStorage(LS_EXPIRES_AT, null);
         },
     };
 
     window.Auth = window.Auth || Auth;
+
+    window.addEventListener('online', () => {
+        if (Auth.token) Auth.whoami().catch(() => {});
+    });
 })();
 
 

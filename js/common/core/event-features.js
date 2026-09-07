@@ -9,9 +9,9 @@
       enabled: false,
       domKey: 'innocent-oldgod-pickup',
     },
-    illustratedIllusionPack: {
+    juggernautIncarnatePack: {
       enabled: true,
-      domKey: 'illustrated-illusion-pack',
+      domKey: 'juggernaut-incarnate-pack',
     },
   };
 
