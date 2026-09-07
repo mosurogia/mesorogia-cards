@@ -535,6 +535,11 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-i-accent-rgb));
 }
 
+.card-pick-option[data-pack="Juggernaut Incarnate"] {
+    --ring: rgb(var(--pack-j-rgb));
+    --ring-accent: rgb(var(--pack-j-accent-rgb));
+}
+
 .card-pick-option[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
     --ring-accent: rgb(var(--pack-special-accent-rgb));
@@ -1445,6 +1450,26 @@ body.is-card-pick-open #deckpeek-button {
     outline-offset: 2px;
 }
 
+.filter-group[data-key="カテゴリ"] .filter-btn {
+    position: relative;
+    flex-direction: column;
+}
+
+.filter-category-name,
+.filter-category-reading {
+    display: block;
+}
+
+.filter-category-count {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    font-size: .65em;
+    font-weight: 500;
+    line-height: 1;
+    opacity: .72;
+}
+
 
 /* =====================================================
    5) GROUP EXCEPTIONS（横一列チップ）
@@ -2000,6 +2025,11 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-i-accent-rgb));
 }
 
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Juggernaut Incarnate"] {
+    --ring: rgb(var(--pack-j-rgb));
+    --ring-accent: rgb(var(--pack-j-accent-rgb));
+}
+
 
 .filter-group[data-key="パック名"] .filter-btn[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
@@ -2453,19 +2483,52 @@ body.is-card-pick-open #deckpeek-button {
     gap: 8px;
 }
 
+.lethal-filter-sections {
+    display: grid;
+    gap: 3px;
+}
+
+.lethal-filter-section {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+}
+
+.lethal-filter-label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-height: 28px;
+    padding: 1px 0;
+    color: #343b49;
+    font-size: .82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.lethal-filter-label-icon {
+    display: inline-block;
+    width: 1.25em;
+    flex: 0 0 1.25em;
+    text-align: center;
+}
+
 .lethal-filter-values {
-    grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
     grid-auto-flow: row;
 }
 
 .lethal-filter-values .filter-btn {
+    min-width: 54px;
     padding: 6px 8px;
     white-space: nowrap;
 }
 
 .lethal-filter-values .lethal-filter-all-button {
-    grid-column: span 2;
-    min-width: 110px;
+    min-width: 72px;
     border-color: rgba(var(--type-attacker-rgb), .32);
     background: rgba(var(--type-attacker-rgb), .07);
     font-weight: 700;
@@ -2483,8 +2546,19 @@ body.is-card-pick-open #deckpeek-button {
 }
 
 @media (max-width: 768px) {
-    .lethal-filter-values .lethal-filter-all-button {
-        grid-column: 1 / span 2;
+    .lethal-filter-section {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 3px;
+    }
+
+    .lethal-filter-label {
+        min-height: 28px;
+        padding-inline: 0;
+        font-size: .78rem;
+    }
+
+    .lethal-filter-values .filter-btn {
+        min-width: 48px;
     }
 }
 

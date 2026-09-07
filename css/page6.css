@@ -241,15 +241,28 @@
     display: inline-flex;
     align-items: center;
     min-height: 26px;
-    padding: 0 9px;
+    max-width: 100%;
+    padding: 0 28px 0 9px;
     border: 1px solid rgba(37, 99, 235, .18);
     border-radius: 999px;
     background: #fff;
     color: #2563eb;
+    font-family: inherit;
     font-size: 12px;
     font-weight: 900;
     line-height: 1.2;
     white-space: nowrap;
+    cursor: pointer;
+}
+
+.tier-board-status:disabled {
+    cursor: default;
+    opacity: .7;
+}
+
+.tier-board-status:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
 }
 
 .tier-board-status.is-error {
@@ -480,15 +493,28 @@
     display: inline-flex;
     align-items: center;
     min-height: 26px;
-    padding: 0 9px;
+    max-width: 100%;
+    padding: 0 28px 0 9px;
     border: 1px solid rgba(37, 99, 235, .18);
     border-radius: 999px;
     background: #fff;
     color: #2563eb;
+    font-family: inherit;
     font-size: 12px;
     font-weight: 900;
     line-height: 1.2;
     white-space: nowrap;
+    cursor: pointer;
+}
+
+.tier-deck-guide-environment:disabled {
+    cursor: default;
+    opacity: .7;
+}
+
+.tier-deck-guide-environment:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .28);
+    outline-offset: 2px;
 }
 
 .tier-deck-guide-environment.is-error {
@@ -993,6 +1019,11 @@
     --pack-stroke: rgba(var(--pack-i-accent-rgb), .7);
 }
 
+#cardDetailDrawer .carddetail-pack[data-pack="J"] {
+    --pack-bg: var(--pack-j-rgb);
+    --pack-stroke: rgba(var(--pack-j-accent-rgb), .7);
+}
+
 #cardDetailDrawer .carddetail-pack[data-pack="SPECIAL"] {
     --pack-bg: var(--pack-special-rgb);
     --pack-stroke: rgba(var(--pack-special-accent-rgb), .7);
@@ -1133,7 +1164,7 @@
 }
 
 body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
-    bottom: 0;
+    bottom: var(--app-bottom-nav-offset);
 }
 
 .tier-guide-deck-list-comment {
@@ -1215,7 +1246,7 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 
     .tier-board-status {
         min-height: 26px;
-        padding: 0 8px;
+        padding: 0 26px 0 8px;
         font-size: 11px;
         white-space: nowrap;
     }
@@ -1280,7 +1311,7 @@ body.is-pwa-standalone #cardDetailDrawer .carddetail-drawer-inner {
 
     .tier-deck-guide-environment {
         min-height: 24px;
-        padding: 0 8px;
+        padding: 0 26px 0 8px;
         font-size: 11px;
     }
 

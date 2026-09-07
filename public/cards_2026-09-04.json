@@ -2306,9 +2306,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10031,
     "link":false,
@@ -2320,8 +2320,8 @@
     "category":"ノーカテゴリ",
     "type":"アタッカー",
     "name":"始祖なる大蛇ゴーゴン",
-    "cost":20,
-    "power":10,
+    "cost":16,
+    "power":11,
     "effect_name1":"■手札発動■",
     "effect_text1":"自分のドラゴンが召喚された時、これのパワーを2増やす。",
     "effect_name2":null,
@@ -2345,17 +2345,18 @@
     "lethal":{
       "attack":{
         "values":[
-          10,
-          12,
-          14,
-          16,
-          18,
-          20,
-          22,
-          24,
-          26,
-          28,
-          30
+          11,
+          13,
+          15,
+          17,
+          19,
+          21,
+          2,
+          23,
+          25,
+          27,
+          29,
+          31
         ],
         "repeat":null,
         "defaultOff":false
@@ -2390,9 +2391,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/10031.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/10031.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -7802,6 +7803,1196 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10901,
+    "link":false,
+    "link_cd":10901,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"聖焔龍（フォルティア）",
+    "type":"チャージャー",
+    "name":"聖焔龍の澄明 エキュメリア",
+    "cost":8,
+    "power":14,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"これのパワーが増えた時、自分の手札の聖焔龍全てのパワーを1増やし、これを破壊する。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これのパワーが増えた時、自分の手札の聖焔龍全てのパワーを1増やし、これを破壊する。このカード名のこの効果は1ターンに1回しか発動しない。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10902,
+    "link":false,
+    "link_cd":10902,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"翔舞士（しょうぶし）",
+    "type":"アタッカー",
+    "name":"翔舞士 アルクス",
+    "cost":12,
+    "power":6,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分のBPを1増やし、自分の手札の「翔舞士 アルクス」以外の翔舞士アタッカー全ての攻撃成功時効果を発動する。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_name2":"■攻撃失敗時■",
+    "effect_text2":"自分の手札の翔舞士を全て破壊する。",
+    "effect_text_all":"自分のBPを1増やし、自分の手札の「翔舞士 アルクス」以外の翔舞士アタッカー全ての攻撃成功時効果を発動する。このカード名のこの効果は1ターンに1回しか発動しない。 自分の手札の翔舞士を全て破壊する。",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10903,
+    "link":false,
+    "link_cd":10903,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"チャージャー",
+    "name":"契神導師・天凰神",
+    "cost":0,
+    "power":5,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"山札の上から5枚見て契神導師を1枚選び、山札の1番上に置き、カードを1枚引く。ドラゴンフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"山札の上から5枚見て契神導師を1枚選び、山札の1番上に置き、カードを1枚引く。ドラゴンフィールドにする。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10904,
+    "link":false,
+    "link_cd":10904,
+    "CV":"百瀬 安由未",
+    "cv_kana":"ももせ　あゆみ",
+    "rarity":"レジェンド",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"チャージャー",
+    "name":"契神導師・魂縁姫",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドであり、自分の手札に契神導師が2枚以上あれば、自分の墓地の契神導師を1枚選び、自分の山札の1番上に戻す。その後、カードを3枚引く。そうでなければ、ドラゴンフィールドにし、カードを1枚引く",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ドラゴンフィールドであり、自分の手札に契神導師が2枚以上あれば、自分の墓地の契神導師を1枚選び、自分の山札の1番上に戻す。その後、カードを3枚引く。そうでなければ、ドラゴンフィールドにし、カードを1枚引く ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10905,
+    "link":false,
+    "link_cd":10905,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"チャージャー",
+    "name":"契神導師・九珠竜",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドにする。カードを1枚引き、それが契神導師であれば相手の戦場のカードのパワーを2減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ドラゴンフィールドにする。カードを1枚引き、それが契神導師であれば相手の戦場のカードのパワーを2減らす。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10906,
+    "link":false,
+    "link_cd":10906,
+    "CV":"白波瀬 沙椰",
+    "cv_kana":"しらはせ　さや",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"チャージャー",
+    "name":"契神導師・禅妃",
+    "cost":0,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドであれば、自分のライフを2増やし、カードを1枚引く。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ドラゴンフィールドであれば、自分のライフを2増やし、カードを1枚引く。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10906.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10907,
+    "link":false,
+    "link_cd":10907,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"アタッカー",
+    "name":"契神導師・夜兎守",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"ドラゴンフィールドにする。自分の手札を1枚選び、それを山札の1番上に戻し、カードを1枚引く。その後、自分の手札の契神導師全てのパワーを1増やす。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"これを引いた時、自分の手札の契神導師全てのパワーを1増やす。",
+    "effect_text_all":"ドラゴンフィールドにする。自分の手札を1枚選び、それを山札の1番上に戻し、カードを1枚引く。その後、自分の手札の契神導師全てのパワーを1増やす。 これを引いた時、自分の手札の契神導師全てのパワーを1増やす。",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":{
+          "value":1
+        },
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10907.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10908,
+    "link":false,
+    "link_cd":10908,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"アタッカー",
+    "name":"契神導師・朧千",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドであれば、相手の戦場のカードのパワーを3減らし、カードを1枚引く。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"これを引いた時、ドラゴンフィールドであれば、次のターンの終わりまで相手の手札全てのパワーを1減らす。",
+    "effect_text_all":"ドラゴンフィールドであれば、相手の戦場のカードのパワーを3減らし、カードを1枚引く。 これを引いた時、ドラゴンフィールドであれば、次のターンの終わりまで相手の手札全てのパワーを1減らす。",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10908.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10909,
+    "link":false,
+    "link_cd":10909,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"レジェンド",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"アタッカー",
+    "name":"契神導師・十耀珠",
+    "cost":12,
+    "power":10,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"ドラゴンフィールドにする。自分の手札の契神導師を1枚選び、それのコピー2枚を自分の山札の1番上に置く。カードを2枚引く。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"これを引いた時、ドラゴンフィールドであれば、次のターンの終わりまで自分の手札全てのコストを2減らす。",
+    "effect_text_all":"ドラゴンフィールドにする。自分の手札の契神導師を1枚選び、それのコピー2枚を自分の山札の1番上に置く。カードを2枚引く。 これを引いた時、ドラゴンフィールドであれば、次のターンの終わりまで自分の手札全てのコストを2減らす。",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10909.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10910,
+    "link":false,
+    "link_cd":10910,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"ブロッカー",
+    "name":"契神導師・魅珠雍",
+    "cost":4,
+    "power":14,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドにする。自分の手札を1枚選び、それを山札の一番上に戻す。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ドラゴンフィールドにする。自分の手札を1枚選び、それを山札の一番上に戻す。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10910.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10911,
+    "link":false,
+    "link_cd":10911,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"ラッパ兵",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札にアタッカーが2枚以上あれば、自分のBPを1増やし、自分の手札全てのパワーを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札にアタッカーが2枚以上あれば、自分のBPを1増やし、自分の手札全てのパワーを1増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10911.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10912,
+    "link":false,
+    "link_cd":10912,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"トレジャービースト",
+    "cost":0,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"次のターンの終わりまで、自分の手札のアタッカー全てのパワーを2減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"次のターンの終わりまで、自分の手札のアタッカー全てのパワーを2減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10912.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10913,
+    "link":false,
+    "link_cd":10913,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"炎幼竜",
+    "cost":4,
+    "power":6,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"相手の手札を1枚選び、それを燃焼にする。ドラゴンフィールドにする。",
+    "effect_name2":"■攻撃失敗時■",
+    "effect_text2":"これを次のターンの終わりまでチャージャーにし、手札に戻す。これのパワーを2増やす。",
+    "effect_text_all":"相手の手札を1枚選び、それを燃焼にする。ドラゴンフィールドにする。 これを次のターンの終わりまでチャージャーにし、手札に戻す。これのパワーを2増やす。",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":true,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6,
+          8,
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10913.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10914,
+    "link":false,
+    "link_cd":10914,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"レジェンド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"炎冠の騎士 イグニス",
+    "cost":14,
+    "power":10,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"これを燃焼にし、コストを0にする。その後、これを自分の手札に戻す。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これを燃焼にし、コストを0にする。その後、これを自分の手札に戻す。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":true,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10914.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":10915,
+    "link":false,
+    "link_cd":10915,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう ひとし",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"火山王 エンケラドス",
+    "cost":20,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"両者の手札全てのパワーを6増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"両者の手札全てのパワーを6増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          6,
+          6
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/10915.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
@@ -9227,9 +10418,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20019,
     "link":false,
@@ -9241,13 +10432,13 @@
     "category":"ノーカテゴリ",
     "type":"アタッカー",
     "name":"古代機巧の少女",
-    "cost":8,
-    "power":8,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"相手の手札のブロッカーを全て拘束し、アンドロイドフィールドにする。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"相手の手札のブロッカーを全て拘束し、アンドロイドフィールドにする。 ",
+    "cost":12,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を1枚選び、ブロッカーにする。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"相手の手札のブロッカーを全て拘束し、アンドロイドフィールドにする。",
+    "effect_text_all":"相手の手札を1枚選び、ブロッカーにする。 相手の手札のブロッカーを全て拘束し、アンドロイドフィールドにする。",
     "field":"アンドロイドフィールド",
     "BP_flag":false,
     "ability_burn":false,
@@ -9266,7 +10457,7 @@
     "lethal":{
       "attack":{
         "values":[
-          8
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -9301,9 +10492,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/20019.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/20019.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
@@ -15564,6 +16755,565 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20901,
+    "link":false,
+    "link_cd":20901,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"レジェンド",
+    "race":"アンドロイド",
+    "category":"メイドロボ",
+    "type":"チャージャー",
+    "name":"メイドロボ・メロン",
+    "cost":4,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"アンドロイドフィールドにする。自分の山札からランダムなメイドロボアタッカー1枚を自分の手札に加える。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"自分のメイドロボアタッカーが召喚された時、相手の戦場のカードがブロッカーであれば、相手の戦場のカードのパワーを「自分の戦場のカードのパワー-1」にする。その後、これを拘束する。",
+    "effect_text_all":"アンドロイドフィールドにする。自分の山札からランダムなメイドロボアタッカー1枚を自分の手札に加える。 自分のメイドロボアタッカーが召喚された時、相手の戦場のカードがブロッカーであれば、相手の戦場のカードのパワーを「自分の戦場のカードのパワー-1」にする。その後、これを拘束する。",
+    "field":"アンドロイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20902,
+    "link":false,
+    "link_cd":20902,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"シルバー",
+    "race":"アンドロイド",
+    "category":"星装（アストロイ）",
+    "type":"ブロッカー",
+    "name":"星装群騎 サルバ",
+    "cost":4,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。相手の墓地に「星装の木馬」が3枚以上あれば、相手の手札を1枚選び、それを破壊する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。相手の墓地に「星装の木馬」が3枚以上あれば、相手の手札を1枚選び、それを破壊する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"OPPONENT",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20903,
+    "link":false,
+    "link_cd":20903,
+    "CV":"小林 風羽舞",
+    "cv_kana":"こばやし　ふうま",
+    "rarity":"ブロンズ",
+    "race":"アンドロイド",
+    "category":"発明家（ラベンダー）",
+    "type":"チャージャー",
+    "name":"発命家 ベル",
+    "cost":4,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"アンドロイドフィールドにする。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"自分の発命家が破壊された時、自分の山札からランダムな発命家1枚を自分の手札に加え、これを破壊する。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_text_all":"アンドロイドフィールドにする。 自分の発命家が破壊された時、自分の山札からランダムな発命家1枚を自分の手札に加え、これを破壊する。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "field":"アンドロイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20904,
+    "link":false,
+    "link_cd":20904,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"機械仕掛けの地球儀",
+    "cost":0,
+    "power":4,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"これのパワーを「自分の手札の枚数×1」増やす。自分の手札を全て山札の1番下に戻し、戻した枚数分カードを引く。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これのパワーを「自分の手札の枚数×1」増やす。自分の手札を全て山札の1番下に戻し、戻した枚数分カードを引く。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20905,
+    "link":false,
+    "link_cd":20905,
+    "CV":"山本 拓人",
+    "cv_kana":"",
+    "rarity":"ゴールド",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"きまぐれな修理屋",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分の攻撃成功時、カードを1枚引く。次のターンの終わりまでそれのパワーを3増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の攻撃成功時、カードを1枚引く。次のターンの終わりまでそれのパワーを3増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          3
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20906,
+    "link":false,
+    "link_cd":20906,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ゴールド",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"スクラップビースト",
+    "cost":12,
+    "power":0,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを2消費して発動する。自分の手札のアンドロイド全てを破壊し、これのパワーを「破壊した枚数×3」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを2消費して発動する。自分の手札のアンドロイド全てを破壊し、これのパワーを「破壊した枚数×3」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          3,
+          6,
+          9,
+          12,
+          15,
+          18,
+          21
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20906.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":20907,
+    "link":false,
+    "link_cd":20907,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"目覚めない時計",
+    "cost":6,
+    "power":6,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"これを引いた時、これを破壊し、自分のBPを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これを引いた時、これを破壊し、自分のBPを1増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/20907.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
@@ -16354,9 +18104,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30011,
     "link":false,
@@ -16369,12 +18119,12 @@
     "type":"チャージャー",
     "name":"鬼刹衆 立花",
     "cost":4,
-    "power":8,
+    "power":10,
     "effect_name1":"■召喚時■",
-    "effect_text1":"自分の鬼刹衆を1枚選び、パワーを2増やす。BPを1増やす。",
+    "effect_text1":"自分の鬼刹衆を1枚選び、パワーを3増やす。BPを1増やす。",
     "effect_name2":null,
     "effect_text2":null,
-    "effect_text_all":"自分の鬼刹衆を1枚選び、パワーを2増やす。BPを1増やす。 ",
+    "effect_text_all":"自分の鬼刹衆を1枚選び、パワーを3増やす。BPを1増やす。 ",
     "field":"フィールド関係なし",
     "BP_flag":true,
     "ability_burn":false,
@@ -16400,7 +18150,7 @@
       },
       "freeBuff":{
         "values":[
-          2
+          3
         ],
         "repeat":null,
         "defaultOff":false
@@ -16428,9 +18178,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/30011.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/30011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
@@ -23339,6 +25089,562 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30901,
+    "link":false,
+    "link_cd":30901,
+    "CV":"白波瀬 沙椰",
+    "cv_kana":"しらはせ　さや",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"秘饗（バンケット）",
+    "type":"チャージャー",
+    "name":"秘饗のヒーラー",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のライフとマナとBPを「自分の手札の秘饗アタッカーの枚数×1（最大3まで）」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフとマナとBPを「自分の手札の秘饗アタッカーの枚数×1（最大3まで）」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30902,
+    "link":false,
+    "link_cd":30902,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"アルケミクルス",
+    "type":"ブロッカー",
+    "name":"アルケミ ルクシア",
+    "cost":4,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の山札の上から5枚見てアルケミを1枚選び、手札に加え、エレメンタルフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の山札の上から5枚見てアルケミを1枚選び、手札に加え、エレメンタルフィールドにする。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30903,
+    "link":false,
+    "link_cd":30903,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"新緑の葉",
+    "cost":0,
+    "power":5,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札にエレメンタルが3枚以上あれば、自分のマナを6増やし、エレメンタルフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札にエレメンタルが3枚以上あれば、自分のマナを6増やし、エレメンタルフィールドにする。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30904,
+    "link":false,
+    "link_cd":30904,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"深森の守護獣",
+    "cost":4,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"エレメンタルフィールドであればこれをブロッカーにする。そうでなければ、エレメンタルフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"エレメンタルフィールドであればこれをブロッカーにする。そうでなければ、エレメンタルフィールドにする。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30905,
+    "link":false,
+    "link_cd":30905,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"幻花 レーヴェ",
+    "cost":6,
+    "power":12,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"相手の効果でカードを選ぶ時、エレメンタルフィールドであれば、可能であればこのカードを選択する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の効果でカードを選ぶ時、エレメンタルフィールドであれば、可能であればこのカードを選択する。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30906,
+    "link":false,
+    "link_cd":30906,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"ミストブルーム",
+    "cost":8,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。相手の手札を1枚選び、それのパワーを4減らす。その後、これのパワーを「相手の手札のパワー4以下の枚数×4」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。相手の手札を1枚選び、それのパワーを4減らす。その後、これのパワーを「相手の手札のパワー4以下の枚数×4」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6,
+          10,
+          14,
+          18
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30906.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":30907,
+    "link":false,
+    "link_cd":30907,
+    "CV":"山本 拓人",
+    "cv_kana":"やまもと　たくと",
+    "rarity":"レジェンド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"清廉なるエルフ騎士",
+    "cost":20,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"エレメンタルフィールドであれば、両者の戦場のカードのステータスをリセットする。その後、パワーが低い方を持ち主の手札へ戻す。そうでなければ、エレメンタルフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"エレメンタルフィールドであれば、両者の戦場のカードのステータスをリセットする。その後、パワーが低い方を持ち主の手札へ戻す。そうでなければ、エレメンタルフィールドにする。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          12
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/30907.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
@@ -27527,9 +29833,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":6,
-    "is_latest":false,
-    "updated_at":"2025-10-23",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40305,
     "link":false,
@@ -27543,15 +29849,15 @@
     "name":"蒼ノ刀-多聞",
     "cost":8,
     "power":8,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"手札の蒼ノ刀アタッカーを1枚選び、コストを「自分のBP×2」減らす。",
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を「自分の手札の蒼の刀の枚数×１（最大3まで）」ランダムに拘束する。",
     "effect_name2":null,
     "effect_text2":null,
-    "effect_text_all":"手札の蒼ノ刀アタッカーを1枚選び、コストを「自分のBP×2」減らす。 ",
+    "effect_text_all":"相手の手札を「自分の手札の蒼の刀の枚数×１（最大3まで）」ランダムに拘束する。 ",
     "field":"フィールド関係なし",
-    "BP_flag":true,
+    "BP_flag":false,
     "ability_burn":false,
-    "ability_bind":false,
+    "ability_bind":true,
     "ability_silence":false,
     "draw":false,
     "cardsearch":false,
@@ -27560,7 +29866,7 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "cost_effect":"DOWN",
+    "cost_effect":"",
     "lethal_burn":0,
     "CHECK":"OK",
     "lethal":{
@@ -27606,9 +29912,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":6,
-    "is_latest":false,
-    "updated_at":"2025-10-23",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40306,
     "link":false,
@@ -27621,12 +29927,12 @@
     "type":"アタッカー",
     "name":"蒼ノ刀-凛",
     "cost":12,
-    "power":8,
+    "power":10,
     "effect_name1":"■攻撃成功時■",
-    "effect_text1":"相手の手札の拘束状態のカードをすべて破壊する。",
+    "effect_text1":"相手の手札の拘束状態のカードをすべて破壊する。相手のライフを「破壊した枚数×1」減らす。",
     "effect_name2":null,
     "effect_text2":null,
-    "effect_text_all":"相手の手札の拘束状態のカードをすべて破壊する。 ",
+    "effect_text_all":"相手の手札の拘束状態のカードをすべて破壊する。相手のライフを「破壊した枚数×1」減らす。 ",
     "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
@@ -27636,7 +29942,7 @@
     "cardsearch":false,
     "graveyard_recovery":false,
     "destroy_target":"OPPONENT",
-    "life_effect":"",
+    "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
@@ -27645,7 +29951,7 @@
     "lethal":{
       "attack":{
         "values":[
-          8
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -27673,16 +29979,19 @@
       },
       "lethalBurn":{
         "values":[
-
+          1,
+          2,
+          3,
+          4
         ],
         "repeat":null,
         "defaultOff":false
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/40306.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/40306.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":6,
@@ -31727,6 +34036,559 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40901,
+    "link":false,
+    "link_cd":40901,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"レジェンド",
+    "race":"ルミナス",
+    "category":"白騎士",
+    "type":"ブロッカー",
+    "name":"白騎士 ヴィーラス",
+    "cost":10,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ルミナスフィールドであれば、自分の手札の白騎士全てを山札に戻し、自分のライフを「戻した枚数×1」増やす。戻した枚数が3枚以上であれば、自分の山札から白騎士を1枚選び、それを自分の手札に加える。",
+    "effect_name2":"■戦場発動■",
+    "effect_text2":"ターン終了時、ルミナスフィールドであれば、自分の手札の白騎士ブロッカーを1枚選び、それをアタッカーにする。",
+    "effect_text_all":"ルミナスフィールドであれば、自分の手札の白騎士全てを山札に戻し、自分のライフを「戻した枚数×1」増やす。戻した枚数が3枚以上であれば、自分の山札から白騎士を1枚選び、それを自分の手札に加える。 ターン終了時、ルミナスフィールドであれば、自分の手札の白騎士ブロッカーを1枚選び、それをアタッカーにする。",
+    "field":"ルミナスフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40902,
+    "link":false,
+    "link_cd":40902,
+    "CV":"小林 風羽舞",
+    "cv_kana":"こばやし　ふうま",
+    "rarity":"シルバー",
+    "race":"ルミナス",
+    "category":"歪祝（エヴァル）",
+    "type":"ブロッカー",
+    "name":"歪祝 マカリア",
+    "cost":4,
+    "power":14,
+    "effect_name1":"■戦場発動■",
+    "effect_text1":"ターン終了時、ルミナスフィールドであれば、自分の山札と墓地から歪祝をランダムに1枚ずつ自分の手札に加える。その後、自分の手札を1枚選び、2ターン後の終わりまでそれのコストを4増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ターン終了時、ルミナスフィールドであれば、自分の山札と墓地から歪祝をランダムに1枚ずつ自分の手札に加える。その後、自分の手札を1枚選び、2ターン後の終わりまでそれのコストを4増やす。 ",
+    "field":"ルミナスフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"UP",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40903,
+    "link":false,
+    "link_cd":40903,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"シルバー",
+    "race":"ルミナス",
+    "category":"アルテアス",
+    "type":"チャージャー",
+    "name":"アルテアス ムルク",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1増やし、これのパワーを「相手の手札の召喚時効果を持たないカードの枚数×2」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1増やし、これのパワーを「相手の手札の召喚時効果を持たないカードの枚数×2」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40904,
+    "link":false,
+    "link_cd":40904,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"運命の鍵",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の山札からランダムなブロッカーを1枚手札に加える。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の山札からランダムなブロッカーを1枚手札に加える。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40905,
+    "link":false,
+    "link_cd":40905,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"ゴールド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"町医者 エルナ",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のライフとBPを「両者の手札の状態異常の枚数×1」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフとBPを「両者の手札の状態異常の枚数×1」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40906,
+    "link":false,
+    "link_cd":40906,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"ブロンズ",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"賛歌鳥",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分のライフが増えた時、自分のマナを1増やし、自分の手札全てのコストを1減らす。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフが増えた時、自分のマナを1増やし、自分の手札全てのコストを1減らす。このカード名のこの効果は1ターンに1回しか発動しない。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40906.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":40907,
+    "link":false,
+    "link_cd":40907,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ゴールド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"白冠の石像",
+    "cost":8,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を1枚選び、拘束する。自分の手札にチャージャーが2枚以上あれば、相手の手札をもう1枚選び、拘束する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の手札を1枚選び、拘束する。自分の手札にチャージャーが2枚以上あれば、相手の手札をもう1枚選び、拘束する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/40907.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
@@ -32359,9 +35221,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50009,
     "link":false,
@@ -32377,11 +35239,11 @@
     "power":8,
     "effect_name1":"■戦場発動■",
     "effect_text1":"このカードが墓地から召喚された時、相手の戦場のカードのパワーを4減らす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"このカードが墓地から召喚された時、相手の戦場のカードのパワーを4減らす。 ",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"自分のマディスキア全てのコストを3減らす。自分のBPを1増やす。",
+    "effect_text_all":"このカードが墓地から召喚された時、相手の戦場のカードのパワーを4減らす。 自分のマディスキア全てのコストを3減らす。自分のBPを1増やす。",
     "field":"フィールド関係なし",
-    "BP_flag":false,
+    "BP_flag":true,
     "ability_burn":false,
     "ability_bind":false,
     "ability_silence":false,
@@ -32392,7 +35254,7 @@
     "life_effect":"",
     "power_effect":"DOWN",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"DOWN",
     "lethal_burn":0,
     "CHECK":"OK",
     "lethal":{
@@ -32517,9 +35379,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50011,
     "link":false,
@@ -32531,15 +35393,15 @@
     "category":"マディスキア",
     "type":"アタッカー",
     "name":"マディスキア・テューロ",
-    "cost":8,
-    "power":8,
+    "cost":12,
+    "power":10,
     "effect_name1":"■戦場発動■",
     "effect_text1":"このカードが墓地から召喚された時、相手の手札全てのパワーを2減らす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"このカードが墓地から召喚された時、相手の手札全てのパワーを2減らす。 ",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"相手の手札全てのパワーを1減らす。自分のBPを1増やす",
+    "effect_text_all":"このカードが墓地から召喚された時、相手の手札全てのパワーを2減らす。 相手の手札全てのパワーを1減らす。自分のBPを1増やす",
     "field":"フィールド関係なし",
-    "BP_flag":false,
+    "BP_flag":true,
     "ability_burn":false,
     "ability_bind":false,
     "ability_silence":false,
@@ -32556,7 +35418,7 @@
     "lethal":{
       "attack":{
         "values":[
-          8
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -32591,9 +35453,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/50011.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/50011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":1,
@@ -32991,9 +35853,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":1,
-    "is_latest":false,
-    "updated_at":"2025-05-30",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50017,
     "link":false,
@@ -33009,16 +35871,16 @@
     "power":16,
     "effect_name1":"■戦場発動■",
     "effect_text1":"このカードが墓地から召喚された時、自分の山札の上から4枚を地に置く。BPを1増やす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"このカードが墓地から召喚された時、自分の山札の上から4枚を地に置く。BPを1増やす。 ",
+    "effect_name2":"■攻撃失敗時■",
+    "effect_text2":"自分の墓地にマディスキアが6枚以上あれば、自分の山札からマディスキアを1枚選び、それを自分の手札に加える。",
+    "effect_text_all":"このカードが墓地から召喚された時、自分の山札の上から4枚を地に置く。BPを1増やす。 自分の墓地にマディスキアが6枚以上あれば、自分の山札からマディスキアを1枚選び、それを自分の手札に加える。",
     "field":"フィールド関係なし",
     "BP_flag":true,
     "ability_burn":false,
     "ability_bind":false,
     "ability_silence":false,
     "draw":false,
-    "cardsearch":false,
+    "cardsearch":true,
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
@@ -34176,9 +37038,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":2,
-    "is_latest":false,
-    "updated_at":"2025-07-16",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
     "cd":50101,
     "link":false,
@@ -34190,32 +37052,32 @@
     "category":"昏き霊園（スレイヴヤード）",
     "type":"アタッカー",
     "name":"昏き霊園ロべリア",
-    "cost":4,
-    "power":6,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"相手の手札を1枚選ぶ。それと同名の相手の手札すべてを沈黙状態にする。",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分のカードの効果で相手のマナを減らしたとき、相手のライフを2減らす。\nこのカード名の効果は1ターンに1度しか発動しない。",
     "effect_name2":null,
     "effect_text2":null,
-    "effect_text_all":"相手の手札を1枚選ぶ。それと同名の相手の手札すべてを沈黙状態にする。 ",
-    "field":"フィールド関係なし",
+    "effect_text_all":"自分のカードの効果で相手のマナを減らしたとき、相手のライフを2減らす。\nこのカード名の効果は1ターンに1度しか発動しない。 ",
+    "field":"自分のカードの効果で相手のマナを減らしたとき、相手のライフを2減らす。\nこのカード名の効果は1ターンに1度しか発動しない。 ",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
-    "ability_silence":true,
+    "ability_silence":false,
     "draw":false,
     "cardsearch":false,
     "graveyard_recovery":false,
     "destroy_target":"",
-    "life_effect":"",
+    "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
-    "lethal_burn":0,
+    "lethal_burn":"2*",
     "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-          6
+          8
         ],
         "repeat":null,
         "defaultOff":false
@@ -34250,9 +37112,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/50101.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/50101.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":2,
@@ -38068,9 +40930,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":11,
-    "is_latest":false,
-    "updated_at":"2026-06-01",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Honor of the Brave Heart 「不屈の誇り」",
     "cd":50701,
     "link":false,
@@ -38085,10 +40947,10 @@
     "cost":12,
     "power":10,
     "effect_name1":"■戦場発動■",
-    "effect_text1":"これが墓地から召喚された時、自分の山札からランダムなマディスキアブロッカー1枚を手札に加え、それを破壊する。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"これが墓地から召喚された時、自分の山札からランダムなマディスキアブロッカー1枚を手札に加え、それを破壊する。 ",
+    "effect_text1":"これが墓地から召喚された時、自分の山札からチャージャー以外のマディスキア1枚選び、それを手札に加え、破壊する。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"自分の墓地からマディスキアを1枚選び、それを自分の手札に加える。",
+    "effect_text_all":"これが墓地から召喚された時、自分の山札からチャージャー以外のマディスキア1枚選び、それを手札に加え、破壊する。 自分の墓地からマディスキアを1枚選び、それを自分の手札に加える。",
     "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
@@ -38096,7 +40958,7 @@
     "ability_silence":false,
     "draw":false,
     "cardsearch":true,
-    "graveyard_recovery":false,
+    "graveyard_recovery":true,
     "destroy_target":"SELF",
     "life_effect":"",
     "power_effect":"",
@@ -38937,9 +41799,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":12,
-    "is_latest":false,
-    "updated_at":"2026-07-16",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Illustrated Illusion 「描画された幻想」",
     "cd":50806,
     "link":false,
@@ -38954,10 +41816,10 @@
     "cost":6,
     "power":12,
     "effect_name1":"■召喚時■",
-    "effect_text1":"シェイドフィールドにする。自分の墓地のヴォルグリムが5枚以上であれば、自分の墓地のヴォルグリムを1枚選び、それを手札に加え、それのコストを6減らす。",
+    "effect_text1":"シェイドフィールドにする。自分の墓地のヴォルグリムが8枚以上であれば、自分の墓地のヴォルグリムを1枚選び、それを手札に加え、それのコストを6減らす。",
     "effect_name2":"■手札発動■",
-    "effect_text2":"これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のチャージャーを1枚選び、破壊する。その後、相手のライフを3減らす。",
-    "effect_text_all":"シェイドフィールドにする。自分の墓地のヴォルグリムが5枚以上であれば、自分の墓地のヴォルグリムを1枚選び、それを手札に加え、それのコストを6減らす。 これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のチャージャーを1枚選び、破壊する。その後、相手のライフを3減らす。",
+    "effect_text2":"これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のチャージャーを1枚選び、破壊する。その後、相手のライフを1減らす。",
+    "effect_text_all":"シェイドフィールドにする。自分の墓地のヴォルグリムが8枚以上であれば、自分の墓地のヴォルグリムを1枚選び、それを手札に加え、それのコストを6減らす。 これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のチャージャーを1枚選び、破壊する。その後、相手のライフを1減らす。",
     "field":"シェイドフィールド",
     "BP_flag":false,
     "ability_burn":false,
@@ -38966,12 +41828,12 @@
     "draw":false,
     "cardsearch":false,
     "graveyard_recovery":true,
-    "destroy_target":"ALL",
+    "destroy_target":"OPPONENT",
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"DOWN",
-    "lethal_burn":3,
+    "lethal_burn":1,
     "CHECK":"OK",
     "lethal":{
       "attack":{
@@ -39095,9 +41957,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":12,
+    "version":13,
     "is_latest":true,
-    "updated_at":"2026-07-16",
+    "updated_at":"2026-09-04",
     "pack_name":"Illustrated Illusion 「描画された幻想」",
     "cd":50808,
     "link":false,
@@ -39114,8 +41976,8 @@
     "effect_name1":"■召喚時■",
     "effect_text1":"自分の手札のヴォルグリムチャージャーを1枚選び、破壊する。自分のマナを「破壊したカードのコスト×1」増やす。",
     "effect_name2":"■手札発動■",
-    "effect_text2":"これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のアタッカーを1枚選び、破壊する。その後、相手のライフを3減らす。",
-    "effect_text_all":"自分の手札のヴォルグリムチャージャーを1枚選び、破壊する。自分のマナを「破壊したカードのコスト×1」増やす。 これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のアタッカーを1枚選び、破壊する。その後、相手のライフを3減らす。",
+    "effect_text2":"これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のアタッカーを1枚選び、破壊する。その後、相手のライフを1減らす。",
+    "effect_text_all":"自分の手札のヴォルグリムチャージャーを1枚選び、破壊する。自分のマナを「破壊したカードのコスト×1」増やす。 これが自分のヴォルグリムの効果で破壊される時、シェイドフィールドであれば、相手の手札のアタッカーを1枚選び、破壊する。その後、相手のライフを1減らす。",
     "field":"シェイドフィールド",
     "BP_flag":false,
     "ability_burn":false,
@@ -39124,12 +41986,12 @@
     "draw":false,
     "cardsearch":false,
     "graveyard_recovery":false,
-    "destroy_target":"ALL",
+    "destroy_target":"OPPONENT",
     "life_effect":"OPPO_DAMAGE",
     "power_effect":"",
     "mana_effect":"UP",
     "cost_effect":"",
-    "lethal_burn":3,
+    "lethal_burn":1,
     "CHECK":"OK",
     "lethal":{
       "attack":{
@@ -39565,6 +42427,571 @@
     },
     "cv_id":0,
     "image_path":"img\/50813.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50901,
+    "link":false,
+    "link_cd":50901,
+    "CV":"小林 風羽舞",
+    "cv_kana":"こばやし　ふうま",
+    "rarity":"ブロンズ",
+    "race":"シェイド",
+    "category":"炎閻魔（えんえんま）",
+    "type":"チャージャー",
+    "name":"炎闇魔-海僧",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のライフが15以下であれば、相手の戦場のカードと同じ役割の炎闇魔を自分の山札から1枚選び、自分の手札に加える。そうでなければ、自分のライフを2減らし、シェイドフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフが15以下であれば、相手の戦場のカードと同じ役割の炎闇魔を自分の山札から1枚選び、自分の手札に加える。そうでなければ、自分のライフを2減らし、シェイドフィールドにする。 ",
+    "field":"シェイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"SELF_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50902,
+    "link":false,
+    "link_cd":50902,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"シルバー",
+    "race":"シェイド",
+    "category":"ヴァントム",
+    "type":"アタッカー",
+    "name":"ヴァントム プリンス",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分のヴァントムが召喚された時、相手の手札のランダムな1枚からパワーを1奪う。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のヴァントムが召喚された時、相手の手札のランダムな1枚からパワーを1奪う。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50903,
+    "link":false,
+    "link_cd":50903,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう ひとし",
+    "rarity":"ブロンズ",
+    "race":"シェイド",
+    "category":"ヴォルグリム",
+    "type":"チャージャー",
+    "name":"ヴォルグリム チウ",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札のヴォルグリムを1枚選び、破壊する。シェイドフィールドであれば、カードを1枚引く。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札のヴォルグリムを1枚選び、破壊する。シェイドフィールドであれば、カードを1枚引く。 ",
+    "field":"シェイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50904,
+    "link":false,
+    "link_cd":50904,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"ゴールド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"呪編みドール",
+    "cost":4,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"シェイドフィールドにする。両者の手札の中で最もパワーが低いカードを全て燃焼にし、相手のマナを「燃焼にした枚数×2」減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"シェイドフィールドにする。両者の手札の中で最もパワーが低いカードを全て燃焼にし、相手のマナを「燃焼にした枚数×2」減らす。 ",
+    "field":"シェイドフィールド",
+    "BP_flag":false,
+    "ability_burn":true,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"DOWN",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50905,
+    "link":false,
+    "link_cd":50905,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"レジェンド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"紫怨の伏姫",
+    "cost":10,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。以下の効果のうちからランダムで1つ発動する。その後、もう一度ランダムで1つ発動する。「相手のマナを3減らす。」「相手のライフを3減らす。」「相手のBPを1減らす。」「相手の戦場のカードのパワーを3減らす。」",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。以下の効果のうちからランダムで1つ発動する。その後、もう一度ランダムで1つ発動する。「相手のマナを3減らす。」「相手のライフを3減らす。」「相手のBPを1減らす。」「相手の戦場のカードのパワーを3減らす。」 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"DOWN",
+    "mana_effect":"DOWN",
+    "cost_effect":"",
+    "lethal_burn":3,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50906,
+    "link":false,
+    "link_cd":50906,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"ゴールド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"巨獣 グレンデル",
+    "cost":30,
+    "power":12,
+    "effect_name1":"■特性■",
+    "effect_text1":"これのコストを「両者の墓地の合計×1」減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これのコストを「両者の墓地の合計×1」減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          12
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50906.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":50907,
+    "link":false,
+    "link_cd":50907,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"亡霊船",
+    "cost":8,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の墓地から1枚選び、それを自分の手札に加える。自分のBPを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の墓地から1枚選び、それを自分の手札に加える。自分のBPを1増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":true,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50907.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   },
@@ -42653,9 +46080,9 @@
     "has_pre_adjustment_image":false
   },
   {
-    "version":3,
-    "is_latest":false,
-    "updated_at":"2025-09-15",
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
     "pack_name":"Creeping Souls「忍び寄る魂達」",
     "cd":80206,
     "link":false,
@@ -42667,13 +46094,13 @@
     "category":"ノーカテゴリ",
     "type":"アタッカー",
     "name":"純血の咎人狩 メアリ ー",
-    "cost":12,
+    "cost":14,
     "power":10,
     "effect_name1":"■召喚時■",
-    "effect_text1":"ノーマルフィールドでないなら、フィールドをリセットし、相手の戦場のカードのパワーを6減らす。",
+    "effect_text1":"ノーマルフィールドでないなら、フィールドをリセットし、相手の戦場のカードのパワーを3減らす。",
     "effect_name2":null,
     "effect_text2":null,
-    "effect_text_all":"ノーマルフィールドでないなら、フィールドをリセットし、相手の戦場のカードのパワーを6減らす。 ",
+    "effect_text_all":"ノーマルフィールドでないなら、フィールドをリセットし、相手の戦場のカードのパワーを3減らす。 ",
     "field":"ノーマルフィールド",
     "BP_flag":false,
     "ability_burn":false,
@@ -42727,9 +46154,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/調整前\/80206.webp",
-    "image_variant":"pre_adjustment",
-    "has_pre_adjustment_image":true
+    "image_path":"img\/80206.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
   },
   {
     "version":3,
@@ -45663,6 +49090,402 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":80901,
+    "link":false,
+    "link_cd":80901,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"ゴールド",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"笑わぬ演者",
+    "cost":0,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札全てのコストを2増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札全てのコストを2増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"UP",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/80901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":80902,
+    "link":false,
+    "link_cd":80902,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"ブロンズ",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"眠たげな司書",
+    "cost":6,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"カードを2枚引く。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"ターン開始時、これのコストを1下げる。",
+    "effect_text_all":"カードを2枚引く。 ターン開始時、これのコストを1下げる。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/80902.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":80903,
+    "link":false,
+    "link_cd":80903,
+    "CV":"白波瀬 沙椰",
+    "cv_kana":"しらはせ　さや",
+    "rarity":"レジェンド",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"空庭の守護者 バシレア",
+    "cost":8,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札を1枚選び、それを破壊する。自分の墓地にアタッカー、ブロッカーが3枚ずつあれば、相手のライフを「自分の墓地のチャージャーの枚数÷2」減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札を1枚選び、それを破壊する。自分の墓地にアタッカー、ブロッカーが3枚ずつあれば、相手のライフを「自分の墓地のチャージャーの枚数÷2」減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/80903.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":80904,
+    "link":false,
+    "link_cd":80904,
+    "CV":"篠原 夢",
+    "cv_kana":"しのはら ゆめ",
+    "rarity":"シルバー",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"伝書バトラー",
+    "cost":4,
+    "power":6,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分の山札からランダムな「伝書バトラー」1枚を自分の手札に加え、それのパワーを3増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の山札からランダムな「伝書バトラー」1枚を自分の手札に加え、それのパワーを3増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6,
+          9
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/80904.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":80905,
+    "link":false,
+    "link_cd":80905,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう ひとし",
+    "rarity":"ブロンズ",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"用心棒ゴブリン",
+    "cost":4,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札にアタッカーがあれば、これのパワーを4増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の手札にアタッカーがあれば、これのパワーを4増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/80905.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
@@ -47160,6 +50983,164 @@
     },
     "cv_id":0,
     "image_path":"img\/90801.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":90901,
+    "link":false,
+    "link_cd":90901,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう ひとし",
+    "rarity":"レジェンド",
+    "race":"旧神",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"旧神 アヌビス",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のライフとマナを比べ、少ない方を8増やす。同じであれば、両方を4増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフとマナを比べ、少ない方を8増やす。同じであれば、両方を4増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/90901.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":13,
+    "is_latest":true,
+    "updated_at":"2026-09-04",
+    "pack_name":"Juggernaut Incarnate 「神威の顕現」",
+    "cd":90902,
+    "link":false,
+    "link_cd":90902,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"レジェンド",
+    "race":"旧神",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"旧神 狙撃手・レイチェル",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■戦場発動■",
+    "effect_text1":"ターン終了時、相手の手札を1枚選び、それをロックオンし、これを自分の手札に戻す。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"相手の手札からロックオンしているカードが召喚された時、それのパワーを6減らす。",
+    "effect_text_all":"ターン終了時、相手の手札を1枚選び、それをロックオンし、これを自分の手札に戻す。 相手の手札からロックオンしているカードが召喚された時、それのパワーを6減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/90902.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   }

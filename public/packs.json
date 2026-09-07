@@ -64,6 +64,13 @@
       "selector": "#pack-illustrated-illusion"
     },
     {
+      "en": "Juggernaut Incarnate",
+      "jp": "神威の顕現",
+      "slug": "juggernaut-incarnate",
+      "key": "juggernaut-incarnate",
+      "selector": "#pack-juggernaut-incarnate"
+    },
+    {
       "en": "コラボカード",
       "jp": "",
       "slug": "コラボカード",
@@ -88,6 +95,7 @@
     "Glory of the Gods",
     "Honor of the Brave Heart",
     "Illustrated Illusion",
+    "Juggernaut Incarnate",
     "コラボカード",
     "その他特殊カード"
   ]

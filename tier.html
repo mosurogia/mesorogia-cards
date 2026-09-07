@@ -31,10 +31,10 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/homeOGP.png">
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-07-17-006">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-07-18-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
-    <link rel="stylesheet" href="css/page6.css?v=2026-07-17-002">
+    <link rel="stylesheet" href="css/page6.css?v=2026-09-07-002">
     <!-- ===== 構造化データ ===== -->
     <script type="application/ld+json">
     {
@@ -117,10 +117,10 @@
     </nav>
     <div class="header-actions">
         <div class="header-dropdown header-explore-menu" data-header-dropdown>
-            <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false"
+            <button type="button" class="header-menu-button header-menu-button--new" aria-haspopup="true" aria-expanded="false"
                 aria-controls="header-explore-menu">
                 <span aria-hidden="true">☰</span>
-                <span class="sr-only">探索・情報メニュー</span>
+                <span class="sr-only">探索・情報メニュー（新着：用語集）</span>
             </button>
             <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
                 <a role="menuitem" href="index.html">
@@ -129,9 +129,8 @@
                 <a class="header-menu-tier-link" role="menuitem" href="tier.html">
                     <span>Tier表</span>
                 </a>
-                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
-                    <span>用語集・質問</span>
-                    <span class="header-menu-badge">今後予定</span>
+                <a role="menuitem" href="glossary.html">
+                    <span>用語集</span><span class="header-menu-badge">NEW</span>
                 </a>
                 <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
                     <span>ランダムデッキ</span>
@@ -153,13 +152,13 @@
     <img src="img/innocent_oldgod_pack.webp" alt="" loading="eager">
 </a>
 
-<a class="home-event-banner home-event-banner--illustrated" href="cards.html?pack=illustrated-illusion" aria-label="Iパックの対象カードをカード図鑑で見る" data-event-feature="illustrated-illusion-pack" hidden>
+<a class="home-event-banner home-event-banner--juggernaut" href="cards.html?pack=juggernaut-incarnate" aria-label="Jパックの対象カードをカード図鑑で見る" data-event-feature="juggernaut-incarnate-pack" hidden>
     <div class="home-event-banner__text">
         <span>新カードパック</span>
-        <strong>Illustrated Illusion</strong>
-        <small><span>対象カードを見に行く👀</span><span>Illustrated Illusion を一発検索</span></small>
+        <strong>Juggernaut Incarnate</strong>
+        <small><span>対象カードを見に行く👀</span><span>Juggernaut Incarnate を一発検索</span></small>
     </div>
-    <img src="img/イベントカレンダー/Iパック追加.jpg" alt="" loading="eager">
+    <img src="img/イベントカレンダー/Jパック追加.jpg" alt="" loading="eager">
 </a>
 
 <main class="tier-page-shell">
@@ -193,7 +192,9 @@
                 <div class="tier-board-heading">
                     <h2 id="tierBoardTitle" class="tier-section-title">最新Tier表（最終更新5月第2週）</h2>
                     <div class="tier-board-meta" aria-label="Tier表環境切り替え">
-                        <span class="tier-board-status">最新：5月第2週</span>
+                        <select class="tier-board-status" data-tier-board-environment aria-label="表示する環境時期">
+                            <option>最新：5月第2週</option>
+                        </select>
                         <div class="tier-env-controls">
                             <button class="tier-env-button" type="button" data-tier-env-prev aria-label="前の環境" disabled>◀</button>
                             <button class="tier-env-button" type="button" data-tier-env-next aria-label="次の環境" disabled>▶</button>
@@ -434,7 +435,9 @@
                 <div class="tier-deck-guide-title-row">
                     <h3 id="tierDeckGuideTitle" class="tier-deck-guide-title">デッキ紹介（最終更新5月第2週）</h3>
                     <div class="tier-deck-guide-meta" aria-label="デッキリスト環境切り替え">
-                        <span class="tier-deck-guide-environment" data-tier-guide-environment>最新：5月第2週</span>
+                        <select class="tier-deck-guide-environment" data-tier-guide-environment aria-label="表示する環境時期">
+                            <option>最新：5月第2週</option>
+                        </select>
                         <div class="tier-env-controls">
                             <button class="tier-env-button" type="button" data-tier-env-prev aria-label="前の環境" disabled>◀</button>
                             <button class="tier-env-button" type="button" data-tier-env-next aria-label="次の環境" disabled>▶</button>
@@ -1426,23 +1429,23 @@
 
 <!-- ===== JavaScript ===== -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="js/common/core/defs.js?v=2026-08-06-001"></script>
-<script src="js/common/core/event-features.js?v=2026-07-17-001"></script>
+<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/core/event-features.js?v=2026-09-07-001"></script>
 <script src="js/common/core/card-core.js?v=2026-05-05-006"></script>
 <script src="js/common/core/card-sort.js?v=2026-05-05-008"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-006"></script>
 <script src="js/common/card/card-detail.js?v=2026-05-05-008"></script>
 <script src="js/common/card/card-image-viewer.js?v=2026-05-05-008"></script>
-<script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
+<script src="js/common/account/auth-core.js?v=2026-08-19-002"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-07-18-001"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
-<script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
+<script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
-<script src="js/pages/tier/tier-page.js?v=2026-07-12-001"></script>
+<script src="js/pages/tier/tier-page.js?v=2026-09-04-003"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 

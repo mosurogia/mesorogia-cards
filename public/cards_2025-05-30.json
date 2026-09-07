@@ -2307,7 +2307,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10031,
@@ -2390,9 +2390,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/10031.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/10031.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -3821,7 +3821,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20019,
@@ -3894,9 +3894,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/20019.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/20019.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -5562,7 +5562,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30011,
@@ -5635,9 +5635,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/30011.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/30011.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -10145,7 +10145,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50009,
@@ -10303,7 +10303,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50011,
@@ -10376,9 +10376,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/50011.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/50011.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -10777,7 +10777,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50017,
@@ -12203,7 +12203,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80005,
-    "link":false,
+    "link":true,
     "link_cd":80005,
     "CV":"五十嵐 鳴",
     "cv_kana":"いがらし めい",
@@ -13072,7 +13072,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80017,
-    "link":false,
+    "link":true,
     "link_cd":80017,
     "CV":"積木 瑞希",
     "cv_kana":"つみき みずき",
@@ -13546,7 +13546,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80025,
-    "link":false,
+    "link":true,
     "link_cd":80025,
     "CV":"CVなし",
     "cv_kana":"CVなし",

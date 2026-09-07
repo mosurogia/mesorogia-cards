@@ -79,6 +79,9 @@
     /*Iパック*/
     --pack-i-rgb: 58, 90, 185;
     --pack-i-accent-rgb: 205, 225, 255;
+    /*Jパック*/
+    --pack-j-rgb: 154, 64, 38;
+    --pack-j-accent-rgb: 246, 190, 92;
     /* 特殊：ダークパープル（異質・限定感） */
     --pack-special-rgb: 200, 170, 70;
     --pack-special-accent-rgb: 255, 220, 120;
@@ -598,6 +601,25 @@ button,
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
     text-shadow: none;
     white-space: nowrap;
+}
+
+/* ===== 用語集公開を知らせるメニューの丸印 ===== */
+.main-header .header-menu-button--new {
+    position: relative;
+    --header-menu-new-color: var(--glossary-news-color, #d93636);
+}
+
+.has-glossary-news .main-header .header-menu-button--new::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--header-menu-new-color);
+    pointer-events: none;
 }
 
 .main-header .header-menu-button:hover {
@@ -1998,6 +2020,10 @@ footer a:hover {
     border-bottom: 1px solid rgba(148, 128, 255, .38);
 }
 
+.home-event-banner[hidden] {
+    display: none;
+}
+
 .home-event-banner::before {
     content: "";
     position: absolute;
@@ -2023,42 +2049,42 @@ footer a:hover {
     pointer-events: none;
 }
 
-.home-event-banner--illustrated {
+.home-event-banner--juggernaut {
     background:
         linear-gradient(90deg,
-            rgba(var(--pack-i-rgb), .98) 0%,
-            rgba(34, 56, 138, .96) 42%,
-            rgba(18, 28, 82, .97) 100%),
+            rgba(var(--pack-j-rgb), .98) 0%,
+            rgba(102, 40, 34, .96) 42%,
+            rgba(48, 20, 19, .97) 100%),
         url("../img/header.webp") center / auto 55px repeat-x;
-    border-top-color: rgba(var(--pack-i-accent-rgb), .62);
-    border-bottom-color: rgba(var(--pack-i-rgb), .78);
+    border-top-color: rgba(var(--pack-j-accent-rgb), .62);
+    border-bottom-color: rgba(var(--pack-j-rgb), .78);
 }
 
-.home-event-banner--illustrated::before {
+.home-event-banner--juggernaut::before {
     background:
-        radial-gradient(circle at 28% 45%, rgba(var(--pack-i-accent-rgb), .24), transparent 31%),
-        linear-gradient(90deg, rgba(var(--pack-i-accent-rgb), .10), transparent 44%);
+        radial-gradient(circle at 28% 45%, rgba(var(--pack-j-accent-rgb), .24), transparent 31%),
+        linear-gradient(90deg, rgba(var(--pack-j-accent-rgb), .10), transparent 44%);
 }
 
-.home-event-banner--illustrated::after {
+.home-event-banner--juggernaut::after {
     background:
-        radial-gradient(circle at 80% 46%, rgba(var(--pack-i-accent-rgb), .34), transparent 39%),
-        linear-gradient(270deg, rgba(var(--pack-i-rgb), .22), transparent);
+        radial-gradient(circle at 80% 46%, rgba(var(--pack-j-accent-rgb), .34), transparent 39%),
+        linear-gradient(270deg, rgba(var(--pack-j-rgb), .22), transparent);
 }
 
-.home-event-banner--illustrated .home-event-banner__text > span {
-    color: rgb(var(--pack-i-accent-rgb));
+.home-event-banner--juggernaut .home-event-banner__text > span {
+    color: rgb(var(--pack-j-accent-rgb));
 }
 
-.home-event-banner--illustrated .home-event-banner__text strong {
+.home-event-banner--juggernaut .home-event-banner__text strong {
     color: #f8fbff;
     text-shadow:
         0 2px 0 rgba(16, 28, 88, .92),
         0 4px 10px rgba(0, 0, 0, .5),
-        0 0 14px rgba(var(--pack-i-accent-rgb), .42);
+        0 0 14px rgba(var(--pack-j-accent-rgb), .42);
 }
 
-.home-event-banner--illustrated img {
+.home-event-banner--juggernaut img {
     right: 0;
     bottom: 0;
     height: 100%;
@@ -2196,7 +2222,7 @@ footer a:hover {
         max-width: 190px;
     }
 
-    .home-event-banner--illustrated img {
+    .home-event-banner--juggernaut img {
         right: 0;
         bottom: 0;
         height: 100%;
@@ -2246,7 +2272,7 @@ footer a:hover {
         max-width: 170px;
     }
 
-    .home-event-banner--illustrated img {
+    .home-event-banner--juggernaut img {
         right: 0;
         bottom: 0;
         height: 100%;
@@ -2283,7 +2309,7 @@ footer a:hover {
         max-width: 168px;
     }
 
-    .home-event-banner--illustrated img {
+    .home-event-banner--juggernaut img {
         right: 0;
         bottom: 0;
         width: 112px;
@@ -2725,6 +2751,20 @@ body.is-pwa-standalone .deckcode-modal {
     text-align: center;
     text-decoration: none;
     padding: 4px 2px;
+}
+
+/* ===== 未閲覧の用語集を知らせる情報タブの丸印 ===== */
+.has-glossary-news .app-bottom-nav a[data-key="info.html"]::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: calc(50% + 10px);
+    width: 8px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--glossary-news-color, #d93636);
+    pointer-events: none;
 }
 
 .app-bottom-nav a[data-key="info.html"] {

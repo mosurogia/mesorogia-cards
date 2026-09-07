@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- ===== 基本設定 ===== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/mosurogia_favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <meta name="theme-color" content="#111827">
+
+    <title>神託のメソロギア 用語集｜モスロギア</title>
+    <meta name="description" content="神託のメソロギアのルールやカード効果、プレイヤー間で使われる用語を分かりやすく紹介する用語集です。">
+
+    <link rel="canonical" href="https://mosurogia.github.io/mesorogia-cards/glossary.html">
+
+    <!-- ===== 共有表示設定 ===== -->
+    <meta property="og:title" content="神託のメソロギア 用語集・解説集｜モスロギア">
+    <meta property="og:description" content="ゲームのルールやカード効果、プレイ中の用語を検索できる用語集・解説集です。">
+    <meta property="og:image" content="https://mosurogia.github.io/mesorogia-cards/img/glossaryOGP.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="モスロギア 用語集・解説集">
+    <meta property="og:url" content="https://mosurogia.github.io/mesorogia-cards/glossary.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="モスロギア">
+
+    <!-- ===== Xカード設定 ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="神託のメソロギア 用語集・解説集｜モスロギア">
+    <meta name="twitter:description" content="ゲームのルールやカード効果、プレイ中の用語を検索できる用語集・解説集です。">
+    <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/glossaryOGP.png">
+    <meta name="twitter:image:alt" content="モスロギア 用語集・解説集">
+
+    <!-- ===== スタイル ===== -->
+    <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
+    <link rel="stylesheet" href="css/page8.css?v=2026-09-04-008">
+</head>
+
+<body>
+<header class="main-header">
+    <div class="header-logo">
+        <a href="index.html" aria-label="ホームへ移動">
+            <img src="img/appicon_1024.webp" alt="神託のメソロギア ロゴ">
+            <span class="header-logo-title">モスロギア</span>
+        </a>
+    </div>
+    <nav class="header-nav">
+        <a href="cards.html">
+            <img src="img/header_icon_1.webp" alt="">
+            <span>図鑑</span>
+        </a>
+        <a href="deckmaker.html">
+            <img src="img/header_icon_2.webp" alt="">
+            <span>デッキメーカー</span>
+        </a>
+        <a href="deck-post.html">
+            <img src="img/header_icon_3.webp" alt="">
+            <span>デッキ投稿</span>
+        </a>
+        <a class="header-nav-tier" href="tier.html">
+            <img src="img/header_icon_5.webp" alt="">
+            <span>Tier表</span>
+        </a>
+    </nav>
+    <div class="header-actions">
+        <div class="header-dropdown header-explore-menu" data-header-dropdown>
+            <button type="button" class="header-menu-button header-menu-button--new" aria-haspopup="true" aria-expanded="false"
+                aria-controls="header-explore-menu">
+                <span aria-hidden="true">≡</span>
+                <span class="sr-only">探索・情報メニュー（新着：用語集）</span>
+            </button>
+            <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
+                <a role="menuitem" href="index.html"><span>ホーム</span></a>
+                <a class="header-menu-tier-link" role="menuitem" href="tier.html"><span>Tier表</span></a>
+                <a role="menuitem" href="glossary.html" aria-current="page"><span>用語集</span><span class="header-menu-badge">NEW</span></a>
+                <button type="button" role="menuitem" data-header-app-action="install">アプリで開く</button>
+            </div>
+        </div>
+    </div>
+    <div class="header-account" data-header-auth></div>
+</header>
+
+<main class="glossary-page">
+    <div class="glossary-sidebar-rail">
+        <aside class="glossary-sidebar" data-glossary-sidebar hidden aria-label="セクションナビゲーション">
+            <p class="glossary-sidebar__title" data-glossary-index-title>用語集目次</p>
+            <p class="glossary-sidebar__hint">クリックで該当箇所へ移動</p>
+            <nav class="glossary-sidebar__nav" data-glossary-section-nav></nav>
+        </aside>
+    </div>
+
+    <div class="glossary-page-main">
+    <h1 class="sr-only" id="glossary-title">用語集・解説集</h1>
+
+    <section class="glossary-tools" aria-label="用語と解説の検索・絞り込み">
+        <label class="glossary-search" for="glossary-search-input">
+            <span class="glossary-search__icon" aria-hidden="true"></span>
+            <span class="sr-only">用語と解説を検索</span>
+            <input id="glossary-search-input" type="search" placeholder="用語・解説を検索" autocomplete="off"
+                data-glossary-search>
+            <button type="button" data-glossary-search-clear hidden aria-label="検索語を消去">×</button>
+        </label>
+        <div class="glossary-tabs" role="tablist" aria-label="表示する内容">
+            <button class="is-active" type="button" role="tab" aria-selected="true" data-content-type="terms">
+                用語集 <span data-glossary-term-total>0</span>
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-content-type="guides">
+                解説集 <span data-glossary-guide-total>0</span>
+            </button>
+        </div>
+        <div class="glossary-filter-group">
+            <label class="glossary-filter-group__label" for="glossary-section-filter">セクション</label>
+            <select class="glossary-filter-select" id="glossary-section-filter"
+                data-glossary-section-filter aria-label="セクションで絞り込む">
+                <option value="all">すべて</option>
+            </select>
+        </div>
+        <div class="glossary-filter-group">
+            <label class="glossary-filter-group__label" for="glossary-tag-filter">タグ</label>
+            <select class="glossary-filter-select" id="glossary-tag-filter"
+                data-glossary-tag-filter aria-label="タグで絞り込む">
+                <option value="all">すべて</option>
+            </select>
+        </div>
+        <p class="glossary-result-count" data-glossary-result-count aria-live="polite">0件を表示</p>
+        <button class="glossary-index-trigger" type="button" aria-haspopup="dialog"
+            aria-controls="glossary-index-modal" aria-expanded="false" data-glossary-index-open>
+            <span data-glossary-index-title>用語集目次</span>
+            <span class="glossary-index__total" data-glossary-mobile-index-total>0</span>
+        </button>
+    </section>
+
+            <div class="glossary-content-main">
+                <section class="glossary-sections" aria-label="用語・解説一覧" data-glossary-list hidden></section>
+
+                <div class="glossary-status" data-glossary-status role="status">
+                    <span class="glossary-status__mark" aria-hidden="true">…</span>
+                    <h2 data-glossary-status-title>用語を読み込んでいます</h2>
+                    <p data-glossary-status-message>しばらくお待ちください。</p>
+                    <button type="button" data-glossary-retry hidden>もう一度読み込む</button>
+                </div>
+
+                <div class="glossary-empty" data-glossary-empty hidden>
+                    <span aria-hidden="true">?</span>
+                    <h2>該当する内容がありません</h2>
+                    <p data-glossary-empty-message>検索する言葉やセクション、タグを変えてみてください。</p>
+                </div>
+            </div>
+    </div>
+</main>
+
+<div class="glossary-index-modal" id="glossary-index-modal" data-glossary-index-modal hidden>
+    <button class="glossary-index-modal__backdrop" type="button" aria-label="目次を閉じる"
+        data-glossary-index-close></button>
+    <section class="glossary-index-modal__panel" role="dialog" aria-modal="true"
+        aria-labelledby="glossary-index-modal-title">
+        <header class="glossary-index-modal__head">
+            <div>
+                <h2 id="glossary-index-modal-title" data-glossary-index-title>用語集目次</h2>
+                <p>セクションを開いて移動先を選択</p>
+            </div>
+            <button class="glossary-index-modal__close" type="button" aria-label="目次を閉じる"
+                data-glossary-index-close>×</button>
+        </header>
+        <nav class="glossary-index__list" data-glossary-mobile-term-index aria-label="目次"></nav>
+    </section>
+</div>
+
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-mini">
+        <div class="footer-mini-left">
+            <span class="footer-brand">モスロギア</span>
+            <span class="footer-sep">・</span>
+            <a class="footer-link" href="https://mythologiatheoracle.com/" target="_blank" rel="noopener noreferrer">
+                公式サイト
+            </a>
+            <span class="footer-sep">・</span>
+            <a class="footer-link footer-feedback"
+                href="https://docs.google.com/forms/d/e/【フォームID】/viewform?usp=pp_url&entry.123456789=用語集"
+                target="_blank" rel="noopener noreferrer">
+                フィードバック
+            </a>
+        </div>
+        <details class="footer-details">
+            <summary class="footer-more">このサイトについて</summary>
+            <div class="footer-detail-body">
+                <p>
+                    <strong>モスロギア</strong> はアプリ『神託のメソロギア』の非公式ファンサイトです。<br>
+                    画像・データ等の著作権は各権利者に帰属します。
+                </p>
+                <p>
+                    一部画像素材は「ジュエルセイバーFREE」
+                    （<a href="https://www.jewel-s.jp/" target="_blank" rel="noopener">https://www.jewel-s.jp/</a>）
+                    を使用しています。
+                </p>
+                <p class="footer-contact">
+                    連絡先：<a href="https://x.com/192837465aruneo" target="_blank"
+                        rel="noopener noreferrer">@192837465aruneo</a>
+                </p>
+                <div class="footer-copy">© 2025 Mesorogia Cards</div>
+            </div>
+        </details>
+    </div>
+</footer>
+
+<!-- ===== ログイン / 新規登録 モーダル ===== -->
+<div class="account-modal" id="authLoginModal" style="display:none;">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+        <div class="account-modal-head">
+            <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+            <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+        </div>
+        <div class="account-modal-body">
+            <div class="auth-stack">
+                <form id="auth-login-form" class="auth-login-form">
+                    <div class="poster-line" style="margin-top:6px;">
+                        <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username"
+                            autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+                    <div class="poster-line">
+                        <input id="auth-password" name="current-password" type="password" placeholder="パスワード"
+                            autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false">
+                        <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                    </div>
+                    <div class="poster-line">
+                        <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）"
+                            autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false">
+                    </div>
+                    <div class="auth-buttons">
+                        <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                        <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                    </div>
+                    <button type="button" class="auth-forgot-link" id="auth-forgot-password">パスワードを忘れた場合</button>
+                    <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;"></p>
+                </form>
+                <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                    <p style="margin:0;">ログイン中です。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="auth-login-save" method="get" action="" target="auth-login-save-frame" autocomplete="on"
+    style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="current-password">
+</form>
+<iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
+
+<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/account/auth-core.js?v=2026-08-19-002"></script>
+<script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
+<script src="js/common/account/account.js?v=2026-05-31-001"></script>
+<script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
+<script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
+<script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
+<script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
+<script src="js/pages/glossary/glossary-page.js?v=2026-09-05-002"></script>
+<script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
+<script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
+</body>
+</html>

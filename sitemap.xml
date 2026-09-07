@@ -43,4 +43,10 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://mosurogia.github.io/mesorogia-cards/glossary.html</loc>
+    <lastmod>2026-09-07</lastmod>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>

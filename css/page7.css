@@ -3,6 +3,8 @@
     max-width: 920px;
     margin-right: auto;
     margin-left: auto;
+    --info-button-background: #625be8;
+    --info-button-background-hover: #5148dc;
 }
 
 .info-page-grid {
@@ -65,7 +67,7 @@
     padding: 8px 14px;
     border: 0;
     border-radius: var(--home-card-radius);
-    background: var(--home-accent);
+    background: var(--info-button-background);
     color: #fff;
     font: inherit;
     font-size: .9rem;
@@ -83,7 +85,7 @@
 }
 
 .info-card__button:hover {
-    background: var(--home-accent-strong);
+    background: var(--info-button-background-hover);
     color: #fff;
     text-decoration: none;
 }
@@ -151,6 +153,34 @@
     width: 48px;
     aspect-ratio: 1 / 1;
     object-fit: contain;
+}
+
+.info-app-glossary-card {
+    display: none;
+}
+
+body.is-pwa-standalone .info-app-glossary-card {
+    display: flex;
+}
+
+.info-glossary-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.info-new-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 20px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: .04em;
 }
 
 .info-action-card h2,

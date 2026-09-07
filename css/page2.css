@@ -6055,6 +6055,28 @@ body.lethal-auto-filter-open {
     cursor: pointer;
 }
 
+.lethal-auto-filter-card__repeat-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.lethal-auto-filter-card__repeat-control select {
+    min-width: 52px;
+    padding: 2px 5px;
+    border: 1px solid rgba(15, 23, 42, .2);
+    border-radius: 5px;
+    background: #fff;
+    color: #334155;
+    font: inherit;
+}
+
+.lethal-auto-filter-card__repeat-control select:disabled {
+    opacity: .5;
+}
+
 .lethal-auto-filter-card__option input {
     width: 16px;
     height: 16px;
@@ -6093,7 +6115,8 @@ body.lethal-auto-filter-open {
 }
 
 .lethal-auto-filter-modal button:focus-visible,
-.lethal-auto-filter-card__option input:focus-visible {
+.lethal-auto-filter-card__option input:focus-visible,
+.lethal-auto-filter-card__repeat-control select:focus-visible {
     outline: 3px solid rgba(185, 28, 28, .25);
     outline-offset: 2px;
 }

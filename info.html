@@ -30,11 +30,11 @@
     <meta name="twitter:image" content="https://mosurogia.github.io/mesorogia-cards/img/homeOGP.png">
 
     <!-- ===== スタイル ===== -->
-    <link rel="stylesheet" href="css/common.css?v=2026-07-17-006">
-    <link rel="stylesheet" href="css/common-page124.css?v=2026-07-18-001">
+    <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
-    <link rel="stylesheet" href="css/page0.css?v=2026-07-17-004">
-    <link rel="stylesheet" href="css/page7.css?v=2026-06-24-001">
+    <link rel="stylesheet" href="css/page0.css?v=2026-09-07-003">
+    <link rel="stylesheet" href="css/page7.css?v=2026-09-07-003">
     <!-- ===== 構造化データ ===== -->
     <script type="application/ld+json">
     {
@@ -93,17 +93,16 @@
     </nav>
     <div class="header-actions">
         <div class="header-dropdown header-explore-menu" data-header-dropdown>
-            <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false"
+            <button type="button" class="header-menu-button header-menu-button--new" aria-haspopup="true" aria-expanded="false"
                 aria-controls="header-explore-menu">
                 <span aria-hidden="true">≡</span>
-                <span class="sr-only">探索・情報メニュー</span>
+                <span class="sr-only">探索・情報メニュー（新着：用語集）</span>
             </button>
             <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
                 <a role="menuitem" href="index.html"><span>ホーム</span></a>
                 <a class="header-menu-tier-link" role="menuitem" href="tier.html"><span>Tier表</span></a>
-                <a role="menuitem" href="#" aria-disabled="true" data-header-disabled-link>
-                    <span>用語集・質問</span>
-                    <span class="header-menu-badge">今後予定</span>
+                <a role="menuitem" href="glossary.html">
+                    <span>用語集</span><span class="header-menu-badge">NEW</span>
                 </a>
                 <button type="button" role="menuitem" data-header-app-action="install">アプリで開く</button>
             </div>
@@ -114,6 +113,17 @@
 
 <main class="home-page info-page">
     <div class="info-page-grid">
+        <section class="info-card info-action-card info-app-glossary-card" aria-labelledby="info-glossary-title">
+            <a class="info-action-card__link" href="glossary.html">
+                <img class="info-action-card__icon" src="img/header_icon_6.webp" alt="">
+                <div>
+                    <h2 id="info-glossary-title" class="info-glossary-title">用語集 <span class="info-new-badge">NEW</span></h2>
+                    <p>正式公開！ゲームの用語やルールを検索し、解説を確認できます。</p>
+                </div>
+                <span class="info-action-card__arrow">開く ▶</span>
+            </a>
+        </section>
+
         <section class="info-card info-card--wide info-calendar-card" aria-labelledby="info-calendar-title">
             <div class="info-card__head">
                 <div>
@@ -147,7 +157,6 @@
                 </div>
             </div>
             <div class="info-chip-list">
-                <span>用語集</span>
                 <span>初心者ガイド</span>
             </div>
         </section>
@@ -241,14 +250,14 @@
 <iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
 
 <!-- ===== スクリプト ===== -->
-<script src="js/common/core/defs.js?v=2026-08-06-001"></script>
-<script src="js/common/account/auth-core.js?v=2026-05-05-006"></script>
+<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/account/auth-core.js?v=2026-08-19-002"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-07-18-001"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
-<script src="js/common/ui/header-menu.js?v=2026-05-30-001"></script>
+<script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
 <script src="js/pages/home/home.js?v=2026-07-17-006"></script>
 <script src="js/pages/info/info-page.js?v=2026-05-30-001"></script>

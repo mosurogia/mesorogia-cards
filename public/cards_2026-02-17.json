@@ -2307,7 +2307,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":10031,
@@ -2390,9 +2390,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/10031.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/10031.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":2,
@@ -7244,7 +7244,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":20019,
@@ -7317,9 +7317,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/20019.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/20019.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -12396,7 +12396,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":30011,
@@ -12469,9 +12469,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/30011.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/30011.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -21576,7 +21576,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40305,
@@ -21655,7 +21655,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40306,
@@ -21728,9 +21728,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/40306.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/40306.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":6,
@@ -22380,7 +22380,7 @@
     "race":"ルミナス",
     "category":"白騎士",
     "type":"ブロッカー",
-    "name":"白騎士 アルル",
+    "name":"白騎士 アアル",
     "cost":6,
     "power":14,
     "effect_name1":"■召喚時■",
@@ -23872,7 +23872,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50009,
@@ -24030,7 +24030,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50011,
@@ -24103,9 +24103,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/50011.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/50011.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":1,
@@ -24504,7 +24504,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":50017,
@@ -25689,7 +25689,7 @@
   },
   {
     "version":2,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-07-16",
     "pack_name":"Beyond the Sanctuary 「聖域の先へ」",
     "cd":50101,
@@ -25762,9 +25762,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/50101.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/50101.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":2,
@@ -29353,7 +29353,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80005,
-    "link":false,
+    "link":true,
     "link_cd":80005,
     "CV":"五十嵐 鳴",
     "cv_kana":"いがらし めい",
@@ -30222,7 +30222,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80017,
-    "link":false,
+    "link":true,
     "link_cd":80017,
     "CV":"積木 瑞希",
     "cv_kana":"つみき みずき",
@@ -30696,7 +30696,7 @@
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":80025,
-    "link":false,
+    "link":true,
     "link_cd":80025,
     "CV":"CVなし",
     "cv_kana":"CVなし",
@@ -32196,7 +32196,7 @@
   },
   {
     "version":3,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-09-15",
     "pack_name":"Creeping Souls「忍び寄る魂達」",
     "cd":80206,
@@ -32269,9 +32269,9 @@
       }
     },
     "cv_id":0,
-    "image_path":"img\/80206.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
+    "image_path":"img\/調整前\/80206.webp",
+    "image_variant":"pre_adjustment",
+    "has_pre_adjustment_image":true
   },
   {
     "version":3,
