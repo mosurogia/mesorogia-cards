@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-03-202123Z",
-  "generatedAt": "2026-09-03T20:21:23Z",
+  "version": "2026-09-07-162740Z",
+  "generatedAt": "2026-09-07T16:27:40Z",
   "sections": [
     {
       "id": "basic-rules",
@@ -21,6 +21,11 @@
       "id": "deck-strategy",
       "label": "デッキ・戦術",
       "sortOrder": 40
+    },
+    {
+      "id": "card-specific",
+      "label": "カード固有",
+      "sortOrder": 50
     },
     {
       "id": "event",
@@ -1689,7 +1694,12 @@
         "ルームマッチ",
         "神秘の回廊",
         "ダイヤ",
-        "スペシャルパック"
+        "スペシャルパック",
+        "パックチケット",
+        "銅",
+        "銀",
+        "金",
+        "虹"
       ],
       "sectionId": "game-system-mode",
       "tagIds": [
@@ -1698,7 +1708,7 @@
       "relatedTermIds": [],
       "thumbnail": "",
       "sortOrder": 50,
-      "updatedAt": "2026-08-22",
+      "updatedAt": "2026-09-08",
       "blocks": [
         {
           "id": "daily-chest-00",
@@ -1767,7 +1777,7 @@
           "id": "daily-chest-07",
           "type": "note",
           "heading": "",
-          "text": "確認できている目安：銅はダイヤ10個、銀は30個、金は80個、虹は120個やスペシャルパックなど。詳しい報酬量は調査中で、各レアリティの出現率は不明です。",
+          "text": "現在確認できている報酬の目安：\n・銅：ダイヤ10～18個\n・銀：ダイヤ20～42個、スペシャルパック\n・金：ダイヤ50～95個、スペシャルパック、パックチケット\n・虹：ダイヤ100～130個、スペシャルパック（1～3枚）、パックチケット\n詳しい報酬量は調査中で、各レアリティの出現率は不明です。",
           "image": "",
           "imageAlt": "",
           "sortOrder": 80
@@ -1875,6 +1885,403 @@
           "image": "",
           "imageAlt": "",
           "sortOrder": 80
+        }
+      ]
+    },
+    {
+      "id": "rachel-behavior",
+      "title": "レイチェルの挙動",
+      "summary": "レイチェルがロックオンするタイミング、手札効果の発動条件、複製時の扱いを解説します。",
+      "searchTerms": [
+        "レイチェル",
+        "ロックオン",
+        "手札効果",
+        "召喚時効果",
+        "マディスキア",
+        "草原のスライム",
+        "複製"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "ability"
+      ],
+      "relatedTermIds": [
+        "hand-effect",
+        "summon-effect",
+        "discard",
+        "deck-pile"
+      ],
+      "thumbnail": "",
+      "sortOrder": 70,
+      "updatedAt": "2026-09-05",
+      "blocks": [
+        {
+          "id": "rachel-behavior-00",
+          "type": "text",
+          "heading": "",
+          "text": "レイチェルは、戦場効果で相手のカード1枚をロックオンし、条件を満たした召喚の直前に手札効果を発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "rachel-behavior-01",
+          "type": "heading",
+          "heading": "ロックオンするタイミング",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "rachel-behavior-02",
+          "type": "text",
+          "heading": "",
+          "text": "レイチェルは、戦場効果により相手のカード1枚をロックオンします。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "rachel-behavior-03",
+          "type": "heading",
+          "heading": "手札効果の発動タイミング",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "rachel-behavior-04",
+          "type": "text",
+          "heading": "",
+          "text": "・自分のカードの召喚時効果が発動する前\n・相手が『マディスキア』または『草原のスライム』の効果でカードを召喚したとき、そのカードの召喚時効果が発動する前",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "rachel-behavior-05",
+          "type": "note",
+          "heading": "",
+          "text": "入れ替える効果によって戦場のカードが変わった場合、レイチェルの手札効果は発動しません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "rachel-behavior-06",
+          "type": "heading",
+          "heading": "複製された場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "rachel-behavior-07",
+          "type": "text",
+          "heading": "",
+          "text": "レイチェルが複製された場合、複製されたレイチェルはカードをロックオンしていない状態です。複製されたレイチェルが新たにロックオンすると、2枚のレイチェルがそれぞれロックオンしているものとして判定されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        }
+      ]
+    },
+    {
+      "id": "lock-on",
+      "title": "ロックオンの仕様",
+      "summary": "ロックオンの表示、同名カードへの適用範囲、解除条件を解説します。",
+      "searchTerms": [
+        "ロックオン",
+        "ロックオンマーク",
+        "同名カード",
+        "エディション",
+        "シグネクチャ",
+        "ステータスリセット"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "relatedTermIds": [
+        "status-ailment",
+        "ability",
+        "discard",
+        "deck-pile",
+        "edition"
+      ],
+      "thumbnail": "",
+      "sortOrder": 80,
+      "updatedAt": "2026-09-05",
+      "blocks": [
+        {
+          "id": "lock-on-00",
+          "type": "text",
+          "heading": "",
+          "text": "ロックオンは、レイチェルが対象とした相手カードを記録する仕組みです。状態異常ではありません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "lock-on-01",
+          "type": "heading",
+          "heading": "ロックオン中の表示",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "lock-on-02",
+          "type": "text",
+          "heading": "",
+          "text": "・ロックオンされたカードには、ロックオンマークが付きます。\n・ロックオンしたレイチェルとロックオンされたカードには、カードテキストの横にロックオンについての説明文が表示されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "lock-on-03",
+          "type": "heading",
+          "heading": "同名カードへの適用",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "lock-on-04",
+          "type": "text",
+          "heading": "",
+          "text": "ロックオンしたカードと同名のカードは、後から引いた場合もすべてロックオン状態になります。エディションやシグネクチャが異なるカードも同名カードとして扱われます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "lock-on-05",
+          "type": "heading",
+          "heading": "ロックオンの解除条件",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "lock-on-06",
+          "type": "text",
+          "heading": "",
+          "text": "ロックオンしたレイチェルが破棄される、山札に戻る、または別のカードを再びロックオンするまで、ロックオンは解除されません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "lock-on-07",
+          "type": "note",
+          "heading": "",
+          "text": "レイチェルの手札効果が削除された場合や、ステータスリセットを受けた場合も、ロックオンは解除されません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        }
+      ]
+    },
+    {
+      "id": "skin-specifications",
+      "title": "スキンの仕様",
+      "summary": "スキンの選択方法、使用制限、入手方法、レベルアップ、ホーム画面での設定を解説します。",
+      "searchTerms": [
+        "スキン",
+        "キャラクター",
+        "パックスキン",
+        "スキンの欠片",
+        "スキンレベル",
+        "アストレア",
+        "専用ボイス",
+        "色違いスキン",
+        "限定称号"
+      ],
+      "sectionId": "game-system-mode",
+      "tagIds": [
+        "profile",
+        "deck",
+        "customization",
+        "pack"
+      ],
+      "relatedTermIds": [
+        "skin",
+        "profile",
+        "title"
+      ],
+      "thumbnail": "",
+      "sortOrder": 90,
+      "updatedAt": "2026-09-05",
+      "blocks": [
+        {
+          "id": "skin-specifications-00",
+          "type": "text",
+          "heading": "",
+          "text": "スキンは、デッキやホーム画面に設定できるキャラクターです。デッキでは使用種族に応じた制限があり、パックスキンは「スキンの欠片」で強化できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "skin-specifications-01",
+          "type": "heading",
+          "heading": "スキンの選択",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "skin-specifications-02",
+          "type": "text",
+          "heading": "",
+          "text": "初めてデッキを作成するときは、使用種族を選んだ後にスキンを選択します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "skin-specifications-03",
+          "type": "text",
+          "heading": "",
+          "text": "作成済みのデッキでスキンを変更する場合は、デッキ編集画面の右上に表示されるスキンのキャラクターをタップします。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "skin-specifications-04",
+          "type": "heading",
+          "heading": "使用制限",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "skin-specifications-05",
+          "type": "text",
+          "heading": "",
+          "text": "デッキに設定できるスキンは、使用種族によって制限されます。ドラゴンのデッキにはドラゴンのスキン、アンドロイドのデッキにはアンドロイドのスキンを設定できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "skin-specifications-06",
+          "type": "note",
+          "heading": "",
+          "text": "アストレアは旧神のキャラクターとして、例外的にすべてのデッキで使用できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "skin-specifications-07",
+          "type": "heading",
+          "heading": "入手方法",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "skin-specifications-08",
+          "type": "text",
+          "heading": "",
+          "text": "スキンには、初めから使用できる基本スキンと、パックから入手できるパックスキンがあります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
+        },
+        {
+          "id": "skin-specifications-09",
+          "type": "text",
+          "heading": "",
+          "text": "パックスキンはパックごとに設定されています。1パックにつき0.5％の確率で、カードとは別に獲得できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 100
+        },
+        {
+          "id": "skin-specifications-10",
+          "type": "text",
+          "heading": "",
+          "text": "すでに所持しているスキンを獲得すると、自動で「スキンの欠片」100個に変換されます。スキンの欠片は種族ごとに分かれています。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 110
+        },
+        {
+          "id": "skin-specifications-11",
+          "type": "heading",
+          "heading": "パックスキンの強化",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 120
+        },
+        {
+          "id": "skin-specifications-12",
+          "type": "text",
+          "heading": "",
+          "text": "パックスキンは入手時点ではレベル0です。スキンの欠片を使ってレベル1～3まで強化でき、レベル3までに合計600個の欠片が必要です。初回入手を含めると、同じパックスキンを合計7回獲得する計算になります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 130
+        },
+        {
+          "id": "skin-specifications-13",
+          "type": "text",
+          "heading": "",
+          "text": "・レベル1（必要な欠片：100個）：プレイヤーLv.獲得経験値＋5％\n・レベル2（必要な欠片：300個）：プレイヤーLv.獲得経験値＋5％、専用ボイス4種追加（期間限定3種、ホーム1種）\n・レベル3（必要な欠片：600個）：色違いスキン解放、限定称号獲得",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 140
+        },
+        {
+          "id": "skin-specifications-14",
+          "type": "note",
+          "heading": "",
+          "text": "プレイヤーLv.獲得経験値の上昇上限は、最大＋100％です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 150
+        },
+        {
+          "id": "skin-specifications-15",
+          "type": "heading",
+          "heading": "ホーム画面での使用",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 160
+        },
+        {
+          "id": "skin-specifications-16",
+          "type": "text",
+          "heading": "",
+          "text": "デッキの設定とは別に、ホーム画面にもスキンを設定できます。「ホーム」→「メニュー」→「プロフィール」→中央左のボタン→「キャラクター」の順に進むと変更できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 170
+        },
+        {
+          "id": "skin-specifications-17",
+          "type": "text",
+          "heading": "",
+          "text": "ホーム画面のキャラクターをタップすると専用ボイスを聞けます。スキンをレベルアップすると、聞けるボイスが追加されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 180
         }
       ]
     }
