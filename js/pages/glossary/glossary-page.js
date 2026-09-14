@@ -3,15 +3,15 @@
     'use strict';
 
     const GLOSSARY_DATA_URL = './public/glossary.json';
+    const SEARCH_SUGGESTION_LIMIT = 12;
     const searchInput = document.querySelector('[data-glossary-search]');
     const searchClear = document.querySelector('[data-glossary-search-clear]');
-    const tagFilter = document.querySelector('[data-glossary-tag-filter]');
-    const sectionFilter = document.querySelector('[data-glossary-section-filter]');
+    const searchSuggestions = document.querySelector('[data-glossary-search-suggestions]');
+    const glossaryPage = document.querySelector('.glossary-page');
     const tabs = Array.from(document.querySelectorAll('[data-content-type]'));
     const list = document.querySelector('[data-glossary-list]');
     const termTotal = document.querySelector('[data-glossary-term-total]');
     const guideTotal = document.querySelector('[data-glossary-guide-total]');
-    const resultCount = document.querySelector('[data-glossary-result-count]');
     const empty = document.querySelector('[data-glossary-empty]');
     const emptyMessage = document.querySelector('[data-glossary-empty-message]');
     const status = document.querySelector('[data-glossary-status]');
@@ -20,22 +20,19 @@
     const retryButton = document.querySelector('[data-glossary-retry]');
     const sidebar = document.querySelector('[data-glossary-sidebar]');
     const sectionNav = document.querySelector('[data-glossary-section-nav]');
-    const mobileTermIndex = document.querySelector('[data-glossary-mobile-term-index]');
-    const mobileIndexTotal = document.querySelector('[data-glossary-mobile-index-total]');
-    const indexTitles = Array.from(document.querySelectorAll('[data-glossary-index-title]'));
-    const mobileIndexModal = document.querySelector('[data-glossary-index-modal]');
-    const mobileIndexOpen = document.querySelector('[data-glossary-index-open]');
-    const mobileIndexCloseButtons = Array.from(document.querySelectorAll('[data-glossary-index-close]'));
+    const allTermsModal = document.querySelector('[data-glossary-all-terms-modal]');
+    const allTermsOpen = document.querySelector('[data-glossary-all-terms-open]');
+    const allTermsCloseButtons = Array.from(document.querySelectorAll('[data-glossary-all-terms-close]'));
+    const allTermsTotal = document.querySelector('[data-glossary-all-terms-total]');
+    const categoryList = document.querySelector('[data-glossary-category-list]');
 
-    if (!searchInput || !searchClear || !tagFilter || !sectionFilter || !tabs.length || !list ||
-        !termTotal || !guideTotal || !resultCount || !empty || !emptyMessage || !status ||
+    if (!searchInput || !searchClear || !searchSuggestions || !glossaryPage || !tabs.length || !list ||
+        !termTotal || !guideTotal || !empty || !emptyMessage || !status ||
         !statusTitle || !statusMessage || !retryButton || !sidebar || !sectionNav ||
-        !mobileTermIndex || !mobileIndexTotal || !indexTitles.length || !mobileIndexModal ||
-        !mobileIndexOpen || !mobileIndexCloseButtons.length) return;
+        !allTermsModal || !allTermsOpen || !allTermsCloseButtons.length || !allTermsTotal ||
+        !categoryList) return;
 
     let selectedType = 'terms';
-    let selectedSection = 'all';
-    let selectedTag = 'all';
     let sections = [];
     let tags = [];
     let terms = [];
@@ -70,24 +67,6 @@
         return new Map(items.map((item) => [item.id, item]));
     }
 
-    function buildTagOptions() {
-        tagFilter.querySelectorAll('option:not([value="all"])').forEach((option) => option.remove());
-        tags.forEach((tag) => {
-            const option = createElement('option', '', tag.label);
-            option.value = tag.id;
-            tagFilter.append(option);
-        });
-    }
-
-    function buildSectionFilterOptions() {
-        sectionFilter.querySelectorAll('option:not([value="all"])').forEach((option) => option.remove());
-        sections.forEach((section) => {
-            const option = createElement('option', '', section.label);
-            option.value = section.id;
-            sectionFilter.append(option);
-        });
-    }
-
     function buildBadges(tagIds, tagMap) {
         const root = createElement('span', 'glossary-card__tags');
         tagIds.forEach((tagId) => {
@@ -97,6 +76,52 @@
         return root;
     }
 
+    function getEntryUrl(type, id) {
+        const url = new URL(window.location.href);
+        url.search = '';
+        url.hash = '';
+        url.searchParams.set(type === 'guides' ? 'guide' : 'term', id);
+        return url.href;
+    }
+
+    function buildShareButton(item, type, className) {
+        const button = createElement('button', className || 'glossary-card__share');
+        const icon = document.createElement('img');
+        icon.src = './img/共有のアイコン.png';
+        icon.alt = '';
+        icon.setAttribute('aria-hidden', 'true');
+        button.type = 'button';
+        button.dataset.glossaryShareType = type;
+        button.dataset.glossaryShareId = item.id;
+        button.dataset.glossaryShareTitle = type === 'guides' ? item.title : item.term;
+        button.setAttribute('aria-label', `${button.dataset.glossaryShareTitle}のリンクを共有`);
+        button.title = '共有';
+        button.append(icon);
+        return button;
+    }
+
+    function buildXShareButton(item, type) {
+        const button = createElement('button', 'glossary-card__share glossary-card__share--x');
+        const icon = document.createElement('img');
+        icon.src = './img/x-logo.svg';
+        icon.alt = '';
+        icon.setAttribute('aria-hidden', 'true');
+        button.type = 'button';
+        button.dataset.glossaryXShareType = type;
+        button.dataset.glossaryXShareId = item.id;
+        button.dataset.glossaryXShareTitle = type === 'guides' ? item.title : item.term;
+        button.setAttribute('aria-label', `${button.dataset.glossaryXShareTitle}をXに投稿`);
+        button.title = 'Xに投稿';
+        button.append(icon);
+        return button;
+    }
+
+    function buildShareActions(item, type) {
+        const actions = createElement('div', 'glossary-card__share-actions');
+        actions.append(buildXShareButton(item, type), buildShareButton(item, type));
+        return actions;
+    }
+
     function buildTermCard(term, tagMap) {
         const card = createElement('article', 'glossary-card glossary-term-card');
         card.id = `glossary-term-${term.id}`;
@@ -104,7 +129,7 @@
         const titleBlock = createElement('div', 'glossary-card__title-block');
         titleBlock.append(createElement('h3', 'glossary-card__title', term.term));
         titleBlock.append(createElement('span', 'glossary-term-card__reading', term.reading));
-        heading.append(titleBlock, buildBadges(term.tagIds, tagMap));
+        heading.append(titleBlock, buildBadges(term.tagIds, tagMap), buildShareActions(term, 'terms'));
         card.append(heading);
 
         const body = createElement('div', 'glossary-card__body');
@@ -118,46 +143,26 @@
         return card;
     }
 
-    function buildMobileIndex(visibleSections) {
+    function buildCategoryIndex() {
         const fragment = document.createDocumentFragment();
-        const showingTerms = selectedType === 'terms';
-        const indexItems = visibleSections.flatMap((entry) => showingTerms ? entry.termItems : entry.guideItems);
-        indexTitles.forEach((title) => {
-            title.textContent = showingTerms ? '用語集目次' : '解説集目次';
-        });
-        visibleSections.forEach(({ section, termItems, guideItems }, index) => {
-            const sectionItems = (showingTerms ? termItems : guideItems)
-                .slice()
-                .sort((a, b) => showingTerms
-                    ? a.reading.localeCompare(b.reading, 'ja')
-                    : a.sortOrder - b.sortOrder || a.title.localeCompare(b.title, 'ja'));
-            if (!sectionItems.length) return;
-
-            const sectionGroup = createElement('details', 'glossary-index__section');
-            sectionGroup.open = visibleSections.length === 1 || index === 0;
-            const sectionSummary = document.createElement('summary');
-            sectionSummary.append(
-                createElement('strong', '', section.label),
-                createElement('span', '', `${sectionItems.length}件`),
-            );
-
-            const termList = createElement('div', 'glossary-index__terms');
-            const sectionButton = createElement('button', 'glossary-index__section-jump', 'セクション先頭へ');
-            sectionButton.type = 'button';
-            sectionButton.dataset.indexSectionId = section.id;
-            termList.append(sectionButton);
-            sectionItems.forEach((item) => {
-                const itemButton = createElement('button', '', showingTerms ? item.term : item.title);
-                itemButton.type = 'button';
-                if (showingTerms) itemButton.dataset.indexTermId = item.id;
-                else itemButton.dataset.indexGuideId = item.id;
-                termList.append(itemButton);
+        sections.forEach((section) => {
+            const sectionTerms = terms.filter((term) => term.sectionId === section.id);
+            if (!sectionTerms.length) return;
+            const group = createElement('section', 'glossary-category-list__group');
+            const heading = createElement('h3', 'glossary-category-list__heading');
+            heading.append(createElement('strong', '', section.label));
+            const termList = createElement('div', 'glossary-category-list__terms');
+            sectionTerms.forEach((term) => {
+                const button = createElement('button', '', term.term);
+                button.type = 'button';
+                button.dataset.allTermId = term.id;
+                termList.append(button);
             });
-            sectionGroup.append(sectionSummary, termList);
-            fragment.append(sectionGroup);
+            group.append(heading, termList);
+            fragment.append(group);
         });
-        mobileTermIndex.replaceChildren(fragment);
-        mobileIndexTotal.textContent = String(indexItems.length);
+        categoryList.replaceChildren(fragment);
+        allTermsTotal.textContent = `${terms.length}件`;
     }
 
     function buildGuideBlock(block) {
@@ -205,6 +210,9 @@
             });
             content.append(related);
         }
+        const actions = createElement('div', 'glossary-guide-card__actions');
+        actions.append(buildShareActions(guide, 'guides'));
+        content.append(actions);
         card.append(content);
         return card;
     }
@@ -220,8 +228,63 @@
     }
 
     function matches(item, type, query) {
-        const matchesTag = selectedTag === 'all' || item.tagIds.includes(selectedTag);
-        return matchesTag && (!query || getSearchText(item, type).includes(query));
+        return !query || getSearchText(item, type).includes(query);
+    }
+
+    function getSearchCandidates(query) {
+        const candidates = [
+            ...terms.map((item) => ({ item, type: 'terms', title: item.term })),
+            ...guides.map((item) => ({ item, type: 'guides', title: item.title })),
+        ].filter(({ item, type }) => matches(item, type, query));
+        return candidates.sort((a, b) => {
+            const aTitle = normalize(a.title);
+            const bTitle = normalize(b.title);
+            const aRank = aTitle === query ? 0 : aTitle.startsWith(query) ? 1 : aTitle.includes(query) ? 2 : 3;
+            const bRank = bTitle === query ? 0 : bTitle.startsWith(query) ? 1 : bTitle.includes(query) ? 2 : 3;
+            return aRank - bRank;
+        });
+    }
+
+    function closeSearchSuggestions() {
+        searchSuggestions.hidden = true;
+        searchInput.setAttribute('aria-expanded', 'false');
+    }
+
+    function updateSearchSuggestions() {
+        const query = normalize(searchInput.value.trim());
+        searchClear.hidden = !searchInput.value;
+        if (!query) {
+            closeSearchSuggestions();
+            render();
+            return;
+        }
+
+        const candidates = getSearchCandidates(query);
+        const fragment = document.createDocumentFragment();
+        candidates.slice(0, SEARCH_SUGGESTION_LIMIT).forEach(({ item, type, title }) => {
+            const button = createElement('button', 'glossary-search-suggestions__item');
+            button.type = 'button';
+            button.role = 'option';
+            button.dataset.suggestionType = type;
+            button.dataset.suggestionId = item.id;
+            button.append(
+                createElement('strong', '', title),
+                createElement('span', '', type === 'guides' ? '解説' : '用語'),
+            );
+            fragment.append(button);
+        });
+        if (!candidates.length) {
+            fragment.append(createElement('p', 'glossary-search-suggestions__empty', '該当する候補はありません'));
+        } else if (candidates.length > SEARCH_SUGGESTION_LIMIT) {
+            fragment.append(createElement(
+                'p',
+                'glossary-search-suggestions__more',
+                `ほか${candidates.length - SEARCH_SUGGESTION_LIMIT}件`,
+            ));
+        }
+        searchSuggestions.replaceChildren(fragment);
+        searchSuggestions.hidden = false;
+        searchInput.setAttribute('aria-expanded', 'true');
     }
 
     function buildSection(section, visibleTerms, visibleGuides, tagMap, termMap, searching) {
@@ -268,7 +331,7 @@
             sectionGroup.append(button);
             if (termItems.length) {
                 const termList = createElement('div', 'glossary-sidebar__terms');
-                termItems.slice().sort((a, b) => a.reading.localeCompare(b.reading, 'ja')).forEach((term) => {
+                termItems.forEach((term) => {
                     const termButton = createElement('button', '', term.term);
                     termButton.type = 'button';
                     termButton.dataset.indexTermId = term.id;
@@ -293,8 +356,6 @@
     }
 
     function render() {
-        const query = normalize(searchInput.value.trim());
-        const searching = Boolean(query);
         const fragment = document.createDocumentFragment();
         const tagMap = getMap(tags);
         const termMap = getMap(terms);
@@ -302,44 +363,72 @@
         let visibleCount = 0;
 
         sections.forEach((section) => {
-            if (selectedSection !== 'all' && section.id !== selectedSection) return;
-            const visibleTerms = (searching || selectedType === 'terms')
-                ? terms.filter((term) => term.sectionId === section.id && matches(term, 'terms', query)) : [];
-            const visibleGuides = (searching || selectedType === 'guides')
-                ? guides.filter((guide) => guide.sectionId === section.id && matches(guide, 'guides', query)) : [];
+            const visibleTerms = selectedType === 'terms'
+                ? terms.filter((term) => term.sectionId === section.id) : [];
+            const visibleGuides = selectedType === 'guides'
+                ? guides.filter((guide) => guide.sectionId === section.id) : [];
             if (!visibleTerms.length && !visibleGuides.length) return;
             const itemCount = visibleTerms.length + visibleGuides.length;
             visibleCount += itemCount;
             visibleSections.push({ section, itemCount, termItems: visibleTerms, guideItems: visibleGuides });
-            fragment.append(buildSection(section, visibleTerms, visibleGuides, tagMap, termMap, searching));
+            fragment.append(buildSection(section, visibleTerms, visibleGuides, tagMap, termMap, false));
         });
 
         list.replaceChildren(fragment);
         buildSectionNav(visibleSections);
-        buildMobileIndex(visibleSections);
-        const filterLabels = [];
-        const selectedSectionLabel = sections.find((section) => section.id === selectedSection)?.label;
-        if (selectedSectionLabel) filterLabels.push(selectedSectionLabel);
-        const selectedTagLabel = tags.find((tag) => tag.id === selectedTag)?.label;
-        if (selectedTagLabel) filterLabels.push(selectedTagLabel);
-        resultCount.textContent = searching
-            ? `検索結果 ${visibleCount}件`
-            : filterLabels.length ? `${filterLabels.join('・')}・${visibleCount}件` : `${visibleCount}件を表示`;
         searchClear.hidden = !searchInput.value;
-        emptyMessage.textContent = searching
-            ? '該当する用語は見つかりませんでした。未掲載の用語は随時追加予定です。'
-            : 'セクションやタグを変えてみてください。';
+        emptyMessage.textContent = '表示できる内容がありません。';
         empty.hidden = visibleCount !== 0 || (!terms.length && !guides.length);
         list.hidden = visibleCount === 0;
     }
 
-    function resetFilters() {
+    function resetSearch() {
         searchInput.value = '';
-        selectedSection = 'all';
-        selectedTag = 'all';
-        sectionFilter.value = 'all';
-        tagFilter.value = 'all';
+        closeSearchSuggestions();
         render();
+    }
+
+    function setSelectedType(type) {
+        selectedType = type;
+        tabs.forEach((tab) => {
+            const active = tab.dataset.contentType === selectedType;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', String(active));
+        });
+    }
+
+    function scrollToGlossaryTop() {
+        glossaryPage.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'start',
+        });
+    }
+
+    function scrollToEntry(type, id, behavior) {
+        requestAnimationFrame(() => {
+            const target = document.getElementById(`glossary-${type === 'guides' ? 'guide' : 'term'}-${id}`);
+            if (!target) return;
+            if (target instanceof HTMLDetailsElement) target.open = true;
+            target.classList.add('is-glossary-entry-target');
+            target.scrollIntoView({
+                behavior: behavior || (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'),
+                block: 'start',
+            });
+            window.setTimeout(() => target.classList.remove('is-glossary-entry-target'), 1800);
+        });
+    }
+
+    function openEntryFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const termId = params.get('term');
+        const guideId = params.get('guide');
+        const type = guideId && guides.some((guide) => guide.id === guideId) ? 'guides'
+            : termId && terms.some((term) => term.id === termId) ? 'terms' : '';
+        const id = type === 'guides' ? guideId : termId;
+        if (!type || !id) return;
+        setSelectedType(type);
+        resetSearch();
+        scrollToEntry(type, id, 'auto');
     }
 
     function validateData(data) {
@@ -364,11 +453,10 @@
             guides = data.guides.slice().sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title, 'ja'));
             termTotal.textContent = String(terms.length);
             guideTotal.textContent = String(guides.length);
-            buildSectionFilterOptions();
-            buildTagOptions();
-            resetFilters();
+            buildCategoryIndex();
+            resetSearch();
             setStatus('ready', '', '');
-            render();
+            openEntryFromUrl();
         } catch (error) {
             console.error('用語集データの読み込みに失敗しました。', error);
             sections = [];
@@ -380,7 +468,27 @@
         }
     }
 
-    searchInput.addEventListener('input', render);
+    function openSearchSuggestion(button) {
+        const type = button.dataset.suggestionType;
+        const id = button.dataset.suggestionId;
+        if (!type || !id) return;
+        setSelectedType(type);
+        resetSearch();
+        scrollToEntry(type, id);
+    }
+
+    searchInput.addEventListener('input', updateSearchSuggestions);
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim()) updateSearchSuggestions();
+    });
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' && !searchSuggestions.hidden) {
+            event.preventDefault();
+            searchSuggestions.querySelector('button')?.focus();
+        } else if (event.key === 'Escape') {
+            closeSearchSuggestions();
+        }
+    });
     searchClear.addEventListener('click', () => {
         searchInput.value = '';
         searchInput.focus();
@@ -388,81 +496,136 @@
     });
     tabs.forEach((tab) => {
         tab.addEventListener('click', () => {
-            selectedType = tab.dataset.contentType || 'terms';
-            tabs.forEach((button) => {
-                const active = button === tab;
-                button.classList.toggle('is-active', active);
-                button.setAttribute('aria-selected', String(active));
-            });
+            setSelectedType(tab.dataset.contentType || 'terms');
             render();
+            scrollToGlossaryTop();
         });
     });
-
-    tagFilter.addEventListener('change', () => {
-        selectedTag = tagFilter.value || 'all';
-        render();
+    searchSuggestions.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-suggestion-type]');
+        if (button) openSearchSuggestion(button);
     });
-
-    sectionFilter.addEventListener('change', () => {
-        selectedSection = sectionFilter.value || 'all';
-        render();
+    searchSuggestions.addEventListener('keydown', (event) => {
+        if (!['ArrowDown', 'ArrowUp', 'Escape'].includes(event.key)) return;
+        event.preventDefault();
+        if (event.key === 'Escape') {
+            searchInput.focus();
+            closeSearchSuggestions();
+            return;
+        }
+        const buttons = Array.from(searchSuggestions.querySelectorAll('button'));
+        const currentIndex = buttons.indexOf(document.activeElement);
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        const nextIndex = (currentIndex + direction + buttons.length) % buttons.length;
+        buttons[nextIndex]?.focus();
     });
-
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.glossary-search-area')) closeSearchSuggestions();
+    });
     function openIndexedTerm(event) {
         const button = event.target.closest('[data-index-term-id], [data-index-guide-id], [data-index-section-id]');
         if (!button) return;
-        if (button.dataset.indexTermId) selectedType = 'terms';
-        if (button.dataset.indexGuideId) selectedType = 'guides';
-        tabs.forEach((tab) => {
-            const active = tab.dataset.contentType === selectedType;
-            tab.classList.toggle('is-active', active);
-            tab.setAttribute('aria-selected', String(active));
-        });
-        closeMobileIndex(false);
-        resetFilters();
+        if (button.dataset.indexTermId) setSelectedType('terms');
+        if (button.dataset.indexGuideId) setSelectedType('guides');
+        resetSearch();
+        if (button.dataset.indexTermId || button.dataset.indexGuideId) {
+            scrollToEntry(selectedType, button.dataset.indexTermId || button.dataset.indexGuideId);
+            return;
+        }
         requestAnimationFrame(() => {
-            const targetId = button.dataset.indexTermId
-                ? `glossary-term-${button.dataset.indexTermId}`
-                : button.dataset.indexGuideId
-                    ? `glossary-guide-${button.dataset.indexGuideId}`
-                    : `glossary-section-${button.dataset.indexSectionId}`;
-            document.getElementById(targetId)?.scrollIntoView({
+            document.getElementById(`glossary-section-${button.dataset.indexSectionId}`)?.scrollIntoView({
                 behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
                 block: 'start',
             });
         });
     }
 
-    function openMobileIndex() {
-        mobileIndexModal.hidden = false;
-        mobileIndexOpen.setAttribute('aria-expanded', 'true');
+    function openAllTermsIndex() {
+        allTermsModal.hidden = false;
+        allTermsOpen.setAttribute('aria-expanded', 'true');
         document.body.classList.add('glossary-index-modal-open');
-        mobileIndexCloseButtons.find((button) => button.classList.contains('glossary-index-modal__close'))?.focus();
+        allTermsCloseButtons.find((button) => button.classList.contains('glossary-index-modal__close'))?.focus();
     }
 
-    function closeMobileIndex(restoreFocus = true) {
-        if (mobileIndexModal.hidden) return;
-        mobileIndexModal.hidden = true;
-        mobileIndexOpen.setAttribute('aria-expanded', 'false');
+    function closeAllTermsIndex(restoreFocus = true) {
+        if (allTermsModal.hidden) return;
+        allTermsModal.hidden = true;
+        allTermsOpen.setAttribute('aria-expanded', 'false');
         document.body.classList.remove('glossary-index-modal-open');
-        if (restoreFocus) mobileIndexOpen.focus();
+        if (restoreFocus) allTermsOpen.focus();
     }
 
     sectionNav.addEventListener('click', openIndexedTerm);
-    mobileTermIndex.addEventListener('click', openIndexedTerm);
-    mobileIndexOpen.addEventListener('click', openMobileIndex);
-    mobileIndexCloseButtons.forEach((button) => button.addEventListener('click', () => closeMobileIndex()));
+    allTermsOpen.addEventListener('click', openAllTermsIndex);
+    allTermsCloseButtons.forEach((button) => button.addEventListener('click', () => closeAllTermsIndex()));
+    const openSelectedTerm = (event) => {
+        const button = event.target.closest('[data-all-term-id]');
+        if (!button) return;
+        closeAllTermsIndex(false);
+        setSelectedType('terms');
+        resetSearch();
+        scrollToEntry('terms', button.dataset.allTermId);
+    };
+    categoryList.addEventListener('click', openSelectedTerm);
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !mobileIndexModal.hidden) closeMobileIndex();
+        if (event.key !== 'Escape') return;
+        if (!allTermsModal.hidden) closeAllTermsIndex();
     });
 
     list.addEventListener('click', (event) => {
+        const xShareButton = event.target.closest('[data-glossary-x-share-type]');
+        if (xShareButton) {
+            const type = xShareButton.dataset.glossaryXShareType;
+            const id = xShareButton.dataset.glossaryXShareId;
+            const title = xShareButton.dataset.glossaryXShareTitle;
+            const url = getEntryUrl(type, id);
+            const xIntentUrl = new URL('https://twitter.com/intent/tweet');
+            xIntentUrl.searchParams.set('text', `${title}とは\n${url}`);
+            window.open(xIntentUrl.href, '_blank', 'noopener,noreferrer');
+            return;
+        }
+        const shareButton = event.target.closest('[data-glossary-share-type]');
+        if (shareButton) {
+            const type = shareButton.dataset.glossaryShareType;
+            const id = shareButton.dataset.glossaryShareId;
+            const title = shareButton.dataset.glossaryShareTitle;
+            const url = getEntryUrl(type, id);
+            const shareText = `${title}とは\n${url}`;
+            const share = async () => {
+                try {
+                    if (navigator.share) {
+                        await navigator.share({ title: `${title}とは | 用語集`, text: `${title}とは`, url });
+                        return;
+                    }
+                    if (!navigator.clipboard) throw new Error('clipboard unavailable');
+                    await navigator.clipboard.writeText(shareText);
+                    shareButton.setAttribute('aria-label', '共有リンクをコピーしました');
+                    shareButton.title = 'コピーしました';
+                    window.setTimeout(() => {
+                        shareButton.setAttribute('aria-label', `${title}のリンクを共有`);
+                        shareButton.title = '共有';
+                    }, 1800);
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        shareButton.setAttribute('aria-label', '共有リンクをコピーできませんでした');
+                        shareButton.title = 'コピーできませんでした';
+                        window.setTimeout(() => {
+                            shareButton.setAttribute('aria-label', `${title}のリンクを共有`);
+                            shareButton.title = '共有';
+                        }, 1800);
+                    }
+                }
+            };
+            share();
+            return;
+        }
         const button = event.target.closest('[data-related-term]');
         if (!button) return;
-        searchInput.value = button.dataset.relatedTerm || '';
-        searchInput.focus();
-        render();
-        window.scrollTo({ top: Math.max(0, searchInput.getBoundingClientRect().top + window.scrollY - 80), behavior: 'smooth' });
+        const term = terms.find((item) => item.term === button.dataset.relatedTerm);
+        if (!term) return;
+        setSelectedType('terms');
+        resetSearch();
+        scrollToEntry('terms', term.id);
     });
 
     retryButton.addEventListener('click', loadGlossary);

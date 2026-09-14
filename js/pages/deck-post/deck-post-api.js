@@ -405,6 +405,17 @@
     });
   }
 
+  async function updateLethalPlans_(postId, lethalPlans) {
+    const token = resolveWriteToken_();
+    if (!token) return { ok: false, error: 'auth required' };
+    return await gasPost_({
+      mode: 'update',
+      token,
+      postId: String(postId || '').trim(),
+      lethalPlans: Array.isArray(lethalPlans) ? lethalPlans : [],
+    });
+  }
+
   async function updateDeckCode_(postId, shareCode) {
     const token = resolveWriteToken_();
     if (!token) return { ok: false, error: 'auth required' };
@@ -436,6 +447,7 @@
     updateDeckTitle_,
     updateCardNotes_,
     updateDeckCode_,
+    updateLethalPlans_,
 
     // doGet
     jsonpRequest,

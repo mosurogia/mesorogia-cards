@@ -1728,6 +1728,7 @@
             ${userTagBtnText}
           </button>
         </div>
+        ${window.DeckPostLethalEditor?.buildHtml(it) || ''}
       </div>
     `;
   }

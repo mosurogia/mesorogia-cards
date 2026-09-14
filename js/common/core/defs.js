@@ -69,7 +69,7 @@ window.BASE_PATH = window.BASE_PATH ?? '';
 // =======================================
 window.GAS_API_BASE =
   window.GAS_API_BASE ||
-  'https://script.google.com/macros/s/AKfycbxEc4aef8yWllpILtH1t-Ia2ve3g383ZXIhmFeZpa6ql7WK-K-a8sQQFHDDdhh-WPwU/exec';
+  'https://script.google.com/macros/s/AKfycbwgvqClfe8RSOQoZ9Jw6A6yVjmrb8TYS9eu0ir-ORnstb29vnmz85RpXrVJXW8mQoU/exec';
 
 window.DECKPOST_API_BASE ??= window.GAS_API_BASE;
 window.AUTH_API_BASE     ??= window.GAS_API_BASE;
@@ -110,6 +110,7 @@ window.CATEGORY_ORDER_LIST ??= [
     "電竜",
     "メロウディア",
     "翔舞士（しょうぶし）",
+    "契神導師（かんなぎ）",
 
     // --- 2: アンドロイド枠 ---
     "メイドロボ",
@@ -151,7 +152,7 @@ window.CATEGORY_ORDER_LIST ??= [
  * - LISTだけでは race が分からないため “枠” 定義を持つ
  */
 window.CATEGORY_GROUPS ??= [
-    { race: 'ドラゴン',   list: ["聖焔龍（フォルティア）","ドラゴライダー","電竜","メロウディア","翔舞士（しょうぶし）"] },
+    { race: 'ドラゴン',   list: ["聖焔龍（フォルティア）","ドラゴライダー","電竜","メロウディア","翔舞士（しょうぶし）","契神導師（かんなぎ）"] },
     { race: 'アンドロイド', list: ["メイドロボ","アドミラルシップ","テックノイズ","星装（アストロイ）","発明家（ラベンダー）"] },
     { race: 'エレメンタル', list: ["ナチュリア","鬼刹（きせつ）","風花森（ふかしん）","秘饗（バンケット）","アルケミクルス"] },
     { race: 'ルミナス',   list: ["ロスリス","白騎士","愚者愚者（クラウンクラウド）","蒼ノ刀","歪祝（エヴァル）","アルテアス"] },

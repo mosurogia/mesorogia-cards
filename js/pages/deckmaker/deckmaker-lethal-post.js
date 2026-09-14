@@ -16,6 +16,10 @@
   const expandedRegisteredPlans = new Set();
   let valueCardsPreview = null;
   let valueCardsLongPressTimer = 0;
+  let valueCardsLongPressButton = null;
+  let valueCardsPointerStart = null;
+  let eventsBound = false;
+  let readDeckCount = cardId => Number(window.deck?.[cardId] || 0);
 
   function clone_(value) {
     return JSON.parse(JSON.stringify(value));
@@ -109,7 +113,7 @@
   }
 
   function getDeckCount_(cardId) {
-    return Number(window.deck?.[cardId] || 0);
+    return readDeckCount(cardId);
   }
 
   function getInvalidReason_(variant) {
@@ -311,6 +315,7 @@
   }
 
   function syncPostPlanner_() {
+    hideValueCardsPreview_();
     copyPlannerContent_('lethal-planner-auto-results', 'post-lethal-auto-results');
     copyPlannerContent_('lethal-planner-expression', 'post-lethal-expression');
     copyPlannerContent_('lethal-planner-groups', 'post-lethal-groups');
@@ -400,6 +405,7 @@
         if (stepIndex) cards.append(' + ');
         const card = document.createElement('span');
         card.className = 'lethal-planner__registered-card post-lethal-candidate-card';
+        card.classList.toggle('is-support', step.type === 'burn' || step.type === 'buff');
         const cardName = step.cardName || window.getCard?.(step.cardId)?.name || step.cardId;
         card.title = cardName;
         const image = document.createElement('img');
@@ -408,6 +414,23 @@
         image.alt = cardName;
         image.loading = 'lazy';
         card.appendChild(image);
+        const label = document.createElement('span');
+        label.className = 'post-lethal-candidate-value';
+        if (step.type === 'buff') {
+          label.textContent = `💪 +${step.value}`;
+          label.setAttribute('aria-label', `バフ +${step.value}`);
+        } else if (step.type === 'burn') {
+          label.textContent = `🔥 ${step.value}`;
+          label.setAttribute('aria-label', `バーン ${step.value}点`);
+        } else if (step.attackValue != null && step.lethalBurnValue != null) {
+          label.textContent = `⚔ ${step.attackValue}\n🔥 ${step.lethalBurnValue}`;
+          label.setAttribute('aria-label', `攻撃 ${step.attackValue}点・バーン ${step.lethalBurnValue}点`);
+        } else {
+          label.textContent = `⚔ ${step.value}`;
+          label.setAttribute('aria-label', `攻撃 ${step.value}点`);
+        }
+        card.title = `${cardName}：${label.getAttribute('aria-label')}`;
+        card.appendChild(label);
         cards.appendChild(card);
       });
       row.append(check, cards);
@@ -436,22 +459,36 @@
   function showValueCardsPreview_(button) {
     const cards = window.getLethalPlannerCardsForKey?.(button?.dataset?.lethalKey) || [];
     hideValueCardsPreview_();
-    if (!button || !cards.length) return;
+    if (!button || button.disabled || !button.isConnected || !cards.length) return;
     const preview = document.createElement('div');
     preview.className = 'post-lethal-value-cards-preview';
     preview.setAttribute('role', 'tooltip');
-    cards.forEach(card => {
+    cards.slice(0, 5).forEach(card => {
       const image = document.createElement('img');
       image.src = window.getCardImageSrc?.(card.cardId) || `img/${card.cardId}.webp`;
       image.alt = card.cardName;
       image.title = card.cardName;
-      preview.appendChild(image);
+      const item = document.createElement('span');
+      item.className = 'post-lethal-value-cards-preview__card';
+      item.appendChild(image);
+      if (card.supplement) {
+        const supplement = document.createElement('span');
+        supplement.textContent = card.supplement;
+        item.appendChild(supplement);
+      }
+      preview.appendChild(item);
     });
+    if (cards.length > 5) {
+      const remainder = document.createElement('span');
+      remainder.textContent = `+${cards.length - 5}`;
+      preview.appendChild(remainder);
+    }
     document.body.appendChild(preview);
     const rect = button.getBoundingClientRect();
     const previewRect = preview.getBoundingClientRect();
     preview.style.left = `${Math.max(8, Math.min(window.innerWidth - previewRect.width - 8, rect.left))}px`;
-    preview.style.top = `${Math.min(window.innerHeight - previewRect.height - 8, rect.bottom + 6)}px`;
+    const fitsBelow = rect.bottom + 6 + previewRect.height <= window.innerHeight - 8;
+    preview.style.top = `${fitsBelow ? rect.bottom + 6 : Math.max(8, rect.top - previewRect.height - 6)}px`;
     valueCardsPreview = preview;
   }
 
@@ -494,6 +531,8 @@
   }
 
   function bind_() {
+    if (eventsBound) return;
+    eventsBound = true;
     document.getElementById('lethal-planner-register')?.addEventListener('click', () => {
       if (registerCurrent_()) {
         window.resetLethalPlannerComposer?.();
@@ -538,6 +577,12 @@
       }
     });
     document.getElementById('post-lethal-groups')?.addEventListener('click', event => {
+      if (valueCardsLongPressButton) {
+        valueCardsLongPressButton = null;
+        event.preventDefault();
+        return;
+      }
+      hideValueCardsPreview_();
       const value = event.target.closest('[data-lethal-key]');
       if (value) clickOriginal_(`[data-lethal-key="${CSS.escape(value.dataset.lethalKey)}"]`);
     });
@@ -552,19 +597,45 @@
     });
     postGroups?.addEventListener('focusin', event => {
       const value = event.target.closest('[data-lethal-key]');
-      if (value) showValueCardsPreview_(value);
+      if (value && !valueCardsPointerStart) showValueCardsPreview_(value);
     });
     postGroups?.addEventListener('focusout', hideValueCardsPreview_);
     postGroups?.addEventListener('pointerdown', event => {
+      hideValueCardsPreview_();
+      valueCardsLongPressButton = null;
+      valueCardsPointerStart = null;
       const value = event.target.closest('[data-lethal-key]');
-      if (!value || event.pointerType !== 'touch') return;
-      valueCardsLongPressTimer = window.setTimeout(() => showValueCardsPreview_(value), 450);
+      if (!value || value.disabled || event.pointerType === 'mouse') return;
+      valueCardsPointerStart = { x: event.clientX, y: event.clientY };
+      valueCardsLongPressTimer = window.setTimeout(() => {
+        showValueCardsPreview_(value);
+        if (valueCardsPreview) valueCardsLongPressButton = value;
+      }, 450);
     });
-    postGroups?.addEventListener('pointerup', () => {
+    postGroups?.addEventListener('pointermove', event => {
+      if (!valueCardsPointerStart) return;
+      if (Math.hypot(event.clientX - valueCardsPointerStart.x, event.clientY - valueCardsPointerStart.y) > 10) {
+        hideValueCardsPreview_();
+      }
+    });
+    document.addEventListener('pointerup', () => {
       if (valueCardsLongPressTimer) window.clearTimeout(valueCardsLongPressTimer);
       valueCardsLongPressTimer = 0;
+      valueCardsPointerStart = null;
     });
-    postGroups?.addEventListener('pointercancel', hideValueCardsPreview_);
+    postGroups?.addEventListener('pointercancel', () => {
+      valueCardsPointerStart = null;
+      valueCardsLongPressButton = null;
+      hideValueCardsPreview_();
+    });
+    postGroups?.addEventListener('contextmenu', event => {
+      if (valueCardsPointerStart || valueCardsLongPressButton) event.preventDefault();
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!postGroups?.contains(event.target)) hideValueCardsPreview_();
+    });
+    window.addEventListener('scroll', hideValueCardsPreview_, true);
+    window.addEventListener('resize', hideValueCardsPreview_);
     document.getElementById('post-lethal-expression')?.addEventListener('click', event => {
       const remove = event.target.closest('.lethal-planner__term-remove');
       if (remove) {
@@ -639,6 +710,12 @@
   }
 
   window.DeckmakerLethalPost = {
+    init(options = {}) {
+      if (options.getDeckCount) readDeckCount = options.getDeckCount;
+      bind_();
+    },
+    normalize: normalizePlans_,
+    close: () => setModalOpen_(false),
     getAll: () => clone_(plans),
     getValid: getValidPlans_,
     hasCard: cardId => {

@@ -139,6 +139,8 @@
   function writePostNote(v){
     const el = document.getElementById('post-note');
     if (el) el.value = v || '';
+    const full = document.getElementById('note-full-text');
+    if (full) full.value = v || '';
   }
 
   // =====================================================
@@ -162,6 +164,7 @@
       if (cardNoteStatus) return cardNoteStatus;
     }
     const next = el.nextElementSibling;
+    if (next?.classList?.contains('post-note-actions')) return next.querySelector(`.${className}`);
     if (next?.classList?.contains(className)) return next;
 
     const status = document.createElement('div');
@@ -351,6 +354,12 @@
   }
 
   function bindNoteFullModal_(){
+    document.getElementById('note-full-text')?.addEventListener('input', (event) => {
+      const note = document.getElementById('post-note');
+      if (!note) return;
+      note.value = event.target.value;
+      note.dispatchEvent(new Event('input', { bubbles: true }));
+    });
     document.getElementById('note-fullscreen-btn')?.addEventListener('click', openNoteFull_);
     document.getElementById('note-full-close')?.addEventListener('click', closeNoteFull_);
     document.addEventListener('keydown', (e)=>{
@@ -374,7 +383,9 @@
       : document.getElementById('post-note');
   }
 
-  function openNoteCardRefPicker_(){
+  function openNoteCardRefPicker_(button){
+    // カード解説のボタンは行ごとの処理に任せ、挿入先の上書きを防ぐ。
+    if (button?.classList.contains('card-note-card-ref-btn')) return;
     const target = getNotePresetTarget_();
     if (!target) return;
 
@@ -1393,9 +1404,10 @@
   // 5) リセット
   // =====================================================
   function resetDeckPostForm(){
-    window.DeckmakerLethalPost?.reset?.();
     const ok = window.confirm('入力内容を削除します。\n投稿者名とXアカウントは残します。\nよろしいですか？');
     if (!ok) return;
+    if (window.backupDeckmakerNow?.() === false) return;
+    window.DeckmakerLethalPost?.reset?.();
 
     window.writeDeckNameInput?.('');
 
@@ -1440,9 +1452,10 @@
     const d = new Date(value || '');
     if (Number.isNaN(d.getTime())) return 'なし';
     const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}/${m}/${day}`;
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${y}/${m}/${day} ${d.getHours()}:${minutes}`;
   }
 
   function setupPostDraftMenu_() {
@@ -1452,6 +1465,28 @@
     const status = document.getElementById('post-draft-status');
     const saveBtn = document.getElementById('post-draft-save');
     const restoreBtn = document.getElementById('post-draft-restore');
+    const historySelect = document.getElementById('post-history-select');
+    const historyRestore = document.getElementById('post-history-restore');
+    let saveFailureNotified = false;
+    let historyRows = [];
+    window.addEventListener('deckmaker:save-status', (event) => {
+      const message = String(event.detail || '');
+      if (message.includes('失敗')) {
+        if (!saveFailureNotified) showPostToast(message, 'danger');
+        saveFailureNotified = true;
+      } else if (message === '自動保存済み') {
+        saveFailureNotified = false;
+      }
+    });
+    historyRestore?.addEventListener('click', () => {
+      const row = historyRows[Number(historySelect?.value)];
+      if (!row) return;
+      if (!window.confirm('選択した履歴を復元します。現在の内容も履歴に退避します。よろしいですか？')) return;
+      if (window.restoreDeckmakerHistory?.(row)) {
+        window.refreshPostSummary?.();
+        setOpen_(false);
+      }
+    });
     if (!wrap || !toggle || !menu) return;
 
     function getDraft_() {
@@ -1471,8 +1506,27 @@
       const draft = getDraft_();
       const savedAt = draft?.savedAt || draft?.date || '';
       const hasDraft = canRestoreDraft_(draft);
-      if (status) status.textContent = `保存データ：${hasDraft ? formatDraftSavedAt_(savedAt) : 'なし'}`;
+      if (status) status.textContent = hasDraft
+        ? `${formatDraftSavedAt_(savedAt)}　解説${String(draft.note || '').length}文字`
+        : '保存された下書きはありません';
       if (restoreBtn) restoreBtn.disabled = !hasDraft;
+      historyRows = window.readDeckmakerHistory?.() || [];
+      if (historySelect) {
+        historySelect.replaceChildren();
+        if (!historyRows.length) {
+          const option = document.createElement('option');
+          option.textContent = '履歴はまだありません';
+          historySelect.appendChild(option);
+        }
+        historyRows.forEach((row, index) => {
+          const option = document.createElement('option');
+          option.value = String(index);
+          option.textContent = `${formatDraftSavedAt_(row.savedAt)} 解説${String(row.note || '').length}文字`;
+          historySelect.appendChild(option);
+        });
+        historySelect.disabled = !historyRows.length;
+      }
+      if (historyRestore) historyRestore.disabled = !historyRows.length;
     }
 
     function setOpen_(open) {
@@ -1492,7 +1546,7 @@
       if (menu.hidden) return;
       const rect = toggle.getBoundingClientRect();
       const menuRect = menu.getBoundingClientRect();
-      const margin = 8;
+      const margin = 12;
       const width = menuRect.width || 190;
       const height = menuRect.height || 0;
       const left = Math.min(
@@ -1548,7 +1602,15 @@
     });
 
     window.addEventListener('resize', positionDraftMenu_);
-    window.addEventListener('scroll', () => setOpen_(false), true);
+    window.addEventListener('scroll', (event) => {
+      if (event.target instanceof Node && menu.contains(event.target)) return;
+      setOpen_(false);
+    }, true);
+    menu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      setOpen_(false);
+      toggle.focus();
+    });
 
     refreshStatus_();
   }
@@ -2667,6 +2729,27 @@
     // 入力監視（note / user-tag追加でautosave）
     const note = document.getElementById('post-note');
     bindLimitStatus_(note, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
+    if (note && !document.getElementById('post-note-reset')) {
+      const status = ensureLimitStatus_(note, 'post-note-char-limit');
+      const actions = document.createElement('div');
+      actions.className = 'post-note-actions';
+      status.before(actions);
+      actions.appendChild(status);
+      const reset = document.createElement('button');
+      reset.type = 'button';
+      reset.id = 'post-note-reset';
+      reset.className = 'post-note-reset';
+      reset.textContent = '解説リセット';
+      reset.addEventListener('click', () => {
+        if (!note.value) return;
+        if (!window.confirm('デッキ解説のみをリセットします。よろしいですか？')) return;
+        if (window.backupDeckmakerNow?.() === false) return;
+        writePostNote('');
+        note.dispatchEvent(new Event('input', { bubbles: true }));
+        note.focus();
+      });
+      actions.appendChild(reset);
+    }
     note?.addEventListener('input', () => {
       updateLimitStatus_(note, POST_DECK_NOTE_MAX_LENGTH, 'デッキ解説', 'post-note-char-limit');
       window.scheduleAutosave?.();

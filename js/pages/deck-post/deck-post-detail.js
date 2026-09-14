@@ -2288,14 +2288,31 @@
         .sort((a, b) => a - b);
       const total = Number(plan.total) || values.reduce((sum, value) => sum + value, 0);
       const variants = plan.variants.map((variant, variantIndex) => {
-        const cards = (Array.isArray(variant?.steps) ? variant.steps : []).map((step, stepIndex) => {
+        // 保存された順序やバフの参照先は変えず、表示だけ数式と同じ昇順にする。
+        const steps = [...(Array.isArray(variant?.steps) ? variant.steps : [])]
+          .sort((a, b) => (Number(a?.value) || 0) - (Number(b?.value) || 0));
+        const cards = steps.map((step, stepIndex) => {
           const cd = normCd5_(step?.cardId || step?.cd);
           const card = window.getCard?.(cd) || {};
           const name = String(step?.cardName || card.name || cd);
           const image = cardImageSrc_(card.cd ? card : { ...card, cd });
+          const value = Number(step?.value) || 0;
+          let mark = `⚔ ${value}`;
+          let label = `攻撃 ${value}点`;
+          if (step?.type === 'buff') {
+            mark = `💪 +${value}`;
+            label = `バフ +${value}`;
+          } else if (step?.type === 'burn') {
+            mark = `🔥 ${value}`;
+            label = `バーン ${value}点`;
+          } else if (step?.attackValue != null && step?.lethalBurnValue != null) {
+            mark = `⚔ ${step.attackValue}\n🔥 ${step.lethalBurnValue}`;
+            label = `攻撃 ${step.attackValue}点・バーン ${step.lethalBurnValue}点`;
+          }
           return `${stepIndex ? '<span class="lethal-plan-operator" aria-hidden="true">＋</span>' : ''}
-            <button type="button" class="lethal-plan-card" data-cd="${escHtml_(cd)}" aria-label="${escHtml_(name)}のカード詳細を開く" title="${escHtml_(name)}">
+            <button type="button" class="lethal-plan-card" data-cd="${escHtml_(cd)}" aria-label="${escHtml_(name)}：${escHtml_(label)}。カード詳細を開く" title="${escHtml_(name)}：${escHtml_(label)}">
               <img class="lethal-plan-card-image" src="${image}" alt="${escHtml_(name)}" loading="lazy" onerror="${cardImageErrorAttr_(card.cd ? card : { ...card, cd })}">
+              <span class="lethal-plan-card-value">${escHtml_(mark)}</span>
             </button>`;
         }).join('');
         const variantLabel = plan.variants.length > 1

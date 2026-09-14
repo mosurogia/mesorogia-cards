@@ -38,6 +38,8 @@
     'deck-post-filter.js',
     'deck-post-detail.js',
     'deck-post-editor.js',
+    '../deckmaker/deckmaker-lethal-post.js',
+    'deck-post-lethal-editor.js',
     'deck-post-utils.js',
     'deck-post-campaign.js',
     'deck-post-export.js',
