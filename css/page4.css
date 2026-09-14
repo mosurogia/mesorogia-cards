@@ -5464,11 +5464,23 @@ textarea.is-char-limit-over {
 .lethal-plan-detail-label { font-size: .78rem; font-weight: 700; }
 .lethal-plan-variant { display: flex; align-items: center; flex-wrap: wrap; gap: .25rem; margin-top: .35rem; }
 .lethal-plan-variant-label { display: inline-grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #eef2f7; color: #475569; font-size: .68rem; font-weight: 800; }
-.lethal-plan-card { display: inline-flex; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; }
+.lethal-plan-card { display: inline-flex; flex-direction: column; width: 52px; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; }
+.lethal-plan-card-value { align-self: stretch; padding: 3px 2px; color: var(--text-color, #172b45); background: var(--lethal-planner-surface, #f7f9fc); font-size: .7rem; font-weight: 700; line-height: 1.4; text-align: center; white-space: pre-line; }
 .lethal-plan-card:hover { border-color: var(--primary-color, #3659a7); }
 .lethal-plan-card-image { display: block; width: 48px; aspect-ratio: 424 / 532; object-fit: cover; }
 .lethal-plan-operator { font-size: .8rem; font-weight: 700; }
 .lethal-plan-card:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+
+/* マイ投稿のリーサル管理 */
+.mine-lethal-section { margin-top: 1rem; min-width: 0; }
+.mine-lethal-section .lethal-planner__registered-header { flex-wrap: wrap; }
+.mine-lethal-preview { margin: .6rem 0; }
+.mine-lethal-workspace { min-width: 0; margin: 0; padding: 0; border: 0; }
+.mine-lethal-hint,
+#mine-lethal-status { font-size: .8rem; line-height: 1.5; }
+.mine-lethal-workspace .post-manage-actions { flex-wrap: wrap; }
+.mine-lethal-workspace:disabled { opacity: .65; }
+#post-lethal-card-modal { z-index: 7000; }
 
 @media (prefers-reduced-motion: reduce) {
   .lethal-plan-card { transition: none; }

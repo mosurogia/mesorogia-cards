@@ -37,7 +37,8 @@
     <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-007">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-05-007">
-    <link rel="stylesheet" href="css/page2.css?v=2026-08-18-004">
+    <link rel="stylesheet" href="css/page2.css?v=2026-09-10-005">
+    <link rel="stylesheet" href="css/lethal-planner.css?v=2026-09-10-005">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1031,12 +1032,22 @@
                 <div class="post-actions">
                     <button type="button" id="post-open-imagegen">画像生成</button>
                     <div class="post-draft-wrap">
-                        <button type="button" id="post-draft-toggle" aria-expanded="false" aria-controls="post-draft-menu">下書き ☰</button>
+                        <button type="button" id="post-draft-toggle" aria-expanded="false" aria-controls="post-draft-menu">下書き・復元 <span aria-hidden="true">▾</span></button>
                         <div id="post-draft-menu" class="post-draft-menu" hidden>
-                            <div id="post-draft-status" class="post-draft-status">保存データ：なし</div>
-                            <button type="button" id="post-draft-save">下書き保存</button>
-                            <button type="button" id="post-draft-restore">下書きを復元</button>
-                            <button type="button" id="post-reset">入力内容を削除</button>
+                            <section class="post-draft-section" aria-labelledby="post-draft-heading">
+                                <div class="post-draft-heading"><h3 id="post-draft-heading">手動下書き保存</h3></div>
+                                <p class="post-draft-help">任意のタイミングで保存できます（最大1件）</p>
+                                <button type="button" id="post-draft-save">現在の内容を保存</button>
+                                <button type="button" id="post-draft-restore"><span>下書き保存読み込み</span><span id="post-draft-status" class="post-draft-status">保存された下書きはありません</span></button>
+                            </section>
+                            <section class="post-draft-section" aria-labelledby="post-history-heading">
+                                <div class="post-draft-heading">
+                                    <h3 id="post-history-heading">自動下書き保存履歴</h3>
+                                </div>
+                                <p class="post-draft-help">内容が消えた時のバックアップ用です（直近20件）</p>
+                                <select id="post-history-select" aria-label="復元するバックアップ"></select>
+                                <button type="button" id="post-history-restore">選択中の履歴を読み込む</button>
+                            </section>
                         </div>
                     </div>
                     <span class="post-submit-wrap" id="post-submit-wrap" data-tooltip="投稿するには投稿同意にチェックしてください。">
@@ -1359,7 +1370,7 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/core/defs.js?v=2026-09-09-009"></script>
 <script src="js/common/core/event-features.js?v=2026-09-07-001"></script>
 <script src="js/common/core/card-core.js?v=2026-07-24-020"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-007"></script>
@@ -1374,7 +1385,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-007"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-007"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-10-005"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-007"></script>
@@ -1409,7 +1420,8 @@
 <script defer src="js/common/deck/screenshot-panel.js?v=2026-05-05-007"></script>
 
 <!-- デッキメーカーページ専用 -->
-<script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-09-05-001"></script>
+<script src="js/common/deck/lethal-planner.js?v=2026-09-10-005"></script>
+<script src="js/pages/deckmaker/deckmaker-loader.js?v=2026-09-09-008"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 

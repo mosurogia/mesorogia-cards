@@ -34,7 +34,7 @@
 
     <!-- ===== スタイル ===== -->
     <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
-    <link rel="stylesheet" href="css/page8.css?v=2026-09-04-008">
+    <link rel="stylesheet" href="css/page8.css?v=2026-09-14-031">
 </head>
 
 <body>
@@ -94,13 +94,18 @@
     <h1 class="sr-only" id="glossary-title">用語集・解説集</h1>
 
     <section class="glossary-tools" aria-label="用語と解説の検索・絞り込み">
-        <label class="glossary-search" for="glossary-search-input">
-            <span class="glossary-search__icon" aria-hidden="true"></span>
-            <span class="sr-only">用語と解説を検索</span>
-            <input id="glossary-search-input" type="search" placeholder="用語・解説を検索" autocomplete="off"
-                data-glossary-search>
-            <button type="button" data-glossary-search-clear hidden aria-label="検索語を消去">×</button>
-        </label>
+        <div class="glossary-search-area">
+            <label class="glossary-search" for="glossary-search-input">
+                <span class="glossary-search__icon" aria-hidden="true"></span>
+                <span class="sr-only">用語と解説を検索</span>
+                <input id="glossary-search-input" type="search" placeholder="用語・解説を検索" autocomplete="off"
+                    aria-autocomplete="list" aria-controls="glossary-search-suggestions" aria-expanded="false"
+                    data-glossary-search>
+                <button type="button" data-glossary-search-clear hidden aria-label="検索語を消去">×</button>
+            </label>
+            <div class="glossary-search-suggestions" id="glossary-search-suggestions" role="listbox"
+                aria-label="検索候補" data-glossary-search-suggestions hidden></div>
+        </div>
         <div class="glossary-tabs" role="tablist" aria-label="表示する内容">
             <button class="is-active" type="button" role="tab" aria-selected="true" data-content-type="terms">
                 用語集 <span data-glossary-term-total>0</span>
@@ -109,25 +114,10 @@
                 解説集 <span data-glossary-guide-total>0</span>
             </button>
         </div>
-        <div class="glossary-filter-group">
-            <label class="glossary-filter-group__label" for="glossary-section-filter">セクション</label>
-            <select class="glossary-filter-select" id="glossary-section-filter"
-                data-glossary-section-filter aria-label="セクションで絞り込む">
-                <option value="all">すべて</option>
-            </select>
-        </div>
-        <div class="glossary-filter-group">
-            <label class="glossary-filter-group__label" for="glossary-tag-filter">タグ</label>
-            <select class="glossary-filter-select" id="glossary-tag-filter"
-                data-glossary-tag-filter aria-label="タグで絞り込む">
-                <option value="all">すべて</option>
-            </select>
-        </div>
-        <p class="glossary-result-count" data-glossary-result-count aria-live="polite">0件を表示</p>
-        <button class="glossary-index-trigger" type="button" aria-haspopup="dialog"
-            aria-controls="glossary-index-modal" aria-expanded="false" data-glossary-index-open>
-            <span data-glossary-index-title>用語集目次</span>
-            <span class="glossary-index__total" data-glossary-mobile-index-total>0</span>
+        <button class="glossary-all-terms-trigger" type="button" aria-haspopup="dialog"
+            aria-controls="glossary-all-terms-modal" aria-expanded="false" data-glossary-all-terms-open>
+            <span>用語を探す</span>
+            <span data-glossary-all-terms-total>0</span>
         </button>
     </section>
 
@@ -150,20 +140,20 @@
     </div>
 </main>
 
-<div class="glossary-index-modal" id="glossary-index-modal" data-glossary-index-modal hidden>
-    <button class="glossary-index-modal__backdrop" type="button" aria-label="目次を閉じる"
-        data-glossary-index-close></button>
+<div class="glossary-index-modal glossary-all-terms-modal" id="glossary-all-terms-modal" data-glossary-all-terms-modal hidden>
+    <button class="glossary-index-modal__backdrop" type="button" aria-label="用語を探す画面を閉じる"
+        data-glossary-all-terms-close></button>
     <section class="glossary-index-modal__panel" role="dialog" aria-modal="true"
-        aria-labelledby="glossary-index-modal-title">
+        aria-labelledby="glossary-all-terms-modal-title">
         <header class="glossary-index-modal__head">
             <div>
-                <h2 id="glossary-index-modal-title" data-glossary-index-title>用語集目次</h2>
-                <p>セクションを開いて移動先を選択</p>
+                <h2 id="glossary-all-terms-modal-title">用語を探す</h2>
+                <p>カテゴリごとの一覧から用語を選べます</p>
             </div>
-            <button class="glossary-index-modal__close" type="button" aria-label="目次を閉じる"
-                data-glossary-index-close>×</button>
+            <button class="glossary-index-modal__close" type="button" aria-label="用語を探す画面を閉じる"
+                data-glossary-all-terms-close>×</button>
         </header>
-        <nav class="glossary-index__list" data-glossary-mobile-term-index aria-label="目次"></nav>
+        <nav class="glossary-category-list" data-glossary-category-list aria-label="カテゴリ別用語一覧"></nav>
     </section>
 </div>
 
@@ -249,16 +239,16 @@
 </form>
 <iframe name="auth-login-save-frame" title="password-save-frame" style="display:none;"></iframe>
 
-<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/core/defs.js?v=2026-09-09-009"></script>
 <script src="js/common/account/auth-core.js?v=2026-08-19-002"></script>
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-14-031"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
-<script src="js/pages/glossary/glossary-page.js?v=2026-09-05-002"></script>
+<script src="js/pages/glossary/glossary-page.js?v=2026-09-14-031"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 </body>

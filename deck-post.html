@@ -38,7 +38,8 @@
     <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-008">
     <link rel="stylesheet" href="css/common-page24.css?v=2026-05-06-001">
-    <link rel="stylesheet" href="css/page4.css?v=2026-09-07-002">
+    <link rel="stylesheet" href="css/page4.css?v=2026-09-10-005">
+    <link rel="stylesheet" href="css/lethal-planner.css?v=2026-09-10-005">
 
     <!-- ===== 外部リソース（必要なら） ===== -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -925,7 +926,7 @@
 
 <!-- スクリプト群 -->
 <!-- 共通処理 -->
-<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/core/defs.js?v=2026-09-09-009"></script>
 <script src="js/common/core/event-features.js?v=2026-09-07-001"></script>
 <script src="js/common/core/card-core.js?v=2026-06-03-001"></script>
 <script src="js/common/core/app-helpers.js?v=2026-05-05-008"></script>
@@ -941,7 +942,7 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-008"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-05-008"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-10-005"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/account/account-match-results.js?v=2026-05-05-008"></script>
@@ -968,9 +969,76 @@
 </div>
 
 <!-- ページ固有 -->
+<script src="js/common/deck/lethal-planner.js?v=2026-09-10-005"></script>
 <script src="js/pages/deck-post/deck-post-page-loader.js?v=2026-07-17-004"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
+
+
+
+<!-- マイ投稿のリーサル編集：編集中の管理欄へ移動して使用する -->
+<div id="mine-lethal-parking" hidden>
+    <fieldset id="mine-lethal-workspace" class="mine-lethal-workspace">
+        <legend class="visually-hidden">リーサルプランを編集</legend>
+        <section class="lethal-planner post-lethal-planner" aria-labelledby="post-lethal-registered-title">
+                            <div class="lethal-planner__registration" id="lethal-planner-registration">
+                                <div class="lethal-planner__registered-header">
+                                    <h4 class="lethal-planner__registered-title" id="post-lethal-registered-title">登録済みリーサルプラン（<span
+                                            id="lethal-planner-registered-count">0/3</span>）</h4>
+                                    <button type="button" class="lethal-planner__register-button"
+                                        id="post-lethal-open-register">新規追加</button>
+                                </div>
+                                <div class="lethal-planner__registered-list" id="lethal-planner-registered-list">
+                                    <p class="lethal-planner__registered-empty">まだ登録されていません</p>
+                                </div>
+                            </div>
+                        </section>
+        <p class="mine-lethal-hint">追加・編集後に「投稿に保存」を押すと反映されます。</p>
+        <div class="post-manage-actions">
+            <button type="button" class="modal-buttun" id="mine-lethal-save">投稿に保存</button>
+            <button type="button" class="modal-buttun" id="mine-lethal-cancel">キャンセル</button>
+        </div>
+        <p id="mine-lethal-status" role="status" aria-live="polite"></p>
+    </fieldset>
+</div>
+<!-- 共通の計算画面を非表示で保持し、追加モーダルに同期する -->
+<section id="lethal-planner" hidden>
+    <button id="lethal-planner-auto" type="button">自動生成</button>
+    <div id="lethal-planner-auto-results"></div>
+    <div id="lethal-planner-expression"></div>
+    <div id="lethal-planner-groups"></div>
+    <div id="lethal-planner-card-list"></div>
+</section>
+<!-- リーサル登録：使用カード選択モーダル -->
+<div id="post-lethal-card-modal" class="modal post-lethal-card-modal" style="display:none;" aria-hidden="true">
+    <div class="modal-content lethal-planner post-lethal-card-modal__content" role="dialog" aria-modal="true" aria-labelledby="post-lethal-card-modal-title">
+        <button type="button" class="modal-close-x" id="post-lethal-card-modal-close" aria-label="閉じる">×</button>
+        <div class="lethal-planner__header">
+            <h3 class="lethal-planner__title" id="post-lethal-card-modal-title">
+                リーサルプラン追加<span class="lethal-planner__title-badge">ベータ版</span>
+            </h3>
+            <button type="button" class="lethal-planner__auto-button" id="post-lethal-auto">自動生成</button>
+        </div>
+        <div class="lethal-planner__auto-results" id="post-lethal-auto-results" aria-live="polite"></div>
+        <div class="lethal-planner__expression" id="post-lethal-expression">= 0</div>
+        <div class="lethal-planner__groups" id="post-lethal-groups"></div>
+        <div class="post-lethal-modal-candidates">
+            <div class="post-lethal-modal-candidates__header">
+                <h4 class="lethal-planner__cards-title">アタッカー構成</h4>
+                <button type="button" class="post-lethal-candidate-toggle" id="post-lethal-candidate-toggle">全てにチェック</button>
+            </div>
+            <p class="post-hint">そのリーサルで使うアタッカー構成にチェックしてください</p>
+        </div>
+        <div id="post-lethal-card-modal-list" class="lethal-planner__card-list"></div>
+        <button type="button" class="lethal-planner__register-button" id="lethal-planner-register">選択した組み合わせを登録</button>
+        <div class="lethal-planner__beta-report" aria-label="リーサル機能のβ報告">
+            <span class="lethal-planner__beta-label">候補や計算が違う場合は、情報をコピーして報告できます。</span>
+            <div class="lethal-planner__beta-actions"><button type="button" class="lethal-planner__beta-button"
+                    data-lethal-report>情報をコピーして報告</button></div>
+            <span class="lethal-planner__copy-status" data-lethal-copy-status role="status" aria-live="polite"></span>
+        </div>
+    </div>
+</div>
 
 
 </body>

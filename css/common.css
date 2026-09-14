@@ -2201,7 +2201,7 @@ footer a:hover {
     }
 
     .home-event-banner__text {
-        max-width: calc(100% - 190px);
+        max-width: calc(100% - 80px);
         padding: 4px 8px 4px 10px;
         column-gap: 8px;
     }
@@ -2243,7 +2243,7 @@ footer a:hover {
             "eyebrow action"
             "title action";
         align-items: center;
-        max-width: calc(100% - 132px);
+        max-width: calc(100% - 48px);
         padding: 3px 0 3px 8px;
         column-gap: 5px;
         row-gap: 1px;
@@ -2283,7 +2283,7 @@ footer a:hover {
 
 @media (max-width: 414px) {
     .home-event-banner__text {
-        max-width: calc(100% - 104px);
+        max-width: calc(100% - 24px);
         column-gap: 4px;
     }
 

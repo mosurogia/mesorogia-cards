@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
     <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
     <link rel="stylesheet" href="css/common-page234.css?v=2026-05-05-006">
-    <link rel="stylesheet" href="css/page6.css?v=2026-09-07-002">
+    <link rel="stylesheet" href="css/page6.css?v=2026-09-14-013">
     <!-- ===== 構造化データ ===== -->
     <script type="application/ld+json">
     {
@@ -191,38 +191,46 @@
             <div class="tier-board-toolbar">
                 <div class="tier-board-heading">
                     <h2 id="tierBoardTitle" class="tier-section-title">最新Tier表（最終更新5月第2週）</h2>
-                    <div class="tier-board-meta" aria-label="Tier表環境切り替え">
-                        <select class="tier-board-status" data-tier-board-environment aria-label="表示する環境時期">
-                            <option>最新：5月第2週</option>
-                        </select>
-                        <div class="tier-env-controls">
+                    <div class="tier-board-meta" aria-label="Tier表操作">
+                        <div class="tier-board-period-controls" role="group" aria-label="表示期間を切り替え">
                             <button class="tier-env-button" type="button" data-tier-env-prev aria-label="前の環境" disabled>◀</button>
+                            <select class="tier-board-status" data-tier-board-environment aria-label="表示する環境時期">
+                                <option>最新：5月第2週</option>
+                            </select>
                             <button class="tier-env-button" type="button" data-tier-env-next aria-label="次の環境" disabled>▶</button>
                         </div>
-                        <button class="tier-board-image-button" type="button" data-tier-board-image data-tooltip="Tier表画像を生成" aria-label="Tier表画像を生成">📷</button>
+                        <div class="tier-board-actions" aria-label="Tier表の補助操作">
+                            <button class="tier-board-compare-button" type="button" data-tier-compare aria-label="前回と今回のTier表を比較" disabled>前回と比較</button>
+                            <button class="tier-board-image-button" type="button" data-tier-board-image data-tooltip="Tier表画像を生成" aria-label="Tier表画像を生成">📷</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tier-board" id="tierBoard" aria-live="polite">
+            <div class="tier-board-frame">
+                <div class="tier-board-loading" data-tier-board-loading role="status" aria-live="polite" hidden>
+                    <span class="tier-board-loading-spinner" aria-hidden="true"></span>
+                    <span>Tier表画像を読み込み中…</span>
+                </div>
+                <div class="tier-board" id="tierBoard" aria-live="polite">
             <div class="tier-row">
                 <div class="tier-label is-s">S</div>
                 <div class="tier-items">
                     <a class="tier-card" data-guide-id="post-39395bf7" href="deck-post.html?pid=39395bf7" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=39395bf7" data-post-id="39395bf7">
                         <div class="tier-card-image-wrap">
-                            <img src="img/風花森.webp" alt="風花森" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/風花森.webp" alt="風花森" loading="lazy">
                         </div>
                         <span class="tier-card-name">風花森</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-4856170d" href="deck-post.html?pid=4856170d" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=4856170d" data-post-id="4856170d">
                         <div class="tier-card-image-wrap">
-                            <img src="img/神翼騎士.webp" alt="神翼騎士" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/神翼騎士.webp" alt="神翼騎士" loading="lazy">
                         </div>
                         <span class="tier-card-name">神翼騎士</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-da1a021d" href="deck-post.html?pid=da1a021d" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=da1a021d" data-post-id="da1a021d">
                         <div class="tier-card-image-wrap">
-                            <img src="img/マディスキア.webp" alt="マディスキア" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/マディスキア.webp" alt="マディスキア" loading="lazy">
                         </div>
                         <span class="tier-card-name">マディスキア</span>
                     </a>
@@ -233,19 +241,19 @@
                 <div class="tier-items">
                     <a class="tier-card" data-guide-id="post-d26eaa10" href="deck-post.html?pid=d26eaa10" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=d26eaa10" data-post-id="d26eaa10">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ジークフリート.webp" alt="ジークフリート" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ジークフリート.webp" alt="ジークフリート" loading="lazy">
                         </div>
                         <span class="tier-card-name">ジークフリート</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-00511a7f" href="deck-post.html?pid=00511a7f" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=00511a7f" data-post-id="00511a7f">
                         <div class="tier-card-image-wrap">
-                            <img src="img/メロウディア.webp" alt="メロウディア" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/メロウディア.webp" alt="メロウディア" loading="lazy">
                         </div>
                         <span class="tier-card-name">メロウディア</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-a35e0a8f" href="deck-post.html?pid=a35e0a8f" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=a35e0a8f" data-post-id="a35e0a8f">
                         <div class="tier-card-image-wrap">
-                            <img src="img/聖焔龍.webp" alt="聖焔龍" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/聖焔龍.webp" alt="聖焔龍" loading="lazy">
                         </div>
                         <span class="tier-card-name">聖焔龍</span>
                     </a>
@@ -256,61 +264,61 @@
                 <div class="tier-items">
                     <a class="tier-card" data-guide-id="post-55e3e2c2" href="deck-post.html?pid=55e3e2c2" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=55e3e2c2" data-post-id="55e3e2c2">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ロスリス.webp" alt="ロスリス" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ロスリス.webp" alt="ロスリス" loading="lazy">
                         </div>
                         <span class="tier-card-name">ロスリス</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-80ebdf24" href="deck-post.html?pid=80ebdf24" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=80ebdf24" data-post-id="80ebdf24">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ユノLO.webp" alt="ユノLO" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ユノLO.webp" alt="ユノLO" loading="lazy">
                         </div>
                         <span class="tier-card-name">ユノLO</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-1cec2c50" href="deck-post.html?pid=1cec2c50" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=1cec2c50" data-post-id="1cec2c50">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ナチュリア.webp" alt="ナチュリア" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ナチュリア.webp" alt="ナチュリア" loading="lazy">
                         </div>
                         <span class="tier-card-name">ナチュリア</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-412967d5" href="deck-post.html?pid=412967d5" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=412967d5" data-post-id="412967d5">
                         <div class="tier-card-image-wrap">
-                            <img src="img/バーントム.webp" alt="バーントム" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/バーントム.webp" alt="バーントム" loading="lazy">
                         </div>
                         <span class="tier-card-name">バーントム</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-255a5361" href="deck-post.html?pid=255a5361" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=255a5361" data-post-id="255a5361">
                         <div class="tier-card-image-wrap">
-                            <img src="img/燃焼ドラゴン.webp" alt="燃焼ドラゴン" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/燃焼ドラゴン.webp" alt="燃焼ドラゴン" loading="lazy">
                         </div>
                         <span class="tier-card-name">燃焼ドラゴン</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-8cf8900b" href="deck-post.html?pid=8cf8900b" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=8cf8900b" data-post-id="8cf8900b">
                         <div class="tier-card-image-wrap">
-                            <img src="img/アルケミ.webp" alt="アルケミ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/アルケミ.webp" alt="アルケミ" loading="lazy">
                         </div>
                         <span class="tier-card-name">アルケミ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-fd63930c" href="deck-post.html?pid=fd63930c" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=fd63930c" data-post-id="fd63930c">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ルミナス10スタン.webp" alt="ルミナス１０スタン" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ルミナス10スタン.webp" alt="ルミナス１０スタン" loading="lazy">
                         </div>
                         <span class="tier-card-name">ルミナス１０スタン</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-d7074e1f" href="deck-post.html?pid=d7074e1f" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=d7074e1f" data-post-id="d7074e1f">
                         <div class="tier-card-image-wrap">
-                            <img src="img/火鞠.webp" alt="火鞠" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/火鞠.webp" alt="火鞠" loading="lazy">
                         </div>
                         <span class="tier-card-name">火鞠</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-90b6518f" href="deck-post.html?pid=90b6518f" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=90b6518f" data-post-id="90b6518f">
                         <div class="tier-card-image-wrap">
-                            <img src="img/愚者愚者.webp" alt="愚者愚者" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/愚者愚者.webp" alt="愚者愚者" loading="lazy">
                         </div>
                         <span class="tier-card-name">愚者愚者</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-c7ee61a1" href="deck-post.html?pid=c7ee61a1" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=c7ee61a1" data-post-id="c7ee61a1">
                         <div class="tier-card-image-wrap">
-                            <img src="img/アグドラ.webp" alt="アグドラ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/アグドラ.webp" alt="アグドラ" loading="lazy">
                         </div>
                         <span class="tier-card-name">アグドラ</span>
                     </a>
@@ -321,67 +329,67 @@
                 <div class="tier-items">
                     <a class="tier-card" data-guide-id="post-096f8c1a" href="deck-post.html?pid=096f8c1a" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=096f8c1a" data-post-id="096f8c1a">
                         <div class="tier-card-image-wrap">
-                            <img src="img/テックノイズ.webp" alt="テックノイズ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/テックノイズ.webp" alt="テックノイズ" loading="lazy">
                         </div>
                         <span class="tier-card-name">テックノイズ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-c55fbae9" href="deck-post.html?pid=c55fbae9" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=c55fbae9" data-post-id="c55fbae9">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ゴーゴン.webp" alt="ゴーゴン" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ゴーゴン.webp" alt="ゴーゴン" loading="lazy">
                         </div>
                         <span class="tier-card-name">ゴーゴン</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-f0d2d7ee" href="deck-post.html?pid=f0d2d7ee" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=f0d2d7ee" data-post-id="f0d2d7ee">
                         <div class="tier-card-image-wrap">
-                            <img src="img/白騎士LO.webp" alt="白騎士ＬＯ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/白騎士LO.webp" alt="白騎士ＬＯ" loading="lazy">
                         </div>
                         <span class="tier-card-name">白騎士ＬＯ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-7294bfa7" href="deck-post.html?pid=7294bfa7" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=7294bfa7" data-post-id="7294bfa7">
                         <div class="tier-card-image-wrap">
-                            <img src="img/ヴァントム.webp" alt="ヴァントム" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/ヴァントム.webp" alt="ヴァントム" loading="lazy">
                         </div>
                         <span class="tier-card-name">ヴァントム</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-df04e5bd" href="deck-post.html?pid=df04e5bd" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=df04e5bd" data-post-id="df04e5bd">
                         <div class="tier-card-image-wrap">
-                            <img src="img/星装.webp" alt="星装" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/星装.webp" alt="星装" loading="lazy">
                         </div>
                         <span class="tier-card-name">星装</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-68efa151" href="deck-post.html?pid=68efa151" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=68efa151" data-post-id="68efa151">
                         <div class="tier-card-image-wrap">
-                            <img src="img/バトメイ.webp" alt="バトメイ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/バトメイ.webp" alt="バトメイ" loading="lazy">
                         </div>
                         <span class="tier-card-name">バトメイ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-ba1b8840" href="deck-post.html?pid=ba1b8840" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=ba1b8840" data-post-id="ba1b8840">
                         <div class="tier-card-image-wrap">
-                            <img src="img/炎閻魔.webp" alt="炎閻魔" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/炎閻魔.webp" alt="炎閻魔" loading="lazy">
                         </div>
                         <span class="tier-card-name">炎閻魔</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-6897371f" href="deck-post.html?pid=6897371f" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=6897371f" data-post-id="6897371f">
                         <div class="tier-card-image-wrap">
-                            <img src="img/メイドロボ.webp" alt="メイドロボ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/メイドロボ.webp" alt="メイドロボ" loading="lazy">
                         </div>
                         <span class="tier-card-name">メイドロボ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-1c12861e" href="deck-post.html?pid=1c12861e" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=1c12861e" data-post-id="1c12861e">
                         <div class="tier-card-image-wrap">
-                            <img src="img/アドミラルシップ.webp" alt="アドミラルシップ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/アドミラルシップ.webp" alt="アドミラルシップ" loading="lazy">
                         </div>
                         <span class="tier-card-name">アドミラルシップ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-cd85bfeb" href="deck-post.html?pid=cd85bfeb" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=cd85bfeb" data-post-id="cd85bfeb">
                         <div class="tier-card-image-wrap">
-                            <img src="img/白騎士.webp" alt="白騎士" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/白騎士.webp" alt="白騎士" loading="lazy">
                         </div>
                         <span class="tier-card-name">白騎士</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-033c3e39" href="deck-post.html?pid=033c3e39" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=033c3e39" data-post-id="033c3e39">
                         <div class="tier-card-image-wrap">
-                            <img src="img/電竜.webp" alt="電竜" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/電竜.webp" alt="電竜" loading="lazy">
                         </div>
                         <span class="tier-card-name">電竜</span>
                     </a>
@@ -392,34 +400,35 @@
                 <div class="tier-items">
                     <a class="tier-card" data-guide-id="post-f56ca0fb" href="deck-post.html?pid=f56ca0fb" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=f56ca0fb" data-post-id="f56ca0fb">
                         <div class="tier-card-image-wrap">
-                            <img src="img/蒼ノ刀.webp" alt="蒼ノ刀" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/蒼ノ刀.webp" alt="蒼ノ刀" loading="lazy">
                         </div>
                         <span class="tier-card-name">蒼ノ刀</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-eb8bc6d6" href="deck-post.html?pid=eb8bc6d6" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=eb8bc6d6" data-post-id="eb8bc6d6">
                         <div class="tier-card-image-wrap">
-                            <img src="img/アストロLO.webp" alt="アストロＬＯ" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/アストロLO.webp" alt="アストロＬＯ" loading="lazy">
                         </div>
                         <span class="tier-card-name">アストロＬＯ</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-67c94079" href="deck-post.html?pid=67c94079" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=67c94079" data-post-id="67c94079">
                         <div class="tier-card-image-wrap">
-                            <img src="img/秘饗.webp" alt="秘饗" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/秘饗.webp" alt="秘饗" loading="lazy">
                         </div>
                         <span class="tier-card-name">秘饗</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-62c3185c" href="deck-post.html?pid=62c3185c" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=62c3185c" data-post-id="62c3185c">
                         <div class="tier-card-image-wrap">
-                            <img src="img/鬼刹衆.webp" alt="鬼刹衆" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/鬼刹衆.webp" alt="鬼刹衆" loading="lazy">
                         </div>
                         <span class="tier-card-name">鬼刹衆</span>
                     </a>
                     <a class="tier-card" data-guide-id="post-7361c806" href="deck-post.html?pid=7361c806" rel="noopener" data-post-url="https://mosurogia.github.io/mesorogia-cards/deck-post.html?pid=7361c806" data-post-id="7361c806">
                         <div class="tier-card-image-wrap">
-                            <img src="img/歪祝.webp" alt="歪祝" loading="lazy">
+                            <img src="img/tier/2026-05-2nd-week/歪祝.webp" alt="歪祝" loading="lazy">
                         </div>
                         <span class="tier-card-name">歪祝</span>
                     </a>
+                </div>
                 </div>
             </div>
             </div>
@@ -435,11 +444,11 @@
                 <div class="tier-deck-guide-title-row">
                     <h3 id="tierDeckGuideTitle" class="tier-deck-guide-title">デッキ紹介（最終更新5月第2週）</h3>
                     <div class="tier-deck-guide-meta" aria-label="デッキリスト環境切り替え">
-                        <select class="tier-deck-guide-environment" data-tier-guide-environment aria-label="表示する環境時期">
-                            <option>最新：5月第2週</option>
-                        </select>
-                        <div class="tier-env-controls">
+                        <div class="tier-board-period-controls tier-deck-guide-period-controls" role="group" aria-label="デッキ紹介の表示期間を切り替え">
                             <button class="tier-env-button" type="button" data-tier-env-prev aria-label="前の環境" disabled>◀</button>
+                            <select class="tier-deck-guide-environment" data-tier-guide-environment aria-label="表示する環境時期">
+                                <option>最新：5月第2週</option>
+                            </select>
                             <button class="tier-env-button" type="button" data-tier-env-next aria-label="次の環境" disabled>▶</button>
                         </div>
                     </div>
@@ -455,7 +464,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=39395bf7" rel="noopener" data-post-id="39395bf7">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -483,7 +492,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=4856170d" rel="noopener" data-post-id="4856170d">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -511,7 +520,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=da1a021d" rel="noopener" data-post-id="da1a021d">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -542,7 +551,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=d26eaa10" rel="noopener" data-post-id="d26eaa10">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="tCmt2UpQKg7l+AgTaP9c2rcae1lxe1iqcxUDJ1W9I+qiPPK8u2TGX3X4jWVJMGEQ/MDJZhCKcJOQ30MXOAknlvgLRNDNm36g04fe5GUXxDIcq3atpmXy6zaCNJGseLr6U1UhebxeY8B0QoUVZl6IlEaR4wISWUKIh9hAs32TAHrqzxc4U1cmdnbWo7pnF0fqhP4llz/cSa+vCGJDcvpxlfOH5dn07ytBpVvuSLsP2x7qpJb5TB37RGVKUsjwrHXUKGghtHypImXrMd1SnRbWePidJN3M4KMp90tWVVZTjx4=" aria-disabled="false">デッキコードをコピー</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -570,7 +579,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=00511a7f" rel="noopener" data-post-id="00511a7f">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -594,7 +603,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=a35e0a8f" rel="noopener" data-post-id="a35e0a8f">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -624,7 +633,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=55e3e2c2" rel="noopener" data-post-id="55e3e2c2">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -652,7 +661,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=80ebdf24" rel="noopener" data-post-id="80ebdf24">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -679,7 +688,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=1cec2c50" rel="noopener" data-post-id="1cec2c50">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -703,7 +712,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=412967d5" rel="noopener" data-post-id="412967d5">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -727,7 +736,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=255a5361" rel="noopener" data-post-id="255a5361">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -751,7 +760,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=8cf8900b" rel="noopener" data-post-id="8cf8900b">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -775,7 +784,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=fd63930c" rel="noopener" data-post-id="fd63930c">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -799,7 +808,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=d7074e1f" rel="noopener" data-post-id="d7074e1f">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -825,7 +834,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=90b6518f" rel="noopener" data-post-id="90b6518f">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -850,7 +859,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=c7ee61a1" rel="noopener" data-post-id="c7ee61a1">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -882,7 +891,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=096f8c1a" rel="noopener" data-post-id="096f8c1a">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -906,7 +915,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=c55fbae9" rel="noopener" data-post-id="c55fbae9">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -930,7 +939,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=f0d2d7ee" rel="noopener" data-post-id="f0d2d7ee">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -958,7 +967,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=7294bfa7" rel="noopener" data-post-id="7294bfa7">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -982,7 +991,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=df04e5bd" rel="noopener" data-post-id="df04e5bd">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1006,7 +1015,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=68efa151" rel="noopener" data-post-id="68efa151">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1032,7 +1041,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=ba1b8840" rel="noopener" data-post-id="ba1b8840">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1057,7 +1066,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=6897371f" rel="noopener" data-post-id="6897371f">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1085,7 +1094,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=1c12861e" rel="noopener" data-post-id="1c12861e">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1109,7 +1118,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=cd85bfeb" rel="noopener" data-post-id="cd85bfeb">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1139,7 +1148,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=033c3e39" rel="noopener" data-post-id="033c3e39">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1168,7 +1177,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=f56ca0fb" rel="noopener" data-post-id="f56ca0fb">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1196,7 +1205,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=eb8bc6d6" rel="noopener" data-post-id="eb8bc6d6">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1225,7 +1234,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=67c94079" rel="noopener" data-post-id="67c94079">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1252,7 +1261,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=62c3185c" rel="noopener" data-post-id="62c3185c">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1277,7 +1286,7 @@
                             </div>
                             <div class="tier-guide-deck-actions-wide">
                                 <a class="tier-guide-detail-link" target="_blank" href="deck-post.html?pid=7361c806" rel="noopener" data-post-id="7361c806">デッキを詳しく見る</a>
-                                <button type="button" class="tier-guide-copy-code-button btn-copy-code-wide" data-tier-guide-copy-code="1" data-code="" disabled aria-disabled="true">デッキコードなし</button>
+                                <div class="tier-guide-rank-change" data-tier-rank-change="1" aria-label="順位変動を確認中">順位確認中</div>
                             </div>
                             <div class="tier-guide-deck-status" data-tier-guide-status="1"></div>
                             <div class="tier-post-decklist" data-tier-guide-list="1">
@@ -1429,7 +1438,7 @@
 
 <!-- ===== JavaScript ===== -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="js/common/core/defs.js?v=2026-08-19-002"></script>
+<script src="js/common/core/defs.js?v=2026-09-09-009"></script>
 <script src="js/common/core/event-features.js?v=2026-09-07-001"></script>
 <script src="js/common/core/card-core.js?v=2026-05-05-006"></script>
 <script src="js/common/core/card-sort.js?v=2026-05-05-008"></script>
@@ -1440,12 +1449,12 @@
 <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
 <script src="js/common/account/account.js?v=2026-05-31-001"></script>
 <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
-<script src="js/common/pwa/cache-config.js?v=2026-09-07-005"></script>
+<script src="js/common/pwa/cache-config.js?v=2026-09-14-013"></script>
 <script src="js/common/pwa/offline-cards.js?v=2026-05-06-003"></script>
 <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
 <script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
 <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
-<script src="js/pages/tier/tier-page.js?v=2026-09-04-003"></script>
+<script src="js/pages/tier/tier-page.js?v=2026-09-14-013"></script>
 <script src="js/common/pwa/install-ui.js?v=2026-07-17-003"></script>
 <script src="js/common/pwa/register.js?v=2026-06-15-001"></script>
 
