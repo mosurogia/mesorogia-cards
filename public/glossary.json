@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-07-162740Z",
-  "generatedAt": "2026-09-07T16:27:40Z",
+  "version": "2026-09-14-161840Z",
+  "generatedAt": "2026-09-14T16:18:40Z",
   "sections": [
     {
       "id": "basic-rules",
@@ -470,7 +470,7 @@
         "status"
       ],
       "description": "拘束・沈黙・燃焼の3種類をまとめた呼び方です。",
-      "note": "2026年9月現在、「状態異常」という表記は『聖堂の清掃員』の効果内でのみ使用されています。",
+      "note": "2026年9月現在、「状態異常」という表記は『聖堂の清掃員』と『町医者 エルナ』の効果内でのみ使用されています。",
       "relatedIds": [
         "bind",
         "silence",
@@ -479,7 +479,7 @@
       "pageType": "",
       "detailDescription": "",
       "sortOrder": 165,
-      "updatedAt": "2026-09-03"
+      "updatedAt": "2026-09-15"
     },
     {
       "id": "burn",
@@ -599,6 +599,28 @@
       "detailDescription": "",
       "sortOrder": 190,
       "updatedAt": "2026-09-04"
+    },
+    {
+      "id": "lock-on",
+      "term": "ロックオン",
+      "reading": "ろっくおん",
+      "aliases": [
+        "ロックオンマーク"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "選ばれたカードにロックオンマークが付く仕組みです。",
+      "note": "・ロックオン自体に効果はなく、状態異常でもありません。\n・2026年9月現在、『旧神　狙撃手・レイチェル』のみが持つ効果です。",
+      "relatedIds": [
+        "ability",
+        "status-ailment"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 195,
+      "updatedAt": "2026-09-15"
     },
     {
       "id": "edition",
@@ -773,6 +795,47 @@
       "detailDescription": "",
       "sortOrder": 260,
       "updatedAt": "2026-09-02"
+    },
+    {
+      "id": "batome",
+      "term": "バトメ",
+      "reading": "ばとめ",
+      "aliases": [
+        "神域のバトルメイド",
+        "バトルメイド"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "deck"
+      ],
+      "description": "『神域のバトルメイド』を指す略称です。",
+      "note": "主に『神域のバトルメイド』を採用した、アタッカーが多めの特殊なデッキを指します。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 260,
+      "updatedAt": "2026-09-15"
+    },
+    {
+      "id": "ship-admi",
+      "term": "船・アドミ",
+      "reading": "ふね・あどみ",
+      "aliases": [
+        "船",
+        "アドミ",
+        "アドミラルシップ"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "deck"
+      ],
+      "description": "アンドロイドカテゴリの『アドミラルシップ』を指す略称です。",
+      "note": "主にアドミラルシップを軸としたデッキに対して使われます。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 270,
+      "updatedAt": "2026-09-15"
     },
     {
       "id": "room-match",
@@ -1195,6 +1258,55 @@
       "detailDescription": "",
       "sortOrder": 430,
       "updatedAt": "2026-09-03"
+    },
+    {
+      "id": "pack-ticket",
+      "term": "パックチケット",
+      "reading": "ぱっくちけっと",
+      "aliases": [
+        "パック券",
+        "チケット"
+      ],
+      "sectionId": "game-system-mode",
+      "tagIds": [
+        "reward",
+        "pack"
+      ],
+      "description": "対象のパックを1回分（5枚）引くことができるチケットです。",
+      "note": "・使用時にパックポイントも獲得できます。\n・ほかのパックのチケットには変換できないため、入手後すぐに使用しても問題ありません。",
+      "relatedIds": [
+        "main-pack",
+        "additional-pack"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 440,
+      "updatedAt": "2026-09-15"
+    },
+    {
+      "id": "daily-shop",
+      "term": "デイリーショップ",
+      "reading": "でいりーしょっぷ",
+      "aliases": [
+        "無料カード",
+        "ショップ更新",
+        "レジェンド確定"
+      ],
+      "sectionId": "game-system-mode",
+      "tagIds": [
+        "shop",
+        "diamond",
+        "reward"
+      ],
+      "description": "毎日ランダムに並ぶ6枚のカードを、1枚ずつ購入できるショップです。",
+      "note": "左上のカード1枚は無料で獲得でき、レジェンドが並ぶこともあります。",
+      "relatedIds": [
+        "pack-ticket"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 450,
+      "updatedAt": "2026-09-15"
     }
   ],
   "guides": [
@@ -1220,7 +1332,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 10,
-      "updatedAt": "2026-08-21",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "win-loss-00",
@@ -1308,7 +1420,7 @@
     {
       "id": "turn-sequence",
       "title": "ターンの処理順",
-      "summary": "ターン開始から状態異常の処理まで、1ターンの進行順を解説します。",
+      "summary": "ターン開始から手札上限の処理まで、1ターンの進行順を解説します。",
       "searchTerms": [
         "ターン処理",
         "処理順",
@@ -1316,7 +1428,10 @@
         "召喚時処理",
         "攻撃処理",
         "ターン終了",
-        "同時処理"
+        "同時処理",
+        "手札上限",
+        "8枚",
+        "破棄"
       ],
       "sectionId": "basic-rules",
       "tagIds": [
@@ -1339,13 +1454,13 @@
       ],
       "thumbnail": "",
       "sortOrder": 20,
-      "updatedAt": "2026-08-22",
+      "updatedAt": "2026-09-15",
       "blocks": [
         {
           "id": "turn-sequence-00",
           "type": "text",
           "heading": "",
-          "text": "ターンは、ターン開始時の効果から状態異常の処理まで、決められた順番で進行します。",
+          "text": "ターンは、ターン開始時の効果から手札上限の処理まで、決められた順番で進行します。",
           "image": "",
           "imageAlt": "",
           "sortOrder": 10
@@ -1520,6 +1635,24 @@
           "image": "",
           "imageAlt": "",
           "sortOrder": 200
+        },
+        {
+          "id": "turn-sequence-20",
+          "type": "heading",
+          "heading": "10. 手札上限の処理",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 210
+        },
+        {
+          "id": "turn-sequence-21",
+          "type": "text",
+          "heading": "",
+          "text": "手札が9枚以上ある場合は、8枚になるように右端のカードから墓地へ送ります。この処理で墓地へ行くカードは、破壊ではなく破棄として扱われます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 220
         }
       ]
     },
@@ -1543,7 +1676,7 @@
       "relatedTermIds": [],
       "thumbnail": "",
       "sortOrder": 30,
-      "updatedAt": "2026-08-22",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "turn-time-limit-00",
@@ -1623,7 +1756,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 40,
-      "updatedAt": "2026-08-22",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "added-to-hand-00",
@@ -1705,10 +1838,12 @@
       "tagIds": [
         "reward"
       ],
-      "relatedTermIds": [],
+      "relatedTermIds": [
+        "pack-ticket"
+      ],
       "thumbnail": "",
       "sortOrder": 50,
-      "updatedAt": "2026-09-08",
+      "updatedAt": "2026-09-15",
       "blocks": [
         {
           "id": "daily-chest-00",
@@ -1777,7 +1912,7 @@
           "id": "daily-chest-07",
           "type": "note",
           "heading": "",
-          "text": "現在確認できている報酬の目安：\n・銅：ダイヤ10～18個\n・銀：ダイヤ20～42個、スペシャルパック\n・金：ダイヤ50～95個、スペシャルパック、パックチケット\n・虹：ダイヤ100～130個、スペシャルパック（1～3枚）、パックチケット\n詳しい報酬量は調査中で、各レアリティの出現率は不明です。",
+          "text": "現在確認できている報酬の目安：\n・銅：ダイヤ10～18個\n・銀：ダイヤ20～49個、スペシャルパック\n・金：ダイヤ50～95個、スペシャルパック、パックチケット\n・虹：ダイヤ100～150個、スペシャルパック（1～3枚）、パックチケット\n詳しい報酬量は調査中で、各レアリティの出現率は不明です。",
           "image": "",
           "imageAlt": "",
           "sortOrder": 80
@@ -1812,7 +1947,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 60,
-      "updatedAt": "2026-08-24",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "edition-00",
@@ -1906,6 +2041,7 @@
         "ability"
       ],
       "relatedTermIds": [
+        "lock-on",
         "hand-effect",
         "summon-effect",
         "discard",
@@ -1913,7 +2049,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 70,
-      "updatedAt": "2026-09-05",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "rachel-behavior-00",
@@ -2006,6 +2142,7 @@
         "ability"
       ],
       "relatedTermIds": [
+        "lock-on",
         "status-ailment",
         "ability",
         "discard",
@@ -2014,7 +2151,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 80,
-      "updatedAt": "2026-09-05",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "lock-on-00",
@@ -2119,7 +2256,7 @@
       ],
       "thumbnail": "",
       "sortOrder": 90,
-      "updatedAt": "2026-09-05",
+      "updatedAt": "2026-09-07",
       "blocks": [
         {
           "id": "skin-specifications-00",
@@ -2282,6 +2419,367 @@
           "image": "",
           "imageAlt": "",
           "sortOrder": 180
+        }
+      ]
+    },
+    {
+      "id": "status-ailment-specifications",
+      "title": "状態異常の仕様",
+      "summary": "拘束・沈黙・燃焼の3種類について、それぞれの効果と解除・処理条件を解説します。",
+      "searchTerms": [
+        "状態異常",
+        "拘束",
+        "沈黙",
+        "燃焼",
+        "召喚不可",
+        "特殊能力無効",
+        "破壊"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "status",
+        "ability"
+      ],
+      "relatedTermIds": [
+        "status-ailment",
+        "bind",
+        "silence",
+        "burn",
+        "summon-effect",
+        "hand-effect",
+        "trait"
+      ],
+      "thumbnail": "",
+      "sortOrder": 100,
+      "updatedAt": "2026-09-15",
+      "blocks": [
+        {
+          "id": "status-ailment-specifications-00",
+          "type": "text",
+          "heading": "",
+          "text": "現在の状態異常は「拘束」「沈黙」「燃焼」の3種類です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "status-ailment-specifications-01",
+          "type": "heading",
+          "heading": "拘束",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "status-ailment-specifications-02",
+          "type": "text",
+          "heading": "",
+          "text": "・カードの召喚を封じ、拘束状態にします。\n・拘束状態のカードは手札効果が発動しません。\n・拘束状態のカードがほかのカードの効果で戦場に出た場合、そのカードの戦場効果は発動しません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "status-ailment-specifications-03",
+          "type": "heading",
+          "heading": "沈黙",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "status-ailment-specifications-04",
+          "type": "text",
+          "heading": "",
+          "text": "・カードの特殊能力がすべて無効化されます。\n・戦場で沈黙を付与された場合は特性効果なども消えます。召喚時効果の発動前に沈黙した場合、その召喚時効果は発動しません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "status-ailment-specifications-05",
+          "type": "heading",
+          "heading": "燃焼",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "status-ailment-specifications-06",
+          "type": "text",
+          "heading": "",
+          "text": "・燃焼状態になっても、カードの特殊能力は変化しません。\n・燃焼を付与された次のターン終了時に破壊されます。この破壊は、自分・相手どちらの破壊にも扱われません。\n・燃焼状態中に再び燃焼を付与されても持続期間は更新されず、最初に付与された次のターン終了時に破壊されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        }
+      ]
+    },
+    {
+      "id": "status-ailment-timing",
+      "title": "状態異常付与のタイミング",
+      "summary": "状態異常を付与するタイミングによる持続期間と、ターン開始時・終了時の違いを解説します。",
+      "searchTerms": [
+        "状態異常",
+        "付与タイミング",
+        "ターン開始時",
+        "ターン終了時",
+        "フェル",
+        "ブラック・ローズ",
+        "ボルト",
+        "ゼローグ",
+        "ドラゴンライダー･ギィロ"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "status",
+        "ability",
+        "battle-rules"
+      ],
+      "relatedTermIds": [
+        "status-ailment",
+        "bind",
+        "silence",
+        "burn",
+        "hand-effect"
+      ],
+      "thumbnail": "",
+      "sortOrder": 110,
+      "updatedAt": "2026-09-15",
+      "blocks": [
+        {
+          "id": "status-ailment-timing-00",
+          "type": "text",
+          "heading": "",
+          "text": "状態異常は召喚時や攻撃成功時などに戦場で付与されるほか、手札効果によって付与されることもあります。付与されたタイミングによって、影響するターンが変わります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "status-ailment-timing-01",
+          "type": "heading",
+          "heading": "基本の持続期間",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "status-ailment-timing-02",
+          "type": "text",
+          "heading": "",
+          "text": "基本的に状態異常は、状態異常を付与した次のターンの終了時まで続きます。特に、状態異常を付与する手札効果が「ターン開始時」と「ターン終了時」のどちらに発動するかが重要です。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "status-ailment-timing-03",
+          "type": "heading",
+          "heading": "ターン開始時に付与する場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "status-ailment-timing-04",
+          "type": "text",
+          "heading": "",
+          "text": "ターン開始時の手札発動効果は、召喚時処理より前に発動します。このタイミングで沈黙や拘束を付与されたカードは、そのターンと次のターンのカード召喚などで状態異常の影響を受けます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "status-ailment-timing-05",
+          "type": "note",
+          "heading": "",
+          "text": "例：3ターン目のターン開始時に「昏き霊園 フェル」「昏き霊園 ブラック・ローズ」によって沈黙を付与された場合、対象のカードは4ターン目の終了時まで特殊能力を使用できません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "status-ailment-timing-06",
+          "type": "text",
+          "heading": "",
+          "text": "ターン開始時に状態異常を付与するカード：\n・「昏き霊園 フェル」「昏き霊園 ブラック・ローズ」による沈黙コンボ\n・「光電竜 ボルト」「超電竜 ゼローグ」による拘束コンボ",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "status-ailment-timing-07",
+          "type": "heading",
+          "heading": "ターン終了時に付与する場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "status-ailment-timing-08",
+          "type": "text",
+          "heading": "",
+          "text": "ターン終了時の手札発動効果は、状態異常の処理と手札上限の処理より前に発動します。このタイミングで燃焼したカードは次のターン終了時に破壊されるため、実質1ターンで処理されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
+        },
+        {
+          "id": "status-ailment-timing-09",
+          "type": "note",
+          "heading": "",
+          "text": "例：3ターン目の終了時、トップから引いた「ドラゴンライダー･ギィロ」の効果で自身が燃焼した場合、4ターン目の終了時にもう一度「ドラゴンライダー･ギィロ」の効果が発動し、その後に破壊されます。燃焼状態の持続期間は更新されません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 100
+        },
+        {
+          "id": "status-ailment-timing-10",
+          "type": "text",
+          "heading": "",
+          "text": "ターン終了時に状態異常を付与するカード：\n・「ドラゴンライダー･ギィロ」の自身への燃焼付与\nトップドローから最速で自動的に墓地へ送れるほか、ターン終了時に発動するほかのカードとのコンボにも利用できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 110
+        }
+      ]
+    },
+    {
+      "id": "daily-shop",
+      "title": "デイリーショップの仕様",
+      "summary": "毎日のカード販売、無料枠、7日ごとのレジェンド確定、更新費用、価格と割引率を解説します。",
+      "searchTerms": [
+        "デイリーショップ",
+        "無料カード",
+        "レジェンド確定",
+        "ショップ更新",
+        "100ダイヤ",
+        "250ダイヤ",
+        "カード価格",
+        "20%割引",
+        "40%割引",
+        "60%割引",
+        "80%割引"
+      ],
+      "sectionId": "game-system-mode",
+      "tagIds": [
+        "shop",
+        "diamond",
+        "reward"
+      ],
+      "relatedTermIds": [
+        "daily-shop",
+        "pack-ticket"
+      ],
+      "thumbnail": "",
+      "sortOrder": 120,
+      "updatedAt": "2026-09-15",
+      "blocks": [
+        {
+          "id": "daily-shop-00",
+          "type": "text",
+          "heading": "",
+          "text": "デイリーショップには、毎日ランダムな6枚のカードが並び、それぞれ1枚ずつ購入できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "daily-shop-01",
+          "type": "heading",
+          "heading": "無料で獲得できるカード",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "daily-shop-02",
+          "type": "text",
+          "heading": "",
+          "text": "左上のカードは無料で獲得できます。無料枠にレジェンドのカードが並ぶこともあります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "daily-shop-03",
+          "type": "heading",
+          "heading": "7日ごとのレジェンド確定",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "daily-shop-04",
+          "type": "text",
+          "heading": "",
+          "text": "7日に1度、右下のカードがレジェンド確定になります。この7日間はログイン日数ではなく、デイリーショップを訪れた日にカウントが進みます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "daily-shop-05",
+          "type": "heading",
+          "heading": "カードの更新",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "daily-shop-06",
+          "type": "text",
+          "heading": "",
+          "text": "並んだカードは更新ボタンで入れ替えられます。更新にはダイヤが必要です。\n・1回目：100ダイヤ\n・2回目：250ダイヤ",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "daily-shop-07",
+          "type": "heading",
+          "heading": "カードの価格",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "daily-shop-08",
+          "type": "text",
+          "heading": "",
+          "text": "ショップに並ぶカードは、レアリティごとに価格が異なります。\n・レジェンド：4,000ダイヤ\n・ゴールド：1,000ダイヤ\n・シルバー：250ダイヤ\n・ブロンズ：150ダイヤ",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
+        },
+        {
+          "id": "daily-shop-09",
+          "type": "heading",
+          "heading": "カードの割引",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 100
+        },
+        {
+          "id": "daily-shop-10",
+          "type": "text",
+          "heading": "",
+          "text": "左上の無料カードを除き、ショップに並ぶカードには必ず20％・40％・60％・80％のいずれかの割引が適用されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 110
         }
       ]
     }
