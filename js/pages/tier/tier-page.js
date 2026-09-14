@@ -647,6 +647,14 @@
     function renderTierRankChange(element, currentPosition, previousPosition, hasPreviousEnvironment) {
         if (!element || !currentPosition) return;
 
+        const appendCompareHint = () => {
+            if (!(element instanceof HTMLButtonElement)) return;
+            const hint = document.createElement('span');
+            hint.className = 'tier-rank-compare-hint';
+            hint.textContent = '比較表を開く';
+            element.append(hint);
+        };
+
         element.className = 'tier-guide-rank-change';
         element.replaceChildren(createTierPositionElement('tier-rank-current', currentPosition));
 
@@ -664,6 +672,7 @@
             badge.className = 'tier-rank-badge is-new';
             badge.textContent = 'NEW';
             element.append(badge);
+            appendCompareHint();
             element.setAttribute('aria-label', `現在${currentPosition.tier}ランク${currentPosition.rank}位、前回Tier表に掲載なし`);
             return;
         }
@@ -681,6 +690,7 @@
         arrow.setAttribute('aria-hidden', 'true');
 
         element.append(arrow, createTierPositionElement('tier-rank-previous', previousPosition));
+        appendCompareHint();
         element.setAttribute(
             'aria-label',
             `現在${currentPosition.tier}ランク${currentPosition.rank}位、${changeText}、前回${previousPosition.tier}ランク${previousPosition.rank}位`
@@ -740,8 +750,21 @@
         row.className = `tier-compare-row is-${side}`;
 
         const label = document.createElement('h4');
-        label.className = `tier-compare-tier-label is-${getTierClassName(tier)}`;
-        label.textContent = tier;
+        const isRemoved = tier === '今回圏外';
+        label.className = isRemoved
+            ? 'tier-compare-removed-label'
+            : `tier-compare-tier-label is-${getTierClassName(tier)}`;
+        if (isRemoved) {
+            const icon = document.createElement('span');
+            icon.textContent = '↓';
+            icon.setAttribute('aria-hidden', 'true');
+            const text = document.createElement('span');
+            text.textContent = '今回圏外';
+            label.append(icon, text);
+            row.classList.add('is-removed');
+        } else {
+            label.textContent = tier;
+        }
 
         const list = document.createElement('div');
         list.className = 'tier-compare-items';
@@ -755,7 +778,9 @@
         } else {
             mergedItems.forEach((item) => {
                 const key = getTierDeckKey(item);
-                const deck = document.createElement('div');
+                const deck = document.createElement('button');
+                deck.type = 'button';
+                deck.dataset.compareKey = key;
                 deck.className = 'tier-compare-deck';
                 deck.classList.toggle('is-highlighted', !!highlightKey && key === highlightKey);
                 deck.setAttribute('aria-label', key);
@@ -808,23 +833,18 @@
         state.comparisonReturnFocus = null;
     }
 
-    function setTierComparisonSide(overlay, side, shouldScroll = true) {
-        const activeSide = side === 'current' ? 'current' : 'previous';
+    function setTierComparisonSide(overlay, side) {
+        const activeSide = ['changes', 'compare', 'previous', 'current'].includes(side) ? side : 'changes';
         overlay.dataset.activeSide = activeSide;
         overlay.querySelectorAll('[data-tier-compare-side]').forEach((button) => {
             const isActive = button.dataset.tierCompareSide === activeSide;
             button.classList.toggle('is-active', isActive);
             button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            button.tabIndex = isActive ? 0 : -1;
         });
 
-        if (!shouldScroll || !window.matchMedia('(max-width: 768px)').matches) return;
         const columns = overlay.querySelector('.tier-compare-columns');
-        const target = overlay.querySelector(`.tier-compare-column.is-${activeSide}`);
-        if (!columns || !target) return;
-        columns.scrollTo({
-            left: Math.max(0, target.offsetLeft - columns.offsetLeft),
-            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
-        });
+        if (columns) columns.scrollTop = 0;
     }
 
     async function openTierComparisonDialog(highlightKey = '', trigger = null) {
@@ -878,54 +898,78 @@
         closeButton.type = 'button';
         closeButton.className = 'tier-compare-close';
         closeButton.setAttribute('aria-label', 'Tier表比較を閉じる');
-        closeButton.textContent = '×';
-        header.append(heading);
+        const closeIcon = document.createElement('span');
+        closeIcon.className = 'tier-compare-close-icon';
+        closeIcon.textContent = '×';
+        closeIcon.setAttribute('aria-hidden', 'true');
+        const closeLabel = document.createElement('span');
+        closeLabel.className = 'tier-compare-close-label';
+        closeLabel.textContent = '閉じる';
+        closeButton.append(closeIcon, closeLabel);
+        header.append(heading, closeButton);
 
-        if (highlightKey) {
+        const updateSummary = (key) => {
+            header.querySelector('.tier-compare-focus-summary')?.remove();
             const summary = document.createElement('div');
             summary.className = 'tier-compare-focus-summary';
+            summary.setAttribute('aria-live', 'polite');
             const deckName = document.createElement('strong');
             deckName.className = 'tier-compare-focus-name';
-            deckName.textContent = highlightKey;
+            deckName.textContent = key;
             const change = document.createElement('div');
-            renderTierRankChange(
-                change,
-                currentPositions.get(highlightKey),
-                previousPositions.get(highlightKey),
-                true
+            const previous = previousPositions.get(key);
+            const current = currentPositions.get(key);
+            const createPosition = (label, position, mode) => {
+                const positionElement = document.createElement('span');
+                positionElement.className = `tier-compare-focus-position is-${mode}`;
+                const labelElement = document.createElement('small');
+                labelElement.textContent = label;
+                const tierElement = document.createElement('strong');
+                tierElement.textContent = position ? position.tier : '—';
+                const rankElement = document.createElement('span');
+                rankElement.textContent = position ? `${position.rank}位` : '掲載なし';
+                positionElement.append(labelElement, tierElement, rankElement);
+                return positionElement;
+            };
+            const arrow = document.createElement('span');
+            arrow.className = 'tier-compare-focus-arrow';
+            arrow.textContent = '→';
+            arrow.setAttribute('aria-hidden', 'true');
+            change.append(
+                createPosition('前回', previous, 'previous'),
+                arrow,
+                createPosition('今回', current, 'current')
             );
             change.classList.add('tier-compare-focus-change');
             summary.append(deckName, change);
-            header.append(summary);
-        }
-        header.append(closeButton);
+            header.insertBefore(summary, closeButton);
+        };
+        if (highlightKey) updateSummary(highlightKey);
 
         const tabs = document.createElement('div');
         tabs.className = 'tier-compare-tabs';
         tabs.setAttribute('role', 'tablist');
         [
-            ['previous', getEnvironmentName(previousEnvironment, state.currentEnvironmentIndex + 1), '前回'],
-            ['current', getEnvironmentName(currentEnvironment, state.currentEnvironmentIndex), '今回']
-        ].forEach(([side, text, relation], index) => {
-            if (index === 1) {
-                const arrow = document.createElement('span');
-                arrow.className = 'tier-compare-tab-arrow';
-                arrow.textContent = '→';
-                arrow.setAttribute('aria-hidden', 'true');
-                tabs.append(arrow);
-            }
+            ['changes', '変動', '変動'],
+            ['compare', '前回・今回', '前回と今回を並べて比較'],
+            ['previous', '前回', '前回'],
+            ['current', '今回', '今回']
+        ].forEach(([side, text, relation]) => {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'tier-compare-tab';
             button.dataset.tierCompareSide = side;
             button.setAttribute('role', 'tab');
-            button.setAttribute('aria-label', `${relation}：${text}`);
+            button.id = `tierCompareTab-${side}`;
+            button.setAttribute('aria-controls', side === 'compare' ? 'tierComparePanels' : `tierComparePanel-${side}`);
+            button.setAttribute('aria-label', relation);
             button.textContent = text;
             tabs.append(button);
         });
 
         const columns = document.createElement('div');
         columns.className = 'tier-compare-columns';
+        columns.id = 'tierComparePanels';
         [
             ['previous', '前回', previousEnvironment, previousGroups, previousImageSources],
             ['current', '今回', currentEnvironment, currentGroups, currentImageSources]
@@ -939,6 +983,7 @@
             }
             const column = document.createElement('section');
             column.className = `tier-compare-column is-${side}`;
+            column.id = `tierComparePanel-${side}`;
             const columnHead = document.createElement('div');
             columnHead.className = `tier-compare-column-head is-${side}`;
             const label = document.createElement('span');
@@ -954,12 +999,58 @@
             columns.append(column);
         });
 
+        const changes = document.createElement('section');
+        changes.className = 'tier-compare-column is-changes';
+        changes.id = 'tierComparePanel-changes';
+        const legend = document.createElement('p');
+        legend.className = 'tier-compare-legend';
+        legend.textContent = '枠色と印：↑ 上昇　↓ 下降　NEW 新規';
+        orderedTiers.forEach((tier) => {
+            const items = currentGroups.get(tier) || [];
+            if (items.length) changes.append(createTierComparisonRow(tier, items, currentImageSources, highlightKey, 'changes'));
+        });
+        const removed = previousItems.filter((item) => !currentPositions.has(getTierDeckKey(item)));
+        if (removed.length) changes.append(createTierComparisonRow('今回圏外', removed, previousImageSources, highlightKey, 'changes'));
+        changes.append(legend);
+        changes.querySelectorAll('[data-compare-key]').forEach((deck) => {
+            const key = deck.dataset.compareKey;
+            const previous = previousPositions.get(key);
+            const current = currentPositions.get(key);
+            const movement = current && previous && current.tier !== previous.tier
+                ? orderedTiers.indexOf(current.tier) - orderedTiers.indexOf(previous.tier)
+                : current && previous ? current.rank - previous.rank : 0;
+            const kind = !current ? 'removed' : !previous ? 'new'
+                : movement < 0 ? 'up'
+                : movement > 0 ? 'down' : '';
+            if (!kind) return;
+            deck.classList.add(`has-change-${kind}`);
+            const badge = document.createElement('span');
+            badge.className = 'tier-compare-change-badge';
+            badge.textContent = kind === 'new' ? 'NEW' : kind === 'removed' ? '−'
+                : `${previous.tier !== current.tier ? previous.tier : ''}${kind === 'up' ? '↑' : '↓'}`;
+            badge.setAttribute('aria-hidden', 'true');
+            deck.append(badge);
+        });
+        columns.prepend(changes);
+        columns.addEventListener('click', (event) => {
+            const deck = event.target.closest('[data-compare-key]');
+            if (!deck) return;
+            const key = deck.dataset.compareKey;
+            updateSummary(key);
+            overlay.classList.add('has-highlight');
+            columns.querySelectorAll('[data-compare-key]').forEach((item) => {
+                const selected = item.dataset.compareKey === key;
+                item.classList.toggle('is-highlighted', selected);
+                item.setAttribute('aria-pressed', String(selected));
+            });
+        });
+
         dialog.append(header, tabs, columns);
         overlay.append(dialog);
         document.body.append(overlay);
         state.comparisonDialog = overlay;
         document.body.style.overflow = 'hidden';
-        setTierComparisonSide(overlay, 'previous', false);
+        setTierComparisonSide(overlay, window.matchMedia('(max-width: 768px)').matches ? 'changes' : 'compare');
 
         closeButton.addEventListener('click', closeTierComparisonDialog);
         overlay.addEventListener('click', (event) => {
@@ -969,15 +1060,17 @@
             const button = event.target.closest('[data-tier-compare-side]');
             if (button) setTierComparisonSide(overlay, button.dataset.tierCompareSide);
         });
-        let comparisonScrollFrame = 0;
-        columns.addEventListener('scroll', () => {
-            if (!window.matchMedia('(max-width: 768px)').matches || comparisonScrollFrame) return;
-            comparisonScrollFrame = window.requestAnimationFrame(() => {
-                comparisonScrollFrame = 0;
-                const side = columns.scrollLeft > (columns.scrollWidth - columns.clientWidth) / 2 ? 'current' : 'previous';
-                setTierComparisonSide(overlay, side, false);
-            });
-        }, { passive: true });
+        tabs.addEventListener('keydown', (event) => {
+            const buttons = Array.from(tabs.querySelectorAll('button'))
+                .filter((button) => button.getClientRects().length);
+            const index = buttons.indexOf(document.activeElement);
+            if (index < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+            event.preventDefault();
+            const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+                : (index + (event.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length;
+            setTierComparisonSide(overlay, buttons[next].dataset.tierCompareSide);
+            buttons[next].focus();
+        });
         overlay.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 event.preventDefault();
@@ -985,7 +1078,8 @@
                 return;
             }
             if (event.key !== 'Tab') return;
-            const focusable = Array.from(overlay.querySelectorAll('button:not(:disabled)'));
+            const focusable = Array.from(overlay.querySelectorAll('button:not(:disabled)'))
+                .filter((button) => button.tabIndex >= 0 && button.getClientRects().length);
             if (!focusable.length) return;
             const first = focusable[0];
             const last = focusable[focusable.length - 1];

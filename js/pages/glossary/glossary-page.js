@@ -4,6 +4,7 @@
 
     const GLOSSARY_DATA_URL = './public/glossary.json';
     const SEARCH_SUGGESTION_LIMIT = 12;
+    const NEW_ENTRY_DAYS = 7;
     const searchInput = document.querySelector('[data-glossary-search]');
     const searchClear = document.querySelector('[data-glossary-search-clear]');
     const searchSuggestions = document.querySelector('[data-glossary-search-suggestions]');
@@ -25,18 +26,31 @@
     const allTermsCloseButtons = Array.from(document.querySelectorAll('[data-glossary-all-terms-close]'));
     const allTermsTotal = document.querySelector('[data-glossary-all-terms-total]');
     const categoryList = document.querySelector('[data-glossary-category-list]');
+    const filterModal = document.querySelector('[data-glossary-filter-modal]');
+    const filterOpen = document.querySelector('[data-glossary-filter-open]');
+    const filterCloseButtons = Array.from(document.querySelectorAll('[data-glossary-filter-close]'));
+    const filterNew = document.querySelector('[data-glossary-filter-new]');
+    const filterTags = document.querySelector('[data-glossary-filter-tags]');
+    const filterReset = document.querySelector('[data-glossary-filter-reset]');
+    const filterApply = document.querySelector('[data-glossary-filter-apply]');
+    const filterCount = document.querySelector('[data-glossary-filter-count]');
+    const activeFilters = document.querySelector('[data-glossary-active-filters]');
 
     if (!searchInput || !searchClear || !searchSuggestions || !glossaryPage || !tabs.length || !list ||
         !termTotal || !guideTotal || !empty || !emptyMessage || !status ||
         !statusTitle || !statusMessage || !retryButton || !sidebar || !sectionNav ||
         !allTermsModal || !allTermsOpen || !allTermsCloseButtons.length || !allTermsTotal ||
-        !categoryList) return;
+        !categoryList || !filterModal || !filterOpen || !filterCloseButtons.length ||
+        !filterNew || !filterTags || !filterReset || !filterApply ||
+        !filterCount || !activeFilters) return;
 
     let selectedType = 'terms';
     let sections = [];
     let tags = [];
     let terms = [];
     let guides = [];
+    let newOnly = false;
+    let selectedTagIds = new Set();
 
     function normalize(value) {
         return String(value || '').normalize('NFKC').toLocaleLowerCase('ja').replace(/\s+/g, ' ');
@@ -47,6 +61,23 @@
         if (className) element.className = className;
         if (text !== undefined) element.textContent = text;
         return element;
+    }
+
+    function isRecentEntry(updatedAt) {
+        const match = String(updatedAt || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return false;
+        const updatedDate = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const elapsedDays = Math.floor((today.getTime() - updatedDate.getTime()) / 86400000);
+        return elapsedDays >= 0 && elapsedDays < NEW_ENTRY_DAYS;
+    }
+
+    function buildNewBadge(updatedAt) {
+        if (!isRecentEntry(updatedAt)) return null;
+        const badge = createElement('span', 'glossary-card__new-badge', 'NEW');
+        badge.title = '直近7日間に追加・更新';
+        return badge;
     }
 
     function appendParagraphs(root, text, className) {
@@ -127,7 +158,11 @@
         card.id = `glossary-term-${term.id}`;
         const heading = createElement('div', 'glossary-card__heading');
         const titleBlock = createElement('div', 'glossary-card__title-block');
-        titleBlock.append(createElement('h3', 'glossary-card__title', term.term));
+        const titleRow = createElement('span', 'glossary-card__title-row');
+        titleRow.append(createElement('h3', 'glossary-card__title', term.term));
+        const newBadge = buildNewBadge(term.updatedAt);
+        if (newBadge) titleRow.append(newBadge);
+        titleBlock.append(titleRow);
         titleBlock.append(createElement('span', 'glossary-term-card__reading', term.reading));
         heading.append(titleBlock, buildBadges(term.tagIds, tagMap), buildShareActions(term, 'terms'));
         card.append(heading);
@@ -189,7 +224,11 @@
         summary.className = 'glossary-guide-card__summary';
         const summaryBody = createElement('span', 'glossary-guide-card__summary-body');
         summaryBody.append(buildBadges(guide.tagIds, tagMap));
-        summaryBody.append(createElement('span', 'glossary-guide-card__title', guide.title));
+        const titleRow = createElement('span', 'glossary-card__title-row');
+        titleRow.append(createElement('span', 'glossary-guide-card__title', guide.title));
+        const newBadge = buildNewBadge(guide.updatedAt);
+        if (newBadge) titleRow.append(newBadge);
+        summaryBody.append(titleRow);
         summaryBody.append(createElement('span', 'glossary-guide-card__description', guide.summary));
         const action = createElement('span', 'glossary-guide-card__action');
         action.setAttribute('aria-hidden', 'true');
@@ -231,11 +270,17 @@
         return !query || getSearchText(item, type).includes(query);
     }
 
+    function matchesActiveFilters(item) {
+        if (newOnly && !isRecentEntry(item.updatedAt)) return false;
+        const itemTagIds = Array.isArray(item.tagIds) ? item.tagIds : [];
+        return Array.from(selectedTagIds).every((tagId) => itemTagIds.includes(tagId));
+    }
+
     function getSearchCandidates(query) {
         const candidates = [
             ...terms.map((item) => ({ item, type: 'terms', title: item.term })),
             ...guides.map((item) => ({ item, type: 'guides', title: item.title })),
-        ].filter(({ item, type }) => matches(item, type, query));
+        ].filter(({ item, type }) => matches(item, type, query) && matchesActiveFilters(item));
         return candidates.sort((a, b) => {
             const aTitle = normalize(a.title);
             const bTitle = normalize(b.title);
@@ -359,14 +404,19 @@
         const fragment = document.createDocumentFragment();
         const tagMap = getMap(tags);
         const termMap = getMap(terms);
+        const filteredTerms = terms.filter(matchesActiveFilters);
+        const filteredGuides = guides.filter(matchesActiveFilters);
         const visibleSections = [];
         let visibleCount = 0;
 
+        termTotal.textContent = String(filteredTerms.length);
+        guideTotal.textContent = String(filteredGuides.length);
+
         sections.forEach((section) => {
             const visibleTerms = selectedType === 'terms'
-                ? terms.filter((term) => term.sectionId === section.id) : [];
+                ? filteredTerms.filter((term) => term.sectionId === section.id) : [];
             const visibleGuides = selectedType === 'guides'
-                ? guides.filter((guide) => guide.sectionId === section.id) : [];
+                ? filteredGuides.filter((guide) => guide.sectionId === section.id) : [];
             if (!visibleTerms.length && !visibleGuides.length) return;
             const itemCount = visibleTerms.length + visibleGuides.length;
             visibleCount += itemCount;
@@ -376,8 +426,11 @@
 
         list.replaceChildren(fragment);
         buildSectionNav(visibleSections);
+        updateActiveFilters();
         searchClear.hidden = !searchInput.value;
-        emptyMessage.textContent = '表示できる内容がありません。';
+        emptyMessage.textContent = getFilterCount()
+            ? '絞り込み条件に一致する内容がありません。'
+            : '表示できる内容がありません。';
         empty.hidden = visibleCount !== 0 || (!terms.length && !guides.length);
         list.hidden = visibleCount === 0;
     }
@@ -418,6 +471,109 @@
         });
     }
 
+    function getFilterCount() {
+        return Number(newOnly) + selectedTagIds.size;
+    }
+
+    function getTagLabel(tagId) {
+        return tags.find((tag) => tag.id === tagId)?.label || tagId;
+    }
+
+    function updateActiveFilters() {
+        const count = getFilterCount();
+        filterCount.textContent = String(count);
+        filterCount.hidden = count === 0;
+        filterOpen.classList.toggle('is-active', count > 0);
+        if (!count) {
+            activeFilters.replaceChildren();
+            activeFilters.hidden = true;
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        fragment.append(createElement('span', 'glossary-active-filters__label', '適用中'));
+        const appendChip = (kind, label) => {
+            const button = createElement('button', 'glossary-active-filters__chip', label);
+            button.type = 'button';
+            button.dataset.glossaryFilterRemove = kind;
+            button.setAttribute('aria-label', `${label}の絞り込みを解除`);
+            button.append(createElement('span', '', '×'));
+            fragment.append(button);
+        };
+        if (newOnly) appendChip('new', '新着のみ');
+        selectedTagIds.forEach((tagId) => appendChip(`tag:${tagId}`, getTagLabel(tagId)));
+        activeFilters.replaceChildren(fragment);
+        activeFilters.hidden = false;
+    }
+
+    function createFilterOption(name, value, label, type) {
+        const option = createElement('label', 'glossary-filter-option');
+        const input = document.createElement('input');
+        input.type = type;
+        input.name = name;
+        input.value = value;
+        option.append(input, createElement('span', '', label));
+        return option;
+    }
+
+    function buildFilterOptions() {
+        const tagFragment = document.createDocumentFragment();
+        tags.forEach((tag) => {
+            tagFragment.append(createFilterOption('glossary-filter-tag', tag.id, tag.label, 'checkbox'));
+        });
+        filterTags.replaceChildren(tagFragment);
+        syncFilterForm();
+    }
+
+    function syncFilterForm() {
+        filterNew.checked = newOnly;
+        filterTags.querySelectorAll('input').forEach((input) => {
+            input.checked = selectedTagIds.has(input.value);
+        });
+    }
+
+    function updateModalOpenState() {
+        document.body.classList.toggle(
+            'glossary-index-modal-open',
+            !allTermsModal.hidden || !filterModal.hidden,
+        );
+    }
+
+    function clearFilters(shouldRender = true) {
+        newOnly = false;
+        selectedTagIds = new Set();
+        syncFilterForm();
+        if (shouldRender) {
+            render();
+            if (searchInput.value.trim()) updateSearchSuggestions();
+        }
+    }
+
+    function openFilterModal() {
+        syncFilterForm();
+        filterModal.hidden = false;
+        filterOpen.setAttribute('aria-expanded', 'true');
+        updateModalOpenState();
+        filterNew.focus();
+    }
+
+    function closeFilterModal(restoreFocus = true) {
+        if (filterModal.hidden) return;
+        filterModal.hidden = true;
+        filterOpen.setAttribute('aria-expanded', 'false');
+        updateModalOpenState();
+        if (restoreFocus) filterOpen.focus();
+    }
+
+    function applyFilters() {
+        newOnly = filterNew.checked;
+        selectedTagIds = new Set(Array.from(filterTags.querySelectorAll('input:checked'), (input) => input.value));
+        closeFilterModal(false);
+        render();
+        if (searchInput.value.trim()) updateSearchSuggestions();
+        scrollToGlossaryTop();
+    }
+
     function openEntryFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const termId = params.get('term');
@@ -427,6 +583,7 @@
         const id = type === 'guides' ? guideId : termId;
         if (!type || !id) return;
         setSelectedType(type);
+        clearFilters(false);
         resetSearch();
         scrollToEntry(type, id, 'auto');
     }
@@ -451,8 +608,7 @@
             tags = data.tags.slice().sort((a, b) => a.sortOrder - b.sortOrder);
             terms = data.terms.slice().sort((a, b) => a.sortOrder - b.sortOrder || a.reading.localeCompare(b.reading, 'ja'));
             guides = data.guides.slice().sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title, 'ja'));
-            termTotal.textContent = String(terms.length);
-            guideTotal.textContent = String(guides.length);
+            buildFilterOptions();
             buildCategoryIndex();
             resetSearch();
             setStatus('ready', '', '');
@@ -527,6 +683,7 @@
         if (!button) return;
         if (button.dataset.indexTermId) setSelectedType('terms');
         if (button.dataset.indexGuideId) setSelectedType('guides');
+        clearFilters(false);
         resetSearch();
         if (button.dataset.indexTermId || button.dataset.indexGuideId) {
             scrollToEntry(selectedType, button.dataset.indexTermId || button.dataset.indexGuideId);
@@ -543,7 +700,7 @@
     function openAllTermsIndex() {
         allTermsModal.hidden = false;
         allTermsOpen.setAttribute('aria-expanded', 'true');
-        document.body.classList.add('glossary-index-modal-open');
+        updateModalOpenState();
         allTermsCloseButtons.find((button) => button.classList.contains('glossary-index-modal__close'))?.focus();
     }
 
@@ -551,7 +708,7 @@
         if (allTermsModal.hidden) return;
         allTermsModal.hidden = true;
         allTermsOpen.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('glossary-index-modal-open');
+        updateModalOpenState();
         if (restoreFocus) allTermsOpen.focus();
     }
 
@@ -563,13 +720,32 @@
         if (!button) return;
         closeAllTermsIndex(false);
         setSelectedType('terms');
+        clearFilters(false);
         resetSearch();
         scrollToEntry('terms', button.dataset.allTermId);
     };
     categoryList.addEventListener('click', openSelectedTerm);
+    filterOpen.addEventListener('click', openFilterModal);
+    filterCloseButtons.forEach((button) => button.addEventListener('click', () => closeFilterModal()));
+    filterApply.addEventListener('click', applyFilters);
+    filterReset.addEventListener('click', () => clearFilters());
+    activeFilters.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-glossary-filter-remove]');
+        if (!button) return;
+        const kind = button.dataset.glossaryFilterRemove;
+        if (kind === 'new') newOnly = false;
+        if (kind?.startsWith('tag:')) selectedTagIds.delete(kind.slice(4));
+        syncFilterForm();
+        render();
+        if (searchInput.value.trim()) updateSearchSuggestions();
+    });
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
-        if (!allTermsModal.hidden) closeAllTermsIndex();
+        if (!filterModal.hidden) {
+            closeFilterModal();
+        } else if (!allTermsModal.hidden) {
+            closeAllTermsIndex();
+        }
     });
 
     list.addEventListener('click', (event) => {
@@ -624,6 +800,7 @@
         const term = terms.find((item) => item.term === button.dataset.relatedTerm);
         if (!term) return;
         setSelectedType('terms');
+        clearFilters(false);
         resetSearch();
         scrollToEntry('terms', term.id);
     });
