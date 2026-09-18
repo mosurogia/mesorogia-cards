@@ -14557,7 +14557,7 @@
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"UP",
+    "power_effect":"DOWN",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
