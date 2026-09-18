@@ -18,7 +18,7 @@
   'use strict';
 
   const BASE = 'js/pages/cards/';
-  const ASSET_VERSION = '2026-06-15-001';
+  const ASSET_VERSION = '2026-09-19-001';
 
   const BASE_FILES = [
     'cards-list.js',

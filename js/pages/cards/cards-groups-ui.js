@@ -107,9 +107,9 @@ function buildAccountSettingsButtonHtml_(loggedIn) {
 }
 
 // =====================================================
-// 画像生成の上限（カード合計枚数）
+// 画像生成の上限（重複を除いたカード種類数）
 // =====================================================
-const MAX_EXPORT_CARDS = 30;
+const MAX_EXPORT_CARDS = 70;
 
 // g.cards の合計枚数（{cd:count} / {cd:true} 両対応）
 function sumGroupCards_(cardsObj) {
@@ -120,6 +120,13 @@ function sumGroupCards_(cardsObj) {
     else if (v) total += 1; // boolean等は1枚扱い
   }
   return total;
+}
+
+function countGroupCardKinds_(cardsObj) {
+    return Object.values(cardsObj || {}).reduce((total, value) => {
+        const count = (typeof value === 'number') ? (value | 0) : (value ? 1 : 0);
+        return total + (count > 0 ? 1 : 0);
+    }, 0);
 }
 
 function isDefaultGroup_(id) {
@@ -203,7 +210,7 @@ function renderSidebar_() {
                 >${st.editingId ? '選択完了' : '✏️'}</button>
 
                 <button type="button" class="cg-icon-btn" id="cg-op-del" title="グループ削除">🗑</button>
-                <button type="button" class="cg-icon-btn" id="cg-op-export" title="グループ画像生成（30枚以下のみ）">📷</button>
+                <button type="button" class="cg-icon-btn" id="cg-op-export" title="グループ画像生成（70種類以下のみ）">📷</button>
             </div>
 
             ${st.editingId ? '' : `
@@ -334,10 +341,10 @@ function renderSidebar_() {
 
     const cardsObj = g.cards || {};
 
-    // ✅ 画像生成は30枚以下のみ
-    const total = sumGroupCards_(cardsObj);
-    if (total > MAX_EXPORT_CARDS) {
-    confirm(`画像生成は${MAX_EXPORT_CARDS}枚以下のみ対応です。\n（現在：${total}枚）\n\n30枚以下に調整してから再度お試しください。`);
+    // 画像に表示する重複を除いたカード種類数で判定する
+    const kinds = countGroupCardKinds_(cardsObj);
+    if (kinds > MAX_EXPORT_CARDS) {
+    confirm(`画像生成は${MAX_EXPORT_CARDS}種類以下のみ対応です。\n（現在：${kinds}種類）\n\n${MAX_EXPORT_CARDS}種類以下に調整してから再度お試しください。`);
     return;
     }
 

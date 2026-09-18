@@ -352,6 +352,10 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         const previewItems = normalizeDeckImagePreviewItems_(canvasOrItems, fileName);
         if (!previewItems.length) return;
 
+        const isDesktop = window.matchMedia('(min-width: 769px)').matches;
+        const previewWidth = isDesktop ? 'min(92vw, 1500px)' : 'min(80vw, 500px)';
+        const previewMaxHeight = isDesktop ? 'calc(100vh - 180px)' : '';
+
         closeDeckImagePreviewModal();
 
         const modal = document.createElement('div');
@@ -366,7 +370,7 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
             alignItems: 'center',
             justifyContent: 'flex-start',
             overflowY: 'auto',
-            padding: '40px 0',
+            padding: isDesktop ? '16px 0' : '40px 0',
             color: '#fff',
             fontFamily: 'system-ui, sans-serif',
         });
@@ -412,7 +416,7 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
             const button = document.createElement('a');
             button.textContent = label;
             Object.assign(button.style, {
-                flex: '1 1 0',
+                flex: isDesktop ? '0 1 360px' : '1 1 0',
                 display: 'inline-block',
                 textAlign: 'center',
                 textDecoration: 'none',
@@ -439,8 +443,8 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
                 const label = document.createElement('div');
                 label.textContent = item.label || `${index + 1}枚目`;
                 Object.assign(label.style, {
-                    width: 'min(80vw, 500px)',
-                    maxWidth: 'min(80vw, 500px)',
+                    width: previewWidth,
+                    maxWidth: previewWidth,
                     margin: index === 0 ? '4px auto 0' : '20px auto 0',
                     fontSize: '14px',
                     fontWeight: '800',
@@ -451,9 +455,10 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
 
             const buttonBar = document.createElement('div');
             Object.assign(buttonBar.style, {
-                width: 'min(80vw, 500px)',
-                maxWidth: 'min(80vw, 500px)',
+                width: previewWidth,
+                maxWidth: previewWidth,
                 display: 'flex',
+                justifyContent: isDesktop ? 'center' : '',
                 gap: '8px',
                 margin: '8px auto 12px',
             });
@@ -484,7 +489,8 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
             image.src = item.dataUrl;
             image.alt = item.fileName || '画像プレビュー';
             Object.assign(image.style, {
-                maxWidth: 'min(80vw, 500px)',
+                maxWidth: previewWidth,
+                maxHeight: previewMaxHeight,
                 height: 'auto',
                 borderRadius: '12px',
                 boxShadow: '0 0 24px rgba(0,0,0,0.6)',
@@ -496,8 +502,8 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         const note = document.createElement('div');
         note.textContent = 'ここで生成した画像はXやDiscordなどにそのまま共有できます。';
         Object.assign(note.style, {
-            width: 'min(80vw, 500px)',
-            maxWidth: 'min(80vw, 500px)',
+            width: previewWidth,
+            maxWidth: previewWidth,
             fontSize: 'clamp(12px, 1.8vw, 14px)',
             color: 'rgba(255,255,255,0.8)',
             textAlign: 'center',

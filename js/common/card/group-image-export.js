@@ -40,7 +40,7 @@
       let canvas;
       try {
         canvas = await html2canvas(node, {
-          scale: getExportScale(),
+          scale: getExportScale(unique.length),
           useCORS: true,
           backgroundColor: '#fff',
           scrollX: 0,
@@ -76,10 +76,11 @@
   // DOM
   // --------------------
   function getGroupCanvasSpec(kinds){
-    const WIDTH = 1350;
-    const PADDING = 24;
-    const COLS = 6;         // グループは6列くらいが見やすい
-    const GAP = 10;
+    const isWideLayout = kinds > 30;
+    const WIDTH = isWideLayout ? 1920 : 1350;
+    const PADDING = isWideLayout ? 32 : 24;
+    const COLS = isWideLayout ? getWideLayoutColumns(kinds) : 6;
+    const GAP = isWideLayout ? 12 : 10;
     const CARD_AR = 532/424;
 
     const usableW = WIDTH - PADDING*2;
@@ -87,12 +88,16 @@
     const cardH = cardW * CARD_AR;
 
     const rows = Math.max(1, Math.ceil((kinds||0)/COLS));
-    const HEADER_H = 140;
-    const FOOTER_H = 60;
+    const HEADER_H = isWideLayout ? 160 : 140;
+    const FOOTER_H = isWideLayout ? 64 : 60;
 
     const height = PADDING + HEADER_H + (rows*cardH + GAP*(rows-1)) + FOOTER_H + PADDING;
 
     return { width: WIDTH, height, padding: PADDING, cols: COLS, gap: GAP, cardW, cardH, headerH: HEADER_H, footerH: FOOTER_H };
+  }
+
+  function getWideLayoutColumns(kinds){
+    return kinds <= 50 ? 10 : 12;
   }
 
   async function buildGroupShareNode(data, spec){
@@ -233,9 +238,9 @@
 
   function nextFrame(){ return new Promise(r => requestAnimationFrame(() => r())); }
 
-  // 30枚以下前提なので「安全側に落とすscale調整」は不要。
-  // ただしDPRが高い端末で荒くならないように 2〜3 に軽くクランプ。
-  function getExportScale(){
+  // 横長レイアウトはキャンバスが大きいため、スマホでのメモリ不足を避ける。
+  function getExportScale(kinds){
+    if (kinds > 30) return 2;
     const dpr = window.devicePixelRatio || 1;
     if (dpr >= 3) return 3;
     if (dpr >= 2) return 2;
