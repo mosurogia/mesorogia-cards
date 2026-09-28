@@ -522,6 +522,54 @@
       "url": "",
       "image": "img/イベントカレンダー/白銀杯.png",
       "sortOrder": 9999
+    },
+    {
+      "date": "2026-10-04",
+      "title": "非公式リーグMULTsシーズン0予選第1回",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "・10/4(日)13時〜\n・トナメルで開催\n・参加費無料\n・スイスドロー形式",
+      "startAt": "2026-10-04T13:00",
+      "endAt": "2026-10-04T21:00",
+      "url": "https://tonamel.com/competition/L90oj",
+      "image": "",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-10-04",
+      "title": "第18回OWF",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "通常ルール、BO3シングルエリミネーション",
+      "startAt": "2026-10-04T21:00",
+      "endAt": "2026-10-05T00:00",
+      "url": "https://tonamel.com/competition/SAklv",
+      "image": "img/イベントカレンダー/第18回OWF.png",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-10-11",
+      "title": "非公式リーグMULTsシーズン0予選第2回",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "・10/11(日)13時〜\n・トナメルで開催\n・参加費無料\n・スイスドロー形式",
+      "startAt": "2026-10-11T13:00",
+      "endAt": "2026-10-11T21:00",
+      "url": "https://tonamel.com/competition/a1hOx",
+      "image": "",
+      "sortOrder": 9999
+    },
+    {
+      "date": "2026-10-18",
+      "title": "非公式リーグMULTsシーズン0予選第3回",
+      "type": "ユーザー大会",
+      "label": "ユーザー大会",
+      "description": "・10/18(日)13時〜\n・トナメルで開催\n・参加費無料\n・スイスドロー形式",
+      "startAt": "2026-10-18T13:00",
+      "endAt": "2026-10-18T21:00",
+      "url": "https://tonamel.com/competition/9eQal",
+      "image": "",
+      "sortOrder": 9999
     }
   ],
   "features": [
