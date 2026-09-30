@@ -42996,6 +42996,86 @@
     "has_pre_adjustment_image":false
   },
   {
+    "version":14,
+    "is_latest":true,
+    "updated_at":"2026-10-01",
+    "pack_name":"その他特殊カード",
+    "cd":50908,
+    "link":true,
+    "link_cd":50206,
+    "CV":"森浦 啓悟",
+    "cv_kana":"もりうら けいご",
+    "rarity":"ブロンズ",
+    "race":"シェイド",
+    "category":"炎閻魔（えんえんま）",
+    "type":"アタッカー",
+    "name":"炎閻魔-鎌鼬",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■特性■",
+    "effect_text1":"自分のライフが15以下であれば、このカードのコストを4減らす。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"お互いのライフを3減らす。",
+    "effect_text_all":"自分のライフが15以下であれば、このカードのコストを4減らす。 お互いのライフを3減らす。",
+    "field":false,
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"3",
+    "cost_effect":"OK",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8,
+          11
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/50908.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
     "version":1,
     "is_latest":true,
     "updated_at":"2025-05-30",
