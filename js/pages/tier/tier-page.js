@@ -1828,7 +1828,7 @@
         const hasMissingCard = context.missingCardIds.size > 0;
         let statusMode = 'none';
         if (context.historyUnavailable) {
-            statusMode = 'unavailable';
+            statusMode = 'none';
         } else if (hasAdjustedCard && hasMissingCard) {
             statusMode = 'partial';
         } else if (hasAdjustedCard) {
