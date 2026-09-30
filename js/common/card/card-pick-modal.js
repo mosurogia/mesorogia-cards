@@ -415,7 +415,6 @@
       const cd5 = normCd5_(row.cd5 || row.cd);
       const card = (window.cardMap || window.allCardsMap || {})[cd5] || {};
       const name = String(row.name || card.name || '').trim();
-
       return `
         <button type="button" class="card-pick-item" data-cd="${escHtml_(cd5)}" data-name="${escHtml_(name)}" title="${escHtml_(name)}">
           <img

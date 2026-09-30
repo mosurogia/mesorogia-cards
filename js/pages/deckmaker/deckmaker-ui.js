@@ -140,6 +140,7 @@
 
     const deck = getDeck_();
     const cardMap = getCardMap_();
+    const representativeCd = window.representativeCd ? normCd5(window.representativeCd) : '';
 
     const entries = Object.entries(deck || {}).sort((a, b) => {
       const [cdA] = a, [cdB] = b;
@@ -168,6 +169,7 @@
       wrap.className = 'item';
       wrap.style.cursor = 'pointer';
       wrap.dataset.cd = cd;
+      if (cd === representativeCd) wrap.classList.add('is-representative');
 
       const img = document.createElement('img');
       img.alt = info.name || '';

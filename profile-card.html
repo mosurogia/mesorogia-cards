@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- ===== 基本設定 ===== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/mosurogia_favicon.ico">
+    <link rel="apple-touch-icon" href="img/appicon_1024.webp">
+    <link rel="manifest" href="manifest.webmanifest?v=2026-05-05-006">
+    <meta name="theme-color" content="#111827">
+    <title>メソロギア自己紹介カード作成｜モスロギア</title>
+    <meta name="description" content="メソロギアのプレイヤー名、推しカード、プレイスタイルをまとめた自己紹介カードを作成できます。">
+
+    <!-- ===== スタイル ===== -->
+    <link rel="stylesheet" href="css/common.css?v=2026-09-07-005">
+    <link rel="stylesheet" href="css/common-page124.css?v=2026-09-07-002">
+    <link rel="stylesheet" href="css/page9.css?v=2026-09-24-001">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="header-logo">
+            <a href="index.html" aria-label="ホームへ移動">
+                <img src="img/appicon_1024.webp" alt="神託のメソロギア ロゴ">
+                <span class="header-logo-title">モスロギア</span>
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="cards.html"><img src="img/header_icon_1.webp" alt=""><span>図鑑</span></a>
+            <a href="deckmaker.html"><img src="img/header_icon_2.webp" alt=""><span>デッキメーカー</span></a>
+            <a href="deck-post.html"><img src="img/header_icon_3.webp" alt=""><span>デッキ投稿</span></a>
+            <a class="header-nav-tier" href="tier.html"><img src="img/header_icon_5.webp" alt=""><span>Tier表</span></a>
+        </nav>
+        <div class="header-actions">
+            <div class="header-dropdown header-explore-menu" data-header-dropdown>
+                <button type="button" class="header-menu-button" aria-haspopup="true" aria-expanded="false" aria-controls="header-explore-menu">
+                    <span aria-hidden="true">≡</span><span class="sr-only">探索・情報メニュー</span>
+                </button>
+                <div class="header-menu-panel" id="header-explore-menu" role="menu" hidden>
+                    <a role="menuitem" href="index.html"><span>ホーム</span></a>
+                    <a role="menuitem" href="tier.html"><span>Tier表</span></a>
+                    <a role="menuitem" href="glossary.html"><span>用語集</span></a>
+                    <a role="menuitem" href="profile-card.html"><span>自己紹介カード</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="header-account" data-header-auth></div>
+    </header>
+
+    <main class="profile-card-page">
+        <div class="profile-card-builder">
+            <form class="profile-card-editor" id="profile-card-form">
+                <div class="profile-card-page__heading">
+                    <h1>自己紹介カードを作る</h1>
+                    <p>推しカードとプレイスタイルをまとめて、プレイヤー同士の交流に使えるカードを作成します。</p>
+                </div>
+
+                <section class="profile-card-editor__section" aria-labelledby="profile-card-basic-title">
+                    <h2 id="profile-card-basic-title">基本情報</h2>
+                    <label class="profile-card-field">
+                        <span>プレイヤー名</span>
+                        <input id="profile-player-name" type="text" maxlength="24" placeholder="プレイヤー名を入力" autocomplete="nickname">
+                    </label>
+                    <fieldset class="profile-card-period-picker">
+                        <legend>始めた時期</legend>
+                        <div class="profile-card-period-grid" id="profile-started-at-options"></div>
+                    </fieldset>
+                    <fieldset class="profile-card-race-picker">
+                        <legend>好きな種族</legend>
+                        <div class="profile-card-race-grid" id="profile-favorite-race-options">
+                            <label class="profile-card-race-option" data-race="ドラゴン">
+                                <input type="radio" name="profileFavoriteRace" value="ドラゴン" checked>
+                                <span>ドラゴン</span>
+                            </label>
+                            <label class="profile-card-race-option" data-race="アンドロイド">
+                                <input type="radio" name="profileFavoriteRace" value="アンドロイド">
+                                <span>アンドロイド</span>
+                            </label>
+                            <label class="profile-card-race-option" data-race="エレメンタル">
+                                <input type="radio" name="profileFavoriteRace" value="エレメンタル">
+                                <span>エレメンタル</span>
+                            </label>
+                            <label class="profile-card-race-option" data-race="ルミナス">
+                                <input type="radio" name="profileFavoriteRace" value="ルミナス">
+                                <span>ルミナス</span>
+                            </label>
+                            <label class="profile-card-race-option" data-race="シェイド">
+                                <input type="radio" name="profileFavoriteRace" value="シェイド">
+                                <span>シェイド</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                    <div class="profile-card-inline-fields">
+                        <label class="profile-card-field">
+                            <span>好きなカテゴリ</span>
+                            <button type="button" class="profile-card-category-button" id="profile-category-open" aria-haspopup="dialog" aria-controls="profile-category-modal">
+                                <span id="profile-favorite-category-label">聖焔龍（フォルティア）</span>
+                                <span aria-hidden="true">選択</span>
+                            </button>
+                            <input id="profile-favorite-category" type="hidden" value="聖焔龍（フォルティア）">
+                        </label>
+                        <label class="profile-card-field">
+                            <span>メインデッキ</span>
+                            <input id="profile-main-deck" type="text" maxlength="30" value="ドラゴン速攻" placeholder="例：ドラゴン速攻">
+                        </label>
+                    </div>
+                </section>
+
+                <section class="profile-card-editor__section" aria-label="アイコン画像と推しカード">
+                    <div class="profile-card-media-row">
+                        <div class="profile-card-media-panel">
+                            <h2>アイコン画像</h2>
+                            <div class="profile-card-field">
+                                <div class="profile-avatar-editor">
+                                    <div class="profile-avatar-controls">
+                                        <button class="profile-avatar-preset" id="profile-avatar-preset" type="button">
+                                            <img src="img/appicon_1024.webp" alt="" aria-hidden="true">
+                                            <span>基本アイコンを使う</span>
+                                        </button>
+                                        <label class="profile-avatar-file-button">
+                                            <img class="profile-avatar-file-icon" src="img/profile-card-image-upload.png" alt="" aria-hidden="true">
+                                            <span>自分の画像を選ぶ</span>
+                                            <input id="profile-avatar-file" class="profile-avatar-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+                                        </label>
+                                        <label class="profile-avatar-zoom">
+                                            <span>拡大・縮小</span>
+                                            <input id="profile-avatar-zoom" type="range" min="0.5" max="2" step="0.01" value="1" aria-label="アイコン画像の拡大・縮小率">
+                                        </label>
+                                        <button class="profile-avatar-reset" id="profile-avatar-reset" type="button">位置をリセット</button>
+                                        <p class="profile-card-help profile-avatar-help">正方形に切り抜いて、プレイヤー名の左へ表示します。</p>
+                                    </div>
+                                    <div class="profile-avatar-crop-column">
+                                        <div class="profile-avatar-crop" id="profile-avatar-crop" aria-label="アイコン画像の位置調整">
+                                            <img class="profile-avatar-crop-preview" id="profile-avatar-crop-preview" src="img/appicon_1024.webp" alt="アイコン画像の調整プレビュー">
+                                        </div>
+                                        <p class="profile-avatar-adjust-help">画像をドラッグして位置を調整できます。<br>2本指で拡大・縮小できます。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-card-media-panel">
+                            <h2 id="profile-card-favorite-card-title">推しカード</h2>
+                            <label class="profile-card-field">
+                                <span class="sr-only">推しカード</span>
+                                <button type="button" class="profile-card-card-button" id="profile-favorite-card-open" aria-haspopup="dialog">
+                                    <span id="profile-favorite-card-label">カードデータを読み込み中…</span>
+                                    <span aria-hidden="true">選択</span>
+                                </button>
+                                <input id="profile-favorite-card" type="hidden" value="00000">
+                            </label>
+                            <button type="button" class="profile-card-media-card-preview-button" id="profile-favorite-card-media-open" aria-haspopup="dialog" aria-label="推しカードを選択">
+                                <img class="profile-card-media-card-preview" id="profile-favorite-card-media-preview" src="img/00000.webp" alt="推しカードのプレビュー">
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="profile-card-editor__section" aria-labelledby="profile-card-tags-title">
+                    <h2 id="profile-card-tags-title">タグ（最大4個）</h2>
+                    <div class="profile-card-tag-grid" id="profile-card-tags">
+                        <label><input type="checkbox" value="ランクガチ勢"><span>ランクガチ勢</span></label>
+                        <label><input type="checkbox" value="カジュアル民"><span>カジュアル民</span></label>
+                        <label><input type="checkbox" value="大会好き"><span>大会好き</span></label>
+                        <label><input type="checkbox" value="復帰プレイヤー"><span>復帰プレイヤー</span></label>
+                        <label><input type="checkbox" value="初心者"><span>初心者</span></label>
+                        <label><input type="checkbox" value="デッキ相談歓迎"><span>デッキ相談歓迎</span></label>
+                        <label><input type="checkbox" value="交流歓迎"><span>交流歓迎</span></label>
+                    </div>
+                </section>
+
+                <section class="profile-card-editor__section" aria-labelledby="profile-card-comment-title">
+                    <h2 id="profile-card-comment-title">一言自己紹介</h2>
+                    <label class="profile-card-field">
+                        <span class="sr-only">一言自己紹介</span>
+                        <textarea id="profile-card-comment" maxlength="80" rows="4">色々なデッキを試しながら、ランクマッチを楽しんでいます！ 気軽に対戦や交流をお願いします。</textarea>
+                    </label>
+                    <p class="profile-card-character-count" id="profile-card-character-count" aria-live="polite">0 / 80文字</p>
+                </section>
+
+                <div class="profile-card-editor__actions">
+                    <button class="btn ghost" type="button" id="profile-card-reset">入力をリセット</button>
+                </div>
+            </form>
+
+            <section class="profile-card-preview-area" aria-labelledby="profile-card-preview-title">
+                <h2 id="profile-card-preview-title">プレビュー</h2>
+                <div class="profile-card-preview-wrap">
+                    <div class="profile-card-preview-stage" id="profile-card-preview-stage">
+                      <article class="profile-card-canvas" id="profile-card-canvas" data-race="ドラゴン">
+                        <div class="profile-card-canvas__brand">MESOROGIA PLAYER CARD</div>
+                        <div class="profile-card-canvas__identity">
+                            <div class="profile-card-canvas__avatar"><img id="profile-avatar-preview" src="img/appicon_1024.webp" alt="設定したアイコン画像"></div>
+                            <div>
+                                <h3 id="profile-player-name-preview">プレイヤー名</h3>
+                                <p id="profile-started-at-preview">2025年夏ごろ</p>
+                            </div>
+                        </div>
+                        <div class="profile-card-canvas__body">
+                            <div class="profile-card-canvas__favorite-card">
+                                <img id="profile-favorite-card-preview" src="img/00000.webp" alt="推しカード">
+                            </div>
+                            <div class="profile-card-canvas__facts">
+                                <p><span>好きな種族</span><strong id="profile-favorite-race-preview">ドラゴン</strong></p>
+                                <p><span>好きなカテゴリ</span><strong id="profile-favorite-category-preview">聖焔龍（フォルティア）</strong></p>
+                                <p><span>メインデッキ</span><strong id="profile-main-deck-preview">ドラゴン速攻</strong></p>
+                                <div class="profile-card-canvas__tags" id="profile-card-tags-preview"></div>
+                            </div>
+                        </div>
+                        <div class="profile-card-canvas__comment">
+                            <span>一言自己紹介</span>
+                            <p id="profile-card-comment-preview">色々なデッキを試しながら、ランクマッチを楽しんでいます！ 気軽に対戦や交流をお願いします。</p>
+                        </div>
+                      </article>
+                    </div>
+                </div>
+                <p class="profile-card-preview-note">アイコンとカード画像はプレビューに反映されます。完成画像はPNGで保存します。</p>
+                <div class="profile-card-preview-actions">
+                    <button class="btn primary" type="button" id="profile-card-export">画像を生成</button>
+                    <p id="profile-card-status" class="profile-card-status" aria-live="polite"></p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="profile-card-category-modal" id="profile-category-modal" hidden>
+        <div class="profile-card-category-modal__backdrop" data-category-modal-close></div>
+        <section class="profile-card-category-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="profile-category-modal-title">
+            <div class="profile-card-category-modal__header">
+                <h2 id="profile-category-modal-title"><span>好きなカテゴリ：</span><span id="profile-category-modal-current">聖焔龍（フォルティア）</span></h2>
+                <button type="button" class="profile-card-category-modal__close" data-category-modal-close aria-label="カテゴリ選択を閉じる">×</button>
+            </div>
+            <div class="profile-card-category-groups" id="profile-category-options"></div>
+            <div class="profile-card-category-modal__footer">
+                <button type="button" class="btn ghost" id="profile-category-clear">選択を解除</button>
+                <button type="button" class="btn primary" data-category-modal-close>閉じる</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="account-modal" id="authLoginModal" style="display:none;">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="authLoginModalTitle">
+            <div class="account-modal-head">
+                <h3 id="authLoginModalTitle">ログイン / 新規登録</h3>
+                <button type="button" class="account-close" data-close="authLoginModal" aria-label="閉じる">×</button>
+            </div>
+            <div class="account-modal-body">
+                <div class="auth-stack">
+                    <form id="auth-login-form" class="auth-login-form">
+                        <div class="poster-line" style="margin-top:6px;">
+                            <input id="auth-username" name="username" type="text" placeholder="ユーザー名" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+                        </div>
+                        <div class="poster-line">
+                            <input id="auth-password" name="current-password" type="password" placeholder="パスワード" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                            <button type="button" id="auth-pass-toggle" class="btn ghost">表示</button>
+                        </div>
+                        <div class="poster-line">
+                            <input id="auth-password-confirm" name="new-password-confirm" type="password" placeholder="パスワード（確認用・新規登録時のみ）" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        </div>
+                        <div class="auth-buttons">
+                            <button class="btn primary" type="button" id="auth-signup-btn">新規登録</button>
+                            <button class="btn primary" type="submit" id="auth-login-btn-submit">ログイン</button>
+                        </div>
+                        <button type="button" class="auth-forgot-link" id="auth-forgot-password">パスワードを忘れた場合</button>
+                        <p id="auth-inline-status" class="auth-inline-status" aria-live="polite" style="margin:0; font-size:.9rem;"></p>
+                    </form>
+                    <div id="auth-logged-in" class="auth-logged-in" style="display:none;">
+                        <p style="margin:0;">ログイン中です。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common/core/defs.js?v=2026-09-09-009"></script>
+    <script src="js/common/account/auth-core.js?v=2026-08-19-002"></script>
+    <script src="js/common/account/auth-ui.js?v=2026-05-05-006"></script>
+    <script src="js/common/account/account.js?v=2026-05-31-001"></script>
+    <script src="js/common/account/account-app-data-sync.js?v=2026-05-13-002"></script>
+    <script src="js/common/account/account-data-manager.js?v=2026-05-14-001"></script>
+    <script src="js/common/core/card-core.js?v=2026-05-05-006"></script>
+    <script src="js/common/core/card-sort.js?v=2026-09-22-001"></script>
+    <script src="js/common/card/card-pick-modal.js?v=2026-07-18-001"></script>
+    <script src="js/common/core/app-helpers.js?v=2026-09-24-001"></script>
+    <script src="js/common/ui/header-menu.js?v=2026-09-07-005"></script>
+    <script src="js/common/account/header-auth.js?v=2026-05-28-002"></script>
+    <script src="js/pages/profile-card/profile-card-page.js?v=2026-09-25-001"></script>
+</body>
+
+</html>

@@ -329,7 +329,7 @@ window.scrollToTop = window.scrollToTop || function scrollToTop() {
         const ua = String(navigator.userAgent || '').toLowerCase();
         if (/iphone|ipad|ipod/.test(ua)) return '長押しして「写真に保存」や「共有」から保存できます。';
         if (/android/.test(ua)) return '長押しして「画像をダウンロード」や「共有」から保存できます。';
-        return '画像を右クリックして保存できます。';
+        return '画像を右クリックして「画像をコピー」を選ぶと、noteなどにそのまま貼り付けられます。保存する場合は「名前を付けて画像を保存」を選んでください。';
     }
 
     function normalizeDeckImagePreviewItems_(canvasOrItems, fileName) {
