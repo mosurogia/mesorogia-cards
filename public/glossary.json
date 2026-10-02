@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-14-161840Z",
-  "generatedAt": "2026-09-14T16:18:40Z",
+  "version": "2026-10-02-145959Z",
+  "generatedAt": "2026-10-02T14:59:59Z",
   "sections": [
     {
       "id": "basic-rules",
@@ -333,18 +333,20 @@
       "id": "blocker",
       "term": "ブロッカー",
       "reading": "ぶろっかー",
-      "aliases": [],
+      "aliases": [
+        "盾"
+      ],
       "sectionId": "card",
       "tagIds": [
         "card-role"
       ],
       "description": "白色のカードで、相手のアタッカーからライフを守る役割を持つカードです",
-      "note": "・防御が成功すると■防御成功時■効果が発動します。\n・防御が失敗すると■防御失敗時■効果が発動します。",
+      "note": "盾と呼ばれることもあります。\n・防御が成功すると■防御成功時■効果が発動します。\n・防御が失敗すると■防御失敗時■効果が発動します。",
       "relatedIds": [],
       "pageType": "",
       "detailDescription": "",
       "sortOrder": 110,
-      "updatedAt": ""
+      "updatedAt": "2026-10-02"
     },
     {
       "id": "priority",
@@ -373,7 +375,7 @@
         "battle-rules"
       ],
       "description": "カードを召喚する際に、カードのコスト分だけ消費する資源です。",
-      "note": "・対戦開始時のマナは4で、最大99まで貯められます。\n・マナが半減する場合、半減後の値の小数点以下は切り捨てられます。",
+      "note": "・対戦開始時のマナは4で、最大99まで貯められます。試合画面ではアイコンの左側に表示されます。\n・マナが半減する場合、半減後の値の小数点以下は切り捨てられます。",
       "relatedIds": [
         "charger",
         "blessing-point"
@@ -381,7 +383,7 @@
       "pageType": "",
       "detailDescription": "",
       "sortOrder": 120,
-      "updatedAt": "2026-09-03"
+      "updatedAt": "2026-10-02"
     },
     {
       "id": "blessing-point",
@@ -393,12 +395,12 @@
         "battle-rules"
       ],
       "description": "マナとは別で一定数まで貯めたり消費することで強力な効果を発動できます。",
-      "note": "",
+      "note": "・最大値は99です。試合画面では画面右下に表示されます。\n・BPの溜まり具合によって、BP数値の炎の演出も大きくなります。",
       "relatedIds": [],
       "pageType": "",
       "detailDescription": "",
       "sortOrder": 130,
-      "updatedAt": ""
+      "updatedAt": "2026-10-02"
     },
     {
       "id": "field",
@@ -1307,6 +1309,599 @@
       "detailDescription": "",
       "sortOrder": 450,
       "updatedAt": "2026-09-15"
+    },
+    {
+      "id": "craft-dismantle",
+      "term": "生成分解",
+      "reading": "せいせいぶんかい",
+      "aliases": [
+        "分解生成",
+        "分解生成イベント"
+      ],
+      "sectionId": "event",
+      "tagIds": [
+        "event"
+      ],
+      "description": "カードを分解・生成すること、または分解生成イベント自体を指します。",
+      "note": "おおよそ毎月月末に、分解生成イベントとして行われることが多いです。",
+      "relatedIds": [
+        "dismantle",
+        "craft"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 460,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "dismantle",
+      "term": "分解",
+      "reading": "ぶんかい",
+      "aliases": [
+        "砂"
+      ],
+      "sectionId": "card",
+      "tagIds": [],
+      "description": "余分に余ったカードを分解して、砂に変換することです。",
+      "note": "4枚以上あるカードでないと分解できません。",
+      "relatedIds": [
+        "craft",
+        "craft-dismantle"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 470,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "craft",
+      "term": "生成",
+      "reading": "せいせい",
+      "aliases": [
+        "砂",
+        "カード生成"
+      ],
+      "sectionId": "card",
+      "tagIds": [],
+      "description": "砂を使って、新たにカードを生成することです。",
+      "note": "一定確率でエディションが上がることもあります。",
+      "relatedIds": [
+        "dismantle",
+        "craft-dismantle",
+        "edition"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 480,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "pack-point",
+      "term": "パックポイント",
+      "reading": "ぱっくぽいんと",
+      "aliases": [],
+      "sectionId": "card",
+      "tagIds": [
+        "pack"
+      ],
+      "description": "各パックごとに存在するポイントです。",
+      "note": "・メインパック・アディショナルパックにはありますが、期間限定パックにはないことが多いです。\n・パックを引くとおまけで付いてきます。貯めることで、そのパックのカードを生成できます。",
+      "relatedIds": [
+        "main-pack",
+        "additional-pack",
+        "craft"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 490,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "ham",
+      "term": "ハム",
+      "reading": "はむ",
+      "aliases": [
+        "秘饗"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「秘饗」の愛称（略称？）です。",
+      "note": "ハムスターのカードが多いことから、こう呼ばれています。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 500,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "katana",
+      "term": "刀",
+      "reading": "かたな",
+      "aliases": [
+        "蒼ノ刀"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「蒼ノ刀」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 510,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "oni",
+      "term": "鬼",
+      "reading": "おに",
+      "aliases": [
+        "鬼刹"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「鬼刹」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 520,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "yugami",
+      "term": "歪",
+      "reading": "ゆがみ",
+      "aliases": [
+        "歪祝"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「歪祝」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 530,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "mermaid",
+      "term": "人魚",
+      "reading": "にんぎょ",
+      "aliases": [
+        "メロウディア"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「メロウディア」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 540,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "wolf",
+      "term": "狼",
+      "reading": "おおかみ",
+      "aliases": [
+        "ヴォルグリム"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "カテゴリ「ヴォルグリム」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 550,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "kenkiwa",
+      "term": "剣極",
+      "reading": "けんきわ",
+      "aliases": [
+        "剣を極めし覇者"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「剣を極めし覇者」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 560,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "oden",
+      "term": "おでん",
+      "reading": "おでん",
+      "aliases": [
+        "オーディン"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「オーディン」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 570,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "astro",
+      "term": "アストロ",
+      "reading": "あすとろ",
+      "aliases": [
+        "星の巨兵-アストロジャイアント-"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「星の巨兵-アストロジャイアント-」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 580,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "tiger",
+      "term": "虎",
+      "reading": "とら",
+      "aliases": [
+        "風花森の獸戦士"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「風花森の獸戦士」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 590,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "rafa",
+      "term": "ラファ",
+      "reading": "らふぁ",
+      "aliases": [
+        "大天使 ラファエル"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「大天使 ラファエル」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 600,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "leaf",
+      "term": "葉",
+      "reading": "は",
+      "aliases": [
+        "新緑の葉"
+      ],
+      "sectionId": "card-specific",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「新緑の葉」の略称です。",
+      "note": "",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 610,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "kyonpachi",
+      "term": "キョンパチ",
+      "reading": "きょんぱち",
+      "aliases": [
+        "キョンシーパチンコデッキ",
+        "ファンシーキョンシー"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "deck",
+        "trivia"
+      ],
+      "description": "「キョンシーパチンコデッキ」の略称です。",
+      "note": "「ファンシーキョンシー」の効果が、確率次第で試合を決めるほどのハイリターンになることから、パチンコデッキといわれています。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 620,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "hand-destruction",
+      "term": "ハンデス",
+      "reading": "はんです",
+      "aliases": [
+        "手札破壊",
+        "ハンド・デストラクション"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "手札破壊のことです。「ハンド・デストラクション」の略で、主に相手のカードを破壊するときに使われます。",
+      "note": "",
+      "relatedIds": [
+        "random-hand-destruction",
+        "hand"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 630,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "random-hand-destruction",
+      "term": "ランデス",
+      "reading": "らんです",
+      "aliases": [
+        "ランダムハンデス",
+        "古魔女・ヤガー",
+        "ピーピングハンデス"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "「ランダムハンデス」の略称で、相手の手札などをランダムに破壊することです。",
+      "note": "主に「古魔女・ヤガー」で使われますが、あのおばあちゃんはピーピングハンデス（選択破壊）ではないかと疑われることもあります。",
+      "relatedIds": [
+        "hand-destruction"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 640,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "life",
+      "term": "ライフ",
+      "reading": "らいふ",
+      "aliases": [
+        "体力",
+        "HP"
+      ],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "battle-rules"
+      ],
+      "description": "自分の体力のことです。",
+      "note": "・0になると負けになります。\n・試合開始時は30で、回復することで31以上にすることも可能です。最大値は99です。\n・試合画面では、アイコンの右側に表示されます。",
+      "relatedIds": [
+        "lethal"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 650,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "lethal",
+      "term": "リーサル",
+      "reading": "りーさる",
+      "aliases": [
+        "とどめ"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "deck"
+      ],
+      "description": "相手を倒しきる方法のことです（とどめを刺すこと）。",
+      "note": "主にライフを0にすることを指します。",
+      "relatedIds": [
+        "life"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 660,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "stats",
+      "term": "スタッツ",
+      "reading": "すたっつ",
+      "aliases": [
+        "コスト/パワー",
+        "基本数値"
+      ],
+      "sectionId": "card",
+      "tagIds": [],
+      "description": "そのカードのパワーとコストを表す数字です。",
+      "note": "カードの基本数値です。メソロギアでは、0/8チャージャーや12/10アタッカーのように、コスト/パワーで書かれることが多いです。",
+      "relatedIds": [
+        "charger",
+        "attacker"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 670,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "reactive-choice",
+      "term": "後出し",
+      "reading": "あとだし",
+      "aliases": [
+        "マディスキアのモルゲン",
+        "旧神アルテミス"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "相手の出したカードに対して、後から選択できる効果を持つカードを指します。",
+      "note": "マディスキアのモルゲン、旧神アルテミスなどが該当します。相手の出したカードに対して強い選択肢を取れるため、非常に強力なカードとなります。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 680,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "nerf",
+      "term": "ナーフ",
+      "reading": "なーふ",
+      "aliases": [
+        "下方修正",
+        "レジェンドの砂"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "能力の下方修正です。",
+      "note": "・メソロギアでは定期的にカード修正が行われます。強いカードに対して行われるバランス調整です。\n・レジェンドカードのナーフが行われた際には、「レジェンドの砂」が所有枚数に応じて運営から補填されます。",
+      "relatedIds": [
+        "buff"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 690,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "buff",
+      "term": "アッパー",
+      "reading": "あっぱー",
+      "aliases": [
+        "上方修正"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "能力の上方修正です。",
+      "note": "ナーフの逆で、弱いカードに対して行われるバランス調整です。",
+      "relatedIds": [
+        "nerf"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 700,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "search",
+      "term": "サーチ",
+      "reading": "さーち",
+      "aliases": [],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "特定のカードを選んで手札に加えることです。",
+      "note": "",
+      "relatedIds": [
+        "hand"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 710,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "burn-damage",
+      "term": "バーンダメージ",
+      "reading": "ばーんだめーじ",
+      "aliases": [
+        "効果ダメージ",
+        "アドミラルシップ ステム",
+        "ゴーストバット",
+        "マスターエイドリアン"
+      ],
+      "sectionId": "card-ability",
+      "tagIds": [
+        "ability"
+      ],
+      "description": "能力によるダメージのことです。",
+      "note": "「アドミラルシップ ステム」「ゴーストバット」「マスターエイドリアン」などの能力が該当します。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 720,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "original-mesorogia",
+      "term": "旧メソ",
+      "reading": "きゅうめそ",
+      "aliases": [
+        "無印",
+        "メソロギア"
+      ],
+      "sectionId": "other",
+      "tagIds": [
+        "trivia"
+      ],
+      "description": "「神託のメソロギア」の前作にあたる「メソロギア」のことです。",
+      "note": "・無印とも呼ばれます。\n・現在はインストールもゲームプレイもできません。",
+      "relatedIds": [],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 730,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "damage-points",
+      "term": "〇点",
+      "reading": "まるてん",
+      "aliases": [
+        "○点",
+        "点",
+        "8点アタッカー"
+      ],
+      "sectionId": "deck-strategy",
+      "tagIds": [
+        "battle-rules"
+      ],
+      "description": "相手に与えるダメージを指す表現です。",
+      "note": "主にアタッカーで攻撃して、ライフを削る際に使われます。パワー8のアタッカーを「8点アタッカー」などと呼ぶこともあります。",
+      "relatedIds": [
+        "attacker",
+        "life"
+      ],
+      "pageType": "",
+      "detailDescription": "",
+      "sortOrder": 740,
+      "updatedAt": "2026-10-02"
     }
   ],
   "guides": [
@@ -2780,6 +3375,305 @@
           "image": "",
           "imageAlt": "",
           "sortOrder": 110
+        }
+      ]
+    },
+    {
+      "id": "zero-power-attacker",
+      "title": "パワー0のアタッカー",
+      "summary": "パワー0のアタッカーの攻撃と、ブロッカーを合わせられた場合の処理を解説します。",
+      "searchTerms": [
+        "パワー0",
+        "0パワー",
+        "アタッカー",
+        "攻撃失敗",
+        "防御失敗",
+        "反射ダメージ"
+      ],
+      "sectionId": "basic-rules",
+      "tagIds": [
+        "battle-rules",
+        "card-role",
+        "ability"
+      ],
+      "relatedTermIds": [
+        "attacker",
+        "blocker",
+        "attack-failure",
+        "block-failure"
+      ],
+      "thumbnail": "",
+      "sortOrder": 130,
+      "updatedAt": "2026-10-02",
+      "blocks": [
+        {
+          "id": "zero-power-attacker-00",
+          "type": "text",
+          "heading": "",
+          "text": "パワーが0のアタッカーを出すと、通常とは異なり、以下の処理になります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "zero-power-attacker-01",
+          "type": "heading",
+          "heading": "アタッカー側の処理",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "zero-power-attacker-02",
+          "type": "text",
+          "heading": "",
+          "text": "アタッカーの攻撃は必ず失敗します。攻撃失敗時効果がある場合は、攻撃失敗時効果が発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "zero-power-attacker-03",
+          "type": "heading",
+          "heading": "ブロッカーを合わせられた場合",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "zero-power-attacker-04",
+          "type": "text",
+          "heading": "",
+          "text": "ブロッカーを合わせられた場合でも、反射ダメージを受けることはありません。ダメージを与えていないため、ブロッカー側も防御失敗となります。防御失敗時効果がある場合は、防御失敗時効果が発動します。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        }
+      ]
+    },
+    {
+      "id": "dismantle-specifications",
+      "title": "分解の仕様",
+      "summary": "分解できる期間、操作方法、同名・同エディションの枚数条件と、獲得できる砂の個数を解説します。",
+      "searchTerms": [
+        "分解",
+        "分解生成イベント",
+        "カード一括分解",
+        "同名カード",
+        "エディション",
+        "ノーマル",
+        "シャイン",
+        "砂",
+        "レジェンド",
+        "ゴールド",
+        "シルバー",
+        "ブロンズ"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "event",
+        "reward",
+        "customization"
+      ],
+      "relatedTermIds": [
+        "dismantle",
+        "craft-dismantle",
+        "edition"
+      ],
+      "thumbnail": "",
+      "sortOrder": 140,
+      "updatedAt": "2026-10-02",
+      "blocks": [
+        {
+          "id": "dismantle-specifications-00",
+          "type": "text",
+          "heading": "",
+          "text": "分解は、分解生成イベントが開催されている時にのみ行えます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "dismantle-specifications-01",
+          "type": "heading",
+          "heading": "分解の操作方法",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "dismantle-specifications-02",
+          "type": "text",
+          "heading": "",
+          "text": "カード画面の「カード一括分解」ボタンからまとめて行うか、カード一覧で個別に行うかを選べます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "dismantle-specifications-03",
+          "type": "heading",
+          "heading": "分解できるカードの条件",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "dismantle-specifications-04",
+          "type": "text",
+          "heading": "",
+          "text": "同名・同エディションのカードを4枚以上所持している場合に、分解できます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "dismantle-specifications-05",
+          "type": "note",
+          "heading": "",
+          "text": "ノーマルエディションを4枚以上所持していても、シャインエディションが3枚以下の場合は、シャインのカードを分解できません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "dismantle-specifications-06",
+          "type": "heading",
+          "heading": "分解で獲得できる砂",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "dismantle-specifications-07",
+          "type": "text",
+          "heading": "",
+          "text": "分解すると、各レアリティに対応した砂を獲得できます。エディションが豪華でも、獲得できる砂の個数は変わりません。\n・レジェンド1枚：レジェンドの砂100個\n・ゴールド1枚：ゴールドの砂40個\n・シルバー1枚：シルバーの砂4個\n・ブロンズ1枚：ブロンズの砂2個",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        }
+      ]
+    },
+    {
+      "id": "craft-specifications",
+      "title": "生成の仕様",
+      "summary": "生成できる期間、操作方法、生成できないカード、エディションの扱いと必要な砂の個数を解説します。",
+      "searchTerms": [
+        "生成",
+        "分解生成イベント",
+        "カード一覧",
+        "デッキ構築",
+        "一覧モード",
+        "デッキポイント",
+        "イベントカード",
+        "コラボカード",
+        "エディション",
+        "砂",
+        "レジェンド",
+        "ゴールド",
+        "シルバー",
+        "ブロンズ"
+      ],
+      "sectionId": "card",
+      "tagIds": [
+        "event",
+        "customization"
+      ],
+      "relatedTermIds": [
+        "craft",
+        "craft-dismantle",
+        "edition"
+      ],
+      "thumbnail": "",
+      "sortOrder": 150,
+      "updatedAt": "2026-10-02",
+      "blocks": [
+        {
+          "id": "craft-specifications-00",
+          "type": "text",
+          "heading": "",
+          "text": "生成は、分解生成イベントが開催されている時にのみ行えます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 10
+        },
+        {
+          "id": "craft-specifications-01",
+          "type": "heading",
+          "heading": "生成の操作方法",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 20
+        },
+        {
+          "id": "craft-specifications-02",
+          "type": "text",
+          "heading": "",
+          "text": "カード一覧、またはデッキ構築中に一覧モードにした後、対象カードをタップすると、生成するボタンが表示されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 30
+        },
+        {
+          "id": "craft-specifications-03",
+          "type": "note",
+          "heading": "",
+          "text": "イベント時以外もボタンは押せますが、デッキポイントでの交換しかできません。一部のイベントカードやコラボカードは生成できません。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 40
+        },
+        {
+          "id": "craft-specifications-04",
+          "type": "heading",
+          "heading": "生成されるカードのエディション",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 50
+        },
+        {
+          "id": "craft-specifications-05",
+          "type": "text",
+          "heading": "",
+          "text": "生成を行った際に、一定確率でシャインやプレミアムのエディションのカードが出ることもあります。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 60
+        },
+        {
+          "id": "craft-specifications-06",
+          "type": "note",
+          "heading": "",
+          "text": "シャインのカードを選択して生成を行っても、基本はノーマルエディションのカードが生成されます。",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 70
+        },
+        {
+          "id": "craft-specifications-07",
+          "type": "heading",
+          "heading": "生成に必要な砂",
+          "text": "",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 80
+        },
+        {
+          "id": "craft-specifications-08",
+          "type": "text",
+          "heading": "",
+          "text": "生成には、各レアリティに対応した砂が必要です。\n・レジェンド1枚：レジェンドの砂300個\n・ゴールド1枚：ゴールドの砂150個\n・シルバー1枚：シルバーの砂20個\n・ブロンズ1枚：ブロンズの砂10個",
+          "image": "",
+          "imageAlt": "",
+          "sortOrder": 90
         }
       ]
     }
