@@ -1,6 +1,6 @@
 {
-  "version": "2026-10-02-145959Z",
-  "generatedAt": "2026-10-02T14:59:59Z",
+  "version": "2026-10-02-151734Z",
+  "generatedAt": "2026-10-02T15:17:34Z",
   "sections": [
     {
       "id": "basic-rules",
@@ -1312,10 +1312,10 @@
     },
     {
       "id": "craft-dismantle",
-      "term": "生成分解",
-      "reading": "せいせいぶんかい",
+      "term": "分解生成",
+      "reading": "ぶんかいせいせい",
       "aliases": [
-        "分解生成",
+        "生成分解",
         "分解生成イベント"
       ],
       "sectionId": "event",
@@ -1331,7 +1331,7 @@
       "pageType": "",
       "detailDescription": "",
       "sortOrder": 460,
-      "updatedAt": "2026-10-02"
+      "updatedAt": "2026-10-03"
     },
     {
       "id": "dismantle",
