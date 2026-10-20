@@ -9546,7 +9546,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":20305,
@@ -14290,7 +14290,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":30305,
@@ -16432,7 +16432,7 @@
   },
   {
     "version":1,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40014,
@@ -20146,7 +20146,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40312,
@@ -20385,7 +20385,7 @@
   },
   {
     "version":7,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2026-01-01",
     "pack_name":"Ensemble of Slience 「無音の合唱曲」",
     "cd":40402,
@@ -24974,7 +24974,7 @@
   },
   {
     "version":6,
-    "is_latest":true,
+    "is_latest":false,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":50304,

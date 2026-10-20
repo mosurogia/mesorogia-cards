@@ -7926,85 +7926,6 @@
     "is_latest":true,
     "updated_at":"2025-05-30",
     "pack_name":"Awakening The Oracle「神託者の覚醒」",
-    "cd":40014,
-    "link":false,
-    "link_cd":40014,
-    "CV":"さかえ りょう",
-    "cv_kana":"さかえ りょう",
-    "rarity":"ブロンズ",
-    "race":"ルミナス",
-    "category":"白騎士",
-    "type":"チャージャー",
-    "name":"白騎士 トーゲン",
-    "cost":4,
-    "power":8,
-    "effect_name1":"■召喚時■",
-    "effect_text1":"カードを2枚引く。自分の手札の白騎士ブロッカーを1枚選び、次のターンの終わりまでチャージャーにする。ルミナスフィールドにする。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"カードを2枚引く。自分の手札の白騎士ブロッカーを1枚選び、次のターンの終わりまでチャージャーにする。ルミナスフィールドにする。 ",
-    "field":"ルミナスフィールド",
-    "BP_flag":false,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":true,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/40014.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":1,
-    "is_latest":true,
-    "updated_at":"2025-05-30",
-    "pack_name":"Awakening The Oracle「神託者の覚醒」",
     "cd":40015,
     "link":false,
     "link_cd":40015,
@@ -23758,85 +23679,6 @@
     "is_latest":true,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
-    "cd":20305,
-    "link":false,
-    "link_cd":20305,
-    "CV":"守 将悟",
-    "cv_kana":"もり しょうご",
-    "rarity":"シルバー",
-    "race":"アンドロイド",
-    "category":"ノーカテゴリ",
-    "type":"アタッカー",
-    "name":"叡智の機械騎士",
-    "cost":12,
-    "power":10,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"BPを3消費して発動する。フィールドをリセットし、相手のBPを2減らす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"BPを3消費して発動する。フィールドをリセットし、相手のBPを2減らす。 ",
-    "field":"ノーマルフィールド",
-    "BP_flag":true,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          10
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/20305.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":6,
-    "is_latest":true,
-    "updated_at":"2025-10-23",
-    "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":30301,
     "link":false,
     "link_cd":30301,
@@ -24145,85 +23987,6 @@
     },
     "cv_id":0,
     "image_path":"img\/30304.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":6,
-    "is_latest":true,
-    "updated_at":"2025-10-23",
-    "pack_name":"Drawn Sword「引き抜かれた剣」",
-    "cd":30305,
-    "link":false,
-    "link_cd":30305,
-    "CV":"阿部 開",
-    "cv_kana":"あべ かい",
-    "rarity":"シルバー",
-    "race":"エレメンタル",
-    "category":"ノーカテゴリ",
-    "type":"アタッカー",
-    "name":"新緑の獣騎士",
-    "cost":12,
-    "power":10,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"BPが3以上の時、相手の手札のカードを1枚選び、破壊する。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"BPが3以上の時、相手の手札のカードを1枚選び、破壊する。 ",
-    "field":"フィールド関係なし",
-    "BP_flag":true,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"OPPONENT",
-    "life_effect":"",
-    "power_effect":"",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          10
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/30305.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   },
@@ -24943,85 +24706,6 @@
     "is_latest":true,
     "updated_at":"2025-10-23",
     "pack_name":"Drawn Sword「引き抜かれた剣」",
-    "cd":40312,
-    "link":false,
-    "link_cd":40312,
-    "CV":"福本 悠",
-    "cv_kana":"ふくもと ゆう",
-    "rarity":"シルバー",
-    "race":"ルミナス",
-    "category":"ノーカテゴリ",
-    "type":"アタッカー",
-    "name":"聖律の神聖騎士",
-    "cost":12,
-    "power":10,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"BPが3以上の時、自分と相手の手札のステータスをすべてリセットする。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"BPが3以上の時、自分と相手の手札のステータスをすべてリセットする。 ",
-    "field":"フィールド関係なし",
-    "BP_flag":true,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          10
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/40312.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":6,
-    "is_latest":true,
-    "updated_at":"2025-10-23",
-    "pack_name":"Drawn Sword「引き抜かれた剣」",
     "cd":40313,
     "link":false,
     "link_cd":40313,
@@ -25331,85 +25015,6 @@
     },
     "cv_id":0,
     "image_path":"img\/50303.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":6,
-    "is_latest":true,
-    "updated_at":"2025-10-23",
-    "pack_name":"Drawn Sword「引き抜かれた剣」",
-    "cd":50304,
-    "link":false,
-    "link_cd":50304,
-    "CV":"木目沢 昌吾",
-    "cv_kana":"きめざわ しょうご",
-    "rarity":"シルバー",
-    "race":"シェイド",
-    "category":"ノーカテゴリ",
-    "type":"アタッカー",
-    "name":"冥府の霊騎士",
-    "cost":12,
-    "power":10,
-    "effect_name1":"■攻撃成功時■",
-    "effect_text1":"BPが3以上の時、墓地からカードを1枚選び手札に戻し、パワーを4増やす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"BPが3以上の時、墓地からカードを1枚選び手札に戻し、パワーを4増やす。 ",
-    "field":"フィールド関係なし",
-    "BP_flag":true,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":true,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"UP",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          10
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-          4
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/50304.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   },
@@ -28917,85 +28522,6 @@
     },
     "cv_id":0,
     "image_path":"img\/40401.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":7,
-    "is_latest":true,
-    "updated_at":"2026-01-01",
-    "pack_name":"Ensemble of Slience 「無音の合唱曲」",
-    "cd":40402,
-    "link":false,
-    "link_cd":40402,
-    "CV":"嶋原 彩心",
-    "cv_kana":"しまはら あやみ",
-    "rarity":"シルバー",
-    "race":"ルミナス",
-    "category":"白騎士",
-    "type":"ブロッカー",
-    "name":"白騎士 アアル",
-    "cost":6,
-    "power":14,
-    "effect_name1":"■召喚時■",
-    "effect_text1":"ルミナスフィールドであれば、自分の山札からランダムな白騎士ブロッカー1枚を手札に加える。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"ルミナスフィールドであれば、自分の山札からランダムな白騎士ブロッカー1枚を手札に加える。 ",
-    "field":"ルミナスフィールド",
-    "BP_flag":false,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":true,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          14
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/40402.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   },
@@ -36381,85 +35907,6 @@
     },
     "cv_id":0,
     "image_path":"img\/40601.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":9,
-    "is_latest":true,
-    "updated_at":"2026-04-07",
-    "pack_name":"Glory of the Gods 「神々の栄光」",
-    "cd":40602,
-    "link":false,
-    "link_cd":40602,
-    "CV":"近藤 悠平",
-    "cv_kana":"こんどう ゆうへい",
-    "rarity":"シルバー",
-    "race":"ルミナス",
-    "category":"歪祝（エヴァル）",
-    "type":"チャージャー",
-    "name":"歪祝 ハルモニア",
-    "cost":0,
-    "power":6,
-    "effect_name1":"■召喚時■",
-    "effect_text1":"ノーマルフィールドであれば、自分の手札の歪祝を1枚選び、2ターン後の終わりまでコストを4増やし、パワーを2増やす。ルミナスフィールドにする。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"ノーマルフィールドであれば、自分の手札の歪祝を1枚選び、2ターン後の終わりまでコストを4増やし、パワーを2増やす。ルミナスフィールドにする。 ",
-    "field":"ルミナスフィールド",
-    "BP_flag":false,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"UP",
-    "mana_effect":"",
-    "cost_effect":"UP",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-          2
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/40602.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   },
@@ -44310,86 +43757,6 @@
     "is_latest":true,
     "updated_at":"2026-07-16",
     "pack_name":"Illustrated Illusion 「描画された幻想」",
-    "cd":40809,
-    "link":false,
-    "link_cd":40809,
-    "CV":"野々井 爽",
-    "cv_kana":"ののい あき",
-    "rarity":"ゴールド",
-    "race":"ルミナス",
-    "category":"アルテアス",
-    "type":"アタッカー",
-    "name":"アルテアス ヴィレム",
-    "cost":8,
-    "power":8,
-    "effect_name1":"■召喚時■",
-    "effect_text1":"相手の戦場のカードに召喚時効果が無ければ、これのパワーを2増やし、自分のBPを1増やす。",
-    "effect_name2":null,
-    "effect_text2":null,
-    "effect_text_all":"相手の戦場のカードに召喚時効果が無ければ、これのパワーを2増やし、自分のBPを1増やす。 ",
-    "field":"フィールド関係なし",
-    "BP_flag":true,
-    "ability_burn":false,
-    "ability_bind":false,
-    "ability_silence":false,
-    "draw":false,
-    "cardsearch":false,
-    "graveyard_recovery":false,
-    "destroy_target":"",
-    "life_effect":"",
-    "power_effect":"UP",
-    "mana_effect":"",
-    "cost_effect":"",
-    "lethal_burn":0,
-    "CHECK":"OK",
-    "lethal":{
-      "attack":{
-        "values":[
-          8,
-          10
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBuff":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "freeBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      },
-      "lethalBurn":{
-        "values":[
-
-        ],
-        "repeat":null,
-        "defaultOff":false
-      }
-    },
-    "cv_id":0,
-    "image_path":"img\/40809.webp",
-    "image_variant":"",
-    "has_pre_adjustment_image":false
-  },
-  {
-    "version":12,
-    "is_latest":true,
-    "updated_at":"2026-07-16",
-    "pack_name":"Illustrated Illusion 「描画された幻想」",
     "cd":40810,
     "link":false,
     "link_cd":40810,
@@ -51181,11 +50548,11 @@
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -51199,7 +50566,7 @@
       },
       "lethalBuff":{
         "values":[
-
+          3
         ],
         "repeat":null,
         "defaultOff":false
@@ -51260,11 +50627,11 @@
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -51333,17 +50700,17 @@
     "draw":false,
     "cardsearch":false,
     "graveyard_recovery":false,
-    "destroy_target":"",
+    "destroy_target":"OPPONENT",
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -51413,16 +50780,16 @@
     "cardsearch":false,
     "graveyard_recovery":false,
     "destroy_target":"",
-    "life_effect":"",
+    "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
-    "lethal_burn":null,
-    "CHECK":false,
+    "lethal_burn":0,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -51490,18 +50857,18 @@
     "ability_silence":false,
     "draw":false,
     "cardsearch":false,
-    "graveyard_recovery":false,
+    "graveyard_recovery":true,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -51515,7 +50882,7 @@
       },
       "lethalBuff":{
         "values":[
-
+          4
         ],
         "repeat":null,
         "defaultOff":false
@@ -51574,9 +50941,9 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"DOWN",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -51647,15 +51014,15 @@
     "ability_bind":false,
     "ability_silence":false,
     "draw":false,
-    "cardsearch":false,
+    "cardsearch":true,
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"DOWN",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -51730,11 +51097,11 @@
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"UP",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -51745,7 +51112,7 @@
       },
       "freeBuff":{
         "values":[
-
+          2
         ],
         "repeat":null,
         "defaultOff":false
@@ -51809,15 +51176,16 @@
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          8,
+          11
         ],
         "repeat":null,
         "defaultOff":false

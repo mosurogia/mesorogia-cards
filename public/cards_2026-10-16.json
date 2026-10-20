@@ -4180,11 +4180,11 @@
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -4198,7 +4198,7 @@
       },
       "lethalBuff":{
         "values":[
-
+          3
         ],
         "repeat":null,
         "defaultOff":false
@@ -13231,11 +13231,11 @@
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -21533,17 +21533,17 @@
     "draw":false,
     "cardsearch":false,
     "graveyard_recovery":false,
-    "destroy_target":"",
+    "destroy_target":"OPPONENT",
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -26705,9 +26705,9 @@
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"DOWN",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -30419,16 +30419,16 @@
     "cardsearch":false,
     "graveyard_recovery":false,
     "destroy_target":"",
-    "life_effect":"",
+    "life_effect":"HEAL",
     "power_effect":"",
     "mana_effect":"",
     "cost_effect":"",
-    "lethal_burn":null,
-    "CHECK":false,
+    "lethal_burn":0,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -30655,15 +30655,15 @@
     "ability_bind":false,
     "ability_silence":false,
     "draw":false,
-    "cardsearch":false,
+    "cardsearch":true,
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
     "power_effect":"",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"DOWN",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -31610,11 +31610,11 @@
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
-    "cost_effect":"",
+    "cost_effect":"UP",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
@@ -31625,7 +31625,7 @@
       },
       "freeBuff":{
         "values":[
-
+          2
         ],
         "repeat":null,
         "defaultOff":false
@@ -33668,15 +33668,16 @@
     "graveyard_recovery":false,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          8,
+          11
         ],
         "repeat":null,
         "defaultOff":false
@@ -38807,18 +38808,18 @@
     "ability_silence":false,
     "draw":false,
     "cardsearch":false,
-    "graveyard_recovery":false,
+    "graveyard_recovery":true,
     "destroy_target":"",
     "life_effect":"",
-    "power_effect":"",
+    "power_effect":"UP",
     "mana_effect":"",
     "cost_effect":"",
     "lethal_burn":0,
-    "CHECK":false,
+    "CHECK":"OK",
     "lethal":{
       "attack":{
         "values":[
-
+          10
         ],
         "repeat":null,
         "defaultOff":false
@@ -38832,7 +38833,7 @@
       },
       "lethalBuff":{
         "values":[
-
+          4
         ],
         "repeat":null,
         "defaultOff":false
