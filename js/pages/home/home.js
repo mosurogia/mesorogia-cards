@@ -119,20 +119,30 @@
         return today;
     }
 
-    function isOngoingEvent_(entry, today) {
-        if (!entry?.startDate || !entry?.endDate) return false;
-        return entry.startDate <= today && today <= entry.endDate;
+    /* 表示用の終了日と分け、日時指定はその時刻、日付指定は翌日0時を終了境界にする */
+    function getEventEndBoundary_(entry) {
+        const value = String(entry?.item?.endAt || '').trim();
+        const end = parseDate_(value);
+        if (end && /^\d{4}-\d{2}-\d{2}$/.test(value)) end.setDate(end.getDate() + 1);
+        return end;
     }
 
-    function isEndedEvent_(entry, today = getToday_()) {
-        return Boolean(entry?.endDate && entry.endDate < today);
+    function isOngoingEvent_(entry, now = new Date()) {
+        const end = getEventEndBoundary_(entry);
+        if (!entry?.startDate || !end) return false;
+        return entry.startDate <= now && now < end;
+    }
+
+    function isEndedEvent_(entry, now = new Date()) {
+        const end = getEventEndBoundary_(entry);
+        return Boolean(end && end <= now);
     }
 
     function isUpcomingWithinDays_(entry, today, days) {
         if (!entry?.startDate) return false;
         const limit = new Date(today);
         limit.setDate(limit.getDate() + days);
-        return today < entry.startDate && entry.startDate <= limit;
+        return new Date() < entry.startDate && entry.startDate <= limit;
     }
 
     function getEventTypeLabel_(item) {
@@ -199,15 +209,15 @@
         return entries
             .filter((entry) => {
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= lastDate && end >= firstDate;
+                return toDateKey_(entry.startDate) <= toDateKey_(lastDate) && toDateKey_(end) >= toDateKey_(firstDate);
             })
             .sort(compareEventEntries_);
     }
 
     function getMonthEventsForDisplay_(entries, monthBase, today = getToday_()) {
         return getMonthEvents_(entries, monthBase).sort((a, b) => {
-            const aEnded = Boolean(a.endDate && a.endDate < today);
-            const bEnded = Boolean(b.endDate && b.endDate < today);
+            const aEnded = isEndedEvent_(a);
+            const bEnded = isEndedEvent_(b);
             if (aEnded !== bEnded) return aEnded ? 1 : -1;
             return compareEventEntries_(a, b);
         });
@@ -215,7 +225,7 @@
 
     function getOngoingEvents_(entries, today) {
         return entries
-            .filter((entry) => isOngoingEvent_(entry, today))
+            .filter((entry) => isOngoingEvent_(entry))
             .sort(compareEventEntriesByEnd_);
     }
 
@@ -242,11 +252,11 @@
                 const permanentStart = getPermanentSaleStartDate_(entry);
                 if (permanentStart) return firstDate <= permanentStart && permanentStart <= lastDate;
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= lastDate && end >= firstDate;
+                return toDateKey_(entry.startDate) <= toDateKey_(lastDate) && toDateKey_(end) >= toDateKey_(firstDate);
             })
             .sort((a, b) => {
-                const aEnded = Boolean(a.endDate && a.endDate < today);
-                const bEnded = Boolean(b.endDate && b.endDate < today);
+                const aEnded = isEndedEvent_(a);
+                const bEnded = isEndedEvent_(b);
                 if (aEnded !== bEnded) return aEnded ? 1 : -1;
                 return compareEventEntries_(a, b);
             });
@@ -276,7 +286,7 @@
             .filter((entry) => {
                 const permanentStart = getPermanentSaleStartDate_(entry);
                 if (permanentStart) return toDateKey_(permanentStart) === toDateKey_(today);
-                return isOngoingEvent_(entry, today);
+                return isOngoingEvent_(entry);
             })
             .sort(compareEventEntriesByEnd_);
     }
@@ -296,7 +306,7 @@
                 const permanentStart = getPermanentSaleStartDate_(entry);
                 if (permanentStart) return toDateKey_(permanentStart) === toDateKey_(date);
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= date && date <= end;
+                return toDateKey_(entry.startDate) <= dateKey && dateKey <= toDateKey_(end);
             })
             .sort(compareSaleLineupEntries_);
     }
@@ -345,7 +355,7 @@
         return entries
             .filter((entry) => {
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= date && date <= end && shouldShowEventInCalendarDay_(entry, date);
+                return toDateKey_(entry.startDate) <= dateKey && dateKey <= toDateKey_(end) && shouldShowEventInCalendarDay_(entry, date);
             })
             .sort(compareEventEntries_);
     }
@@ -378,7 +388,7 @@
 
     function getActiveMonthTournamentEvents_(entries, monthBase, today = getToday_()) {
         return getMonthTournamentEvents_(entries, monthBase)
-            .filter((entry) => !isEndedEvent_(entry, today));
+            .filter((entry) => !isEndedEvent_(entry));
     }
 
     function addTournamentTabBadge_(button, key, entries, monthBase) {
@@ -928,7 +938,7 @@
         const monthEvents = eventItems
             .filter((entry) => {
                 const end = entry.endDate && entry.endDate >= entry.startDate ? entry.endDate : entry.startDate;
-                return entry.startDate <= lastDate && end >= firstDate;
+                return toDateKey_(entry.startDate) <= toDateKey_(lastDate) && toDateKey_(end) >= toDateKey_(firstDate);
             })
             .sort((a, b) => a.startDate - b.startDate);
         const eventSummaryIdByItem = new Map();
@@ -941,7 +951,7 @@
             const start = new Date(entry.startDate);
             const end = entry.endDate && entry.endDate >= start ? entry.endDate : start;
 
-            for (const cursor = new Date(start); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {
+            for (const cursor = new Date(start); toDateKey_(cursor) <= toDateKey_(end); cursor.setDate(cursor.getDate() + 1)) {
                 if (cursor.getFullYear() !== year || cursor.getMonth() !== month) continue;
                 if (!shouldShowEventInCalendarDay_(entry, cursor)) continue;
                 const key = toDateKey_(cursor);
@@ -1702,7 +1712,7 @@
                 const today = getToday_();
                 const card = createCompactEventCard_(entry, {
                     dateText: formatSaleEventDateText_(entry),
-                    isEnded: Boolean(options.markEnded && isEndedEvent_(entry, today)),
+                    isEnded: Boolean(options.markEnded && isEndedEvent_(entry)),
                 });
                 saleNodes.push(card);
                 list.append(card);
@@ -1718,7 +1728,7 @@
             const today = getToday_();
             list.append(createCompactEventCard_(entry, {
                 dateText: formatSaleEventDateText_(entry),
-                isEnded: Boolean(options.markEnded && isEndedEvent_(entry, today)),
+                isEnded: Boolean(options.markEnded && isEndedEvent_(entry)),
             }));
         });
     }
@@ -1738,7 +1748,7 @@
         const appendEntries = (targetEntries) => {
             targetEntries.forEach((entry) => {
                 const today = getToday_();
-                const isEnded = Boolean(options.markEnded && isEndedEvent_(entry, today));
+                const isEnded = Boolean(options.markEnded && isEndedEvent_(entry));
                 list.append(createCompactEventCard_(entry, {
                     dateText: options.getDateText ? options.getDateText(entry) : '',
                     showDescription: options.showDescription,
