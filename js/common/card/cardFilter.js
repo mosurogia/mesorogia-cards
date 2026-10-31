@@ -1362,6 +1362,11 @@
         featureKey: 'juggernautIncarnatePack',
         pack: 'Juggernaut Incarnate',
         },
+        'kryptos-of-the-abyss': {
+        label: 'Kパック',
+        featureKey: 'kryptosOfTheAbyssPack',
+        pack: 'Kryptos of the Abyss',
+        },
     };
 
     function isPackPickupEnabled_(key) {

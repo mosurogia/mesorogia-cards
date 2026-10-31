@@ -13,6 +13,10 @@
       enabled: true,
       domKey: 'juggernaut-incarnate-pack',
     },
+    kryptosOfTheAbyssPack: {
+      enabled: true,
+      domKey: 'kryptos-of-the-abyss-pack',
+    },
   };
 
   function normalizeKey_(key) {
