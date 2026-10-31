@@ -2,6 +2,14 @@
   "ok": true,
   "news": [
     {
+      "date": "2026-10-31",
+      "title": "Kパックカードデータ追加",
+      "category": "サイト更新",
+      "description": "メインパック第六弾「Kryptos of the Abyss ～果てなき万象～」のカードデータを追加しました\n画像についても順次反映予定です",
+      "note": "",
+      "sortOrder": 9999
+    },
+    {
       "date": "2026-10-20",
       "title": "カード更新",
       "category": "その他",
