@@ -1849,6 +1849,12 @@ button.tier-guide-rank-change:focus-visible {
     --pack-stroke: rgba(var(--pack-j-accent-rgb), .7);
 }
 
+
+#cardDetailDrawer .carddetail-pack[data-pack="K"] {
+    --pack-bg: var(--pack-k-rgb);
+    --pack-stroke: rgba(var(--pack-k-accent-rgb), .7);
+}
+
 #cardDetailDrawer .carddetail-pack[data-pack="SPECIAL"] {
     --pack-bg: var(--pack-special-rgb);
     --pack-stroke: rgba(var(--pack-special-accent-rgb), .7);

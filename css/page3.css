@@ -264,9 +264,12 @@
     pointer-events: none;
 }
 
-#cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
-#cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
-    width: calc((100% - 45px) / 10);
+/* 折りたたみ時の列数増加はPCのグループ欄がある幅だけに適用する。 */
+@media (min-width: 901px) {
+    #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
+    #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
+        width: calc((100% - 45px) / 10);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -276,14 +279,14 @@
     }
 }
 
-@media (max-width: 1440px) {
+@media (min-width: 901px) and (max-width: 1440px) {
     #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
     #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
         width: calc((100% - 35px) / 8);
     }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 901px) and (max-width: 1024px) {
     #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
     #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
         width: calc((100% - 25px) / 6);
@@ -324,7 +327,7 @@
     flex-direction: column;
     position: sticky;
     top: 0;
-    z-index: 2000;
+    z-index: var(--layer-page-sticky, 100);
     background: #fff;
     border-bottom: 2px solid #ccc;
     padding: 4px 6px;
@@ -1040,6 +1043,12 @@
     --pack-accent-rgb: var(--pack-j-rgb);
 }
 
+
+#pack-summary-list .pack-summary[data-pack-group="k"] {
+    --pack-border-rgb: var(--pack-k-accent-rgb);
+    --pack-accent-rgb: var(--pack-k-rgb);
+}
+
 #pack-summary-list .pack-summary[data-pack-group="special"] {
     --pack-border-rgb: var(--pack-special-accent-rgb);
     --pack-accent-rgb: var(--pack-special-rgb);
@@ -1485,6 +1494,12 @@
 .pack-section[data-packgroup="j"] {
     --pack-rgb: var(--pack-j-rgb);
     --pack-accent-rgb: var(--pack-j-accent-rgb);
+}
+
+
+.pack-section[data-packgroup="k"] {
+    --pack-rgb: var(--pack-k-rgb);
+    --pack-accent-rgb: var(--pack-k-accent-rgb);
 }
 
 .pack-section[data-packgroup="collab"] {

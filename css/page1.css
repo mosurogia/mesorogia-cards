@@ -1,30 +1,74 @@
 /* =====================================================
-   View Toggle（カード表示 / 一覧表示）
+   表示形式のアイコン切替
 ===================================================== */
-.view-toggle {
+#cards .view-toggle {
+    --view-accent: #8fc4ef;
+    --view-surface: #e9f5fb;
+    --view-border: #b5d9f3;
     display: flex;
-    gap: 6px;
-    padding: 2px 4px;
-    background: #fff;
-    border-bottom: 1px solid #e7e7e7;
-    z-index: 1900;
+    gap: 4px;
+    width: 76px;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    flex: 0 0 auto;
 }
 
-.view-btn {
-    flex: 1 1 auto;
-    padding: 6px 10px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 999px;
-    background: #f7f7f9;
+#cards .view-btn {
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 4px;
+    border: 1px solid var(--view-border);
+    border-radius: 4px;
+    background: var(--view-surface);
+    color: #1f3f5f;
     cursor: pointer;
-    font-size: 14px;
 }
 
-.view-btn.is-active {
-    background: #2b90ff;
-    border-color: #2b90ff;
-    color: #fff;
+#cards .view-btn svg { width: 26px; height: 26px; }
+
+#cards .view-btn.is-active {
+    background: var(--view-accent);
+    border: 2px solid #4f91c5;
+    box-shadow: inset 0 0 0 1px #fff;
+    color: #1f3f5f;
 }
+
+#cards .view-btn:focus-visible {
+    outline: 2px solid #2f80ed;
+    outline-offset: 2px;
+}
+
+/* 条件とグループ化の操作を同じ行に置き、狭い幅では自然に折り返す。 */
+#cards #active-chips-bar .chips-scroll { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; white-space: normal; }
+#cards #active-chips-bar .chip-mini { max-width: 100%; box-sizing: border-box; white-space: normal; overflow-wrap: anywhere; }
+#cards .cards-group-results { background: #e9f5fb; color: #1f3f5f; border: 1px solid #b5d9f3; cursor: pointer; }
+#cards .cards-group-results:disabled { opacity: .55; cursor: default; }
+#cards .cards-group-results:focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
+
+/* 検索結果の内容を確認しながら名前を決める専用画面。 */
+.cg-results-dialog { box-sizing: border-box; width: min(94vw, 680px); max-height: 90dvh; padding: 16px; border: 1px solid #b5d9f3; border-radius: 12px; background: #fff; color: #1f3f5f; overflow-y: auto; }
+.cg-results-dialog::backdrop { background: rgba(0, 0, 0, .45); }
+.cg-results-form { display: flex; flex-direction: column; gap: 10px; min-width: 0; max-height: calc(90dvh - 34px); }
+.cg-results-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cg-results-heading h2 { margin: 0; font-size: 18px; }
+.cg-results-help { margin: 0; font-size: 13px; line-height: 1.6; color: #465e73; }
+.cg-results-dialog input { box-sizing: border-box; width: 100%; min-width: 0; padding: 8px; border: 1px solid #b5d9f3; border-radius: 4px; font: inherit; font-size: 16px; }
+.cg-results-count, .cg-results-status { margin: 0; font-size: 13px; }
+.cg-results-status { min-height: 1.4em; color: #a12e2e; }
+.cg-results-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; min-height: 0; max-height: 42dvh; overflow-y: auto; overscroll-behavior: contain; margin: 0; padding: 4px; list-style: none; }
+.cg-results-cards img { display: block; width: 100%; aspect-ratio: 424 / 532; object-fit: cover; border-radius: 4px; }
+.cg-results-footer { display: flex; justify-content: flex-end; gap: 8px; }
+.cg-results-dialog button { min-height: 36px; padding: 6px 10px; border: 1px solid #b5d9f3; border-radius: 4px; background: #e9f5fb; color: #1f3f5f; font: inherit; cursor: pointer; }
+.cg-results-dialog .cg-results-create { background: #8fc4ef; border-color: #4f91c5; }
+.cg-results-dialog button:disabled { opacity: .55; cursor: default; }
+.cg-results-dialog :is(button, input):focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
 
 /* =====================================================
    List View Layout（図鑑：リスト表示）
@@ -268,7 +312,7 @@
     position: sticky;
     top: 0;
     background: #fff;
-    z-index: 2000;
+    z-index: var(--layer-page-sticky, 100);
     padding: 10px 4px 8px;
     display: flex;
     flex-direction: column;
@@ -332,6 +376,45 @@
     font-size: 16px;
     letter-spacing: .02em;
     white-space: nowrap;
+}
+
+/* PCの見出しと設定入口、認証・保存状態を二段にまとめる。 */
+@media (min-width: 901px) {
+    #cards-groups-list .cg-head { container-type: inline-size; gap: 4px; padding: 8px 4px 6px; }
+    #cards-groups-list .cg-head-row-title { justify-content: space-between; }
+    #cards-groups-list .cg-account-settings-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 32px;
+        min-height: 32px;
+        margin: 0;
+        padding: .45rem .5rem;
+        background: var(--account-settings-background);
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    #cards-groups-list .cg-account-settings-icon { display: none; }
+    #cards-groups-list .cg-account-settings-label { display: inline; }
+    #cards-groups-list .cg-account-settings-btn:focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
+    #cards-groups-list .cg-head-row-source { flex-wrap: nowrap; gap: 4px; }
+    #cards-groups-list .cg-head:not(.is-auth-logged-in) .cg-head-row-source { flex-wrap: wrap; row-gap: 4px; }
+    #cards-groups-list .cg-auth-actions { flex: 0 0 auto; flex-wrap: nowrap; gap: 4px; }
+    #cards-groups-list .cg-auth-actions .cards-auth-btn { padding: .3rem .35rem; }
+    #cards-groups-list .cg-head-row-source .data-source-badge { padding: .3rem .4rem; gap: .3rem; }
+    @container (max-width: 269px) {
+        #cards-groups-list .cg-head-title { font-size: 14px; }
+        #cards-groups-list .cg-account-settings-btn { font-size: 11px; padding: .35rem .3rem; }
+    }
+    @container (max-width: 219px) {
+        #cards-groups-list .cg-head-title { font-size: 12px; }
+        #cards-groups-list .cg-head-title-icon { display: none; }
+        #cards-groups-list .cg-head-row-title { gap: 1px; }
+        #cards-groups-list .cg-account-settings-btn { padding-inline: .25rem; }
+    }
 }
 
 .cg-storage-status {
@@ -400,6 +483,21 @@
     gap: 4px;
     width: 100%;
 }
+
+/* PCの操作は選択グループの下へまとめ、狭いサイドバーでは折り返す。 */
+.cg-group-actions {
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    padding-top: 6px;
+    border-top: 1px solid #b5d9f3;
+}
+
+.cg-group-actions .cg-ops-row-bottom { width: auto; }
+.cg-group-actions .cg-ops-row-top > button { display: inline-flex; align-items: center; justify-content: center; }
+.cg-group-actions .cg-card-edit-btn { width: 40px; }
+.cg-group-actions .cg-selection-icon { width: 34px; height: 25px; }
+.cg-group-actions #cg-op-del svg { width: 24px; height: 24px; }
+.cg-group-actions .cg-ops-row-bottom .cg-icon-btn { flex: 0 0 40px; min-width: 40px; width: 40px; }
 
 /* ✅ 上段（編集/削除/画像） */
 .cg-ops-row-top {
@@ -651,7 +749,6 @@
 ===================================================== */
 
 @media (max-width: 900px) {
-
     /* ドロワーヘッダ内：自動で閉じるトグル */
     .sp-group-auto-close {
         display: inline-flex;
@@ -702,6 +799,9 @@
 .cg-row.is-editing {
     background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(129, 199, 132, 0.18));
 }
+
+/* 空グループは見本画像の枠を省き、カード追加時には通常表示へ戻す。 */
+.cg-row.is-empty .cg-mini { display: none; }
 
 /* ---- top row：名前＋rename（✏️） ---- */
 .cg-row-top {
@@ -1089,3 +1189,153 @@ body.is-group-editing #grid .card.group-picked img {
     filter: none;
     opacity: 1;
 }
+
+/* PCの操作列はグループ欄の幅に左右されない共通幅へ配置する。 */
+.cards-group-toggle { display: none; }
+/* グループを閉じたカード一覧にはサイドバーの幅や境界を残さない。 */
+#cards-summary-panel.is-collapsed {
+    width: 0;
+    padding: 0;
+    border-right-width: 0;
+    box-shadow: none;
+}
+
+@media (min-width: 901px) {
+    #cards > .top-bar { display: grid; grid-template-columns: max-content 76px max-content minmax(120px, 1fr) max-content 220px max-content; overflow-x: auto; align-items: center; justify-content: start; gap: 6px; padding: 6px; }
+    #cards > .top-bar .cards-result-export { display: inline-flex; height: 36px; padding: 0 8px; border: 1px solid #b5d9f3; border-radius: 4px; background: #e9f5fb; color: #1f3f5f; font-size: 14px; font-weight: 700; white-space: nowrap; }
+    #cards-summary-panel-toggle { display: none; }
+    #cards > .top-bar .search-bar, #cards > .top-bar .search-bar-left, #cards > .top-bar .search-bar-right { display: contents; }
+    #cards > .top-bar .cards-group-toggle { display: block; height: 36px; padding: 0 8px; border: 1px solid #b5d9f3; border-radius: 4px; background: #e9f5fb; color: #1f3f5f; font: inherit; font-weight: 700; white-space: nowrap; }
+    #cards > .top-bar .cards-group-toggle { cursor: pointer; width: 236px; box-sizing: border-box; }
+    #cards > .top-bar #keyword { width: 100%; min-width: 0; order: 0; }
+    #cards > .top-bar .type-quick-filter, #cards > .top-bar .sort-controls, #cards > .top-bar button[onclick*="openFilterModal"] { order: 0; margin: 0; }
+    #cards > .top-bar .sort-controls { width: 220px; grid-column: 6; }
+    #cards > .top-bar .type-quick-filter { grid-column: 5; }
+    #cards > .top-bar button[onclick*="openFilterModal"] { grid-column: 7; }
+    #cards > .top-bar #sort-select { flex: 0 0 164px; width: 164px; font-size: 16px; }
+    #cards > .top-bar .sort-order-toggle { flex: 0 0 56px; }
+    #cards > .top-bar button[onclick*="openFilterModal"] { padding: 0 8px; font-size: 16px; }
+    #cards > .top-bar #active-chips-bar, #cards > .top-bar #group-bulk-actions { grid-column: 1 / -1; }
+    #cards .summary-panel { top: var(--cards-toolbar-height, 48px); height: calc(100vh - var(--cards-toolbar-height, 48px)); }
+    #cards .cards-group-toggle:focus-visible, #cards .cards-result-export:focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
+}
+
+/* スマホは操作一行と低い横タイルを使い、カード一覧の高さを残す。 */
+.cards-mobile-controls { display: contents; }
+.cards-result-export { display: none; }
+#cards .cards-result-export { align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+#cards .cards-result-export svg { flex: 0 0 24px; width: 24px; height: 24px; }
+#cards .cards-result-export:disabled, #cards .cards-result-export.is-unavailable { background: #eee; border-color: #ccc; color: #666; opacity: 1; }
+#cards .cards-result-export[aria-busy="true"] { cursor: wait; }
+.cg-mobile-actions { display: none; }
+.cg-rename-icon {
+    display: block;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask: url('../img/icons/rename-aa-pen.svg') center / contain no-repeat;
+    mask: url('../img/icons/rename-aa-pen.svg') center / contain no-repeat;
+}
+@media (max-width: 900px) {
+    /* 見本カードの高さを基準に、横タイルと選択操作の領域も揃える。 */
+    #cards .top-bar #cards-groups-block {
+        --cg-preview-height: clamp(40px, 7.8vw, 64px);
+        --cg-preview-width: calc(var(--cg-preview-height) * 424 / 532);
+        --cg-preview-overlap: calc(var(--cg-preview-width) * -0.54);
+        --cg-tile-height: calc(var(--cg-preview-height) + 34px);
+        --cg-tile-width: calc(var(--cg-preview-width) * 4.8 + 44px);
+        --cg-selected-info-width: clamp(150px, calc(100vw - 170px), var(--cg-tile-width));
+    }
+    /* グループは上部へ移動するため、空のサイドバーをレイアウトから外す。 */
+    #cards-summary-panel { display: none; }
+    #cards #group-bulk-actions, #sp-group-open, #sp-group-done-fab, #cards-summary-panel-toggle { display: none; }
+    #cards .cards-mobile-controls { display: grid; grid-template-columns: minmax(100px, 1fr) 76px 124px; gap: 4px; padding: 4px 2px; }
+    #cards .cards-group-toggle, #cards .cards-result-export { display: block; width: 100%; min-width: 0; height: 36px; box-sizing: border-box; padding: 0 4px; border: 1px solid #b5d9f3; border-radius: 4px; background: #e9f5fb; color: #1f3f5f; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    #cards .cards-group-toggle { padding-inline: 0; font-size: clamp(11px, 3.1vw, 12px); }
+    #cards .cards-result-export { display: inline-flex; }
+    #cards .cards-group-toggle:focus-visible, #cards .cards-result-export:focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
+    #cards .top-bar #cards-groups-block { padding: 0 3px 4px; }
+    #cards .top-bar #cards-groups-block[hidden] { display: none; }
+    #cards .top-bar .cg-head, #cards .top-bar .cg-limit { display: none; }
+    #cards .top-bar:has(#cards-groups-block) #group-bulk-actions { visibility: hidden; position: absolute; width: 0; height: 0; overflow: hidden; }
+    #cards .top-bar .cg-list { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: stretch; min-width: 0; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 3px; }
+    /* 横一覧では同期ロック用の縦一覧向け最小高さを引き継がない。 */
+    #cards .top-bar .cg-list.is-sync-locked { min-height: 0; }
+    #cards .top-bar .cg-row { flex: 0 0 auto; width: max-content; min-width: 124px; max-width: var(--cg-tile-width); box-sizing: border-box; margin: 0; padding: 5px; height: var(--cg-tile-height); min-height: var(--cg-tile-height); gap: 1px; scroll-snap-align: start; }
+    #cards .top-bar .cg-row-top { gap: 4px; }
+    #cards .top-bar .cg-name-btn { min-width: 0; pointer-events: auto; }
+    #cards .top-bar .cg-name-text { display: block; max-width: 130px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    #cards .top-bar .cg-mini { width: max-content; max-width: 100%; height: calc(var(--cg-preview-height) + 2px); min-height: 0; margin-top: 0; padding: 0 36px 0 0; border-top: none; box-sizing: border-box; overflow: hidden; }
+    #cards .top-bar .cg-mini-card { display: block; flex: 0 0 var(--cg-preview-width); width: var(--cg-preview-width); height: var(--cg-preview-height); margin-left: var(--cg-preview-overlap); box-sizing: border-box; }
+    #cards .top-bar .cg-mini-card:first-child { margin-left: 0; }
+    #cards .top-bar .cg-mini-card img { object-fit: contain; }
+    #cards .top-bar .has-mobile-actions .cg-mini { --cg-preview-overlap: calc(var(--cg-preview-width) * -0.66); }
+    @media (min-width: 600px) {
+        #cards .top-bar .has-mobile-actions .cg-mini { --cg-preview-overlap: calc(var(--cg-preview-width) * -0.54); }
+    }
+    #cards .top-bar .cg-mini-empty { min-height: 0; height: 30px; padding: 2px; font-size: 10px; }
+    #cards .top-bar .cg-add { flex: 0 0 120px; margin: 0; min-height: 70px; height: var(--cg-tile-height); font-size: 12px; }
+    /* 情報欄の実幅と操作欄の固定幅で親も縮め、余った列を作らない。 */
+    #cards .top-bar .cg-row.has-mobile-actions { max-width: none; display: grid; grid-template-columns: max-content 120px; grid-template-rows: 1fr; gap: 6px; }
+    #cards .top-bar .cg-row.is-empty { flex-basis: 124px; height: 52px; min-height: 52px; }
+    #cards .top-bar .cg-row.has-mobile-actions.is-empty { flex-basis: auto; grid-template-columns: 104px 124px; height: 70px; min-height: 70px; }
+    #cards .top-bar .cg-row.is-empty .cg-mobile-actions { height: 58px; }
+    #cards .top-bar .cg-row.is-empty .cg-mini { display: none; }
+    #cards .top-bar .cg-row.is-empty .cg-row-top { height: 100%; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }
+    #cards .top-bar .cg-row.is-empty .cg-count { margin-left: 0; }
+    #cards .top-bar .cg-row.is-empty .cg-name-text { max-width: 110px; }
+    #cards .top-bar .cg-row.has-mobile-actions.is-empty .cg-name-text { max-width: 102px; }
+    .cg-row.is-empty .cg-mobile-info { display: flex; flex-direction: column; justify-content: center; }
+    .cg-mobile-info { display: grid; grid-template-rows: 19px calc(var(--cg-preview-height) + 2px); gap: 1px; width: max-content; min-width: 104px; max-width: var(--cg-selected-info-width); }
+    .cg-mobile-info .cg-row-top { align-items: center; min-width: 0; }
+    #cards .top-bar .cg-mobile-info .cg-name-text { max-width: 116px; }
+    #cards .top-bar .cg-mobile-info .cg-name-input { box-sizing: border-box; height: 19px; min-width: 0; padding: 0 2px; font-size: 12px; }
+    #cards .top-bar .cg-mobile-actions { display: block; min-width: 0; height: calc(var(--cg-tile-height) - 12px); }
+    .cg-mobile-buttons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 3px; height: 100%; }
+    .cg-mobile-buttons > button { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; padding: 0 2px; border: 1px solid #b5d9f3; border-radius: 4px; background: #eef6ff; color: #1f3f5f; font-size: 11px; white-space: nowrap; cursor: pointer; }
+    .cg-mobile-buttons > button:disabled { opacity: 0.45; cursor: default; }
+    .cg-mobile-buttons > button:focus-visible, .cg-mobile-info .cg-name-input:focus-visible { outline: 2px solid #2f80ed; outline-offset: 1px; }
+    .cg-mobile-buttons [data-cg-command="edit"] { grid-column: 1 / 5; grid-row: 1; }
+    .cg-mobile-buttons [data-cg-command="rename"] { grid-column: 1 / 3; grid-row: 2; font-size: 15px; }
+    .cg-mobile-buttons [data-cg-command="del"] { grid-column: 3 / 5; grid-row: 2; color: #9b2929; border-color: #e0b8b8; background: #fff5f5; }
+    .cg-mobile-buttons [data-cg-command="del"] svg { width: 24px; height: 24px; }
+    .cg-selection-icon { width: 34px; height: 25px; }
+    .cg-mobile-actions.is-editing [data-cg-command="edit"] { grid-column: 1 / 3; }
+    .cg-mobile-actions.is-editing [data-cg-command="select-all"] { grid-column: 3; grid-row: 1; }
+    .cg-mobile-actions.is-editing [data-cg-command="reset-cards"] { grid-column: 4; grid-row: 1; }
+    .cg-mobile-tools { flex: 0 0 308px; box-sizing: border-box; display: grid; grid-template-rows: 1fr 1fr; gap: 3px; height: var(--cg-tile-height); padding: 3px; border: 1px solid #b5d9f3; border-radius: 10px; background: #eef6ff; }
+    #cards .top-bar .cg-list:not(:has(.cg-row:not(.is-empty))) .cg-mobile-tools { height: 70px; }
+    .cg-tools-actions { display: grid; grid-template-columns: 1.25fr 1fr; gap: 3px; min-height: 0; }
+    .cg-mobile-tools button, #cards .top-bar .cg-mobile-tools .cg-add { box-sizing: border-box; min-width: 0; min-height: 0; width: 100%; height: 100%; margin: 0; padding: 0 4px; border-radius: 4px; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    .cg-tools-actions button { border: 1px solid #b5d9f3; background: #fff; color: #1f3f5f; }
+    .cg-mobile-tools button:disabled { opacity: 0.45; cursor: default; }
+    .cg-mobile-tools button:focus-visible { outline: 2px solid #2f80ed; outline-offset: 1px; }
+    .cg-tools-auth-row { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: center; gap: 4px; min-height: 0; }
+    .cg-tools-auth-row .cg-tools-auth-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 100%; }
+    .cg-tools-auth-actions .cards-auth-btn { box-sizing: border-box; width: 100%; height: 100%; min-height: 28px; padding: 0 4px; font-size: 12px; }
+    .cg-tools-auth-row .cg-tools-save-status { box-sizing: border-box; min-width: 0; height: 100%; padding: 0 8px; justify-content: center; }
+}
+
+/* 並び替えの下書きはモーダル内だけで編集する。 */
+.cg-order-dialog { box-sizing: border-box; width: min(92vw, 420px); max-height: 90dvh; padding: 12px; border: 1px solid #b5d9f3; border-radius: 12px; color: #1f3f5f; background: #fff; }
+.cg-order-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+.cg-order-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cg-order-heading h2 { margin: 0; font-size: 17px; }
+.cg-order-help, .cg-order-status { margin: 8px 0; font-size: 12px; }
+.cg-order-list { max-height: 50dvh; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.cg-order-entry { display: grid; grid-template-columns: minmax(0, 1fr) 32px 32px; align-items: center; gap: 4px; padding: 3px 0; border-bottom: 1px solid #e5edf3; }
+.cg-order-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.cg-order-name small { color: #666; }
+.cg-order-card-info { min-width: 0; }
+.cg-order-label { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.cg-order-count { flex: 0 0 auto; font-size: 11px; white-space: nowrap; }
+.cg-order-thumbs { display: flex; align-items: center; height: 30px; padding: 2px 0 0; overflow: hidden; }
+.cg-order-thumbs img { flex: 0 0 22px; width: 22px; height: 28px; margin-left: -5px; border: 1px solid #ddd; border-radius: 2px; object-fit: cover; }
+.cg-order-thumbs img:first-child { margin-left: 0; }
+.cg-order-more { margin-left: 5px; font-size: 11px; white-space: nowrap; }
+.cg-order-empty { color: #666; font-size: 11px; }
+.cg-order-dialog button { min-height: 32px; padding: 4px 6px; border: 1px solid #b5d9f3; border-radius: 4px; background: #eef6ff; color: #1f3f5f; cursor: pointer; }
+.cg-order-dialog button:disabled { opacity: 0.4; cursor: default; }
+.cg-order-dialog button:focus-visible { outline: 2px solid #2f80ed; outline-offset: 1px; }
+.cg-order-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }

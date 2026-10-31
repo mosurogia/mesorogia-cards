@@ -1355,6 +1355,8 @@ body.lethal-auto-filter-open {
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
 }
 
 .post-lethal-card-modal__content {
@@ -1571,4 +1573,112 @@ body.lethal-auto-filter-open {
     .post-lethal-candidate-card {
         --candidate-image-width: 42px;
     }
+}
+
+/* 番号と矢印で実行順を示し、枠を選んで順番を変更する。 */
+.lethal-planner__order-slot { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.lethal-planner__expression .lethal-planner__term { padding: 0; max-width: 100%; border-radius: 8px; }
+.lethal-planner__term-order { display: inline-flex; align-items: center; gap: 6px; min-width: 70px; min-height: 44px; padding: 6px 12px; border: 0; border-radius: inherit; background: transparent; color: inherit; font: inherit; cursor: pointer; touch-action: manipulation; }
+.lethal-planner__term-order:disabled { opacity: 1; cursor: default; }
+.lethal-planner__term-order .lethal-planner__term-icon { position: static; font-size: 13px; }
+.lethal-planner__term-number { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #e2e8f0; color: #475569; font-size: 12px; }
+.lethal-planner__term.is-order-selected { border-color: #2563eb; background: #dbeafe; box-shadow: 0 0 0 2px #2563eb; }
+.lethal-planner__term.is-order-selected .lethal-planner__term-number { background: #2563eb; color: #fff; }
+.lethal-planner__term-order:focus-visible, .lethal-planner__term-remove:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+.lethal-planner__header { flex-wrap: wrap; }
+.lethal-planner__actions { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; max-width: 100%; }
+.lethal-planner__expression .lethal-planner__result { display: inline-flex; align-items: center; flex: 0 0 auto; min-height: 32px; padding: 6px 10px; border-radius: 6px; background: #eef2f6; white-space: nowrap; }
+.lethal-planner__numbers-reset { min-height: 36px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #475569; font: inherit; font-size: 12px; cursor: pointer; touch-action: manipulation; }
+.lethal-planner__numbers-reset:disabled { opacity: .45; cursor: default; }
+.lethal-planner__numbers-reset:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+.lethal-planner__order-help { flex-basis: 100%; font-size: 12px; font-weight: 400; color: #475569; }
+
+/* 並べ替え用の非編集枠だけ、文字選択とiOS長押しメニューを抑制する。 */
+.lethal-planner__expression .lethal-planner__term,
+.lethal-planner__expression .lethal-planner__term * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* →と↑を同じ境界に置き、次の枠と一緒に折り返す。 */
+.lethal-planner__order-slot { position: relative; padding-bottom: 32px; }
+.lethal-planner__order-boundary { position: relative; display: inline-flex; align-items: center; justify-content: center; align-self: stretch; flex: 0 0 44px; width: 44px; }
+.lethal-planner__expression { align-items: flex-start; }
+.lethal-planner__order-gap { position: absolute; left: 0; top: calc(100% + 2px); display: inline-flex; align-items: flex-start; justify-content: center; width: 44px; height: 28px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #334155; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.lethal-planner__order-gap span { display: inline-flex; pointer-events: none; }
+.lethal-planner__order-gap svg { width: 20px; height: 20px; }
+.lethal-planner__order-gap:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+.lethal-planner__order-gap:hover { background: #eff6ff; }
+
+/* 画面幅にかかわらず4つの攻撃枠を同じ行に置く。境界の押下面積は下の帯に確保する。 */
+@media all {
+    .lethal-planner__expression { gap: 2px; }
+    .lethal-planner__order-slot { gap: 2px; }
+    .lethal-planner__order-boundary { flex-basis: 12px; width: 12px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-boundary,
+    .lethal-planner__order-slot--total .lethal-planner__order-boundary { flex-basis: 28px; width: 28px; }
+    .lethal-planner__term-order { min-width: 0; min-height: 40px; padding: 3px 2px; gap: 2px; }
+    .lethal-planner__term-number { width: 14px; height: 14px; font-size: 10px; }
+    .lethal-planner__term-value { font-size: 14px; }
+    .lethal-planner__term-order .lethal-planner__term-icon { position: absolute; top: -8px; left: 18px; font-size: 11px; }
+    .lethal-planner__operator { font-size: 12px; }
+    .lethal-planner__order-gap { left: -16px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-gap,
+    .lethal-planner__order-slot--total .lethal-planner__order-gap { left: -8px; }
+    .lethal-planner__expression .lethal-planner__result { min-height: 32px; padding: 4px; font-size: 12px; }
+}
+
+/* 4攻撃と合計を全画面幅で一列に置き、操作面積は下方向に確保する。 */
+@media all {
+    .lethal-planner__expression { gap: 1px; }
+    .lethal-planner__order-slot { gap: 0; padding-bottom: 44px; }
+    .lethal-planner__order-boundary { flex-basis: 8px; width: 8px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-boundary,
+    .lethal-planner__order-slot--total .lethal-planner__order-boundary { flex-basis: 16px; width: 16px; }
+    .lethal-planner__term-order { padding: 3px 2px; gap: 1px; }
+    .lethal-planner__term-number { width: 12px; height: 12px; font-size: 10px; }
+    .lethal-planner__term-value { font-size: 12px; }
+    .lethal-planner__order-gap { left: -12px; width: 32px; height: 40px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-gap,
+    .lethal-planner__order-slot--total .lethal-planner__order-gap { left: -8px; }
+    .lethal-planner__expression .lethal-planner__result { min-height: 38px; padding: 2px; font-size: 11px; }
+}
+
+/* 式の実内幅に合わせて拡大し、4攻撃と合計が収まる余白を保つ。 */
+.lethal-planner__expression { container-type: inline-size; }
+@container (min-width: 440px) {
+    .lethal-planner__order-slot { gap: 4px; }
+    .lethal-planner__order-boundary { flex-basis: 16px; width: 16px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-boundary,
+    .lethal-planner__order-slot--total .lethal-planner__order-boundary { flex-basis: 24px; width: 24px; }
+    .lethal-planner__term-order { min-height: 44px; padding: 5px 6px; gap: 4px; }
+    .lethal-planner__term-number { width: 16px; height: 16px; font-size: 11px; }
+    .lethal-planner__term-value { font-size: 16px; }
+    .lethal-planner__operator { font-size: 14px; }
+    .lethal-planner__order-gap { left: -8px; }
+    .lethal-planner__order-slot:first-child .lethal-planner__order-gap,
+    .lethal-planner__order-slot--total .lethal-planner__order-gap { left: -4px; }
+    .lethal-planner__expression .lethal-planner__result { min-height: 38px; padding: 4px 6px; font-size: 14px; }
+}
+@container (min-width: 680px) {
+    .lethal-planner__order-slot { gap: 6px; }
+    .lethal-planner__order-boundary,
+    .lethal-planner__order-slot:first-child .lethal-planner__order-boundary,
+    .lethal-planner__order-slot--total .lethal-planner__order-boundary { flex-basis: 28px; width: 28px; }
+    .lethal-planner__term-order { min-width: 70px; padding: 6px 12px; gap: 6px; }
+    .lethal-planner__term-value { font-size: 18px; }
+    .lethal-planner__term-number { width: 20px; height: 20px; font-size: 12px; }
+    .lethal-planner__term-order .lethal-planner__term-icon { position: static; font-size: 13px; }
+    .lethal-planner__operator { font-size: 16px; }
+    .lethal-planner__order-gap,
+    .lethal-planner__order-slot:first-child .lethal-planner__order-gap,
+    .lethal-planner__order-slot--total .lethal-planner__order-gap { left: -8px; width: 44px; }
+    .lethal-planner__expression .lethal-planner__result { min-height: 32px; padding: 6px 10px; font-size: 16px; }
+}
+
+/* 狭い式では打点枠そのものに余白を付け、ボタンとの二重余白を避ける。 */
+@container (max-width: 439px) {
+    .lethal-planner__expression .lethal-planner__term { padding: 0 5px; }
+    .lethal-planner__term-order { padding-left: 0; padding-right: 0; }
 }

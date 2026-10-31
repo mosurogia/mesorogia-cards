@@ -9,7 +9,7 @@
     position: sticky;
     top: 0;
     background: #fff;
-    z-index: 2000;
+    z-index: var(--layer-page-sticky, 100);
     border-bottom: 1px solid #ccc;
 }
 
@@ -18,7 +18,7 @@
     padding: 0 2px;
     position: sticky;
     top: 0;
-    z-index: 2000;
+    z-index: var(--layer-page-sticky, 100);
     display: flex;
     align-items: center;
     background: #fff;
@@ -540,6 +540,12 @@ body.is-card-pick-open #deckpeek-button {
     --ring-accent: rgb(var(--pack-j-accent-rgb));
 }
 
+
+.card-pick-option[data-pack="Kryptos of the Abyss"] {
+    --ring: rgb(var(--pack-k-rgb));
+    --ring-accent: rgb(var(--pack-k-accent-rgb));
+}
+
 .card-pick-option[data-pack="その他特殊カード"] {
     --ring: rgb(var(--pack-special-rgb));
     --ring-accent: rgb(var(--pack-special-accent-rgb));
@@ -789,6 +795,7 @@ body.is-card-pick-open #deckpeek-button {
 }
 
 .modal {
+    box-sizing: border-box;
     display: none;
     position: fixed;
     inset: 0;
@@ -797,7 +804,7 @@ body.is-card-pick-open #deckpeek-button {
     overflow-x: hidden;
     overflow-x: clip;
     background: rgba(0, 0, 0, .5);
-    z-index: 2000;
+    z-index: var(--layer-dialog, 2000);
     justify-content: center;
     align-items: center;
 }
@@ -808,7 +815,7 @@ body.is-card-pick-open #deckpeek-button {
 
 .modal-content {
     background: #fff;
-    padding: 0 15px;
+    padding: 10px 15px;
     border-radius: 10px;
     max-width: 950px;
     width: min(90%, calc(100vw - 24px));
@@ -818,7 +825,7 @@ body.is-card-pick-open #deckpeek-button {
     overflow-y: auto;
     position: relative;
     box-sizing: border-box;
-    margin: auto;
+    margin: 5px auto ;
 }
 
 /* フィルターモーダル上部固定 */
@@ -1018,7 +1025,7 @@ body.is-card-pick-open #deckpeek-button {
 .card-detail-modal-title-row {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 32px 44px 32px;
+    grid-template-columns: minmax(0, 1fr) 32px 32px 44px 32px;
     align-items: center;
     gap: 8px;
 }
@@ -1028,7 +1035,30 @@ body.is-card-pick-open #deckpeek-button {
     font-size: 1rem;
     line-height: 1.35;
     min-width: 0;
+    overflow-wrap: anywhere;
 }
+
+/* お気に入りは形と配色の両方で状態を示し、既存の操作と領域を分ける。 */
+.card-detail-favorite {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 3px;
+    border: 1px solid #b5d9f3;
+    border-radius: 8px;
+    background: #e9f5fb;
+    color: #4f91c5;
+    cursor: pointer;
+}
+.card-detail-favorite svg { width: 24px; height: 24px; }
+.card-detail-modal-favorite { align-self: start; }
+.card-detail-favorite[aria-pressed="true"] { background: #8fc4ef; border-color: #4f91c5; color: #1f3f5f; }
+.card-detail-favorite[aria-pressed="true"] svg { fill: currentColor; }
+.card-detail-favorite:disabled { opacity: .5; cursor: not-allowed; }
+.card-detail-favorite:focus-visible { outline: 2px solid #2f80ed; outline-offset: 2px; }
+.card-detail-favorite-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .card-detail-modal-close {
     display: grid;
@@ -1302,9 +1332,15 @@ body.is-card-pick-open #deckpeek-button {
 
     .card-detail-modal-title-row {
         grid-area: title;
-        grid-template-columns: minmax(0, 1fr) 28px 36px 28px;
+        grid-template-columns: minmax(0, 1fr) 28px 36px 28px 32px;
         gap: 4px;
     }
+
+    .card-detail-modal-title { grid-column: 1 / 5; grid-row: 1; }
+    .card-detail-modal-favorite { grid-column: 5; grid-row: 1; }
+    .card-detail-modal-move-hint { grid-column: 2; grid-row: 2; }
+    .card-detail-modal-save { grid-column: 3; grid-row: 2; }
+    .card-detail-modal-close { grid-column: 4 / 6; grid-row: 2; justify-self: end; }
 
     .card-detail-modal-help {
         position: fixed;
@@ -2028,6 +2064,12 @@ body.is-card-pick-open #deckpeek-button {
 .filter-group[data-key="パック名"] .filter-btn[data-pack="Juggernaut Incarnate"] {
     --ring: rgb(var(--pack-j-rgb));
     --ring-accent: rgb(var(--pack-j-accent-rgb));
+}
+
+
+.filter-group[data-key="パック名"] .filter-btn[data-pack="Kryptos of the Abyss"] {
+    --ring: rgb(var(--pack-k-rgb));
+    --ring-accent: rgb(var(--pack-k-accent-rgb));
 }
 
 
@@ -2963,6 +3005,11 @@ body.is-card-pick-open #deckpeek-button {
     flex-wrap: wrap;
 }
 
+.card-title-row.card-detail-favorite-title { display: grid; grid-template-columns: 28px minmax(0, 1fr) 32px; align-items: start; }
+.card-detail-favorite-title .detail-zoom-btn { grid-column: 1; }
+.card-detail-favorite-title .card-name { grid-column: 2; min-width: 0; overflow-wrap: anywhere; }
+.card-detail-favorite-title .card-detail-favorite { grid-column: 3; grid-row: 1; }
+
 .card-detail-actions {
     display: grid;
     grid-template-columns:
@@ -3459,4 +3506,48 @@ body.is-pwa-standalone .card-detail-action-btn {
 
 .type-ブロッカー {
     background: rgba(214, 212, 204, 0.5);
+}
+
+/* 背景は全画面のまま、ダイアログの左右に安全な余白を確保する。 */
+@media (max-width: 768px) {
+    .modal { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+    .modal > .modal-content { max-width: 100%; }
+}
+
+/* 登録成功の案内は操作ボタンの下に置き、画面幅に収める。 */
+#card-detail-favorite-guide {
+    --favorite-guide-border: #34d399;
+    --favorite-guide-background: #ecfdf5;
+    position: fixed;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100vw - 16px);
+    padding: 7px 8px;
+    border: 1px solid var(--favorite-guide-border);
+    border-radius: 9px;
+    background: var(--favorite-guide-background);
+    color: #065f46;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.45;
+    box-shadow: 0 4px 12px rgba(6, 95, 70, .14);
+    z-index: 40000;
+    pointer-events: none;
+}
+#card-detail-favorite-guide::before,
+#card-detail-favorite-guide::after {
+    content: "";
+    position: absolute;
+    left: var(--favorite-guide-arrow);
+    transform: translateX(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--favorite-guide-border);
+    top: -10px;
+}
+#card-detail-favorite-guide::after {
+    border-left-width: 8px;
+    border-right-width: 8px;
+    border-bottom: 8px solid var(--favorite-guide-background);
+    top: -8px;
 }

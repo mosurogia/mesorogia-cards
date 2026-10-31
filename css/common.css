@@ -1,5 +1,6 @@
 
 :root {
+    --account-settings-background: linear-gradient(90deg, #ef4444, #f97316);
     --app-bottom-nav-offset: 0px;
     --app-visual-viewport-bottom-gap: 0px;
 
@@ -82,6 +83,9 @@
     /*Jパック*/
     --pack-j-rgb: 154, 64, 38;
     --pack-j-accent-rgb: 246, 190, 92;
+    /*Kパック：深い青緑とターコイズ*/
+    --pack-k-rgb: 20, 86, 94;
+    --pack-k-accent-rgb: 86, 224, 200;
     /* 特殊：ダークパープル（異質・限定感） */
     --pack-special-rgb: 200, 170, 70;
     --pack-special-accent-rgb: 255, 220, 120;
@@ -603,13 +607,13 @@ button,
     white-space: nowrap;
 }
 
-/* ===== 用語集公開を知らせるメニューの丸印 ===== */
+/* ===== 探索メニューの未閲覧項目を知らせる丸印 ===== */
 .main-header .header-menu-button--new {
     position: relative;
     --header-menu-new-color: var(--glossary-news-color, #d93636);
 }
 
-.has-glossary-news .main-header .header-menu-button--new::after {
+.has-header-menu-news .main-header .header-menu-button--new::after {
     content: "";
     position: absolute;
     top: -3px;
@@ -1088,6 +1092,13 @@ button,
     cursor: pointer;
 }
 
+/* 各ページのアカウント設定で使う既存の赤から橙の配色。 */
+.account-settings-action {
+    background: var(--account-settings-background);
+    color: #fff;
+    border: none;
+}
+
 .btn.ghost {
     min-width: 60px;
     padding: 0.35rem 0.6rem;
@@ -1132,6 +1143,13 @@ button,
     text-decoration: underline;
     cursor: pointer;
 }
+
+.auth-forgot-guide { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; color: #475569; font-size: .85rem; line-height: 1.6; }
+.auth-forgot-guide[hidden] { display: none; }
+.auth-forgot-guide p { margin: 0 0 6px; }
+.auth-forgot-contact { color: #4f46e5; text-decoration: underline; }
+.auth-forgot-contact:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; border-radius: 4px; }
+.auth-forgot-hint { margin: 0; color: #64748b; font-size: .78rem; line-height: 1.5; }
 
 .auth-forgot-link:hover {
     color: #3730a3;
@@ -2049,42 +2067,52 @@ footer a:hover {
     pointer-events: none;
 }
 
-.home-event-banner--juggernaut {
+.home-event-banner--kryptos {
     background:
         linear-gradient(90deg,
-            rgba(var(--pack-j-rgb), .98) 0%,
-            rgba(102, 40, 34, .96) 42%,
-            rgba(48, 20, 19, .97) 100%),
+            rgba(var(--pack-k-rgb), .98) 0%,
+            rgba(18, 56, 64, .96) 42%,
+            rgba(8, 31, 39, .97) 100%),
         url("../img/header.webp") center / auto 55px repeat-x;
-    border-top-color: rgba(var(--pack-j-accent-rgb), .62);
-    border-bottom-color: rgba(var(--pack-j-rgb), .78);
+    border-top-color: rgba(var(--pack-k-accent-rgb), .62);
+    border-bottom-color: rgba(var(--pack-k-rgb), .78);
 }
 
-.home-event-banner--juggernaut::before {
+.home-event-banner--kryptos::before {
     background:
-        radial-gradient(circle at 28% 45%, rgba(var(--pack-j-accent-rgb), .24), transparent 31%),
-        linear-gradient(90deg, rgba(var(--pack-j-accent-rgb), .10), transparent 44%);
+        radial-gradient(circle at 28% 45%, rgba(var(--pack-k-accent-rgb), .24), transparent 31%),
+        linear-gradient(90deg, rgba(var(--pack-k-accent-rgb), .10), transparent 44%);
 }
 
-.home-event-banner--juggernaut::after {
+.home-event-banner--kryptos::after {
     background:
-        radial-gradient(circle at 80% 46%, rgba(var(--pack-j-accent-rgb), .34), transparent 39%),
-        linear-gradient(270deg, rgba(var(--pack-j-rgb), .22), transparent);
+        radial-gradient(circle at 80% 46%, rgba(var(--pack-k-accent-rgb), .34), transparent 39%),
+        linear-gradient(270deg, rgba(var(--pack-k-rgb), .22), transparent);
 }
 
-.home-event-banner--juggernaut .home-event-banner__text > span {
-    color: rgb(var(--pack-j-accent-rgb));
+.home-event-banner--kryptos .home-event-banner__text > span {
+    color: #d9fff6;
 }
 
-.home-event-banner--juggernaut .home-event-banner__text strong {
+.home-event-banner--kryptos .home-event-banner__text strong {
     color: #f8fbff;
     text-shadow:
-        0 2px 0 rgba(16, 28, 88, .92),
+        0 2px 0 rgba(5, 25, 34, .92),
         0 4px 10px rgba(0, 0, 0, .5),
-        0 0 14px rgba(var(--pack-j-accent-rgb), .42);
+        0 0 14px rgba(var(--pack-k-accent-rgb), .42);
 }
 
-.home-event-banner--juggernaut img {
+.home-event-banner--kryptos .home-event-banner__text small {
+    background: linear-gradient(135deg, rgba(var(--pack-k-accent-rgb), .96), rgba(234, 255, 248, .92));
+    border-color: rgba(var(--pack-k-rgb), .70);
+    color: #083c43;
+}
+
+.home-event-banner--kryptos .home-event-banner__text small span:last-child {
+    color: #164c49;
+}
+
+.home-event-banner--kryptos img {
     right: 0;
     bottom: 0;
     height: 100%;
@@ -2222,7 +2250,7 @@ footer a:hover {
         max-width: 190px;
     }
 
-    .home-event-banner--juggernaut img {
+    .home-event-banner--kryptos img {
         right: 0;
         bottom: 0;
         height: 100%;
@@ -2272,7 +2300,7 @@ footer a:hover {
         max-width: 170px;
     }
 
-    .home-event-banner--juggernaut img {
+    .home-event-banner--kryptos img {
         right: 0;
         bottom: 0;
         height: 100%;
@@ -2309,7 +2337,7 @@ footer a:hover {
         max-width: 168px;
     }
 
-    .home-event-banner--juggernaut img {
+    .home-event-banner--kryptos img {
         right: 0;
         bottom: 0;
         width: 112px;
@@ -3242,4 +3270,48 @@ body.is-pwa-standalone .app-back-to-top.is-visible {
     #deck-post-result-modal .deck-post-result-dialog {
         scroll-behavior: auto;
     }
+}
+
+/* 投稿完了画面を閉じる前の入力保持・リセット確認 */
+.modal.deck-post-input-choice-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, .5);
+}
+.deck-post-input-choice-modal .deck-post-input-choice-dialog {
+    position: relative;
+    width: min(100%, 540px);
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    color: #172033;
+}
+.deck-post-input-choice-dialog h3 { padding-right: 28px; }
+.deck-post-input-choice-dialog p { line-height: 1.6; }
+.deck-post-input-choice-actions { display: grid; gap: 10px; }
+.deck-post-input-choice-actions button { min-height: 44px; }
+.deck-post-input-choice-actions button:focus-visible { outline: 2px solid #2458a6; outline-offset: 2px; }
+
+/* 通常の固定UIは共通ダイアログより下に置く。重ねたダイアログの既存層は維持する。 */
+:root { --layer-page-sticky: 100; --layer-page-subtab: 110; --layer-dialog: 2000; }
+@media (max-width: 768px) {
+    .account-modal { box-sizing: border-box; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+    .account-modal > .modal-content { max-width: 100%; }
+}
+
+/* 共通の認証送信ボタン内に処理状態を表示する */
+#auth-login-btn-submit.is-auth-loading { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.auth-button-spinner { width: 14px; height: 14px; flex: 0 0 auto; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: auth-button-spin .8s linear infinite; }
+@keyframes auth-button-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    .auth-button-spinner { animation: none; }
 }
