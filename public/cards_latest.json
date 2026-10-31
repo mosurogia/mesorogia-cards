@@ -47970,7 +47970,7 @@
     "link":false,
     "link_cd":20905,
     "CV":"山本 拓人",
-    "cv_kana":"",
+    "cv_kana":"やまもと　たくと",
     "rarity":"ゴールド",
     "race":"アンドロイド",
     "category":"ノーカテゴリ",
@@ -50454,7 +50454,7 @@
     "effect_name2":"■攻撃成功時■",
     "effect_text2":"お互いのライフを3減らす。",
     "effect_text_all":"自分のライフが15以下であれば、このカードのコストを4減らす。 お互いのライフを3減らす。",
-    "field":false,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50534,7 +50534,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"BPが1以上の時、次のターンの終わりまで、自分の手札すべてのパワーを3増やす ",
-    "field":false,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50613,7 +50613,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"BPを1消費して発動する。フィールドをリセットし、相手のBPを2減らす。 ",
-    "field":false,
+    "field":"ノーマルフィールド",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50692,7 +50692,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"BPが2以上の時、相手の手札のカードを1枚選び、破壊する。 ",
-    "field":null,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50771,7 +50771,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"BPが2以上の時、自分のライフを5増やし、自分と相手の手札のステータスをすべてリセットする。 ",
-    "field":null,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50850,7 +50850,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"BPが2以上の時、墓地からカードを1枚選び手札に戻し、パワーを4増やす。 ",
-    "field":null,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -50929,7 +50929,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"カードを2枚引く。自分の手札の白騎士ブロッカーを1枚選び、コストを2減らし、次のターンの終わりまでチャージャーにする。ルミナスフィールドにする。 ",
-    "field":null,
+    "field":"ルミナスフィールド",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -51008,7 +51008,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"自分の山札からランダムな白騎士ブロッカー1枚を手札に加え、コストを4減らす。\nルミナスフィールドにする。 ",
-    "field":null,
+    "field":"ルミナスフィールド",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -51087,7 +51087,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"ルミナスフィールドでなければ、自分の手札の歪祝を1枚選び、2ターン後の終わりまでコストを4増やし、パワーを2増やす。ルミナスフィールドにする。 ",
-    "field":null,
+    "field":"ルミナスフィールド",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -51166,7 +51166,7 @@
     "effect_name2":null,
     "effect_text2":null,
     "effect_text_all":"自分のBPを1増やす。相手の戦場のカードに召喚時効果が無ければ、これのパワーを3増やす。 ",
-    "field":null,
+    "field":"フィールド関係なし",
     "BP_flag":false,
     "ability_burn":false,
     "ability_bind":false,
@@ -51221,6 +51221,3960 @@
     },
     "cv_id":0,
     "image_path":"img\/40809.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11001,
+    "link":false,
+    "link_cd":0,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう じん",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"ドラゴライダー",
+    "type":"チャージャー",
+    "name":"ドラゴライダー・コービス",
+    "cost":0,
+    "power":5,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を1枚選び、燃焼にする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の手札を1枚選び、燃焼にする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":true,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11002,
+    "link":false,
+    "link_cd":0,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"メロウディア",
+    "type":"ブロッカー",
+    "name":"メロウディア＝ラベル",
+    "cost":4,
+    "power":14,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドであれば、自分のライフを「自分の手札のメロウディアの枚数×1（最大4まで）」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ドラゴンフィールドであれば、自分のライフを「自分の手札のメロウディアの枚数×1（最大4まで）」増やす。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11003,
+    "link":false,
+    "link_cd":0,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"契神導師（かんなぎ）",
+    "type":"チャージャー",
+    "name":"契神導師・櫛灘",
+    "cost":6,
+    "power":11,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ドラゴンフィールドであれば、自分のマナを2増やし、カードを1枚引く。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"これを引いた時、ドラゴンフィールドであれば、自分のマナを「自分の手札の契神導師の枚数×1（最大4まで）」増やす。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_text_all":"ドラゴンフィールドであれば、自分のマナを2増やし、カードを1枚引く。 これを引いた時、ドラゴンフィールドであれば、自分のマナを「自分の手札の契神導師の枚数×1（最大4まで）」増やす。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11004,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"忘れられた聖剣",
+    "cost":0,
+    "power":0,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを12消費して発動する。自分の手札を1枚選び、コストを0にし、パワーを50増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを12消費して発動する。自分の手札を1枚選び、コストを0にし、パワーを50増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          50
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11005,
+    "link":false,
+    "link_cd":0,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"ゴールド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"岩砕剣士",
+    "cost":4,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。相手の手札のブロッカーを1枚選び、破壊する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。相手の手札のブロッカーを1枚選び、破壊する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"OPPONENT",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11006,
+    "link":false,
+    "link_cd":0,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"レジェンド",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"炎翼の竜妃 ペレ",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。これのパワーを4増やす。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"自分のBPを1増やす。自分の山札の上から5枚見てドラゴンを1枚選び、自分の手札に加え、パワーを2増やす。",
+    "effect_text_all":"自分のBPを1消費して発動する。これのパワーを4増やす。 自分のBPを1増やす。自分の山札の上から5枚見てドラゴンを1枚選び、自分の手札に加え、パワーを2増やす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8,
+          12
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+          2
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":11007,
+    "link":false,
+    "link_cd":0,
+    "CV":"白波瀬 沙耶",
+    "cv_kana":"しらはせ さや",
+    "rarity":"シルバー",
+    "race":"ドラゴン",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"大槌使い ブレンダ",
+    "cost":10,
+    "power":8,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"次のターンの終わりまで、相手の手札すべてをブロッカーにする。ドラゴンフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"次のターンの終わりまで、相手の手札すべてをブロッカーにする。ドラゴンフィールドにする。 ",
+    "field":"ドラゴンフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/11007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21001,
+    "link":false,
+    "link_cd":0,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"シルバー",
+    "race":"アンドロイド",
+    "category":"メイドロボ",
+    "type":"チャージャー",
+    "name":"メイドロボ オレンジ",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"アンドロイドフィールドであれば、自分の手札のメイドロボすべてのコストを2減らし、パワーを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"アンドロイドフィールドであれば、自分の手札のメイドロボすべてのコストを2減らし、パワーを1増やす。 ",
+    "field":"アンドロイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21002,
+    "link":false,
+    "link_cd":0,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"ブロンズ",
+    "race":"アンドロイド",
+    "category":"アドミラルシップ",
+    "type":"チャージャー",
+    "name":"アドミラルシップ ハチ",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分のアドミラルシップの攻撃成功時、これを破壊し、自分の墓地からアドミラルシップ1枚を選び、自分の手札に加える。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のアドミラルシップの攻撃成功時、これを破壊し、自分の墓地からアドミラルシップ1枚を選び、自分の手札に加える。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"SELF",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21003,
+    "link":false,
+    "link_cd":0,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"ゴールド",
+    "race":"アンドロイド",
+    "category":"テックノイズ",
+    "type":"チャージャー",
+    "name":"テックノイズ ハープ",
+    "cost":6,
+    "power":12,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札に「ノイズ」を1枚加える。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"自分の手札に「ノイズ」が加わった時、自分のマナとライフを2増やす。",
+    "effect_text_all":"自分の手札に「ノイズ」を1枚加える。 自分の手札に「ノイズ」が加わった時、自分のマナとライフを2増やす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21004,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"光砲台",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の戦場のカードがアタッカーであれば、相手のライフを3減らし、自分のマナを5増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の戦場のカードがアタッカーであれば、相手のライフを3減らし、自分のマナを5増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"DOWN",
+    "cost_effect":"",
+    "lethal_burn":3,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21005,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"空域戦闘機",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"カードを1枚引く。それがアタッカーであれば、自分のBPを1増やし、自分の山札からチャージャーをランダムに1枚、自分の手札に加える。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"カードを1枚引く。それがアタッカーであれば、自分のBPを1増やし、自分の山札からチャージャーをランダムに1枚、自分の手札に加える。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21006,
+    "link":false,
+    "link_cd":0,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"ゴールド",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"紅眼の電銃士・レイナ",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"相手の手札を1枚選び、ロックオンする。これを自分の手札に戻す。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"相手の手札からロックオンしているカードが召喚された時、相手のライフを5減らす。",
+    "effect_text_all":"相手の手札を1枚選び、ロックオンする。これを自分の手札に戻す。 相手の手札からロックオンしているカードが召喚された時、相手のライフを5減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+          5
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":21007,
+    "link":false,
+    "link_cd":0,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"レジェンド",
+    "race":"アンドロイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"黒翼の双剣・アルテナ",
+    "cost":10,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。自分の手札を1枚選び、コストを4減らす。その後、自分の手札を1枚選び、パワーを3増やす。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"自分のBPを1増やす。",
+    "effect_text_all":"自分のBPを1消費して発動する。自分の手札を1枚選び、コストを4減らす。その後、自分の手札を1枚選び、パワーを3増やす。 自分のBPを1増やす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          3
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/21007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31001,
+    "link":false,
+    "link_cd":0,
+    "CV":"白波瀬 沙耶",
+    "cv_kana":"しらはせ さや",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"ナチュリア",
+    "type":"チャージャー",
+    "name":"信頼のナチュリア トラスト",
+    "cost":6,
+    "power":10,
+    "effect_name1":"■手札発動■",
+    "effect_text1":"自分のナチュリアアタッカーが召喚された時、エレメンタルフィールドであれば、自分の戦場のカードのパワーを1増やす。このカード名のこの効果は1ターンに1回しか発動しない。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のナチュリアアタッカーが召喚された時、エレメンタルフィールドであれば、自分の戦場のカードのパワーを1増やす。このカード名のこの効果は1ターンに1回しか発動しない。 ",
+    "field":"エレメンタルフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":{
+          "value":1
+        },
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31002,
+    "link":false,
+    "link_cd":0,
+    "CV":"川石 奈奈",
+    "cv_kana":"かわいし　なな",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"鬼刹（きせつ）",
+    "type":"ブロッカー",
+    "name":"鬼刹衆一 立宗",
+    "cost":8,
+    "power":16,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の山札からコスト12の鬼刹衆を1枚選び、自分の手札に加え、次のターンの終わりまでコストを0にする。これのコストが0であれば、自分の手札の鬼刹衆すべてのパワーを1増やす。",
+    "effect_name2":"■手札発動■",
+    "effect_text2":"ターン終了時、自分の戦場のカードが鬼刹衆であれば、次のターンの終わりまでこれのコストを8減らす。",
+    "effect_text_all":"自分の山札からコスト12の鬼刹衆を1枚選び、自分の手札に加え、次のターンの終わりまでコストを0にする。これのコストが0であれば、自分の手札の鬼刹衆すべてのパワーを1増やす。 ターン終了時、自分の戦場のカードが鬼刹衆であれば、次のターンの終わりまでこれのコストを8減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31003,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・ウィンド",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1増やす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札すべてのパワーを2減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1増やす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札すべてのパワーを2減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31004,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・ライトニング",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の山札の上から5枚見て、ウィルドルーンを1枚選び、自分の手札に加える。自分のBPを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の山札の上から5枚見て、ウィルドルーンを1枚選び、自分の手札に加える。自分のBPを1増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31005,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・フローズ",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。自分の手札のウィルドルーンを1枚選び、次のターンの終わりまでパワーを4増やし、ブロッカーにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。自分の手札のウィルドルーンを1枚選び、次のターンの終わりまでパワーを4増やし、ブロッカーにする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31006,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・フレイム",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1増やす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札をランダムに2枚燃焼にする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1増やす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札をランダムに2枚燃焼にする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":true,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31007,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・ポイズン",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手のライフを1減らす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手のライフを2減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手のライフを1減らす。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手のライフを2減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":"1,3",
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31008,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"チャージャー",
+    "name":"ウィルドルーン・バインド",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を1枚選び、拘束する。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札をランダムに2枚拘束する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の手札を1枚選び、拘束する。自分の手札にコスト0のウィルドルーンが2種類以上あれば、相手の手札をランダムに2枚拘束する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31008.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31009,
+    "link":false,
+    "link_cd":0,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"レジェンド",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"アタッカー",
+    "name":"ウィルドルーンの大賢者",
+    "cost":4,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の山札の上から3枚のうち、ウィルドルーンチャージャーすべてを自分の手札に加える。",
+    "effect_name2":"■攻撃成功時■",
+    "effect_text2":"自分の山札から「ウィルドルーンの大魔女」をランダムに1枚自分の手札に加え、自分の手札のウィルドルーンすべてのパワーを1増やす。自分のBPを1増やす。",
+    "effect_text_all":"自分の山札の上から3枚のうち、ウィルドルーンチャージャーすべてを自分の手札に加える。 自分の山札から「ウィルドルーンの大魔女」をランダムに1枚自分の手札に加え、自分の手札のウィルドルーンすべてのパワーを1増やす。自分のBPを1増やす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31009.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31010,
+    "link":false,
+    "link_cd":0,
+    "CV":"工藤 文音",
+    "cv_kana":"くどう あやね",
+    "rarity":"レジェンド",
+    "race":"エレメンタル",
+    "category":"ウィルドルーン",
+    "type":"アタッカー",
+    "name":"ウィルドルーンの大魔女",
+    "cost":12,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。自分の手札のウィルドルーンを1枚選び、アタッカーにし、コストを6増やし、パワーを3増やす。カードを1枚引く。",
+    "effect_name2":"■特性■",
+    "effect_text2":"自分の手札にコスト0のウィルドルーンが2種類以上あれば、これのコストを6減らす。",
+    "effect_text_all":"自分のBPを1消費して発動する。自分の手札のウィルドルーンを1枚選び、アタッカーにし、コストを6増やし、パワーを3増やす。カードを1枚引く。 自分の手札にコスト0のウィルドルーンが2種類以上あれば、これのコストを6減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":true,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"UP",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+          3
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31010.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31011,
+    "link":false,
+    "link_cd":0,
+    "CV":"谷 茜子",
+    "cv_kana":"たに　あかね",
+    "rarity":"シルバー",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"星粒の採集者",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札のエレメンタルを1枚選び、次のターンの終わりまでコストを5減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札のエレメンタルを1枚選び、次のターンの終わりまでコストを5減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31011.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31012,
+    "link":false,
+    "link_cd":0,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"レジェンド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"燈華姫・セレネ",
+    "cost":2,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1消費して発動する。自分の手札を1枚選び、コストを6減らす。次のターンの終わりまで、選んだカードと同じ役割の相手の手札すべてのパワーを2減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1消費して発動する。自分の手札を1枚選び、コストを6減らす。次のターンの終わりまで、選んだカードと同じ役割の相手の手札すべてのパワーを2減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31012.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31013,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"失われた刻限",
+    "cost":6,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"これのコストが0であれば、相手の手札すべてのパワーを1減らし、自分の手札すべてのコストを2減らす。",
+    "effect_name2":"■特性■",
+    "effect_text2":"ターン開始時、これのコストを3減らす。",
+    "effect_text_all":"これのコストが0であれば、相手の手札すべてのパワーを1減らし、自分の手札すべてのコストを2減らす。 ターン開始時、これのコストを3減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"DOWN",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31013.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31014,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"水鏡の器",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札を1枚選び、パワーを10奪う。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札を1枚選び、パワーを10奪う。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"STEAL",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31014.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":31015,
+    "link":false,
+    "link_cd":0,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"ゴールド",
+    "race":"エレメンタル",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"遺跡探索者",
+    "cost":6,
+    "power":18,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の墓地にチャージャーが8枚以上あれば、自分のBPを1消費して発動する。相手の戦場のカードをアタッカーにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の墓地にチャージャーが8枚以上あれば、自分のBPを1消費して発動する。相手の戦場のカードをアタッカーにする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/31015.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41001,
+    "link":false,
+    "link_cd":0,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"ブロンズ",
+    "race":"ルミナス",
+    "category":"ロスリス",
+    "type":"ブロッカー",
+    "name":"ロスリスラスト テート",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1増やす。自分の墓地のロスリスを1枚選び、自分の山札の1番下に戻す。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1増やす。自分の墓地のロスリスを1枚選び、自分の山札の1番下に戻す。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41002,
+    "link":false,
+    "link_cd":0,
+    "CV":"安藤 仁",
+    "cv_kana":"あんどう じん",
+    "rarity":"ブロンズ",
+    "race":"ルミナス",
+    "category":"愚者愚者（クラウンクラウド）",
+    "type":"チャージャー",
+    "name":"愚者愚者のクシファ",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ルミナスフィールドにする。相手の手札にパワー1以下の愚者愚者があれば、自分の手札の愚者愚者すべてのパワーを1増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ルミナスフィールドにする。相手の手札にパワー1以下の愚者愚者があれば、自分の手札の愚者愚者すべてのパワーを1増やす。 ",
+    "field":"ルミナスフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41003,
+    "link":false,
+    "link_cd":0,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"シルバー",
+    "race":"ルミナス",
+    "category":"アルテアス",
+    "type":"ブロッカー",
+    "name":"アルテアス クレー",
+    "cost":4,
+    "power":14,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを1増やす。自分の手札のアルテアスを1枚選び、パワーを2増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを1増やす。自分の手札のアルテアスを1枚選び、パワーを2増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          2
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41004,
+    "link":false,
+    "link_cd":0,
+    "CV":"篠原 夢",
+    "cv_kana":"しのはら ゆめ",
+    "rarity":"ゴールド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"魔導士・エルフィア",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札のルミナスを1枚選び、コストを8減らし、2ターン後の終わりまで拘束する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札のルミナスを1枚選び、コストを8減らし、2ターン後の終わりまで拘束する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41005,
+    "link":false,
+    "link_cd":0,
+    "CV":"川乃 璃子",
+    "cv_kana":"かわの　りこ",
+    "rarity":"シルバー",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"白羽の射手・ディアナ",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"ルミナスフィールドであれば、相手の手札を1枚選び、拘束する。その後、相手のライフを「相手の手札の拘束状態のカードの枚数×2」減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"ルミナスフィールドであれば、相手の手札を1枚選び、拘束する。その後、相手のライフを「相手の手札の拘束状態のカードの枚数×2」減らす。 ",
+    "field":"ルミナスフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":"2,4,6,8,10,12,14,16",
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41006,
+    "link":false,
+    "link_cd":0,
+    "CV":"山本 拓人",
+    "cv_kana":"やまもと　たくと",
+    "rarity":"レジェンド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"煌王子 アウレオ",
+    "cost":10,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを最大4消費して発動する。消費したBPが2以上であれば、相手の手札を1枚選び、拘束する。さらに、消費したBPが3以上であれば、自分のライフを6増やす。さらに、消費したBPが4以上であれば、相手の戦場のカードをチャージャーにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを最大4消費して発動する。消費したBPが2以上であれば、相手の手札を1枚選び、拘束する。さらに、消費したBPが3以上であれば、自分のライフを6増やす。さらに、消費したBPが4以上であれば、相手の戦場のカードをチャージャーにする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":41007,
+    "link":false,
+    "link_cd":0,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"ゴールド",
+    "race":"ルミナス",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"剣姫・リゼル",
+    "cost":14,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の戦場のカードがブロッカーであれば、自分のBPを2消費して発動する。相手の戦場のカードを破壊する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の戦場のカードがブロッカーであれば、自分のBPを2消費して発動する。相手の戦場のカードを破壊する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"OPPONENT",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/41007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51001,
+    "link":false,
+    "link_cd":0,
+    "CV":"篠原 夢",
+    "cv_kana":"しのはら ゆめ",
+    "rarity":"ブロンズ",
+    "race":"シェイド",
+    "category":"昏き霊園（スレイヴヤード）",
+    "type":"チャージャー",
+    "name":"昏き霊園 ルナリア",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の昏き霊園の攻撃成功時、相手のマナを2減らし、相手の手札をランダムに1枚沈黙にする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の昏き霊園の攻撃成功時、相手のマナを2減らし、相手の手札をランダムに1枚沈黙にする。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":true,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"DOWN",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51002,
+    "link":false,
+    "link_cd":0,
+    "CV":"津田 拓也",
+    "cv_kana":"つだ　たくや",
+    "rarity":"シルバー",
+    "race":"シェイド",
+    "category":"炎閻魔（えんえんま）",
+    "type":"チャージャー",
+    "name":"炎閻魔-煙羅",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のライフが15以下であれば、次のターンの終わりまで、相手の手札すべてをチャージャーにする。そうでなければ、自分のライフを4減らす。シェイドフィールドにする。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフが15以下であれば、次のターンの終わりまで、相手の手札すべてをチャージャーにする。そうでなければ、自分のライフを4減らす。シェイドフィールドにする。 ",
+    "field":"シェイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"SELF_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51003,
+    "link":false,
+    "link_cd":0,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"ブロンズ",
+    "race":"シェイド",
+    "category":"ヴァントム",
+    "type":"ブロッカー",
+    "name":"ヴァントム クルスト",
+    "cost":6,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の手札を1枚選び、パワーを4奪う。自分のBPを1増やす。",
+    "effect_name2":"■戦場発動■",
+    "effect_text2":"ターン終了時、自分のBPが3以上であれば、自分の手札のヴァントムすべてのパワーを1増やす。",
+    "effect_text_all":"相手の手札を1枚選び、パワーを4奪う。自分のBPを1増やす。 ターン終了時、自分のBPが3以上であれば、自分の手札のヴァントムすべてのパワーを1増やす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          1
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51004,
+    "link":false,
+    "link_cd":0,
+    "CV":"白波瀬 沙耶",
+    "cv_kana":"しらはせ さや",
+    "rarity":"ゴールド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"夢現の魔女・エルシア",
+    "cost":4,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"シェイドフィールドであれば、自分の墓地からシェイドのチャージャーとアタッカーを1枚ずつ選び自分の手札に加える。加えたカードを2ターン後の終わりまで拘束する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"シェイドフィールドであれば、自分の墓地からシェイドのチャージャーとアタッカーを1枚ずつ選び自分の手札に加える。加えたカードを2ターン後の終わりまで拘束する。 ",
+    "field":"シェイドフィールド",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":true,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51005,
+    "link":false,
+    "link_cd":0,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"レジェンド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"漆黒魔導少女 ネロ",
+    "cost":10,
+    "power":10,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札にアタッカーが2枚以上あれば、自分のBPを3消費して発動する。自分の手札のアタッカーをすべて破壊し、相手のマナとライフを6減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札にアタッカーが2枚以上あれば、自分のBPを3消費して発動する。自分の手札のアタッカーをすべて破壊し、相手のマナとライフを6減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"SELF",
+    "life_effect":"OPPO_DAMAGE",
+    "power_effect":"",
+    "mana_effect":"DOWN",
+    "cost_effect":"",
+    "lethal_burn":6,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51006,
+    "link":false,
+    "link_cd":0,
+    "CV":"山本 拓人",
+    "cv_kana":"やまもと　たくと",
+    "rarity":"シルバー",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"仮面拳闘士",
+    "cost":10,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"相手の戦場のカードがチャージャーであれば、それを破壊する。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"相手の戦場のカードがチャージャーであれば、それを破壊する。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"OPPONENT",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51006.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":51007,
+    "link":false,
+    "link_cd":0,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"ゴールド",
+    "race":"シェイド",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"亡剣者 ネハム",
+    "cost":12,
+    "power":10,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分の墓地のアタッカーを1枚選び、自分の手札に加え、コストを4減らす。",
+    "effect_name2":"■特性■",
+    "effect_text2":"自分の墓地にアタッカーが3枚以上あれば、これのコストを4減らす。",
+    "effect_text_all":"自分の墓地のアタッカーを1枚選び、自分の手札に加え、コストを4減らす。 自分の墓地にアタッカーが3枚以上あれば、これのコストを4減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":true,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          10
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/51007.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":81001,
+    "link":false,
+    "link_cd":0,
+    "CV":"汐見 瑠夏",
+    "cv_kana":"しおみ　るか",
+    "rarity":"ブロンズ",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"パン職人 リーゼ",
+    "cost":0,
+    "power":7,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札にチャージャー、アタッカー、ブロッカーがあれば、自分のライフとBPを2増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札にチャージャー、アタッカー、ブロッカーがあれば、自分のライフとBPを2増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/81001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":81002,
+    "link":false,
+    "link_cd":0,
+    "CV":"加門 志琉",
+    "cv_kana":"かもん　しりゅう",
+    "rarity":"レジェンド",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"夜街の怪盗青年・ルシアン",
+    "cost":0,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分のBPを2消費して発動する。相手の手札を1枚選び、それを自分の手札に加え、コストを4減らす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のBPを2消費して発動する。相手の手札を1枚選び、それを自分の手札に加え、コストを4減らす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/81002.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":81003,
+    "link":false,
+    "link_cd":0,
+    "CV":"山本 拓人",
+    "cv_kana":"やまもと　たくと",
+    "rarity":"ゴールド",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"旅立ちのエイク",
+    "cost":4,
+    "power":6,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分の山札からコストがこれより高いカードをランダムに1枚、自分の手札に加える。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の山札からコストがこれより高いカードをランダムに1枚、自分の手札に加える。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":true,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          6
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/81003.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":81004,
+    "link":false,
+    "link_cd":0,
+    "CV":"木立 萌子",
+    "cv_kana":"こだち　もえこ",
+    "rarity":"シルバー",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"疾風少女・ミーナ",
+    "cost":8,
+    "power":8,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"6ターン目以内であれば、これのパワーを1増やす。",
+    "effect_name2":"■特性■",
+    "effect_text2":"6ターン目以内であれば、これのコストを4減らす。",
+    "effect_text_all":"6ターン目以内であれば、これのパワーを1増やす。 6ターン目以内であれば、これのコストを4減らす。",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"DOWN",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          8,
+          9
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/81004.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":81005,
+    "link":false,
+    "link_cd":0,
+    "CV":"CVなし",
+    "cv_kana":"CVなし",
+    "rarity":"ブロンズ",
+    "race":"イノセント",
+    "category":"ノーカテゴリ",
+    "type":"ブロッカー",
+    "name":"ピエロの仮面",
+    "cost":4,
+    "power":11,
+    "effect_name1":"■防御成功時■",
+    "effect_text1":"これをアタッカーにし、自分の手札に戻す。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"これをアタッカーにし、自分の手札に戻す。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"",
+    "mana_effect":"",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/81005.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":91001,
+    "link":false,
+    "link_cd":0,
+    "CV":"長妻 樹里",
+    "cv_kana":"ながつま　じゅり",
+    "rarity":"レジェンド",
+    "race":"旧神",
+    "category":"ノーカテゴリ",
+    "type":"チャージャー",
+    "name":"旧神 バステト",
+    "cost":0,
+    "power":6,
+    "effect_name1":"■召喚時■",
+    "effect_text1":"自分の手札のコスト4以下のカードすべてのコストを2増やし、パワーを4増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分の手札のコスト4以下のカードすべてのコストを2増やし、パワーを4増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"",
+    "power_effect":"UP",
+    "mana_effect":"",
+    "cost_effect":"UP",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+          4
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/91001.webp",
+    "image_variant":"",
+    "has_pre_adjustment_image":false
+  },
+  {
+    "version":16,
+    "is_latest":true,
+    "updated_at":"2026-10-31",
+    "pack_name":"Kryptos of the Abyss 「果てなき万象」",
+    "cd":91002,
+    "link":false,
+    "link_cd":0,
+    "CV":"加瀬 雅洋",
+    "cv_kana":"かせ　まさひろ",
+    "rarity":"レジェンド",
+    "race":"旧神",
+    "category":"ノーカテゴリ",
+    "type":"アタッカー",
+    "name":"旧神 アポロン",
+    "cost":16,
+    "power":12,
+    "effect_name1":"■攻撃成功時■",
+    "effect_text1":"自分のライフとマナを「現在のターン数×1（最大8まで）」増やす。",
+    "effect_name2":null,
+    "effect_text2":null,
+    "effect_text_all":"自分のライフとマナを「現在のターン数×1（最大8まで）」増やす。 ",
+    "field":"フィールド関係なし",
+    "BP_flag":false,
+    "ability_burn":false,
+    "ability_bind":false,
+    "ability_silence":false,
+    "draw":false,
+    "cardsearch":false,
+    "graveyard_recovery":false,
+    "destroy_target":"",
+    "life_effect":"HEAL",
+    "power_effect":"",
+    "mana_effect":"UP",
+    "cost_effect":"",
+    "lethal_burn":0,
+    "CHECK":"OK",
+    "lethal":{
+      "attack":{
+        "values":[
+          12
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBuff":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "freeBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      },
+      "lethalBurn":{
+        "values":[
+
+        ],
+        "repeat":null,
+        "defaultOff":false
+      }
+    },
+    "cv_id":0,
+    "image_path":"img\/91002.webp",
     "image_variant":"",
     "has_pre_adjustment_image":false
   }

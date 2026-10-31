@@ -71,6 +71,13 @@
       "selector": "#pack-juggernaut-incarnate"
     },
     {
+      "en": "Kryptos of the Abyss",
+      "jp": "果てなき万象",
+      "slug": "kryptos-of-the-abyss",
+      "key": "kryptos-of-the-abyss",
+      "selector": "#pack-kryptos-of-the-abyss"
+    },
+    {
       "en": "コラボカード",
       "jp": "",
       "slug": "コラボカード",
@@ -96,6 +103,7 @@
     "Honor of the Brave Heart",
     "Illustrated Illusion",
     "Juggernaut Incarnate",
+    "Kryptos of the Abyss",
     "コラボカード",
     "その他特殊カード"
   ]
