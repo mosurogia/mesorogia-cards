@@ -264,12 +264,9 @@
     pointer-events: none;
 }
 
-/* 折りたたみ時の列数増加はPCのグループ欄がある幅だけに適用する。 */
-@media (min-width: 901px) {
-    #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
-    #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
-        width: calc((100% - 45px) / 10);
-    }
+#cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
+#cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
+    width: calc((100% - 45px) / 10);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -279,14 +276,14 @@
     }
 }
 
-@media (min-width: 901px) and (max-width: 1440px) {
+@media (max-width: 1440px) {
     #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
     #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
         width: calc((100% - 35px) / 8);
     }
 }
 
-@media (min-width: 901px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
     #cards-summary-panel.is-collapsed ~ .card-content #grid:not(.is-list) .card,
     #cards-summary-panel.is-collapsed ~ .card-content .card-list .card {
         width: calc((100% - 25px) / 6);
@@ -327,7 +324,7 @@
     flex-direction: column;
     position: sticky;
     top: 0;
-    z-index: var(--layer-page-sticky, 100);
+    z-index: 2000;
     background: #fff;
     border-bottom: 2px solid #ccc;
     padding: 4px 6px;

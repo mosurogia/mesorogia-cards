@@ -342,7 +342,7 @@
 ------------------------------------------*/
 
 .auth-logged-in-row .btn.danger {
-    background: var(--account-settings-background, linear-gradient(90deg, #ef4444, #f97316));
+    background: linear-gradient(90deg, #ef4444, #f97316);
     color: #fff;
     border: none;
     border-radius: 8px;

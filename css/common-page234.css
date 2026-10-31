@@ -1,7 +1,6 @@
 
 /* ======== タブ切り替え ======== */
 .tab-bar {
-    z-index: var(--layer-page-sticky, 100);
     display: flex;
     background: #333;
     color: white;
