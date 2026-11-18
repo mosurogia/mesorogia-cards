@@ -460,8 +460,13 @@
 
 /* ヘッダのアイコンボタン（JSで使ってる） */
 .cg-icon-btn {
-    width: 31px;
-    height: 31px;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, .15);
     background: #f7f7f9;
@@ -1089,3 +1094,9 @@ body.is-group-editing #grid .card.group-picked img {
     filter: none;
     opacity: 1;
 }
+
+/* グループ操作の図形は共通の寸法に揃え、キーボードの選択位置を示す。 */
+.cg-icon-btn > svg, .cg-icon-btn > img { width: 25px; height: 25px; }
+.cg-icon-btn > .cg-selection-icon { width: 29px; }
+.cg-icon-btn:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+
