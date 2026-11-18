@@ -1,4 +1,4 @@
-var SW_BUILD_VERSION = '2026-09-25-002';
+var SW_BUILD_VERSION = '2026-11-19-groups-001';
 importScripts('./js/common/pwa/cache-config.js?v=' + SW_BUILD_VERSION);
 
 var config = self.MESOROGIA_PWA_CACHE_CONFIG;
@@ -270,3 +270,4 @@ function putRuntimeCache(request, response) {
     });
   });
 }
+

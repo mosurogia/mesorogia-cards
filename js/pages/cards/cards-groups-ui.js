@@ -6,7 +6,7 @@
  * 新仕様：
  * - セクション選択（rowクリック）→ ヘッダの操作が有効化
  * - グループ名クリック → インラインで名前編集（Enter確定 / Escキャンセル）
- * - ヘッダ操作（3列）
+ * - ヘッダ操作（カード選択・名前変更・削除・画像生成）
  *   1列目：編集 / 削除
  *   2列目：↑ / ↓（未選択時はdisabled）
  *   3列目：選択完了（編集中のみ表示）
@@ -18,6 +18,9 @@ function qs(sel, root = document) { return root.querySelector(sel); }
 const escapeHtml_ = window.escapeHtml_;
 const GENERATED_GROUP_ID = 'generated';
 const INNOCENT_OLDGOD_MISSING_GROUP_ID = 'missing_innocent_oldgod';
+const GROUP_CARD_EDIT_ICON_ = "<svg class=\"cg-selection-icon\" viewBox=\"0 0 44 32\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"1\" y=\"2\" width=\"40\" height=\"27\" rx=\"5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/><g fill=\"#edf4fa\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"5\" y=\"6\" width=\"9\" height=\"19\" rx=\"1.5\"/><rect x=\"17\" y=\"6\" width=\"9\" height=\"19\" rx=\"1.5\"/><rect x=\"29\" y=\"6\" width=\"9\" height=\"19\" rx=\"1.5\"/></g><rect x=\"23\" y=\"17\" width=\"20\" height=\"14\" rx=\"5\" fill=\"#258443\" stroke=\"#fff\" stroke-width=\"1.2\"/><path d=\"M26 24h5M28.5 21.5v5M35 24h5\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>";
+const GROUP_DELETE_ICON_ = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"#d9363e\"/><path d=\"M9.5 7V5.5q0-1 1-1h3q1 0 1 1V7\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\"/><rect x=\"6\" y=\"7\" width=\"12\" height=\"2.2\" rx=\"1.1\" fill=\"#fff\"/><path d=\"M7 10h10l-.7 8.8q-.1 1.2-1.3 1.2H9q-1.2 0-1.3-1.2Z\" fill=\"#fff\"/><path d=\"M10 12v5M14 12v5\" fill=\"none\" stroke=\"#d9363e\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg>";
+
 const DEFAULT_GROUP_IDS = new Set(['fav', INNOCENT_OLDGOD_MISSING_GROUP_ID, 'meta', GENERATED_GROUP_ID]);
 
 function ensureReady_() {
@@ -205,19 +208,21 @@ function renderSidebar_() {
                 <button type="button"
                 class="${st.editingId ? 'cg-head-btn cg-op-edit-done' : 'cg-icon-btn'}"
                 id="cg-op-edit"
+                aria-label="${st.editingId ? 'カード選択を完了' : 'グループのカードを選択'}"
                 title="${st.editingId ? '編集を終了（選択完了）' : 'グループカード編集'}"
                 data-mode="${st.editingId ? 'done' : 'edit'}"
-                >${st.editingId ? '選択完了' : '✏️'}</button>
+                >${st.editingId ? '選択完了' : GROUP_CARD_EDIT_ICON_}</button>
 
-                <button type="button" class="cg-icon-btn" id="cg-op-del" title="グループ削除">🗑</button>
+                <button type="button" class="cg-icon-btn" id="cg-op-rename" aria-label="グループ名を変更" title="グループ名を変更"><img src="img/icons/rename-aa-pen.svg" alt="" /></button>
+                <button type="button" class="cg-icon-btn" id="cg-op-del" aria-label="グループを削除" title="グループ削除（確認あり）">${GROUP_DELETE_ICON_}</button>
                 <button type="button" class="cg-icon-btn" id="cg-op-export" title="グループ画像生成（70種類以下のみ）">📷</button>
             </div>
 
             ${st.editingId ? '' : `
             <!-- 2段目：↑ / ↓（編集中は非表示） -->
             <div class="cg-ops-row cg-ops-row-bottom">
-                <button type="button" class="cg-icon-btn" id="cg-op-up" title="上へ">↑</button>
-                <button type="button" class="cg-icon-btn" id="cg-op-down" title="下へ">↓</button>
+                <button type="button" class="cg-icon-btn" id="cg-op-up" aria-label="グループを上へ移動" title="上へ">↑</button>
+                <button type="button" class="cg-icon-btn" id="cg-op-down" aria-label="グループを下へ移動" title="下へ">↓</button>
             </div>
             `}
         </div>
@@ -248,6 +253,13 @@ function renderSidebar_() {
         if (selectedAutoLocked) b.title = '自動更新グループは編集できません';
     }
     }
+
+    const renameButton = qs('#cg-op-rename', host);
+    renameButton.disabled = !canEditGroups || !hasSel || selectedFixedLocked || isEditing;
+    renameButton.addEventListener('click', () => {
+      const row = Array.from(host.querySelectorAll('.cg-row')).find(el => el.dataset.gid === uiSelectedId);
+      row?.querySelector('.cg-name-btn')?.click();
+    });
 
     // 削除：選択が必要（編集中でも許可）
     {
@@ -485,7 +497,7 @@ function bindRowEvents_(root) {
     const st = window.CardGroups.getState();
 
     // ① グループ名クリック → 名前編集モードへ（固定グループは除外）
-    const nameText = e.target.closest('.cg-name-text');
+    const nameText = e.target.closest('.cg-name-btn');
     if (nameText) {
     e.preventDefault();
     e.stopPropagation();
@@ -774,3 +786,4 @@ window.addEventListener('account-owned-sync:ready', scheduleHeavySync_);
 window.addEventListener('account-owned-sync:status', scheduleHeavySync_);
 window.__CardGroupsUI.refresh = scheduleHeavySync_;
 })();
+

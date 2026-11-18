@@ -2,9 +2,9 @@
   'use strict';
 
   var config = {
-    version: '2026-09-25-002',
-    staticCacheName: 'mesorogia-static-2026-09-25-002',
-    runtimeCacheName: 'mesorogia-runtime-2026-09-25-002',
+    version: '2026-11-19-groups-001',
+    staticCacheName: 'mesorogia-static-2026-11-19-groups-001',
+    runtimeCacheName: 'mesorogia-runtime-2026-11-19-groups-001',
     navigationNetworkTimeoutMs: 4000,
     assetNetworkTimeoutMs: 4000,
     appShell: [
@@ -48,3 +48,4 @@
 
   self.MESOROGIA_PWA_CACHE_CONFIG = config;
 }());
+
